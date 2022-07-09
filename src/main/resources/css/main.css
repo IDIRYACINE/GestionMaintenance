@@ -1,0 +1,12 @@
+
+#leftPanel  {
+    -fx-background-color: #FFFFFF;    
+   
+}
+
+.label  {
+    -fx-text-fill : #818893
+}
+.glyph-icon {
+    -fx-fill : #818893
+}
