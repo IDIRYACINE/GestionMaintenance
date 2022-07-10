@@ -1,138 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.palexdev.materialfx.controls.MFXListView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
 
-
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="595.0" prefWidth="742.0" 
-xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="idir.embag.Models.CheckSearch.SearchController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="595.0" prefWidth="742.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="idir.embag.Models.CheckSearch.SearchController">
    <children>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+      <HBox alignment="CENTER" spacing="200.0">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Numero Check">
-               <HBox.margin>
-                  <Insets right="20.0" />
-               </HBox.margin>
-            </Text>
-            <TextField fx:id="IDField">
-               <HBox.margin>
-                  <Insets right="20.0" />
-               </HBox.margin>
-            </TextField>
-            <CheckBox fx:id="ID" mnemonicParsing="false" />
+            <MFXListView />
+            <MFXListView />
          </children>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-         <padding>
-            <Insets left="40.0" />
-         </padding>
-      </HBox>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Location">
-               <HBox.margin>
-                  <Insets right="20.0" />
-               </HBox.margin>
-            </Text>
-            <TextField fx:id="LocationField">
-               <HBox.margin>
-                  <Insets right="20.0" />
-               </HBox.margin>
-            </TextField>
-            <CheckBox mnemonicParsing="false" fx:id="Location" />
-         </children>
-         <padding>
-            <Insets left="40.0" />
-         </padding>
-      </HBox>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Receveur">
-               <HBox.margin>
-                  <Insets right="20.0" />
-               </HBox.margin>
-            </Text>
-            <TextField fx:id="ReceiverField">
-               <HBox.margin>
-                  <Insets right="20.0" />
-               </HBox.margin>
-            </TextField>
-            <CheckBox mnemonicParsing="false" fx:id="Receiver" />
-         </children>
-         <padding>
-            <Insets left="40.0" />
-         </padding>
-      </HBox>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Montant min">
-               <HBox.margin>
-                  <Insets right="20.0" />
-               </HBox.margin>
-            </Text>
-            <TextField fx:id="AmountMinField">
-               <HBox.margin>
-                  <Insets right="50.0" />
-               </HBox.margin>
-            </TextField>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Montant max">
-               <HBox.margin>
-                  <Insets right="10.0" />
-               </HBox.margin>
-            </Text>
-            <TextField fx:id="AmountMaxField"/>
-            <CheckBox fx:id="Amount" mnemonicParsing="false">
-               <HBox.margin>
-                  <Insets left="10.0" />
-               </HBox.margin>
-            </CheckBox>
-         </children>
-         <padding>
-            <Insets left="40.0" />
-         </padding>
-      </HBox>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Date debut">
-               <HBox.margin>
-                  <Insets right="20.0" />
-               </HBox.margin>
-            </Text>
-            <TextField fx:id="DateStartField">
-               <HBox.margin>
-                  <Insets right="50.0" />
-               </HBox.margin>
-            </TextField>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Date Fin">
-               <HBox.margin>
-                  <Insets right="10.0" />
-               </HBox.margin>
-            </Text>
-            <TextField fx:id="DateEndField" />
-            <CheckBox fx:id="BDate" mnemonicParsing="false">
-               <HBox.margin>
-                  <Insets left="10.0" />
-               </HBox.margin>
-            </CheckBox>
-         </children>
-         <padding>
-            <Insets left="40.0" />
-         </padding>
       </HBox>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Button fx:id="Cancel" onAction="#CancelSearch" mnemonicParsing="false" text="Anuuler">
+            <Button fx:id="Cancel" mnemonicParsing="false" onAction="#CancelSearch" text="Anuuler">
                <HBox.margin>
                   <Insets right="80.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="Search" onAction="#ConfirmSearch" mnemonicParsing="false" text="Search" />
+            <Button fx:id="Search" mnemonicParsing="false" onAction="#ConfirmSearch" text="Search" />
          </children>
       </HBox>
    </children>

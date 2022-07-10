@@ -1,8 +1,8 @@
-package idir.embag.Utility.Database;
+package idir.embag.Utility.Database.Implementations;
 
 import java.sql.SQLException;
 
-public interface ISessionQuery {
+public interface SessionQuery {
 
     public void RegisterSession() throws SQLException;
     public void UpdateSession() throws SQLException;

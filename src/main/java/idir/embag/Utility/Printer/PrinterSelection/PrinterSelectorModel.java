@@ -3,7 +3,6 @@ package idir.embag.Utility.Printer.PrinterSelection;
 import java.io.IOException;
 
 
-import com.jfoenix.controls.JFXDialog;
 
 import idir.embag.Utility.Printer.CheckPrinter;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +14,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 public class PrinterSelectorModel  {
-    private JFXDialog dialog;
     private PrinterSelectionController controller;
     private CheckPrinter checkPrinter;
 
@@ -25,11 +23,9 @@ public class PrinterSelectorModel  {
     }
 
     public void show(){
-        dialog.show();
     }
 
     public void close(){
-        dialog.close();
     }
 
 
@@ -40,7 +36,6 @@ public class PrinterSelectorModel  {
             Pane dialogPanel = (Pane)loader.getRoot();
             controller = loader.getController();
             controller.setUp(this);
-            dialog = new JFXDialog(parentPanel, dialogPanel, JFXDialog.DialogTransition.TOP);
         } catch (IOException e) {
            
             e.printStackTrace();

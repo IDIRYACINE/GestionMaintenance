@@ -1,38 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTableView?>
+<?import io.github.palexdev.materialfx.controls.legacy.MFXLegacyComboBox?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="685.0" prefWidth="1300.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="idir.embag.Models.CheckListDisplay.ChecksController">
    <children>
-      <HBox spacing="30.0">
-         <padding>
-            <Insets left="20.0" right="20.0" top="20.0" />
-         </padding>
+      <HBox alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" prefHeight="54.0" prefWidth="199.0" text="Button" />
-            <Button mnemonicParsing="false" prefHeight="54.0" prefWidth="199.0" text="Filter" />
+            <MFXLegacyComboBox promptText="Session" />
+            <HBox alignment="TOP_RIGHT" spacing="30.0">
+               <padding>
+                  <Insets left="20.0" right="20.0" top="20.0" />
+               </padding>
+               <children>
+                  <MFXButton text="Manager Worker" />
+                  <MFXButton text="Manager Groups" />
+                  <MFXButton text="Close Session" />
+                  <MFXButton text="Exporter" />
+                  <MFXButton text="Refresher" />
+               </children>
+            </HBox>
          </children>
       </HBox>
-      <TableView fx:id="DataTable" prefHeight="598.0" prefWidth="1300.0">
-         <columns>
-            <TableColumn fx:id="Date" prefWidth="163.0" text="Code Article" />
-            <TableColumn fx:id="ID" minWidth="0.0" prefWidth="207.0" text="Nom Article" />
-            <TableColumn fx:id="Receiver" minWidth="0.0" prefWidth="190.0" text="Quantity Stock" />
-            <TableColumn fx:id="Amount" minWidth="0.0" prefWidth="159.0" text="Prix" />
-            <TableColumn fx:id="Status" minWidth="0.0" prefWidth="182.0" text="Quanitity Inventory" />
-            <TableColumn fx:id="Status1" minWidth="0.0" prefWidth="190.0" text="Decalage Quantity" />
-            <TableColumn fx:id="Status11" minWidth="0.0" prefWidth="251.0" text="Decalage Prix" />
-         </columns>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-      </TableView>
+      <MFXTableView prefHeight="636.0" prefWidth="1332.0" />
       <StackPane fx:id="dialogContainer" />
 
    </children>

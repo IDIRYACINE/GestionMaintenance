@@ -2,7 +2,6 @@ module idir.embag {
     
     requires javafx.controls;
     requires javafx.fxml;
-    requires com.jfoenix;
     requires java.sql;
     requires org.xerial.sqlitejdbc;
     requires java.desktop;
