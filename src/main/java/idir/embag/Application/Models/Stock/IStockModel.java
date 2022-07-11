@@ -1,7 +1,5 @@
 package idir.embag.Application.Models.Stock;
 
-import java.util.List;
-
 import idir.embag.Application.Models.Generics.ISearchable;
 import idir.embag.DataModels.Products.EProductAttributes;
 import idir.embag.DataModels.Products.IProduct;

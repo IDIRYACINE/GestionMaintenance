@@ -10,7 +10,6 @@ import javafx.print.PageLayout;
 import javafx.print.PageOrientation;
 import javafx.print.Paper;
 import javafx.print.Printer;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 public class PrinterSelectorModel  {
@@ -33,7 +32,6 @@ public class PrinterSelectorModel  {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Forms/PrinterDialog.fxml"));
         try {
             loader.load();
-            Pane dialogPanel = (Pane)loader.getRoot();
             controller = loader.getController();
             controller.setUp(this);
         } catch (IOException e) {

@@ -2,7 +2,6 @@ package idir.embag.Utility.Printer;
 
 
 
-import idir.embag.Application.Models.Settings.SettingsModel;
 import idir.embag.Utility.Printer.PrinterSelection.PrinterSelectorModel;
 import javafx.print.PageLayout;
 import javafx.print.Printer;
@@ -17,9 +16,6 @@ public class CustomPrinter {
     private StackPane pane ;
     private PageLayout pageLayout;
     private Printer printer ;
-    private static SettingsModel settingsModel = SettingsModel.getInstance();
-
-
     public CustomPrinter(Node node , StackPane pane){
         this.node = node ;
         this.pane = pane;

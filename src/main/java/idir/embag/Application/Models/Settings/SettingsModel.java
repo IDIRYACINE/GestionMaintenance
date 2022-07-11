@@ -14,9 +14,8 @@ public class SettingsModel {
     private static SettingsModel settingsModel ;
     
 
-    private SettingsModel(){
-     
-        
+    private SettingsModel() {
+      loadIniFile();
     }
 
     public static SettingsModel getInstance(){

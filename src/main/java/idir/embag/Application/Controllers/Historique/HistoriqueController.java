@@ -3,7 +3,6 @@ package idir.embag.Application.Controllers.Historique;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import idir.embag.Application.Models.Historique.IHistoriqueModel;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,7 +10,6 @@ import javafx.fxml.Initializable;
 public class HistoriqueController implements Initializable{
 
     
-    private IHistoriqueModel historiqueModel;
 
     @FXML
     private MFXButton search , refresh;
