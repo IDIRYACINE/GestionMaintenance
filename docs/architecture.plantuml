@@ -1,0 +1,43 @@
+
+@startuml Architecture
+
+component Application 
+component Utility 
+component DataModel
+component Exceptions
+component EventCenter
+
+Utility <- EventCenter
+EventCenter --> DataModel
+EventCenter -> Exceptions
+Application --> EventCenter
+
+note top of Application 
+   
+   Handling ui,userEvents,making
+   linking utility and data models,
+   and other stuff
+
+end note
+
+note left of Utility 
+    Infrastructure code : communicating with server,
+    databases ,exporting and importing data
+end note
+
+note bottom of DataModel 
+    Buisness logic , modeling entities like sessionRecord,worers,
+    sessionGroups
+end note
+
+note right of Exceptions
+    Custom Exceptions,
+    Error handlers
+end note
+
+note as n1
+    EventCenter uses subscribers design pattern
+    to decentralise events/class coupling
+end note
+
+@enduml

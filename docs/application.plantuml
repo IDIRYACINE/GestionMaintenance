@@ -1,0 +1,26 @@
+
+@startuml Application
+
+package Application{
+
+component Views
+component Controllers
+component Models
+}
+
+note bottom of Views 
+    User interface code
+end note 
+
+note bottom of Controllers
+    A delegate between Ui events,
+    application models
+
+end note    
+
+note bottom of Models
+    Entities containing logical operations,
+    manipulating Ui
+end note
+
+@enduml

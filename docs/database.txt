@@ -1,0 +1,184 @@
+
+// Generated using https://dbdiagram.io
+
+
+
+Table Inventory {
+  ArticleId int [pk] 
+  ArticleCodebar int 
+  ArticleQuantity int
+  ArticleLocation int
+  StockId int [ref: > Stock.ArticleId]
+  
+  indexes{
+    (ArticleCodebar,ArticleId)
+  }
+  
+}
+
+Table Stock {
+  ArticleId int[pk]
+  ArticleName varchar
+  ArticleQuantity int
+  ArticlePrice double
+  ArticleFamily int [ref: > FamilyCodes.FamilyCode]
+}
+
+Table Workers{
+  WorkerId int [pk,increment]
+  WorkerFirstname varchar
+  WorkerLastname varchar
+  WorkerEmail varchar
+  WorkerPhone int
+  
+  indexes{
+    (WorkerLastname,WorkerFirstname)
+  }
+}
+
+Table Sessions{
+  SessionId int[pk]
+  SessionStart date
+  SessionEnd date
+  QuantityShift int
+  PriceShift double
+}
+
+Table SessionsRecords{
+  RecordId int [pk,increment]
+  SessionId int [ref: > Sessions.SessionId]
+  WorkerId int 
+  GroupId int [ref: > SessionGroups.GroupId]
+  InventoryId int [ref: > Inventory.ArticleId]
+  RecordDate date
+  StockQuantity int
+  RecordQuantity int
+  StockPrice double
+  QuantityShift int
+  PriceShift double
+  
+  indexes{
+  (GroupId,SessionId)
+  (RecordDate)  
+  }
+}
+
+Table SessionWorkers{
+  Id int [pk ,increment]
+  WorkerId int [ref: > Workers.WorkerId]
+  GroupId int [ref: > SessionGroups.GroupId]
+  indexes{(WorkerId,GroupId)}
+}
+
+
+Table ActiveWorkers{
+  Id int [pk ,increment]
+  WorkerId int [ref: > Workers.WorkerId]
+  Password varchar
+  
+  indexes{(Id,Password)}
+}
+
+
+Table SessionGroups{
+  GroupId int [pk ,increment]
+  GroupName varchar
+}
+
+Table FamilyCodes{
+  FamilyCode int [pk]
+  FamilyNamy varchar
+}
+
+
+// Indexes 
+Table Inventory :
+  ArticleId int [pk] 
+  indexes{
+    (ArticleCodebar,ArticleId)
+  }
+  
+}
+
+Table Stock {
+  ArticleId int[pk]
+}
+
+Table Workers{
+  WorkerId int [pk,increment]
+  
+  indexes{
+    (WorkerLastname,WorkerFirstname)
+  }
+}
+
+Table Sessions{
+  SessionId int[pk]
+}
+
+Table SessionsRecords{
+  RecordId int [pk,increment]
+ 
+  
+  indexes{
+  (GroupId,SessionId)
+  (RecordDate)  
+  }
+}
+
+Table SessionWorkers{
+  Id int [pk ,increment]
+
+  indexes{(WorkerId,GroupId)}
+}
+
+
+Table ActiveWorkers : Id int [pk ,increment] , indexes{(Id,Password)}
+
+
+
+Table SessionGroups{
+  GroupId int [pk ,increment]
+  GroupName varchar
+}
+
+Table FamilyCodes : FamilyCode int [pk]
+
+
+Indexes Table Inventory :
+  indexes{
+    (ArticleCodebar,ArticleId)
+  }
+  
+
+
+Table Stock :
+  ArticleId int[pk]
+
+Table Workers :
+  WorkerId int [pk,increment]
+  indexes{
+    (WorkerLastname,WorkerFirstname)
+  }
+
+
+Table Sessions : SessionId int[pk]
+
+
+Table SessionsRecords : RecordId int [pk,increment]
+  indexes{
+  (GroupId,SessionId)
+  (RecordDate)  
+  }
+
+
+Table SessionWorkers : Id int [pk ,increment], indexes{(WorkerId,GroupId)}
+
+
+Table ActiveWorkers : indexes{(Id,Password)}
+
+
+Table SessionGroups : GroupId int [pk ,increment]
+
+Table FamilyCodes : FamilyCode int [pk]
+}

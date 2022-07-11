@@ -1,0 +1,22 @@
+
+@startuml DataModes
+
+package DataModels{
+    component SessionRecord
+    component Session 
+    component Worker
+    component SessionGroup
+    component Product
+    component FamilyCode
+}
+
+note left of DataModels 
+    Package containing abstractions
+    for real objects/concepts
+    in the buisness model
+    sessionGroups,records,
+    stockProduct,inventoryProduct,
+    ...etc
+end note 
+
+@enduml

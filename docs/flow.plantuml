@@ -1,0 +1,47 @@
+@startuml flow
+
+component mobileClient 
+
+component backendServer
+
+component localClient
+
+component cloudStorage
+
+mobileClient -> backendServer
+backendServer -> mobileClient 
+
+backendServer -> localClient
+localClient -> backendServer
+
+localClient -> cloudStorage
+
+note bottom of localClient
+    local pc used to oversee
+    maintenance progress.
+    and other functionality,
+    open/close sessions,
+    backup database on
+    a cloud storage
+    ..etc
+end note
+
+note bottom of mobileClient
+    worker scanning codebars
+end note
+
+note top of backendServer
+    responsibe for authenticating
+    mobileClients.
+    providing an online copy of
+    inventory for the mobileClient.
+    notifying localClient of scanned
+    articles in realTime.
+end note
+
+note top of cloudStorage
+    A cloud storage for database-backup
+    eg:google drive
+end note
+
+@enduml

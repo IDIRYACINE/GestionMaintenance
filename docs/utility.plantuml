@@ -1,0 +1,35 @@
+
+@startuml Utility
+
+package Utility{
+
+component Database
+component Server
+component Exporter
+component ThreadManager
+}
+
+note bottom of ThreadManager
+    entity responsible for 
+    managing threaded code
+    like synchronisation
+    and delegation
+end note
+
+
+note bottom of Exporter
+    entity responsible for
+    importing/exporting data
+    from other files
+    like excel
+    and converting them
+    to data models
+end note
+
+note bottom of Server
+    entity responsibe for 
+    handling network communications,
+    api , websockets...etc
+end note
+
+@enduml
