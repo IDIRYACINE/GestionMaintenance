@@ -10,7 +10,6 @@ import javafx.fxml.Initializable;
 public class HistoriqueController implements Initializable{
 
     
-
     @FXML
     private MFXButton search , refresh;
 

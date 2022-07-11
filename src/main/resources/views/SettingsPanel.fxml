@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane prefHeight="814.0" prefWidth="1130.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="idir.embag.Models.Settings.SettingsController">
+<Pane prefHeight="814.0" prefWidth="1130.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="idir.embag.Application.Controllers.Settings.SettingsController">
    <children>
       <HBox layoutX="127.0" layoutY="178.0">
          <children>

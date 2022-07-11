@@ -16,9 +16,15 @@ module idir.embag {
     requires ini4j;
 
     opens idir.embag to javafx.fxml;
-   
-    opens idir.embag.Application.Controllers to javafx.base,javafx.fxml;
-    opens idir.embag.Utility.Printer.PrinterSelection to javafx.base , javafx.fxml;
+
+    opens idir.embag.Ui.Views.Historique to javafx.base,javafx.fxml;
+    opens idir.embag.Ui.Views.Session to javafx.base,javafx.fxml;
+    opens idir.embag.Ui.Views.Workers to javafx.base,javafx.fxml;
+    opens idir.embag.Ui.Views.Settings to javafx.base,javafx.fxml;
+    opens idir.embag.Ui.Views.Stock to javafx.base,javafx.fxml;
+    opens idir.embag.Ui.Components to javafx.base,javafx.fxml;
+    opens idir.embag.Application.Controllers.Navigation to javafx.base,javafx.fxml;
+    opens idir.embag.Utility.Printer.PrinterSelection to javafx.base,javafx.fxml;
     opens idir.embag.Application.Controllers.Settings to javafx.base,javafx.fxml;
 
     exports idir.embag;
