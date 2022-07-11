@@ -9,16 +9,16 @@ public interface IDatabase {
     
     public void Disconnect();
 
-    public ResultSet SelectQuery() throws SQLException;
+    public ResultSet SelectQuery(String query) throws SQLException;
 
-    public ResultSet SearchQuery(String qString) throws SQLException;
+    public ResultSet SearchQuery(String query) throws SQLException;
 
-    public void InsertQuery();
+    public void InsertQuery(String query);
 
-    public void DeleteQuery();
+    public void DeleteQuery(String query);
 
-    public void CreateQuery();
+    public void CreateQuery(String query);
 
-    public void UpdateQuery();
+    public void UpdateQuery(String query);
     
 }

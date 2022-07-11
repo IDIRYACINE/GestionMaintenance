@@ -2,26 +2,28 @@ package idir.embag.Utility.Database;
 
 import java.sql.SQLException;
 
-public interface ISessionQuery {
+import idir.embag.Utility.Database.Generics.IQuery;
+import idir.embag.Utility.Database.Generics.MDatabase;
 
-    public void RegisterSession() throws SQLException;
-    public void UpdateSession() throws SQLException;
+public abstract class ISessionQuery extends IQuery{
+
+    public abstract void RegisterSession(AttributeWrapper<MDatabase.SessionsRecordsAttributes>[] attributes) throws SQLException;
+    public abstract void UpdateSession(int sessionId,AttributeWrapper<MDatabase.SessionsRecordsAttributes>[] attributes) throws SQLException;
+
+    public abstract void RegisterSessionGroup(AttributeWrapper<MDatabase.SessionsGroupsAttributes>[] attributes) throws SQLException;
+    public abstract void UnregisterSessionGroup(int groupId) throws SQLException;
+    public abstract void UpdateSessionGroup(int groupId , AttributeWrapper<MDatabase.SessionsGroupsAttributes>[] attributes) throws SQLException;
+
+    public abstract void RegsiterSessionWorker(int workerId,AttributeWrapper<MDatabase.SessionWorkersAttributes>[] attributes) throws SQLException;
+    public abstract void UnregisterGroupWorker(int workerId) throws SQLException;
 
 
-    public void RegisterSessionGroup() throws SQLException;
-    public void UnregisterSessionGroup() throws SQLException;
-    public void UpdateSessionGroup() throws SQLException;
-
-    public void RegisterGroupWorker() throws SQLException;
-    public void UnregisterGroupWorker() throws SQLException;
-
-
-    public void RegisterSessionRecord() throws SQLException;
+    public abstract void RegisterSessionRecord(AttributeWrapper<MDatabase.SessionsRecordsAttributes>[] attributes) throws SQLException;
     
 
-    public void CreateSessionTable() throws SQLException;
-    public void CreateSessionGroupTable() throws SQLException;
-    public void CreateSessionRecordTable()  throws SQLException;
-    public void CreateSessionWorkersTabe()  throws SQLException;
+    public abstract void CreateSessionTable() throws SQLException;
+    public abstract void CreateSessionGroupTable() throws SQLException;
+    public abstract void CreateSessionRecordTable()  throws SQLException;
+    public abstract void CreateSessionWorkersTabel()  throws SQLException;
 
 }

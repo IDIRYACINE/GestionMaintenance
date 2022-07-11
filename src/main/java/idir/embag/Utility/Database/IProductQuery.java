@@ -2,23 +2,28 @@ package idir.embag.Utility.Database;
 
 import java.sql.SQLException;
 
-public interface IProductQuery {
+import idir.embag.Utility.Database.Generics.IQuery;
+import idir.embag.Utility.Database.Generics.MDatabase;
+
+public abstract class IProductQuery extends IQuery{
     
-    public void RegisterStockProduct() throws SQLException;
-    public void UnregisterStockProduct() throws SQLException;
-    public void UpdateStockProduct() throws SQLException;
+    public abstract void RegisterStockProduct(AttributeWrapper<MDatabase.StockAttributes>[] attributes) throws SQLException;
+    public abstract void UnregisterStockProduct() throws SQLException;
+    public abstract void UpdateStockProduct(int articleId , AttributeWrapper<MDatabase.StockAttributes>[] attributes) throws SQLException;
 
-    public void RegisterInventoryProduct() throws SQLException;
-    public void UnregisterInventoryProduct() throws SQLException;
-    public void UpdateInventoryProduct() throws SQLException;
+    public abstract void RegisterInventoryProduct(AttributeWrapper<MDatabase.InventoryAttributes>[] attributes) throws SQLException;
+    public abstract void UnregisterInventoryProduct() throws SQLException;
+    public abstract void UpdateInventoryProduct(int articleId,AttributeWrapper<MDatabase.InventoryAttributes>[] attributes) throws SQLException;
 
-    public void RegisterFamilyCode() throws SQLException;
-    public void UpdateFamilyCode() throws SQLException;
-    public void UnregisterFamilyCode() throws SQLException;
+    public abstract void RegisterFamilyCode(AttributeWrapper<MDatabase.FamilliesCodeAttributes>[] attributes) throws SQLException;
+    public abstract void UpdateFamilyCode(int familyId,AttributeWrapper<MDatabase.FamilliesCodeAttributes>[] attributes ) throws SQLException;
+    public abstract void UnregisterFamilyCode() throws SQLException;
 
 
-    public void CreateFamiLCodeTable() throws SQLException;
-    public void CreateInventoryTable() throws SQLException;
-    public void CreateStockTable() throws SQLException;
+    public abstract void CreateFamiLCodeTable() throws SQLException;
+    public abstract void CreateInventoryTable() throws SQLException;
+    public abstract void CreateStockTable() throws SQLException;
+
+    
     
 }
