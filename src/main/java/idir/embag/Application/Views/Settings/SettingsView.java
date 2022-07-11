@@ -1,4 +1,4 @@
-package idir.embag.Controllers.Settings;
+package idir.embag.Application.Views.Settings;
 
 
 import javafx.fxml.FXMLLoader;

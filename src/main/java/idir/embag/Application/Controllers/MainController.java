@@ -1,4 +1,4 @@
-package idir.embag.Controllers;
+package idir.embag.Application.Controllers;
 
 import java.io.IOException;
 import java.net.URL;
@@ -7,8 +7,7 @@ import java.util.ResourceBundle;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import idir.embag.App;
-import idir.embag.Controllers.Settings.SettingsView;
-
+import idir.embag.Application.Views.Settings.SettingsView;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;

@@ -3,8 +3,7 @@ package idir.embag.Utility.Printer;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-
-import idir.embag.Controllers.Settings.SettingsModel;
+import idir.embag.Application.Models.Settings.SettingsModel;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;

@@ -1,4 +1,4 @@
-package idir.embag.Controllers.Settings;
+package idir.embag.Application.Models.Settings;
 
 import java.io.File;
 import java.io.IOException;

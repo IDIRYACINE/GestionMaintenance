@@ -1,4 +1,4 @@
-package idir.embag.Models;
+package idir.embag.DataModels;
 
 public class Session {
     

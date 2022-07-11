@@ -16,9 +16,9 @@ module idir.embag {
 
     opens idir.embag to javafx.fxml;
    
-    opens idir.embag.Models to javafx.base,javafx.fxml;
+    opens idir.embag.Application.Controllers to javafx.base,javafx.fxml;
     opens idir.embag.Utility.Printer.PrinterSelection to javafx.base , javafx.fxml;
-    opens idir.embag.Controllers.Settings to javafx.base,javafx.fxml;
+    opens idir.embag.Application.Controllers.Settings to javafx.base,javafx.fxml;
 
     exports idir.embag;
 }
