@@ -4,7 +4,7 @@ import java.io.IOException;
 
 
 
-import idir.embag.Utility.Printer.CheckPrinter;
+import idir.embag.Utility.Printer.CustomPrinter;
 import javafx.fxml.FXMLLoader;
 import javafx.print.PageLayout;
 import javafx.print.PageOrientation;
@@ -15,9 +15,9 @@ import javafx.scene.layout.StackPane;
 
 public class PrinterSelectorModel  {
     private PrinterSelectionController controller;
-    private CheckPrinter checkPrinter;
+    private CustomPrinter checkPrinter;
 
-    public PrinterSelectorModel(StackPane parentPanel , CheckPrinter checkPrinter) {
+    public PrinterSelectorModel(StackPane parentPanel , CustomPrinter checkPrinter) {
         this.checkPrinter = checkPrinter;
         loadFxml(parentPanel);
     }

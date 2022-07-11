@@ -13,14 +13,13 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
-public class CheckPrintModel extends Pane{
+public class PrintModel extends Pane{
     private static Font defaultFont =  new Font("Serif Bold", 13f);
     private static Font smallFont = new Font("Serif Bold",12f);
     private static SettingsModel settingsModel = SettingsModel.getInstance();
 
-    public CheckPrintModel(String amount , String amountStringF ,String amountStringS , String receiver , String location ){
-       setUpBounds();
-       setUpLabels(amount,amountStringF,amountStringS,receiver,location);
+    public PrintModel(){
+       //TODO:Auto generated example
     }
 
     private void setUpBounds(){
@@ -34,7 +33,6 @@ public class CheckPrintModel extends Pane{
         double[] xCoordinates = new double[7];
         double[] yCoordinates = new double[7];
 
-        loadCoordinates(xCoordinates, yCoordinates);
 
         children.add(createLabel(amount, 122, TextAlignment.LEFT,Pos.CENTER_RIGHT, defaultFont, xCoordinates[0], yCoordinates[0]));
         children.add(createLabel(amountStringF, 390, TextAlignment.LEFT,Pos.CENTER_LEFT, defaultFont, xCoordinates[1], yCoordinates[1]));
@@ -47,16 +45,6 @@ public class CheckPrintModel extends Pane{
 
     }
 
-    private void loadCoordinates(double[] xCoordinates , double[] yCoordinates){
-        String [] STR_X_COORDINATES = settingsModel.getXcoordinates();
-        String [] STR_Y_COORDINATES = settingsModel.getYcoordinates();
-
-        for (int i = 0 ; i < STR_X_COORDINATES.length;i++){
-            xCoordinates[i] = Double.parseDouble(STR_X_COORDINATES[i]);
-            yCoordinates[i] = Double.parseDouble(STR_Y_COORDINATES[i]);;
-        }
-       
-    }
 
     private Label createLabel(String value , double width ,TextAlignment textAlignment ,Pos labelAlignment,Font font, double posX , double posY){
         Label label = new Label(value);

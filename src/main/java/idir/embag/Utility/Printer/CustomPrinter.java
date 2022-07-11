@@ -12,7 +12,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Scale;
 
 
-public class CheckPrinter {
+public class CustomPrinter {
     private Node node ;
     private StackPane pane ;
     private PageLayout pageLayout;
@@ -20,9 +20,10 @@ public class CheckPrinter {
     private static SettingsModel settingsModel = SettingsModel.getInstance();
 
 
-    public CheckPrinter(Node node , StackPane pane){
+    public CustomPrinter(Node node , StackPane pane){
         this.node = node ;
         this.pane = pane;
+        
     }
 
     public void printDialog(){
@@ -53,8 +54,7 @@ public class CheckPrinter {
 
     private double[] loadScaleFromSettings(){
         double[] scales = new double[2];
-        scales[0] = Double.parseDouble(settingsModel.getXcoordinates()[6]);
-        scales[1] = Double.parseDouble( settingsModel.getYcoordinates()[6]);
+     
         return scales;
     }
     

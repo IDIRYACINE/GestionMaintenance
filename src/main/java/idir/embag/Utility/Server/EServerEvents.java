@@ -1,6 +1,6 @@
 package idir.embag.Utility.Server;
 
-public enum ServerEvents {
+public enum EServerEvents {
     ReceivedRecord,
     
 }

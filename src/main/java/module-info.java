@@ -4,6 +4,7 @@ module idir.embag {
     requires javafx.fxml;
     requires java.sql;
     requires org.xerial.sqlitejdbc;
+    requires MaterialFX;
     requires java.desktop;
     requires javafx.base;
     requires de.jensd.fx.glyphs.fontawesome;
