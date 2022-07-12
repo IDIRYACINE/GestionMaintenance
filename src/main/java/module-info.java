@@ -17,11 +17,11 @@ module idir.embag {
 
     opens idir.embag to javafx.fxml;
 
-    opens idir.embag.Ui.Views.Historique to javafx.base,javafx.fxml;
-    opens idir.embag.Ui.Views.Session to javafx.base,javafx.fxml;
-    opens idir.embag.Ui.Views.Workers to javafx.base,javafx.fxml;
-    opens idir.embag.Ui.Views.Settings to javafx.base,javafx.fxml;
-    opens idir.embag.Ui.Views.Stock to javafx.base,javafx.fxml;
+    opens idir.embag.Ui.Panels.Historique to javafx.base,javafx.fxml;
+    opens idir.embag.Ui.Panels.Session to javafx.base,javafx.fxml;
+    opens idir.embag.Ui.Panels.Workers to javafx.base,javafx.fxml;
+    opens idir.embag.Ui.Panels.Settings to javafx.base,javafx.fxml;
+    opens idir.embag.Ui.Panels.Stock to javafx.base,javafx.fxml;
     opens idir.embag.Ui.Components to javafx.base,javafx.fxml;
     opens idir.embag.Application.Controllers.Navigation to javafx.base,javafx.fxml;
     opens idir.embag.Utility.Printer.PrinterSelection to javafx.base,javafx.fxml;

@@ -1,18 +1,18 @@
-package idir.embag.Ui.Views.Workers;
+package idir.embag.Ui.Panels.Workers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import idir.embag.DataModels.Workers.Worker;
+import idir.embag.Ui.Panels.Generics.INodeView;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 
-public class WorkersView implements IWorkersView ,Initializable{
+public class WorkersPanel extends INodeView implements Initializable{
     
     @FXML
     private VBox root;
@@ -23,10 +23,13 @@ public class WorkersView implements IWorkersView ,Initializable{
     @FXML
     private MFXTableView<Worker> tableStock;
 
-    @Override
-    public Node getView() {
-        return root;
+    
+
+    public WorkersPanel() {
+        fxmlPath = "/views/WorkersPanel.fxml";
     }
+
+   
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -35,16 +38,8 @@ public class WorkersView implements IWorkersView ,Initializable{
     }
 
     @Override
-    public void loadFxml() {
-        try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/WorkersPanel.fxml"));   
-            loader.setController(this);  
-            loader.load();
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        
+    public Node getView() {
+        return root;
     }
 
 }

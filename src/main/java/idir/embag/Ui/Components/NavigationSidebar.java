@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import idir.embag.Application.Controllers.Navigation.INavigationController;
-import idir.embag.Ui.Views.Generics.INodeView;
+import idir.embag.Ui.Panels.Generics.INodeView;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,7 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class NavigationSidebar implements Initializable,INodeView{
+public class NavigationSidebar extends INodeView  implements Initializable{
     
     @FXML
     private VBox navigationPanel;
@@ -36,12 +36,13 @@ public class NavigationSidebar implements Initializable,INodeView{
     private FontAwesomeIconView[] icons;
 
     private INavigationController navigationController;
-
-    public void setNavigationController(INavigationController navigationController) {
-        this.navigationController = navigationController;
+    
+    public NavigationSidebar(INavigationController navigationController) {
+      this.navigationController = navigationController;
+      fxmlPath = "/views/NavigationSidebar.fxml";
     }
 
-    
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
       icons = new FontAwesomeIconView[INavigationController.PanelCount];
@@ -113,9 +114,8 @@ public class NavigationSidebar implements Initializable,INodeView{
       boxes[index].setStyle("-fx-background-color: ffffff");
     }
 
-    public void setup(int panelId,INavigationController navigationController){
-      this.navigationController = navigationController;
-
+    public void setup(int panelId){
+    
       String css = getClass().getResource("/css/main.css").toExternalForm();
       navigationPanel.getStylesheets().add(css);
 
@@ -129,21 +129,5 @@ public class NavigationSidebar implements Initializable,INodeView{
     public Node getView() {
       return navigationPanel;
     }
-
-
-    @Override
-    public void loadFxml() {
-      FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Components/NavigationSidebar.fxml"));     
-      try {
-    
-        loader.setController(this);
-        loader.load();
-       
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-      
-    }
-
 
 }

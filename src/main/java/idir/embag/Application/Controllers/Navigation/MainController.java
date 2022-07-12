@@ -1,17 +1,16 @@
 package idir.embag.Application.Controllers.Navigation;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
 import idir.embag.Ui.Components.NavigationSidebar;
-import idir.embag.Ui.Views.Generics.INodeView;
-import idir.embag.Ui.Views.Historique.HistoriqueView;
-import idir.embag.Ui.Views.Session.SessionView;
-import idir.embag.Ui.Views.Settings.SettingsView;
-import idir.embag.Ui.Views.Stock.StockView;
-import idir.embag.Ui.Views.Workers.WorkersView;
+import idir.embag.Ui.Panels.Generics.INodeView;
+import idir.embag.Ui.Panels.Historique.HistoryPanel;
+import idir.embag.Ui.Panels.Session.SessionPanel;
+import idir.embag.Ui.Panels.Settings.SettingsPanel;
+import idir.embag.Ui.Panels.Stock.StockPanel;
+import idir.embag.Ui.Panels.Workers.WorkersPanel;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
@@ -74,11 +73,11 @@ public class MainController extends INavigationController implements Initializab
     
     private void loadPanels(){
       views = new INodeView[INavigationController.PanelCount];
-      views[INavigationController.SettingsPanelId] = new SettingsView();
-      views[INavigationController.SessionPanelId] = new SessionView();
-      views[INavigationController.HistoryPanelId] = new HistoriqueView();
-      views[INavigationController.WorkersPanelId] = new WorkersView();
-      views[INavigationController.StockPanelId] = new StockView();
+      views[INavigationController.SettingsPanelId] = new SettingsPanel();
+      views[INavigationController.SessionPanelId] = new SessionPanel();
+      views[INavigationController.HistoryPanelId] = new HistoryPanel();
+      views[INavigationController.WorkersPanelId] = new WorkersPanel();
+      views[INavigationController.StockPanelId] = new StockPanel();
 
       for (INodeView view: views) {
         view.loadFxml();
@@ -87,8 +86,7 @@ public class MainController extends INavigationController implements Initializab
     }
 
     private void loadNavigationPane(){
-     NavigationSidebar navigationSidebar = new NavigationSidebar();
-     navigationSidebar.setNavigationController(this);
+     NavigationSidebar navigationSidebar = new NavigationSidebar(this);
      navigationSidebar.loadFxml();
      leftPanel.getChildren().setAll(navigationSidebar.getView());
     }
