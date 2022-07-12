@@ -1,4 +1,4 @@
-package idir.embag.Utility.Printer.PrinterSelection;
+package idir.embag.Infrastructure.Printer.PrinterSelection;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

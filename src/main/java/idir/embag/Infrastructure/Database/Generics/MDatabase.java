@@ -1,4 +1,4 @@
-package idir.embag.Utility.Database.Generics;
+package idir.embag.Infrastructure.Database.Generics;
 
 public class MDatabase {
 

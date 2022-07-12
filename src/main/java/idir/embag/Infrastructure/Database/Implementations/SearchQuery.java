@@ -1,4 +1,4 @@
-package idir.embag.Utility.Database.Implementations;
+package idir.embag.Infrastructure.Database.Implementations;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

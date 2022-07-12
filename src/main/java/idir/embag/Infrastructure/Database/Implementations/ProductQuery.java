@@ -1,14 +1,14 @@
-package idir.embag.Utility.Database.Implementations;
+package idir.embag.Infrastructure.Database.Implementations;
 
 import java.sql.SQLException;
 
-import idir.embag.Utility.Database.AttributeWrapper;
-import idir.embag.Utility.Database.IDatabase;
-import idir.embag.Utility.Database.IProductQuery;
-import idir.embag.Utility.Database.Generics.MDatabase;
-import idir.embag.Utility.Database.Generics.MDatabase.FamilliesCodeAttributes;
-import idir.embag.Utility.Database.Generics.MDatabase.InventoryAttributes;
-import idir.embag.Utility.Database.Generics.MDatabase.StockAttributes;
+import idir.embag.Infrastructure.Database.AttributeWrapper;
+import idir.embag.Infrastructure.Database.IDatabase;
+import idir.embag.Infrastructure.Database.IProductQuery;
+import idir.embag.Infrastructure.Database.Generics.MDatabase;
+import idir.embag.Infrastructure.Database.Generics.MDatabase.FamilliesCodeAttributes;
+import idir.embag.Infrastructure.Database.Generics.MDatabase.InventoryAttributes;
+import idir.embag.Infrastructure.Database.Generics.MDatabase.StockAttributes;
 
 public class ProductQuery extends IProductQuery{
     

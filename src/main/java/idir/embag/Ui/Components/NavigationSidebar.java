@@ -6,9 +6,9 @@ import java.util.ResourceBundle;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import idir.embag.Application.Controllers.Navigation.INavigationController;
+import idir.embag.EventStore.Stores.NavigationStore;
 import idir.embag.Ui.Panels.Generics.INodeView;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -21,13 +21,13 @@ public class NavigationSidebar extends INodeView  implements Initializable{
     private VBox navigationPanel;
 
     @FXML
-    private FontAwesomeIconView sessionIcon , historyIcon,stockIcon ,settingsIcon ;
+    private FontAwesomeIconView sessionIcon , historyIcon,stockIcon ,settingsIcon ,workersIcon;
 
     @FXML 
-    private Label sessionLabel , historyLabel , stockLabel , settingsLabel;
+    private Label sessionLabel , historyLabel , stockLabel , settingsLabel,workersLabel;
 
     @FXML
-    private HBox sessionBox , historyBox , stockBox , settingsBox;
+    private HBox sessionBox , historyBox , stockBox , settingsBox,workersBox;
 
     private int activePanelIndex = 0;
 
@@ -39,60 +39,62 @@ public class NavigationSidebar extends INodeView  implements Initializable{
     
     public NavigationSidebar(INavigationController navigationController) {
       this.navigationController = navigationController;
-      fxmlPath = "/views/NavigationSidebar.fxml";
+      fxmlPath = "/views/Components/NavigationSidebar.fxml";
     }
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-      icons = new FontAwesomeIconView[INavigationController.PanelCount];
-      icons[INavigationController.SessionPanelId] = sessionIcon;
-      icons[INavigationController.HistoryPanelId] = historyIcon;
-      icons[INavigationController.StockPanelId] = stockIcon;
-      icons[INavigationController.SettingsPanelId] = settingsIcon;
+      icons = new FontAwesomeIconView[NavigationStore.PanelCount];
+      icons[NavigationStore.SessionPanelId] = sessionIcon;
+      icons[NavigationStore.HistoryPanelId] = historyIcon;
+      icons[NavigationStore.StockPanelId] = stockIcon;
+      icons[NavigationStore.SettingsPanelId] = settingsIcon;
+      icons[NavigationStore.WorkersPanelId] = workersIcon;
 
-      labels = new Label[INavigationController.PanelCount];
-      labels[INavigationController.SessionPanelId] = sessionLabel;
-      labels[INavigationController.HistoryPanelId] = historyLabel;
-      labels[INavigationController.StockPanelId] = stockLabel;
-      labels[INavigationController.SettingsPanelId] = settingsLabel;
+      labels = new Label[NavigationStore.PanelCount];
+      labels[NavigationStore.SessionPanelId] = sessionLabel;
+      labels[NavigationStore.HistoryPanelId] = historyLabel;
+      labels[NavigationStore.StockPanelId] = stockLabel;
+      labels[NavigationStore.SettingsPanelId] = settingsLabel;
+      labels[NavigationStore.WorkersPanelId] = workersLabel;
 
-      boxes = new HBox[INavigationController.PanelCount];
-      boxes[INavigationController.SessionPanelId] = sessionBox;
-      boxes[INavigationController.HistoryPanelId] = historyBox;
-      boxes[INavigationController.StockPanelId] = stockBox;
-      boxes[INavigationController.SettingsPanelId] = settingsBox;
-
+      boxes = new HBox[NavigationStore.PanelCount];
+      boxes[NavigationStore.SessionPanelId] = sessionBox;
+      boxes[NavigationStore.HistoryPanelId] = historyBox;
+      boxes[NavigationStore.StockPanelId] = stockBox;
+      boxes[NavigationStore.SettingsPanelId] = settingsBox;
+      boxes[NavigationStore.WorkersPanelId] = workersBox;
     }
 
      
     @FXML
     private void settingsClicked() throws IOException{
-      setActiveStyle(INavigationController.SettingsPanelId);
+      setActiveStyle(NavigationStore.SettingsPanelId);
       navigationController.navigateToSettingsPanel();
     }
     
     @FXML
     private void sessionClicked() throws IOException{
-      setActiveStyle(INavigationController.SessionPanelId);
+      setActiveStyle(NavigationStore.SessionPanelId);
       navigationController.navigateToSessionPanel();
     }
     @FXML
     private void workersClicked( ) throws IOException{
-     setActiveStyle(INavigationController.WorkersPanelId);
+     setActiveStyle(NavigationStore.WorkersPanelId);
      navigationController.navigateToWorkersPanel();
     }
     
     @FXML
     private void stockClicked()throws IOException{
-     setActiveStyle(INavigationController.StockPanelId);
+     setActiveStyle(NavigationStore.StockPanelId);
      navigationController.navigateToStockPanel();
     }
 
 
     @FXML
     private void historyClicked()throws IOException{
-     setActiveStyle(INavigationController.HistoryPanelId);
+     setActiveStyle(NavigationStore.HistoryPanelId);
      navigationController.navigateToHistoryPanel();
     }
 

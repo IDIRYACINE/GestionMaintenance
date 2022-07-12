@@ -1,4 +1,4 @@
-package idir.embag.Utility.DataConverters;
+package idir.embag.Infrastructure.DataConverters;
 
 public interface IDataConverter {
     

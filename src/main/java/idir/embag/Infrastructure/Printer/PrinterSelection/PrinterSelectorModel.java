@@ -1,10 +1,8 @@
-package idir.embag.Utility.Printer.PrinterSelection;
+package idir.embag.Infrastructure.Printer.PrinterSelection;
 
 import java.io.IOException;
 
-
-
-import idir.embag.Utility.Printer.CustomPrinter;
+import idir.embag.Infrastructure.Printer.CustomPrinter;
 import javafx.fxml.FXMLLoader;
 import javafx.print.PageLayout;
 import javafx.print.PageOrientation;

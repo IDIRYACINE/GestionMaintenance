@@ -1,14 +1,14 @@
-package idir.embag.Utility.Database.Implementations;
+package idir.embag.Infrastructure.Database.Implementations;
 
 import java.sql.SQLException;
 
-import idir.embag.Utility.Database.AttributeWrapper;
-import idir.embag.Utility.Database.IDatabase;
-import idir.embag.Utility.Database.ISessionQuery;
-import idir.embag.Utility.Database.Generics.MDatabase;
-import idir.embag.Utility.Database.Generics.MDatabase.SessionWorkersAttributes;
-import idir.embag.Utility.Database.Generics.MDatabase.SessionsGroupsAttributes;
-import idir.embag.Utility.Database.Generics.MDatabase.SessionsRecordsAttributes;
+import idir.embag.Infrastructure.Database.AttributeWrapper;
+import idir.embag.Infrastructure.Database.IDatabase;
+import idir.embag.Infrastructure.Database.ISessionQuery;
+import idir.embag.Infrastructure.Database.Generics.MDatabase;
+import idir.embag.Infrastructure.Database.Generics.MDatabase.SessionWorkersAttributes;
+import idir.embag.Infrastructure.Database.Generics.MDatabase.SessionsGroupsAttributes;
+import idir.embag.Infrastructure.Database.Generics.MDatabase.SessionsRecordsAttributes;
 
 public class SessionQuery extends ISessionQuery{
 

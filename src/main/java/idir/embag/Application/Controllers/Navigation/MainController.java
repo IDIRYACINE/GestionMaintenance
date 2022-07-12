@@ -3,6 +3,7 @@ package idir.embag.Application.Controllers.Navigation;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import idir.embag.EventStore.Stores.NavigationStore;
 import idir.embag.Ui.Components.NavigationSidebar;
 import idir.embag.Ui.Panels.Generics.INodeView;
 import idir.embag.Ui.Panels.Historique.HistoryPanel;
@@ -39,45 +40,45 @@ public class MainController extends INavigationController implements Initializab
 
     @Override
     public void navigateToSettingsPanel() {
-      Node node = views[INavigationController.SettingsPanelId].getView();
+      Node node = views[NavigationStore.SettingsPanelId].getView();
       rightPanel.getChildren().setAll(node);
       
     }
 
     @Override
     public void navigateToSessionPanel() {
-      Node node = views[INavigationController.SessionPanelId].getView();
+      Node node = views[NavigationStore.SessionPanelId].getView();
       rightPanel.getChildren().setAll(node);
       
     }
 
     @Override
     public void navigateToHistoryPanel() {
-      Node node = views[INavigationController.HistoryPanelId].getView();
+      Node node = views[NavigationStore.HistoryPanelId].getView();
       rightPanel.getChildren().setAll(node);
       
     }
 
     @Override
     public void navigateToWorkersPanel() {
-      Node node = views[INavigationController.WorkersPanelId].getView();
+      Node node = views[NavigationStore.WorkersPanelId].getView();
       rightPanel.getChildren().setAll(node);
       
     }
 
     @Override
     public void navigateToStockPanel() {
-      Node node = views[INavigationController.StockPanelId].getView();
+      Node node = views[NavigationStore.StockPanelId].getView();
       rightPanel.getChildren().setAll(node);
     }
     
     private void loadPanels(){
-      views = new INodeView[INavigationController.PanelCount];
-      views[INavigationController.SettingsPanelId] = new SettingsPanel();
-      views[INavigationController.SessionPanelId] = new SessionPanel();
-      views[INavigationController.HistoryPanelId] = new HistoryPanel();
-      views[INavigationController.WorkersPanelId] = new WorkersPanel();
-      views[INavigationController.StockPanelId] = new StockPanel();
+      views = new INodeView[NavigationStore.PanelCount];
+      views[NavigationStore.SettingsPanelId] = new SettingsPanel();
+      views[NavigationStore.SessionPanelId] = new SessionPanel();
+      views[NavigationStore.HistoryPanelId] = new HistoryPanel();
+      views[NavigationStore.WorkersPanelId] = new WorkersPanel();
+      views[NavigationStore.StockPanelId] = new StockPanel();
 
       for (INodeView view: views) {
         view.loadFxml();

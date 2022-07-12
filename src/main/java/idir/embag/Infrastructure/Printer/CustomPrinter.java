@@ -1,8 +1,8 @@
-package idir.embag.Utility.Printer;
+package idir.embag.Infrastructure.Printer;
 
 
 
-import idir.embag.Utility.Printer.PrinterSelection.PrinterSelectorModel;
+import idir.embag.Infrastructure.Printer.PrinterSelection.PrinterSelectorModel;
 import javafx.print.PageLayout;
 import javafx.print.Printer;
 import javafx.print.PrinterJob;

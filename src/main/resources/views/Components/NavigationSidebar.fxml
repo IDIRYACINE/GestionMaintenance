@@ -7,9 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox fx:id="navigationPanel" alignment="CENTER_LEFT" prefHeight="833.0" prefWidth="260.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" 
-   xmlns:fx="http://javafx.com/fxml/1" >
+<VBox fx:id="navigationPanel" alignment="CENTER_LEFT" prefHeight="833.0" prefWidth="260.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
 <children>
       <HBox fx:id="sessionBox" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="190.0" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#sessionClicked" prefHeight="50.0" spacing="15.0" styleClass="sidebar-options">
          <children>
@@ -28,6 +26,16 @@
          <children>
             <FontAwesomeIconView fx:id="stockIcon" glyphName="CAR" scaleX="3.0" scaleY="3.0" />
             <Label fx:id="stockLabel" text="Stock">
+               <font>
+                  <Font size="35.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <HBox fx:id="workersBox" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="190.0" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#workersClicked" prefHeight="50.0" spacing="15.0" styleClass="sidebar-options">
+         <children>
+            <FontAwesomeIconView fx:id="workersIcon" glyphName="COG" scaleX="3.0" scaleY="3.0" />
+            <Label fx:id="workersLabel" text="Workers">
                <font>
                   <Font size="35.0" />
                </font>

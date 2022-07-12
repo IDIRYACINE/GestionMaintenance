@@ -1,4 +1,4 @@
-package idir.embag.Utility.Database.Implementations;
+package idir.embag.Infrastructure.Database.Implementations;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,8 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
-import idir.embag.Utility.Database.IDatabase;
+import idir.embag.Infrastructure.Database.IDatabase;
 
 public class Database implements IDatabase{
 

@@ -24,7 +24,7 @@ module idir.embag {
     opens idir.embag.Ui.Panels.Stock to javafx.base,javafx.fxml;
     opens idir.embag.Ui.Components to javafx.base,javafx.fxml;
     opens idir.embag.Application.Controllers.Navigation to javafx.base,javafx.fxml;
-    opens idir.embag.Utility.Printer.PrinterSelection to javafx.base,javafx.fxml;
+    opens idir.embag.Infrastructure.Printer.PrinterSelection to javafx.base,javafx.fxml;
     opens idir.embag.Application.Controllers.Settings to javafx.base,javafx.fxml;
 
     exports idir.embag;

@@ -1,12 +1,12 @@
-package idir.embag.Utility.Database.Implementations;
+package idir.embag.Infrastructure.Database.Implementations;
 
 import java.sql.SQLException;
 
-import idir.embag.Utility.Database.AttributeWrapper;
-import idir.embag.Utility.Database.IDatabase;
-import idir.embag.Utility.Database.IWorkerQuery;
-import idir.embag.Utility.Database.Generics.MDatabase;
-import idir.embag.Utility.Database.Generics.MDatabase.WorkersAttributes;
+import idir.embag.Infrastructure.Database.AttributeWrapper;
+import idir.embag.Infrastructure.Database.IDatabase;
+import idir.embag.Infrastructure.Database.IWorkerQuery;
+import idir.embag.Infrastructure.Database.Generics.MDatabase;
+import idir.embag.Infrastructure.Database.Generics.MDatabase.WorkersAttributes;
 
 public class WorkerQuery extends IWorkerQuery{
     private IDatabase database;

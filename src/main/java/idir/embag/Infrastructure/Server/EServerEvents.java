@@ -1,4 +1,4 @@
-package idir.embag.Utility.Server;
+package idir.embag.Infrastructure.Server;
 
 public enum EServerEvents {
     ReceivedRecord,

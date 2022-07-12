@@ -37,7 +37,6 @@ public class StockPanel extends INodeView  implements  Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        
         comboStockType.getItems().addAll(EStockTypes.values());
     }
 

@@ -1,9 +1,9 @@
-package idir.embag.Utility.Database;
+package idir.embag.Infrastructure.Database;
 
 import java.sql.SQLException;
 
-import idir.embag.Utility.Database.Generics.IQuery;
-import idir.embag.Utility.Database.Generics.MDatabase;
+import idir.embag.Infrastructure.Database.Generics.IQuery;
+import idir.embag.Infrastructure.Database.Generics.MDatabase;
 
 public abstract class IProductQuery extends IQuery{
     

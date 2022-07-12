@@ -1,4 +1,4 @@
-package idir.embag.Utility.Database;
+package idir.embag.Infrastructure.Database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

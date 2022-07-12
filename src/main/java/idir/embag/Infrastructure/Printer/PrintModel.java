@@ -1,4 +1,4 @@
-package idir.embag.Utility.Printer;
+package idir.embag.Infrastructure.Printer;
 
 import javafx.scene.layout.Pane;
 

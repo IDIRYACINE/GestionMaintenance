@@ -1,6 +1,6 @@
-package idir.embag.Utility.Database.Generics;
+package idir.embag.Infrastructure.Database.Generics;
 
-import idir.embag.Utility.Database.AttributeWrapper;
+import idir.embag.Infrastructure.Database.AttributeWrapper;
 
 public abstract class IQuery {
     

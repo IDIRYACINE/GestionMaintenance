@@ -1,4 +1,4 @@
-package idir.embag.Utility.Database;
+package idir.embag.Infrastructure.Database;
 
 public class AttributeWrapper<T>{
     private T attributeName;
