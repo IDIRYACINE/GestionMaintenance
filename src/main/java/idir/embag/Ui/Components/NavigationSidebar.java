@@ -41,7 +41,6 @@ public class NavigationSidebar implements Initializable{
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
       icons = new FontAwesomeIconView[INavigationController.PanelCount];
       icons[INavigationController.SessionPanelId] = sessionIcon;
       icons[INavigationController.HistoryPanelId] = historyIcon;

@@ -9,7 +9,7 @@
 
 
 <VBox fx:id="navigationPanel" alignment="CENTER_LEFT" prefHeight="833.0" prefWidth="260.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" 
-   xmlns:fx="http://javafx.com/fxml/1" fx:controller="idir.embag.Ui.Components.NavigationSidebar">
+   xmlns:fx="http://javafx.com/fxml/1" >
 <children>
       <HBox fx:id="sessionBox" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="190.0" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#sessionClicked" prefHeight="50.0" spacing="15.0" styleClass="sidebar-options">
          <children>

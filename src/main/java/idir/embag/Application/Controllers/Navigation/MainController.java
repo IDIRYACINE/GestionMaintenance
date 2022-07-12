@@ -79,22 +79,18 @@ public class MainController extends INavigationController implements Initializab
       views[INavigationController.HistoryPanelId] = new HistoriqueView();
       views[INavigationController.WorkersPanelId] = new WorkersView();
       views[INavigationController.StockPanelId] = new StockView();
+
+      for (INodeView view: views) {
+        view.loadFxml();
+      }
+      
     }
 
     private void loadNavigationPane(){
-
-      FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Components/NavigationSidebar.fxml"));     
-      try {
-        loader.load();
-        Node node = loader.getRoot();
-        NavigationSidebar controller = loader.getController();
-        controller.setup(INavigationController.SettingsPanelId, this);
-        leftPanel.getChildren().setAll(node);
-       
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-     
+     NavigationSidebar navigationSidebar = new NavigationSidebar();
+     navigationSidebar.setNavigationController(this);
+     navigationSidebar.loadFxml();
+     leftPanel.getChildren().setAll(navigationSidebar.getView());
     }
     
 }
