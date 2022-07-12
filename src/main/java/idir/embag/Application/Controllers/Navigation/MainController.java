@@ -35,7 +35,7 @@ public class MainController extends INavigationController implements Initializab
     public void initialize(URL location, ResourceBundle resources) {
       loadPanels();
       loadNavigationPane();
-      navigateToSettingsPanel();
+      navigateToStockPanel();
     }
 
     @Override

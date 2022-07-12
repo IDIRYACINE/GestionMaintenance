@@ -7,23 +7,23 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="685.0" prefWidth="1300.0" spacing="20.0" 
-   xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="idir.embag.Application.Controllers.Workers.WorkersController">
+<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="685.0" prefWidth="1300.0" spacing="20.0" 
+   xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <HBox alignment="TOP_RIGHT" spacing="30.0">
          <padding>
             <Insets left="20.0" right="20.0" top="20.0" />
          </padding>
          <children>
-            <MFXButton text="Ajouter" />
-            <MFXButton text="Modifier" />
-            <MFXButton text="Rechercher" />
-            <MFXButton text="Ajouter au session" />
-            <MFXButton text="Refresher" />
+            <MFXButton fx:id="btnAdd" text="Ajouter" />
+            <MFXButton fx:id="btnEdit" text="Modifier" />
+            <MFXButton fx:id="btnSearch" text="Rechercher" />
+            <MFXButton fx:id="btnAddSessionWorker" text="Ajouter au session" />
+            <MFXButton fx:id="btnRefresh" text="Refresher" />
          </children>
       </HBox>
-      <MFXTableView prefHeight="636.0" prefWidth="1332.0" />
-      <StackPane fx:id="dialogContainer" />
+      <MFXTableView fx:id="tableWorkers" prefHeight="636.0" prefWidth="1332.0" />
+    
 
    </children>
 </VBox>

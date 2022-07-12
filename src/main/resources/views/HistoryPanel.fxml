@@ -7,21 +7,21 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="685.0" prefWidth="1300.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" 
-   xmlns:fx="http://javafx.com/fxml/1" fx:controller="idir.embag.Application.Controllers.HistoriqueController">
+<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="685.0" prefWidth="1300.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" 
+   xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <HBox alignment="TOP_RIGHT" spacing="30.0">
          <padding>
             <Insets left="20.0" right="20.0" top="20.0" />
          </padding>
          <children>
-            <MFXButton text="Rechercher" />
-            <MFXButton text="Refresher" />
-            <MFXButton text="Exporter" />
+            <MFXButton fx:id="btnSearch" text="Rechercher" />
+            <MFXButton fx:id="btnRefresh" text="Refresher" />
+            <MFXButton fx:id="btnExport" text="Exporter" />
          </children>
       </HBox>
-      <MFXTableView prefHeight="636.0" prefWidth="1332.0" />
-      <StackPane fx:id="dialogContainer" />
+      <MFXTableView fx:id="tableSessionRecord" prefHeight="636.0" prefWidth="1332.0" />
+    
 
    </children>
 </VBox>

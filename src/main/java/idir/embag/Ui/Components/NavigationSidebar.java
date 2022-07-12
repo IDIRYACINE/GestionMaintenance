@@ -6,13 +6,16 @@ import java.util.ResourceBundle;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import idir.embag.Application.Controllers.Navigation.INavigationController;
+import idir.embag.Ui.Views.Generics.INodeView;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class NavigationSidebar implements Initializable{
+public class NavigationSidebar implements Initializable,INodeView{
     
     @FXML
     private VBox navigationPanel;
@@ -119,6 +122,27 @@ public class NavigationSidebar implements Initializable{
       activePanelIndex = panelId;
       setActiveStyle(activePanelIndex);
 
+    }
+
+
+    @Override
+    public Node getView() {
+      return navigationPanel;
+    }
+
+
+    @Override
+    public void loadFxml() {
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Components/NavigationSidebar.fxml"));     
+      try {
+    
+        loader.setController(this);
+        loader.load();
+       
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      
     }
 
 

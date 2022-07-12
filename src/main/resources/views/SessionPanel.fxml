@@ -2,34 +2,34 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXTableView?>
-<?import io.github.palexdev.materialfx.controls.legacy.MFXLegacyComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="685.0" prefWidth="1300.0" spacing="20.0" 
-   xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="idir.embag.idir.embag.Application.Controllers.Session.SessionController">
+<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="685.0" prefWidth="1300.0" spacing="20.0" 
+   xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <HBox alignment="CENTER">
          <children>
-            <MFXLegacyComboBox promptText="Session" />
+            
             <HBox alignment="TOP_RIGHT" spacing="30.0">
                <padding>
                   <Insets left="20.0" right="20.0" top="20.0" />
                </padding>
                <children>
-                  <MFXButton text="Manager Worker" />
-                  <MFXButton text="Manager Groups" />
-                  <MFXButton text="Close Session" />
-                  <MFXButton text="Exporter" />
-                  <MFXButton text="Refresher" />
+                  <MFXButton fx:id="btnManageWorkers" text="Manager Worker" />
+                  <MFXButton fx:id="btnManageGroups" text="Manager Groups" />
+                  <MFXButton fx:id="btnCloseSession" text="Close Session" />
+                  <MFXButton fx:id="btnExport" text="Exporter" />
+                  <MFXButton fx:id="btnRefresh" text="Refresher" />
                </children>
             </HBox>
          </children>
       </HBox>
-      <MFXTableView prefHeight="636.0" prefWidth="1332.0" />
-      <StackPane fx:id="dialogContainer" />
+      <MFXTableView fx:id="tableSessionRecord" prefHeight="636.0" prefWidth="1332.0" />
+     
 
    </children>
 </VBox>
