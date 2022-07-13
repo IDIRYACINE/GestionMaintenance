@@ -1,5 +1,6 @@
 package idir.embag.Infrastructure.Database.Implementations;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -19,11 +20,18 @@ public class Database implements IDatabase{
 
     @Override
     public void Connect() {
+        //TODO: Implement this method
+    String AbsolutePath = new File("").getAbsolutePath();
+    File directory = new File("Data");
+    
+    if (! directory.exists()){
+        directory.mkdir();
+    }
+
         try{
-            connection = DriverManager.getConnection("jdbc:sqlite:"+DATABASE_URL);
+            connection = DriverManager.getConnection("jdbc:sqlite:"+AbsolutePath+"/"+DATABASE_URL);
             if (connection != null){
                 connection.getMetaData();
-                //CreateTables();
             }    
         }
         catch(Exception e){
@@ -76,14 +84,11 @@ public class Database implements IDatabase{
 
     @Override
     public void CreateQuery(String query) {
-        PreparedStatement statement;
         try {
-            statement = connection.prepareStatement(query);
-            statement.executeQuery();
+            connection.createStatement().execute(query);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
     }
 
     @Override

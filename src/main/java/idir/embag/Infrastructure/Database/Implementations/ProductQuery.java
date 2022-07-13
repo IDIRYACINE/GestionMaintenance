@@ -18,7 +18,7 @@ public class ProductQuery extends IProductQuery{
     
     private static final MDatabase.Tables STOCK_TABLE_NAME = MDatabase.Tables.Stock;
     private static final MDatabase.Tables INVENTORY_TABLE_NAME = MDatabase.Tables.Inventory;
-    private static final MDatabase.Tables FAMILIES_TABLE_NAME = MDatabase.Tables.FamilliesCode;
+    private static final MDatabase.Tables FAMILIES_TABLE_NAME = MDatabase.Tables.FamilyCodes;
 
     public ProductQuery(IDatabase database) {
         this.database = database;
@@ -31,10 +31,7 @@ public class ProductQuery extends IProductQuery{
     }
 
     @Override
-    public void UnregisterStockProduct(int articleId) throws SQLException {
-        // TODO Auto-generated method stub
-        
-    }
+    public void UnregisterStockProduct(int articleId) throws SQLException {}
 
     @Override
     public void UpdateStockProduct(int articleId, AttributeWrapper<StockAttributes>[] attributes) throws SQLException {
@@ -52,10 +49,7 @@ public class ProductQuery extends IProductQuery{
     }
 
     @Override
-    public void UnregisterInventoryProduct(int articleId) throws SQLException {
-        // TODO Auto-generated method stub
-        
-    }
+    public void UnregisterInventoryProduct(int articleId) throws SQLException {}
 
     @Override
     public void UpdateInventoryProduct(int articleId, AttributeWrapper<InventoryAttributes>[] attributes)
@@ -84,14 +78,11 @@ public class ProductQuery extends IProductQuery{
     }
 
     @Override
-    public void UnregisterFamilyCode(int familyId) throws SQLException {
-        // TODO Auto-generated method stub
-        
-    }
+    public void UnregisterFamilyCode(int familyId) throws SQLException {}
 
     @Override
     public void CreateFamiLCodeTable() throws SQLException {
-        String query = "CREATE TABLE [IF NOT EXISTS] "+FAMILIES_TABLE_NAME+"("+
+        String query = "CREATE TABLE "+FAMILIES_TABLE_NAME+"("+
                 MDatabase.FamilliesCodeAttributes.FamilyCode+" INTEGER PRIMARY KEY,"+
                 MDatabase.FamilliesCodeAttributes.FamilyName+" TEXT)";
 
@@ -100,20 +91,20 @@ public class ProductQuery extends IProductQuery{
 
     @Override
     public void CreateInventoryTable() throws SQLException {
-        String query = "CREATE TABLE [IF NOT EXISTS] "+INVENTORY_TABLE_NAME+"("
+        String query = "CREATE TABLE "+INVENTORY_TABLE_NAME+"("
                 + MDatabase.InventoryAttributes.ArticleId +" INTEGER PRIMARY KEY,\n"
                 + MDatabase.InventoryAttributes.ArticleName +" TEXT,\n"
                 + MDatabase.InventoryAttributes.StockId +" INTEGER,\n"
                 + MDatabase.InventoryAttributes.FamilyCode +" INTEGER,\n"
-                + MDatabase.InventoryAttributes.Price +" REAL)\n"
+                + MDatabase.InventoryAttributes.Price +" REAL,\n"
 
                 + "FOREIGN KEY ("+ MDatabase.InventoryAttributes.FamilyCode +")\n"
                 + "REFERENCES "+ FAMILIES_TABLE_NAME +"(" +MDatabase.FamilliesCodeAttributes.FamilyCode +")\n"  
-                + "ON DELETE CASCADE ON UPDATE NO ACTION\n"
+                + "ON DELETE CASCADE ON UPDATE NO ACTION,\n"
 
                 + "FOREIGN KEY ("+ MDatabase.InventoryAttributes.StockId +")\n"
                 + "REFERENCES "+ STOCK_TABLE_NAME +"(" +MDatabase.StockAttributes.ArticleId +")\n"  
-                + "ON DELETE CASCADE ON UPDATE NO ACTION";
+                + "ON DELETE CASCADE ON UPDATE NO ACTION)";
                 
         database.CreateQuery(query);
     }
@@ -121,15 +112,15 @@ public class ProductQuery extends IProductQuery{
     @Override
     public void CreateStockTable() throws SQLException {
 
-        String query = "CREATE TABLE [IF NOT EXISTS] "+ STOCK_TABLE_NAME +" (\n"
+        String query = "CREATE TABLE "+ STOCK_TABLE_NAME +" (\n"
            + MDatabase.StockAttributes.ArticleId + " INTEGER PRIMARY KEY,\n"
            + MDatabase.StockAttributes.ArticleName + " TEXT,\n"
            + MDatabase.StockAttributes.Price + " REAL,\n"
            + MDatabase.StockAttributes.Quantity + " INTEGER,\n"
-           + MDatabase.StockAttributes.FamilyCode + " INTEGER)\n"
+           + MDatabase.StockAttributes.FamilyCode + " INTEGER,\n"
            + "FOREIGN KEY ("+ MDatabase.StockAttributes.FamilyCode +")\n"
            + "REFERENCES "+ FAMILIES_TABLE_NAME +"(" +MDatabase.FamilliesCodeAttributes.FamilyCode +")\n"  
-           + "ON DELETE CASCADE ON UPDATE NO ACTION";
+           + "ON DELETE CASCADE ON UPDATE NO ACTION)";
 
         database.CreateQuery(query);
         

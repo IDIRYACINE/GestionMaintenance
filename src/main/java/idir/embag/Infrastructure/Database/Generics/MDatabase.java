@@ -8,7 +8,7 @@ public static enum Tables{
     Inventory,
     Workers,
     SessionsGroups,
-    FamilliesCode,
+    FamilyCodes,
     SessionsRecords,
     CodeBars,
     SessionWorkers,

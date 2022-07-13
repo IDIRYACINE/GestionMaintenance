@@ -19,10 +19,11 @@ public class DatabaseInitialiser {
     
 
     public DatabaseInitialiser() {
-        database = new Database("dATABASE_URL");
+        database = new Database("Data/TestDatabase.db");
         productQuery = new ProductQuery(database);
         sessionQuery = new SessionQuery(database);
         workerQuery = new WorkerQuery(database);
+        database.Connect();
     }
 
     public IProductQuery getProductQuery() {
@@ -33,6 +34,31 @@ public class DatabaseInitialiser {
     }
     public IWorkerQuery getWorkerQuery() {
         return workerQuery;
+    }
+
+    public void createTables(){
+        try{
+        productQuery.CreateFamiLCodeTable();
+        productQuery.CreateStockTable();
+        productQuery.CreateInventoryTable();
+
+        workerQuery.CreateWorkerTable();
+
+        sessionQuery.CreateSessionTable();
+        sessionQuery.CreateSessionGroupTable();
+        sessionQuery.CreateSessionWorkersTabel();
+        sessionQuery.CreateSessionRecordTable();
+
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public void connect(){
+        database.Connect();
     }
 
     

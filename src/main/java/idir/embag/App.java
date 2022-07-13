@@ -30,10 +30,8 @@ public class App extends Application {
     public void start(Stage stage) throws IOException{
 
         INavigationController navigationController = new MainController();
-
-        servicesCenter = ServicesCenter.getInstance();
-        storesCenter = StoreCenter.getInstance(servicesCenter,navigationController);
-        
+        setup(navigationController);
+       
         FXMLLoader loader = new FXMLLoader();
         loader.setController(navigationController);
         loader.load(getClass().getResourceAsStream("/views/Main.fxml"));
@@ -50,6 +48,13 @@ public class App extends Application {
         launch(args);
     }
 
+    private void setup(INavigationController navigationController){
+
+        servicesCenter = ServicesCenter.getInstance();
+        servicesCenter.getDatabaseInitialiser().createTables();
+        storesCenter = StoreCenter.getInstance(servicesCenter,navigationController);
+        
+    }
    
 
 }
