@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+
+
+<HBox fx:id="root" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="attrbLabel" prefWidth="100.0" text="Label" />
+      <MFXTextField fx:id="attrbValue" prefWidth="200.0" />
+   </children>
+</HBox>

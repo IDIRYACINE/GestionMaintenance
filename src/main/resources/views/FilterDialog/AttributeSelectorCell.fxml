@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXCheckbox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+
+
+<HBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="200.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="attrbLabel" text="Label" />
+      <MFXCheckbox fx:id="attrbCheckBox" />
+   </children>
+</HBox>

@@ -3,11 +3,11 @@ package idir.embag.Infrastructure.Database;
 public class AttributeWrapper<T>{
     private T attributeName;
 
-    private Object value;
+    private String value;
 
     public AttributeWrapper(T attributeName, Object value) {
         this.attributeName = attributeName;
-        this.value = value;
+        setValue(value);
     }
 
     public T getAttributeName() {
@@ -23,7 +23,11 @@ public class AttributeWrapper<T>{
     }
 
     public void setValue(Object value) {
-        this.value = value;
+        if(!(value instanceof String)){
+            this.value = value.toString();
+            return;
+        }
+        this.value = (String) value;
     }
     
 }
