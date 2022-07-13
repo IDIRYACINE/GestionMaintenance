@@ -1,20 +1,20 @@
 package idir.embag.Infrastructure.Database.Implementations;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import idir.embag.Infrastructure.Database.IDatabase;
 import idir.embag.Infrastructure.Database.IWorkerQuery;
 import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Infrastructure.Database.Generics.MDatabase;
 import idir.embag.Infrastructure.Database.Generics.MDatabase.WorkersAttributes;
+import idir.embag.Infrastructure.Database.Generics.SearchWrapper;
 
 public class WorkerQuery extends IWorkerQuery{
     private IDatabase database;
     
 
     private static final MDatabase.Tables WORKERS_TABLE_NAME = MDatabase.Tables.Workers;
-    
-
     
     public WorkerQuery(IDatabase database) {
         this.database = database;
@@ -23,10 +23,7 @@ public class WorkerQuery extends IWorkerQuery{
 
 
     @Override
-    public void UnregisterWorker() throws SQLException {
-        // TODO Auto-generated method stub
-        
-    }
+    public void UnregisterWorker() throws SQLException {}
 
     @Override
     public void RegisterWorker(AttributeWrapper<WorkersAttributes>[] attributes) throws SQLException {
@@ -45,8 +42,22 @@ public class WorkerQuery extends IWorkerQuery{
 
     @Override
     public void CreateWorkerTable() throws SQLException {
+        String query = "CREATE TABLE [IF NOT EXISTS] "+ WORKERS_TABLE_NAME +" (\n"
+           + MDatabase.WorkersAttributes.WorkerId+" INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+           + MDatabase.WorkersAttributes.Name+" TEXT,\n"
+           + MDatabase.WorkersAttributes.Email+" TEXT,\n"
+           + MDatabase.WorkersAttributes.Phone+" INTEGER)\n";
+           
+        database.CreateQuery(query);
+            
+    }
+
+
+
+    @Override
+    public List<Object> SearchWorker(SearchWrapper parametrers) throws SQLException {
         // TODO Auto-generated method stub
-        
+        return null;
     }
 
 }

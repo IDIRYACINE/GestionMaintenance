@@ -11,7 +11,6 @@ import idir.embag.Ui.Panels.Session.SessionPanel;
 import idir.embag.Ui.Panels.Settings.SettingsPanel;
 import idir.embag.Ui.Panels.Stock.StockPanel;
 import idir.embag.Ui.Panels.Workers.WorkersPanel;
-import io.github.palexdev.materialfx.dialogs.MFXDialogs;
 import io.github.palexdev.materialfx.dialogs.MFXGenericDialogBuilder;
 import io.github.palexdev.materialfx.dialogs.MFXStageDialog;
 import javafx.fxml.FXML;

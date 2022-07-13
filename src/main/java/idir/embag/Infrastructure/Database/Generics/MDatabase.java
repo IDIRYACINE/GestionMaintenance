@@ -20,13 +20,17 @@ public static enum StockAttributes {
     ArticleName,
     Price,
     Quantity,
+    FamilyCode,
 }
 
 public static enum InventoryAttributes{
     ArticleId,
+    ArticleCode,
     ArticleName,
     StockId,
     Price,
+    FamilyCode,
+
    
 }
 

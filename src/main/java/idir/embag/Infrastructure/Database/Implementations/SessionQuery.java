@@ -51,10 +51,7 @@ public class SessionQuery extends ISessionQuery{
     }
 
     @Override
-    public void UnregisterSessionGroup(int groupId) throws SQLException {
-        // TODO Auto-generated method stub
-        
-    }
+    public void UnregisterSessionGroup(int groupId) throws SQLException {}
 
     @Override
     public void UpdateSessionGroup(int groupId, AttributeWrapper<SessionsGroupsAttributes>[] attributes)
@@ -75,10 +72,7 @@ public class SessionQuery extends ISessionQuery{
     }
 
     @Override
-    public void UnregisterGroupWorker(int workerId) throws SQLException {
-        // TODO Auto-generated method stub
-        
-    }
+    public void UnregisterGroupWorker(int workerId) throws SQLException {}
 
     @Override
     public void RegisterSessionRecord(AttributeWrapper<SessionsRecordsAttributes>[] attributes) throws SQLException {
@@ -89,25 +83,84 @@ public class SessionQuery extends ISessionQuery{
 
     @Override
     public void CreateSessionTable() throws SQLException {
-        // TODO Auto-generated method stub
+        String query = "CREATE TABLE [IF NOT EXISTS] "+ SESSION_TABLE_NAME +" (\n"
+            + MDatabase.SessionsAttributes.SessionId+" INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+            + MDatabase.SessionsAttributes.StartDate+" DATE,\n"
+            + MDatabase.SessionsAttributes.EndDate+" DATE,\n"
+            + MDatabase.SessionsAttributes.PriceShiftValue+" REAL,\n"
+            + MDatabase.SessionsAttributes.QuantityShiftValue+" REAL)\n";
+           
+           
+        database.CreateQuery(query);
         
     }
 
     @Override
     public void CreateSessionGroupTable() throws SQLException {
-        // TODO Auto-generated method stub
+        String query = "CREATE TABLE [IF NOT EXISTS] "+ GROUPS_TABLE_NAME +" (\n"
+            + MDatabase.SessionsGroupsAttributes.Id+" INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+            + MDatabase.SessionsGroupsAttributes.SessionId+" INTEGER,\n"
+            + MDatabase.SessionsGroupsAttributes.Name+" TEXT)\n"
+           
+            + "FOREIGN KEY ("+ MDatabase.SessionsRecordsAttributes.SessionId +")\n"
+            + "REFERENCES "+ SESSION_TABLE_NAME +"(" +MDatabase.SessionsAttributes.SessionId +")\n"  
+            + "ON DELETE CASCADE ON UPDATE NO ACTION \n";
+           
+        database.CreateQuery(query);
         
     }
 
     @Override
     public void CreateSessionRecordTable() throws SQLException {
-        // TODO Auto-generated method stub
-        
+        String query = "CREATE TABLE [IF NOT EXISTS] "+ RECORDS_TABLE_NAME +" (\n"
+            + MDatabase.SessionsRecordsAttributes.RecordId + " INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+            + MDatabase.SessionsRecordsAttributes.SessionId + " INTEGER,\n"
+            + MDatabase.SessionsRecordsAttributes.WorkerId + " INTEGER,\n"
+            + MDatabase.SessionsRecordsAttributes.GroupId + " INTEGER,\n"
+            + MDatabase.SessionsRecordsAttributes.InventoryId + " INTEGER,\n"
+            + MDatabase.SessionsRecordsAttributes.RecordDate + " DATE,\n"
+            + MDatabase.SessionsRecordsAttributes.PriceShift + " REAL,\n"
+            + MDatabase.SessionsRecordsAttributes.QuantityShift + " INTEGER,\n"
+            + MDatabase.SessionsRecordsAttributes.RecordQuantity + " INTEGER,\n"
+            + MDatabase.SessionsRecordsAttributes.StockQuantity + " INTEGER,\n"
+            + MDatabase.SessionsRecordsAttributes.StockPrice + " REAL\n"
+
+            + "FOREIGN KEY ("+ MDatabase.SessionsRecordsAttributes.SessionId +")\n"
+            + "REFERENCES "+ SESSION_TABLE_NAME +"(" +MDatabase.SessionsAttributes.SessionId +")\n"  
+            + "ON DELETE CASCADE ON UPDATE NO ACTION \n"
+
+            + "FOREIGN KEY ("+ MDatabase.SessionsRecordsAttributes.WorkerId +")\n"
+            + "REFERENCES "+ MDatabase.Tables.Workers +"(" +MDatabase.WorkersAttributes.WorkerId +")\n"  
+            + "ON DELETE CASCADE ON UPDATE NO ACTION \n"
+
+            + "FOREIGN KEY ("+ MDatabase.SessionsRecordsAttributes.GroupId +")\n"
+            + "REFERENCES "+ GROUPS_TABLE_NAME +"(" +MDatabase.SessionsGroupsAttributes.Id +")\n"  
+            + "ON DELETE CASCADE ON UPDATE NO ACTION \n"
+            
+            + "FOREIGN KEY ("+ MDatabase.SessionsRecordsAttributes.InventoryId +")\n"
+            + "REFERENCES "+ MDatabase.Tables.Inventory +"(" +MDatabase.InventoryAttributes.ArticleId +")\n"  
+            + "ON DELETE CASCADE ON UPDATE NO ACTION \n";
+           
+        database.CreateQuery(query);
     }
 
     @Override
     public void CreateSessionWorkersTabel() throws SQLException {
-        // TODO Auto-generated method stub
+        String query = "CREATE TABLE [IF NOT EXISTS] "+ SESSION_WORKERS_TABLE_NAME +" (\n"
+            + MDatabase.SessionWorkersAttributes.Id + " INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+            + MDatabase.SessionWorkersAttributes.GroupId + " INTEGER,\n"
+            + MDatabase.SessionWorkersAttributes.WorkerId + " INTEGER)\n"
+        
+            + "FOREIGN KEY ("+ MDatabase.SessionsRecordsAttributes.WorkerId +")\n"
+            + "REFERENCES "+ MDatabase.Tables.Workers +"(" +MDatabase.WorkersAttributes.WorkerId +")\n"  
+            + "ON DELETE CASCADE ON UPDATE NO ACTION \n"
+
+            + "FOREIGN KEY ("+ MDatabase.SessionsRecordsAttributes.GroupId +")\n"
+            + "REFERENCES "+ GROUPS_TABLE_NAME +"(" +MDatabase.SessionsGroupsAttributes.Id +")\n"  
+            + "ON DELETE CASCADE ON UPDATE NO ACTION \n";
+            
+           
+        database.CreateQuery(query);
         
     }
 

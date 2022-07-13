@@ -91,19 +91,47 @@ public class ProductQuery extends IProductQuery{
 
     @Override
     public void CreateFamiLCodeTable() throws SQLException {
-        // TODO Auto-generated method stub
-        
+        String query = "CREATE TABLE [IF NOT EXISTS] "+FAMILIES_TABLE_NAME+"("+
+                MDatabase.FamilliesCodeAttributes.FamilyCode+" INTEGER PRIMARY KEY,"+
+                MDatabase.FamilliesCodeAttributes.FamilyName+" TEXT)";
+
+        database.CreateQuery(query);        
     }
 
     @Override
     public void CreateInventoryTable() throws SQLException {
-        // TODO Auto-generated method stub
-        
+        String query = "CREATE TABLE [IF NOT EXISTS] "+INVENTORY_TABLE_NAME+"("
+                + MDatabase.InventoryAttributes.ArticleId +" INTEGER PRIMARY KEY,\n"
+                + MDatabase.InventoryAttributes.ArticleName +" TEXT,\n"
+                + MDatabase.InventoryAttributes.StockId +" INTEGER,\n"
+                + MDatabase.InventoryAttributes.FamilyCode +" INTEGER,\n"
+                + MDatabase.InventoryAttributes.Price +" REAL)\n"
+
+                + "FOREIGN KEY ("+ MDatabase.InventoryAttributes.FamilyCode +")\n"
+                + "REFERENCES "+ FAMILIES_TABLE_NAME +"(" +MDatabase.FamilliesCodeAttributes.FamilyCode +")\n"  
+                + "ON DELETE CASCADE ON UPDATE NO ACTION\n"
+
+                + "FOREIGN KEY ("+ MDatabase.InventoryAttributes.StockId +")\n"
+                + "REFERENCES "+ STOCK_TABLE_NAME +"(" +MDatabase.StockAttributes.ArticleId +")\n"  
+                + "ON DELETE CASCADE ON UPDATE NO ACTION";
+                
+        database.CreateQuery(query);
     }
 
     @Override
     public void CreateStockTable() throws SQLException {
-        // TODO Auto-generated method stub
+
+        String query = "CREATE TABLE [IF NOT EXISTS] "+ STOCK_TABLE_NAME +" (\n"
+           + MDatabase.StockAttributes.ArticleId + " INTEGER PRIMARY KEY,\n"
+           + MDatabase.StockAttributes.ArticleName + " TEXT,\n"
+           + MDatabase.StockAttributes.Price + " REAL,\n"
+           + MDatabase.StockAttributes.Quantity + " INTEGER,\n"
+           + MDatabase.StockAttributes.FamilyCode + " INTEGER)\n"
+           + "FOREIGN KEY ("+ MDatabase.StockAttributes.FamilyCode +")\n"
+           + "REFERENCES "+ FAMILIES_TABLE_NAME +"(" +MDatabase.FamilliesCodeAttributes.FamilyCode +")\n"  
+           + "ON DELETE CASCADE ON UPDATE NO ACTION";
+
+        database.CreateQuery(query);
         
     }
 
