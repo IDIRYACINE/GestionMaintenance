@@ -6,27 +6,16 @@ import java.util.List;
 import idir.embag.EventStore.Stores.Generics.IDataDelegate;
 import idir.embag.Infrastructure.Database.AttributeWrapper;
 import idir.embag.Infrastructure.Database.IProductQuery;
-import idir.embag.Infrastructure.Database.Generics.MDatabase.StockAttributes;
+import idir.embag.Infrastructure.Database.Generics.MDatabase;
 
 @SuppressWarnings("unchecked")
-public class StockModel implements IDataDelegate{
-    IProductQuery productQuery;
-    
+public class FamilyModel implements IDataDelegate{
+    private IProductQuery productQuery;
+
     @Override
     public void add(Object data) {
         try {
-            productQuery.RegisterStockProduct((AttributeWrapper<StockAttributes>[]) data);
-        } catch (SQLException e) {
-        
-            e.printStackTrace();
-        }
-        
-    }
-
-    @Override
-    public void remove(int id) {
-        try {
-            productQuery.UnregisterStockProduct(id);
+            productQuery.RegisterFamilyCode((AttributeWrapper<MDatabase.FamilliesCodeAttributes>[])data);
         } catch (SQLException e) {
            
             e.printStackTrace();
@@ -35,11 +24,20 @@ public class StockModel implements IDataDelegate{
     }
 
     @Override
+    public void remove(int id) {
+       try {
+        productQuery.UnregisterFamilyCode(id);
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+        
+    }
+
+    @Override
     public void update(int id, Object data) {
         try {
-            productQuery.UpdateStockProduct(id, (AttributeWrapper<StockAttributes>[]) data);
+            productQuery.UpdateFamilyCode(id, (AttributeWrapper<MDatabase.FamilliesCodeAttributes>[])data);
         } catch (SQLException e) {
-            
             e.printStackTrace();
         }
         
@@ -49,12 +47,12 @@ public class StockModel implements IDataDelegate{
     public List<Object> search(Object data) {
         List<Object> result = null;
         try {
-            result = productQuery.SearchStockProduct((AttributeWrapper<StockAttributes>[]) data);
+            result = productQuery.SearchFamilyCode((AttributeWrapper<MDatabase.FamilliesCodeAttributes>[])data);
         } catch (SQLException e) {
-           
             e.printStackTrace();
         }
         
         return result;
     }
+    
 }

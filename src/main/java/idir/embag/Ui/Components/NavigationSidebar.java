@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import idir.embag.Application.Controllers.Navigation.INavigationController;
-import idir.embag.EventStore.Stores.NavigationStore;
+import idir.embag.EventStore.Stores.Implementation.NavigationStore;
 import idir.embag.Ui.Panels.Generics.INodeView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

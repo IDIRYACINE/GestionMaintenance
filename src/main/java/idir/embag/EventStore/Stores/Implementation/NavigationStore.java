@@ -1,4 +1,4 @@
-package idir.embag.EventStore.Stores;
+package idir.embag.EventStore.Stores.Implementation;
 
 import idir.embag.Application.Controllers.Navigation.INavigationController;
 
