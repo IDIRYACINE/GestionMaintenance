@@ -27,6 +27,7 @@ module idir.embag {
     opens idir.embag.Infrastructure.Printer.PrinterSelection to javafx.base,javafx.fxml;
     opens idir.embag.Application.Controllers.Settings to javafx.base,javafx.fxml;
     opens idir.embag.Ui.Components.FilterDialog to  javafx.base,javafx.fxml;
+    opens idir.embag.Ui.Components.MangerDialog to  javafx.base,javafx.fxml;
 
     exports idir.embag;
 }

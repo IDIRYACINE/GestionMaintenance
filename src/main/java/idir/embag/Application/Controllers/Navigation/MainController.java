@@ -3,7 +3,7 @@ package idir.embag.Application.Controllers.Navigation;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import idir.embag.EventStore.Stores.NavigationStore;
+import idir.embag.EventStore.Stores.Implementation.NavigationStore;
 import idir.embag.Ui.Components.NavigationSidebar;
 import idir.embag.Ui.Panels.Generics.INodeView;
 import idir.embag.Ui.Panels.Historique.HistoryPanel;

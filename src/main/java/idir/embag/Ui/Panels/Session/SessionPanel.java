@@ -7,8 +7,8 @@ import java.util.ResourceBundle;
 
 import idir.embag.DataModels.Products.EProductAttributes;
 import idir.embag.DataModels.Workers.SessionRecord;
-import idir.embag.DataModels.Workers.Worker;
-import idir.embag.Ui.Components.FilterDialog;
+import idir.embag.Ui.Components.FilterDialog.FilterDialog;
+import idir.embag.Ui.Components.MangerDialog.WorkersManagerDialog;
 import idir.embag.Ui.Panels.Generics.INodeView;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTableView;
@@ -45,14 +45,14 @@ public class SessionPanel extends INodeView implements Initializable {
     @FXML
     private void manageWorkers(){
        
-        List<EProductAttributes> workers =  new ArrayList<EProductAttributes>();
-        workers.add(EProductAttributes.ArticleCode);
-        FilterDialog<EProductAttributes> fDialog = new FilterDialog<EProductAttributes>(workers);
+      
+        WorkersManagerDialog fDialog = new WorkersManagerDialog();
         fDialog.loadFxml();
         
         
         MFXStageDialog dialog = MFXGenericDialogBuilder.build()
         .setContent(fDialog.getView())
+        .setShowAlwaysOnTop(true)
         .toStageDialogBuilder()
         .get();
 

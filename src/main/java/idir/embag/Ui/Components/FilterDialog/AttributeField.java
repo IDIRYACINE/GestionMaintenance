@@ -3,7 +3,7 @@ package idir.embag.Ui.Components.FilterDialog;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import idir.embag.Infrastructure.Database.AttributeWrapper;
+import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

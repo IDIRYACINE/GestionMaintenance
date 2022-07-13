@@ -9,8 +9,8 @@
    <children>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
          <children>
-            <MFXButton fx:id="btnCancel" onAction="#onCancel" text="Remove" />
-            <MFXButton fx:id="btnConfirm" alignment="CENTER" onAction="#onConfirm" text="Update" />
+            <MFXButton fx:id="btnRemove" onAction="#onRemove" text="Remove" />
+            <MFXButton fx:id="btnUpdate" alignment="CENTER" onAction="#onUpdate" text="Update" />
          </children>
       </HBox>
       <MFXTableView fx:id="tableSessionWorkers" footerVisible="false" prefHeight="346.0" prefWidth="725.0" />
