@@ -1,17 +1,12 @@
 package idir.embag.Application.Controllers.Navigation;
 
-public abstract class INavigationController {
+import javafx.scene.Node;
+
+public interface INavigationController {
 
     
-    public abstract void navigateToSettingsPanel();
-
-    public abstract void navigateToSessionPanel();
-
-    public abstract void navigateToHistoryPanel();
-
-    public abstract void navigateToWorkersPanel();
-
-    public abstract void navigateToStockPanel();
-
+    public void navigateToPanel(int panelId);
+    
+    public void displayPopup(Node node);
     
 }

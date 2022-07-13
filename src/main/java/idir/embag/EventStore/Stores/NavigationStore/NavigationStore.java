@@ -1,6 +1,9 @@
-package idir.embag.EventStore.Stores.Implementation;
+package idir.embag.EventStore.Stores.NavigationStore;
 
 import idir.embag.Application.Controllers.Navigation.INavigationController;
+import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEventAction;
+import idir.embag.EventStore.Stores.Generics.StoreEvent.StoreEvent;
+import javafx.scene.Node;
 
 public class NavigationStore {
 
@@ -17,24 +20,13 @@ public class NavigationStore {
         this.navigationController = navigationController;
     }
 
-    public void navigateToSettingsPanel(){
-        navigationController.navigateToSettingsPanel();
-    }
-
-    public void navigateToSessionPanel(){
-        navigationController.navigateToSessionPanel();
-    }
-
-    public void navigateToHistoryPanel(){
-        navigationController.navigateToHistoryPanel();
-    }
-
-    public void navigateToWorkersPanel(){
-        navigationController.navigateToWorkersPanel();
-    }
-
-    public void navigateToStockPanel(){
-        navigationController.navigateToStockPanel();
+    public void dispatch(StoreEvent event) {
+        if(event.getAction() == EStoreEventAction.Navigation){
+            navigationController.navigateToPanel(((int)event.getData()));
+        }
+        else{
+            navigationController.displayPopup((Node)event.getData());
+        }
     }
 
     

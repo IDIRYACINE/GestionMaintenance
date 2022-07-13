@@ -4,11 +4,9 @@
 <?import io.github.palexdev.materialfx.controls.MFXTableView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="685.0" prefWidth="1300.0" spacing="20.0" 
-   xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" >
+<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="685.0" prefWidth="1300.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox alignment="TOP_RIGHT" spacing="30.0">
          <padding>
@@ -22,7 +20,7 @@
             <MFXButton fx:id="btnRefresh" text="Refresher" />
          </children>
       </HBox>
-      <MFXTableView fx:id="tableWorkers" prefHeight="636.0" prefWidth="1332.0" />
+      <MFXTableView fx:id="tableWorkers" footerVisible="false" prefHeight="636.0" prefWidth="1332.0" />
     
 
    </children>

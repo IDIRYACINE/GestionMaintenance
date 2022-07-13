@@ -6,7 +6,13 @@ import java.util.ResourceBundle;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import idir.embag.Application.Controllers.Navigation.INavigationController;
-import idir.embag.EventStore.Stores.Implementation.NavigationStore;
+import idir.embag.EventStore.Stores.Generics.StoreDispatch.EStores;
+import idir.embag.EventStore.Stores.Generics.StoreDispatch.StoreDispatch;
+import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEventAction;
+import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEvents;
+import idir.embag.EventStore.Stores.Generics.StoreEvent.StoreEvent;
+import idir.embag.EventStore.Stores.NavigationStore.NavigationStore;
+import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Ui.Panels.Generics.INodeView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -35,10 +41,7 @@ public class NavigationSidebar extends INodeView  implements Initializable{
     private HBox[] boxes;
     private FontAwesomeIconView[] icons;
 
-    private INavigationController navigationController;
-    
     public NavigationSidebar(INavigationController navigationController) {
-      this.navigationController = navigationController;
       fxmlPath = "/views/Components/NavigationSidebar.fxml";
     }
 
@@ -71,31 +74,31 @@ public class NavigationSidebar extends INodeView  implements Initializable{
     @FXML
     private void settingsClicked() throws IOException{
       setActiveStyle(NavigationStore.SettingsPanelId);
-      navigationController.navigateToSettingsPanel();
+      dispatchNavigationEvent(NavigationStore.SettingsPanelId);
     }
     
     @FXML
     private void sessionClicked() throws IOException{
       setActiveStyle(NavigationStore.SessionPanelId);
-      navigationController.navigateToSessionPanel();
+      dispatchNavigationEvent(NavigationStore.SessionPanelId);
     }
     @FXML
     private void workersClicked( ) throws IOException{
      setActiveStyle(NavigationStore.WorkersPanelId);
-     navigationController.navigateToWorkersPanel();
+     dispatchNavigationEvent(NavigationStore.WorkersPanelId);
     }
     
     @FXML
     private void stockClicked()throws IOException{
      setActiveStyle(NavigationStore.StockPanelId);
-     navigationController.navigateToStockPanel();
+     dispatchNavigationEvent(NavigationStore.StockPanelId);
     }
 
 
     @FXML
     private void historyClicked()throws IOException{
      setActiveStyle(NavigationStore.HistoryPanelId);
-     navigationController.navigateToHistoryPanel();
+     dispatchNavigationEvent(NavigationStore.HistoryPanelId);
     }
 
     private void setActiveStyle(int index){
@@ -124,6 +127,17 @@ public class NavigationSidebar extends INodeView  implements Initializable{
       activePanelIndex = panelId;
       setActiveStyle(activePanelIndex);
 
+    }
+
+    private void dispatchNavigationEvent(int panelId){
+      StoreEvent event = new StoreEvent(
+        EStoreEvents.NavigationEvent,
+        EStoreEventAction.Navigation,
+        panelId);
+
+      StoreDispatch dispatch = new StoreDispatch(EStores.NavigationStore,event);
+
+      StoreCenter.getInstance().dispatch(dispatch);
     }
 
 

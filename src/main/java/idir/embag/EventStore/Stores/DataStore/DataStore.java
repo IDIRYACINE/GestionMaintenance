@@ -1,14 +1,12 @@
-package idir.embag.EventStore.Stores.Implementation;
+package idir.embag.EventStore.Stores.DataStore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import idir.embag.EventStore.Stores.IDataStore;
-import idir.embag.EventStore.Stores.Generics.EStoreEvents;
-import idir.embag.EventStore.Stores.Generics.IDataDelegate;
 import idir.embag.EventStore.Stores.Generics.IEventSubscriber;
-import idir.embag.EventStore.Stores.Generics.StoreEvent;
+import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEvents;
+import idir.embag.EventStore.Stores.Generics.StoreEvent.StoreEvent;
 
 public class DataStore implements IDataStore {
     
@@ -69,6 +67,12 @@ public class DataStore implements IDataStore {
         for(EStoreEvents event : EStoreEvents.values()) {
               subscribers.put(event, new ArrayList<IEventSubscriber>());
         }
+        
+    }
+
+    @Override
+    public void dispatch(StoreEvent event) {
+        // TODO Auto-generated method stub
         
     }
     

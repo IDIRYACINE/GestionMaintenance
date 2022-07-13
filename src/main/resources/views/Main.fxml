@@ -9,8 +9,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<HBox fx:id="rootPanel" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" 
-fx:controller="idir.embag.Application.Controllers.Navigation.MainController">
+<HBox fx:id="rootPanel" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <VBox fx:id="leftPanel" alignment="CENTER_LEFT" prefHeight="833.0" prefWidth="260.0" spacing="20.0"/>
       <StackPane fx:id="rightPanel" prefHeight="833.0" prefWidth="972.0" />

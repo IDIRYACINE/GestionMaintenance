@@ -1,4 +1,4 @@
-package idir.embag.EventStore.Stores.Generics;
+package idir.embag.EventStore.Stores.DataStore;
 
 import java.util.List;
 

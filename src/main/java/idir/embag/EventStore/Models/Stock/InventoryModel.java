@@ -3,7 +3,7 @@ package idir.embag.EventStore.Models.Stock;
 import java.sql.SQLException;
 import java.util.List;
 
-import idir.embag.EventStore.Stores.Generics.IDataDelegate;
+import idir.embag.EventStore.Stores.DataStore.IDataDelegate;
 import idir.embag.Infrastructure.Database.IProductQuery;
 import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Infrastructure.Database.Generics.SearchWrapper;

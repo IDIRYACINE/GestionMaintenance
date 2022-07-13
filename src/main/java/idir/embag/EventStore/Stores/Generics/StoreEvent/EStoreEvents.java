@@ -1,4 +1,4 @@
-package idir.embag.EventStore.Stores.Generics;
+package idir.embag.EventStore.Stores.Generics.StoreEvent;
 
 public enum EStoreEvents {
     SessionWorkerEvent,
@@ -9,4 +9,5 @@ public enum EStoreEvents {
     InventoryEvent,
     WorkersEvent,
     SessionEvent,
+    NavigationEvent
 }

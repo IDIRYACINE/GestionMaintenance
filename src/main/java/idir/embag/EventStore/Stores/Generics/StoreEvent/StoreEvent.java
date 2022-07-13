@@ -1,4 +1,5 @@
-package idir.embag.EventStore.Stores.Generics;
+package idir.embag.EventStore.Stores.Generics.StoreEvent;
+
 
 public class StoreEvent {
     private EStoreEvents event;

@@ -2,7 +2,7 @@ package idir.embag.EventStore.Models.Session;
 
 import java.util.List;
 
-import idir.embag.EventStore.Stores.Generics.IDataDelegate;
+import idir.embag.EventStore.Stores.DataStore.IDataDelegate;
 
 public class SessionModel implements IDataDelegate{
 
