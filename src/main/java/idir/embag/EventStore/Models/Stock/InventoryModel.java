@@ -4,14 +4,22 @@ import java.sql.SQLException;
 import java.util.List;
 
 import idir.embag.EventStore.Stores.Generics.IDataDelegate;
-import idir.embag.Infrastructure.Database.AttributeWrapper;
 import idir.embag.Infrastructure.Database.IProductQuery;
+import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
+import idir.embag.Infrastructure.Database.Generics.SearchWrapper;
 import idir.embag.Infrastructure.Database.Generics.MDatabase.InventoryAttributes;
 
 @SuppressWarnings("unchecked")
 public class InventoryModel  implements IDataDelegate {
+
     IProductQuery productQuery;
+
     
+    
+    public InventoryModel(IProductQuery productQuery) {
+        this.productQuery = productQuery;
+    }
+
     public void add(Object data) {
         try {
             productQuery.RegisterInventoryProduct((AttributeWrapper<InventoryAttributes>[]) data);
@@ -41,7 +49,7 @@ public class InventoryModel  implements IDataDelegate {
 
        List<Object> result = null;
        try {
-        result = productQuery.SearchInventoryProduct((AttributeWrapper<InventoryAttributes>[]) data);
+        result = productQuery.SearchInventoryProduct((SearchWrapper) data);
         } catch (SQLException e) {
         e.printStackTrace();
         }

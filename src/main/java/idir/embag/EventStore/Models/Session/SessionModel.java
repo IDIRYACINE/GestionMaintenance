@@ -1,65 +1,27 @@
 package idir.embag.EventStore.Models.Session;
 
-import idir.embag.DataModels.Session.SessionGroup;
-import idir.embag.DataModels.Workers.ESessionWorker;
-import idir.embag.DataModels.Workers.SessionRecord;
-import idir.embag.DataModels.Workers.SessionWorker;
-import idir.embag.DataModels.Workers.Worker;
+import java.util.List;
 
-public class SessionModel implements ISessionModel{
+import idir.embag.EventStore.Stores.Generics.IDataDelegate;
+
+public class SessionModel implements IDataDelegate{
 
     @Override
-    public boolean doesSessionExists() {
-        // TODO Auto-generated method stub
-        return false;
+    public void add(Object data) {
     }
 
     @Override
-    public void createSession() {
-        // TODO Auto-generated method stub
-        
+    public void remove(int id) {
     }
 
     @Override
-    public void closeSession() {
-        // TODO Auto-generated method stub
-        
+    public void update(int id, Object data) {
     }
 
     @Override
-    public void refreshSession() {
-        // TODO Auto-generated method stub
-        
+    public List<Object> search(Object data) {
+        return null;
     }
 
-    @Override
-    public void createWorkersGroup(SessionGroup group) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void addWorkerToGroup(Worker worker) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void removeWorkerFromGroup(SessionWorker worker) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void updateWorker(SessionWorker worker, ESessionWorker[] updatedFields, String[] updatedValues) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void receiveSessionRecord(SessionRecord record) {
-        // TODO Auto-generated method stub
-        
-    }
     
 }

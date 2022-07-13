@@ -1,60 +1,74 @@
 package idir.embag.EventStore.Stores.Implementation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import idir.embag.EventStore.Stores.IDataStore;
 import idir.embag.EventStore.Stores.Generics.EStoreEvents;
+import idir.embag.EventStore.Stores.Generics.IDataDelegate;
 import idir.embag.EventStore.Stores.Generics.IEventSubscriber;
 import idir.embag.EventStore.Stores.Generics.StoreEvent;
 
 public class DataStore implements IDataStore {
     
-    private ArrayList<IEventSubscriber> sessionSubscribers;
-    private ArrayList<IEventSubscriber> workersSubscribers;
-    private ArrayList<IEventSubscriber> inventorySubscriber;
-    private ArrayList<IEventSubscriber> stockSubscribers;
-    private ArrayList<IEventSubscriber> historySubscribers;
+    private Map<EStoreEvents,IDataDelegate> dataDelegates = new HashMap<>();
+    private Map<EStoreEvents,ArrayList<IEventSubscriber>> subscribers = new HashMap<>();
+    
+    public DataStore(IDataDelegate stockDelegate, IDataDelegate inventoryDelegate, IDataDelegate historyDelegate,
+            IDataDelegate familyDelegate) {
 
+      
+       dataDelegates.put(EStoreEvents.StockEvent, stockDelegate);
+       dataDelegates.put(EStoreEvents.InventoryEvent, inventoryDelegate);
+       dataDelegates.put(EStoreEvents.HistoryEvent, historyDelegate);
+       dataDelegates.put(EStoreEvents.SessionWorkerEvent, familyDelegate);
 
+       setupSubscribers();
+       
+    }
 
     @Override
     public void add(StoreEvent event) {
-        // TODO Auto-generated method stub
-        
+        IDataDelegate dataDelegate = dataDelegates.get(event.getEvent());
+        dataDelegate.add(event.getData());
     }
 
     @Override
     public void remove(StoreEvent event) {
-        // TODO Auto-generated method stub
+        IDataDelegate dataDelegate = dataDelegates.get(event.getEvent());
+        dataDelegate.remove((int)event.getData());
         
     }
 
     @Override
     public void update(StoreEvent event) {
-        // TODO Auto-generated method stub
-        
+        IDataDelegate dataDelegate = dataDelegates.get(event.getEvent());
+        dataDelegate.update((int)event.getData(), event.getData());
     }
 
     @Override
     public void get(StoreEvent event) {
-        // TODO Auto-generated method stub
+        IDataDelegate dataDelegate = dataDelegates.get(event.getEvent());
+        dataDelegate.search(event.getData());
         
     }
 
     @Override
     public void subscribe(IEventSubscriber subscriber, EStoreEvents store) {
-        // TODO Auto-generated method stub
-        
+        subscribers.get(store).add(subscriber);   
     }
 
     @Override
     public void unsubscribe(IEventSubscriber subscriber, EStoreEvents store) {
-        // TODO Auto-generated method stub
-        
+        subscribers.get(store).remove(subscriber);
     }
 
+    private void setupSubscribers() {
 
-    private void notifySubscribers(EStoreEvents event,Object data){
+        for(EStoreEvents event : EStoreEvents.values()) {
+              subscribers.put(event, new ArrayList<IEventSubscriber>());
+        }
         
     }
     

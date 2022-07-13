@@ -1,7 +1,5 @@
 package idir.embag.Infrastructure.Database.Generics;
 
-import idir.embag.Infrastructure.Database.AttributeWrapper;
-
 public abstract class IQuery {
     
     protected <T> String InsertWrapperToQuery(AttributeWrapper<T>[] attrs){

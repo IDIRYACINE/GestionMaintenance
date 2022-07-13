@@ -4,14 +4,20 @@ import java.sql.SQLException;
 import java.util.List;
 
 import idir.embag.EventStore.Stores.Generics.IDataDelegate;
-import idir.embag.Infrastructure.Database.AttributeWrapper;
 import idir.embag.Infrastructure.Database.IProductQuery;
+import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
+import idir.embag.Infrastructure.Database.Generics.SearchWrapper;
 import idir.embag.Infrastructure.Database.Generics.MDatabase.StockAttributes;
 
 @SuppressWarnings("unchecked")
 public class StockModel implements IDataDelegate{
+
     IProductQuery productQuery;
-    
+
+    public StockModel(IProductQuery productQuery) {
+        this.productQuery = productQuery;
+    }
+
     @Override
     public void add(Object data) {
         try {
@@ -49,7 +55,7 @@ public class StockModel implements IDataDelegate{
     public List<Object> search(Object data) {
         List<Object> result = null;
         try {
-            result = productQuery.SearchStockProduct((AttributeWrapper<StockAttributes>[]) data);
+            result = productQuery.SearchStockProduct((SearchWrapper) data);
         } catch (SQLException e) {
            
             e.printStackTrace();

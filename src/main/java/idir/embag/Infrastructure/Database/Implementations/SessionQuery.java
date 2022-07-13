@@ -1,14 +1,16 @@
 package idir.embag.Infrastructure.Database.Implementations;
 
 import java.sql.SQLException;
+import java.util.List;
 
-import idir.embag.Infrastructure.Database.AttributeWrapper;
 import idir.embag.Infrastructure.Database.IDatabase;
 import idir.embag.Infrastructure.Database.ISessionQuery;
+import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Infrastructure.Database.Generics.MDatabase;
 import idir.embag.Infrastructure.Database.Generics.MDatabase.SessionWorkersAttributes;
 import idir.embag.Infrastructure.Database.Generics.MDatabase.SessionsGroupsAttributes;
 import idir.embag.Infrastructure.Database.Generics.MDatabase.SessionsRecordsAttributes;
+import idir.embag.Infrastructure.Database.Generics.SearchWrapper;
 
 public class SessionQuery extends ISessionQuery{
 
@@ -107,6 +109,27 @@ public class SessionQuery extends ISessionQuery{
     public void CreateSessionWorkersTabel() throws SQLException {
         // TODO Auto-generated method stub
         
+    }
+
+
+    @Override
+    public List<Object> SearchSessionGroup(SearchWrapper parametrers) throws SQLException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    public List<Object> SearchSessionWorker(SearchWrapper parametrers) throws SQLException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    public List<Object> SearchSessionRecord(SearchWrapper parametrers) throws SQLException {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 

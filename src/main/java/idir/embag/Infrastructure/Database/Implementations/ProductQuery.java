@@ -3,13 +3,14 @@ package idir.embag.Infrastructure.Database.Implementations;
 import java.sql.SQLException;
 import java.util.List;
 
-import idir.embag.Infrastructure.Database.AttributeWrapper;
 import idir.embag.Infrastructure.Database.IDatabase;
 import idir.embag.Infrastructure.Database.IProductQuery;
+import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Infrastructure.Database.Generics.MDatabase;
 import idir.embag.Infrastructure.Database.Generics.MDatabase.FamilliesCodeAttributes;
 import idir.embag.Infrastructure.Database.Generics.MDatabase.InventoryAttributes;
 import idir.embag.Infrastructure.Database.Generics.MDatabase.StockAttributes;
+import idir.embag.Infrastructure.Database.Generics.SearchWrapper;
 
 public class ProductQuery extends IProductQuery{
     
@@ -107,22 +108,23 @@ public class ProductQuery extends IProductQuery{
     }
 
     @Override
-    public List<Object> SearchInventoryProduct(AttributeWrapper<InventoryAttributes>[] data) throws SQLException {
+    public List<Object> SearchStockProduct(SearchWrapper parametrers) throws SQLException {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public List<Object> SearchStockProduct(AttributeWrapper<StockAttributes>[] data) throws SQLException {
+    public List<Object> SearchInventoryProduct(SearchWrapper parametrers) throws SQLException {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public List<Object> SearchFamilyCode(AttributeWrapper<FamilliesCodeAttributes>[] data) {
+    public List<Object> SearchFamilyCode(SearchWrapper parametrers) throws SQLException {
         // TODO Auto-generated method stub
         return null;
     }
+
 
 
 }

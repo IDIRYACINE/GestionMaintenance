@@ -4,13 +4,19 @@ import java.sql.SQLException;
 import java.util.List;
 
 import idir.embag.EventStore.Stores.Generics.IDataDelegate;
-import idir.embag.Infrastructure.Database.AttributeWrapper;
 import idir.embag.Infrastructure.Database.IProductQuery;
+import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Infrastructure.Database.Generics.MDatabase;
+import idir.embag.Infrastructure.Database.Generics.SearchWrapper;
 
 @SuppressWarnings("unchecked")
 public class FamilyModel implements IDataDelegate{
+
     private IProductQuery productQuery;
+
+    public FamilyModel(IProductQuery productQuery) {
+        this.productQuery = productQuery;
+    }
 
     @Override
     public void add(Object data) {
@@ -47,7 +53,7 @@ public class FamilyModel implements IDataDelegate{
     public List<Object> search(Object data) {
         List<Object> result = null;
         try {
-            result = productQuery.SearchFamilyCode((AttributeWrapper<MDatabase.FamilliesCodeAttributes>[])data);
+            result = productQuery.SearchFamilyCode((SearchWrapper) data);
         } catch (SQLException e) {
             e.printStackTrace();
         }

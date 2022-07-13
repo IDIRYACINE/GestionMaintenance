@@ -2,6 +2,7 @@ package idir.embag.Infrastructure.Database;
 
 import java.sql.SQLException;
 
+import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Infrastructure.Database.Generics.IQuery;
 import idir.embag.Infrastructure.Database.Generics.MDatabase.WorkersAttributes;
 
