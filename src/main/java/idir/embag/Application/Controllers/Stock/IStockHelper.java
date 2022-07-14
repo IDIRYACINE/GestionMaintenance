@@ -1,6 +1,7 @@
 package idir.embag.Application.Controllers.Stock;
 
 import idir.embag.DataModels.Products.IProduct;
+import idir.embag.EventStore.Stores.Generics.StoreEvent.StoreEvent;
 
 public interface IStockHelper {
 
@@ -13,5 +14,9 @@ public interface IStockHelper {
     void refresh();
 
     void search();
+
+    void notifyEvent(StoreEvent event);
+
+    void notifySelected();
     
 }

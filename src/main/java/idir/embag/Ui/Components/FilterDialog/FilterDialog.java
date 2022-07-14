@@ -3,9 +3,7 @@ package idir.embag.Ui.Components.FilterDialog;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
-
 import idir.embag.Ui.Panels.Generics.INodeView;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXListView;
@@ -30,7 +28,7 @@ public class FilterDialog<T> extends INodeView implements Initializable{
     @FXML
     private MFXListView<HBox> listViewSelectedAttrb;
 
-    private List<T> attributes;
+    private T[] attributes;
 
     private ArrayList<AttributeField<T>> attributesFieldControllers;
     private ArrayList<HBox> selectedAttributesNodes;
@@ -38,9 +36,9 @@ public class FilterDialog<T> extends INodeView implements Initializable{
     private ArrayList<AttributeSelector<T>> attributeSelectorControllers;
     private ArrayList<HBox> attributeSelectorNodes;
 
-    public FilterDialog(List<T> attributes) {
+    public FilterDialog() {
         fxmlPath = "/views/FilterDialog/FilterDialog.fxml";
-        this.attributes = attributes;
+        
     }
 
    
@@ -65,10 +63,10 @@ public class FilterDialog<T> extends INodeView implements Initializable{
     private void setupSelectedAttributes(){
         AttributeField<T> controller ;
 
-        for(int i = 0 ; i < attributes.size();i++){
+        for(int i = 0 ; i < attributes.length;i++){
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/FilterDialog/AttributeWrapperCell.fxml"));    
-                controller = new AttributeField<T>(attributes.get(i));
+                controller = new AttributeField<T>(attributes[i]);
                 attributesFieldControllers.add(controller);
                 loader.setController(controller);
                 selectedAttributesNodes.add(loader.load());
@@ -85,9 +83,9 @@ public class FilterDialog<T> extends INodeView implements Initializable{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/ManagerDialog/AttributeRow.fxml"));     
         AttributeSelector<T> controller ;
 
-        for(int i = 0 ; i < attributes.size();i++){
+        for(int i = 0 ; i < attributes.length;i++){
             try {
-                controller = new AttributeSelector<T>(attributes.get(i));
+                controller = new AttributeSelector<T>(attributes[i]);
                 attributeSelectorControllers.add(controller);
                 loader.setController(controller);
                 attributeSelectorNodes.add(loader.load());
@@ -106,6 +104,10 @@ public class FilterDialog<T> extends INodeView implements Initializable{
 
         attributeSelectorControllers = new ArrayList<AttributeSelector<T>>();
         attributeSelectorNodes = new ArrayList<>();
+    }
+
+    public void setAttributes(T[] attributes){
+        this.attributes = attributes;
     }
     
 }

@@ -9,5 +9,6 @@ public enum EStoreEvents {
     InventoryEvent,
     WorkersEvent,
     SessionEvent,
-    NavigationEvent
+    NavigationEvent,
+    SubscribtionEvent,
 }

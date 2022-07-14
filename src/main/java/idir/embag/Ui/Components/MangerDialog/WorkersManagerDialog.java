@@ -51,7 +51,7 @@ public class WorkersManagerDialog extends INodeView implements Initializable{
            columns.add(new MFXTableColumn<ESessionWorker>(rawColumns[i].toString()));
         }
 
-        tableSessionWorkers.getTableColumns().addAll(columns);
+        tableSessionWorkers.getTableColumns().setAll(columns);
     }
 
     @FXML

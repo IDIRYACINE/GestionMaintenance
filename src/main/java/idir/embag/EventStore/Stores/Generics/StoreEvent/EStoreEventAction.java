@@ -10,4 +10,5 @@ public enum EStoreEventAction {
     Dialog,
     Subscribe,
     Unsubscribe,
+    Refresh,
 }
