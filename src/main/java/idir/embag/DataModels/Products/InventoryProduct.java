@@ -31,5 +31,11 @@ public class InventoryProduct implements IProduct{
         // TODO Auto-generated method stub
         return 0;
     }
+
+    @Override
+    public int getArticleId() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
     
 }

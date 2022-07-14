@@ -63,11 +63,11 @@ public class FilterDialog<T> extends INodeView implements Initializable{
     private void onCancel(){}
 
     private void setupSelectedAttributes(){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/FilterDialog/AttributeWrapperCell.fxml"));     
         AttributeField<T> controller ;
 
         for(int i = 0 ; i < attributes.size();i++){
             try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/FilterDialog/AttributeWrapperCell.fxml"));    
                 controller = new AttributeField<T>(attributes.get(i));
                 attributesFieldControllers.add(controller);
                 loader.setController(controller);
@@ -82,7 +82,7 @@ public class FilterDialog<T> extends INodeView implements Initializable{
     }
 
     private void setupAttributesSelector(){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/FilterDialog/AttributeSelectorCell.fxml"));     
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/ManagerDialog/AttributeRow.fxml"));     
         AttributeSelector<T> controller ;
 
         for(int i = 0 ; i < attributes.size();i++){

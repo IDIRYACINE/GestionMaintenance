@@ -8,18 +8,14 @@ import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
 
 public class AttributeField<T> implements Initializable {
 
-    @FXML
-    private HBox root;
-    
     @FXML 
-    private Label attrbLabel;
+    private Label attributeLabel;
 
     @FXML 
-    private MFXTextField attrbValue;
+    private MFXTextField attributeField;
 
     private AttributeWrapper<T> attributeWrapper;
 
@@ -30,14 +26,14 @@ public class AttributeField<T> implements Initializable {
 
 
     public AttributeWrapper<T> getAttributeWrapper(){
-        attributeWrapper.setValue(attrbValue.getText());
+        attributeWrapper.setValue(attributeField.getText());
         return attributeWrapper;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        attrbValue.setText(attributeWrapper.getValue().toString());
-        attrbLabel.setText(attributeWrapper.getAttributeName().toString());
+        attributeField.setText(attributeWrapper.getValue().toString());
+        attributeLabel.setText(attributeWrapper.getAttributeName().toString());
     }
 
 

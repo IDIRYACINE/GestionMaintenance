@@ -1,7 +1,8 @@
-package idir.embag.DataModels.Products;
+package idir.embag.DataModels.Metadata;
 
 public enum EProductAttributes {
-    ArticleCode,
+    ArticleId,
+    ArticleName,
     FamilyCode,
     CodeBar,
     Quantity,
