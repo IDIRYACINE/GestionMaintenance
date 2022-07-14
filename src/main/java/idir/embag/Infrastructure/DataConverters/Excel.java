@@ -1,34 +1,33 @@
 package idir.embag.Infrastructure.DataConverters;
 
-import org.apache.poi.ss.usermodel.Sheet;
-
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import javafx.stage.FileChooser;
-import javafx.stage.Window;
 
-public class Excel {
+public class Excel implements IDataConverter {
+
     private Workbook workbook ;
-    private Sheet sheet ;
-    
-    public Excel(){
-        setUpWorkSheet("Liste des Check");
-        Row  header = sheet.createRow(0);
-        CellStyle headerStyle = setUpHeaderStyle();
-        setUpHeaderCells(header, headerStyle);
-    }
 
+    private Sheet sheet ;
+
+    private String title;
+
+    private String[] columns;
+
+    private Object[] data;
 
     private void setUpWorkSheet(String title){
         workbook = new XSSFWorkbook();
@@ -39,10 +38,10 @@ public class Excel {
 
     private void setUpHeaderCells(Row headerRow , CellStyle headerStyle){
         Cell headCell ;
-        String[] titles = {"Date","Numero Check" , "Receveur" ,"Location" , "Montant" ,"Status" };
-        for (int i = 0 ; i < titles.length ; i++){
+
+        for (int i = 0 ; i < columns.length ; i++){
             headCell = headerRow.createCell(i);
-            headCell.setCellValue(titles[i]);
+            headCell.setCellValue(columns[i]);
             headCell.setCellStyle(headerStyle);
         }
     }
@@ -61,42 +60,106 @@ public class Excel {
         return headerStyle ;
     }
 
-    public <T> void setUpCellsData(ArrayList<T> data){
+    @Override
+    public <T> void setData(T[] data){
+        this.data = data ;
+    }
+
+    private void populateRowsWithData(){
         CellStyle style = workbook.createCellStyle();
         style.setWrapText(true);
-        Object[] rawData  = new Object[data.size()];
+        Object[] rawData  = new Object[data.length];
 
-        for(int i = 0 ; i < data.size() ; i++){
+        for(int i = 0 ; i < data.length ; i++){
             Row row = sheet.createRow(i+1);
 
             for (int j = 0 ; j < rawData.length ; j++){
-            // {"Date","Numero Check" , "Receveur" ,"Location" , "Montant" ,"Status" }
                 Cell cell = row.createCell(j);
                 cell.setCellValue((double) rawData[j]);
                 cell.setCellStyle(style);
                 
+            }
         }
     }
+
+    @Override
+    public void exportData(String outputPath) {
+        
+        populateRowsWithData();
+
+        File file = new File(outputPath);
+                    
+        try (FileOutputStream content = new FileOutputStream(file)) {
+            workbook.write(content);
+            content.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+               
+        
     }
 
-    public void saveSheet(Window window  ){
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Excel files (*.xlsx)", "*.xslx");
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(extFilter);
 
-        
-        File file = fileChooser.showSaveDialog(window);
+    @Override
+    public void importData(String sourcePath) {
+        try
+        {
+            FileInputStream file = new FileInputStream(new File(sourcePath));
  
-            if (file != null) {
-                try {
-                    
-                    FileOutputStream content = new FileOutputStream(file);
-                    workbook.write(content);
-                    content.close();
-                } 
-                catch (IOException ex) {
+            XSSFWorkbook workbook = new XSSFWorkbook(file);
+ 
+            XSSFSheet sheet = workbook.getSheetAt(0);
+ 
+            Iterator<Row> rowIterator = sheet.iterator();
+
+            while (rowIterator.hasNext()) 
+            {
+                Row row = rowIterator.next();
+                Iterator<Cell> cellIterator = row.cellIterator();
+                 
+                while (cellIterator.hasNext()) 
+                {
+                    Cell cell = cellIterator.next();
+                    //TODO: do something with the cell
                 }
+                //TODO: do something with the row
             }
+            
+            workbook.close();
+            file.close();
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+        }
+        
+    }
+
+
+    @Override
+    public void setTitle(String title) {
+       this.title = title ;
+    }
+
+
+    @Override
+    public <T> void setColumns(T[] columns) {
+        String[] columnsNames = new String[columns.length];
+
+        for (int i = 0 ; i < columns.length ; i++){
+            columnsNames[i] = columns[i].toString();
+        }
+
+        this.columns = columnsNames;
+    }
+
+
+    @Override
+    public void setupNewPage() {
+        setUpWorkSheet(title);
+        Row  header = sheet.createRow(0);
+        CellStyle headerStyle = setUpHeaderStyle();
+        setUpHeaderCells(header, headerStyle);
     }
 
 

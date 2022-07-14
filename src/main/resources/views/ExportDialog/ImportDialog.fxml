@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="20.0" 
+   xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER_LEFT" spacing="50.0">
+         <children>
+            <VBox spacing="20.0">
+               <children>
+                  <VBox>
+                     <children>
+                        <Label text="Start Row" />
+                        <MFXTextField fx:id="fieldRowStart" />
+                     </children>
+                  </VBox>
+                  <VBox>
+                     <children>
+                        <Label text="Start Column" />
+                        <MFXTextField fx:id="fieldColStart" />
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+            <VBox spacing="20.0">
+               <children>
+                  <VBox>
+                     <children>
+                        <Label text="End Row" />
+                        <MFXTextField fx:id="fieldRowEnd"/>
+                     </children>
+                  </VBox>
+                  <VBox>
+                     <children>
+                        <Label text="End Column" />
+                        <MFXTextField fx:id="fieldColEnd"/>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" spacing="65.0">
+         <children>
+            <Label text="Selecte File" />
+            <MFXButton prefWidth="90.0" fx:id="btnSelectFile" onAction="#SelectFile" text="Select" />
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" spacing="50.0">
+         <children>
+            <MFXButton fx:id="btnCancel" onAction="#Cancel"  prefWidth="90.0" text="Cancel" />
+            <MFXButton fx:id="btnImport" onAction="#Import" prefWidth="90.0" text="Confirm" />
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+</VBox>

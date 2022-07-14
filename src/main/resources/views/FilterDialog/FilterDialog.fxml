@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXTableView?>
+<?import io.github.palexdev.materialfx.controls.MFXListView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox fx:id="root" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="482.0" prefWidth="742.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+      <HBox alignment="CENTER">
          <children>
-            <MFXButton fx:id="btnCancel" onAction="#onCancel" text="Remove" />
-            <MFXButton fx:id="btnConfirm" alignment="CENTER" onAction="#onConfirm" text="Update" />
+            <MFXListView fx:id="listViewSelectedAttrb" prefHeight="350.0" prefWidth="363.0" />
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="50.0" />
+            <MFXListView fx:id="listViewAttrb" prefHeight="350.0" prefWidth="263.0" />
          </children>
       </HBox>
-      <MFXTableView fx:id="tableSessionWorkers" footerVisible="false" prefHeight="346.0" prefWidth="725.0" />
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+         <children>
+            <MFXButton fx:id="btnCancel" onAction="#onCancel" text="Anuler" />
+            <MFXButton fx:id="btnConfirm" alignment="CENTER" onAction="#onConfirm" text="Confirm" />
+         </children>
+      </HBox>
    </children>
 </VBox>
