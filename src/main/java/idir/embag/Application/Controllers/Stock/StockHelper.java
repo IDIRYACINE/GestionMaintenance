@@ -1,6 +1,9 @@
 package idir.embag.Application.Controllers.Stock;
 
 import java.util.Comparator;
+import java.util.List;
+import java.util.function.Consumer;
+
 import idir.embag.DataModels.Metadata.EProductAttributes;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.EventStore.Stores.Generics.StoreDispatch.EStores;
@@ -9,12 +12,15 @@ import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.EventStore.Stores.Generics.StoreEvent.StoreEvent;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
+import idir.embag.Ui.Components.IDialogContent;
+import idir.embag.Ui.Components.ConfirmationDialog.ConfirmationDialog;
+import idir.embag.Ui.Components.FilterDialog.FilterDialog;
 import idir.embag.Ui.Components.MangerDialog.ManagerDialog;
+import idir.embag.Ui.Constants.Messages;
 import idir.embag.Ui.Constants.Names;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
-import javafx.scene.Node;
 
 @SuppressWarnings("unchecked")
 public class StockHelper implements IStockHelper{
@@ -27,65 +33,53 @@ public class StockHelper implements IStockHelper{
 
     @Override
     public void update(IProduct product) {
-        
-        
+        IDialogContent dialogContent =  buildUpdateDialog();
+        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
+        StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
+        StoreCenter.getInstance().dispatch(action);
     }
 
     @Override
     public void remove(int id) {
-        
-        
+        IDialogContent dialogContent =  buildRemoveDialog(id);
+        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
+        StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
+        StoreCenter.getInstance().dispatch(action);
     }
 
     @Override
     public void add() {
-
-        Node dialogContent =  buildAddDialog();
-
+        IDialogContent dialogContent =  buildAddDialog();
         StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
-
         StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
-
         StoreCenter.getInstance().dispatch(action);
-        
     }
 
     @Override
-    public void refresh() {
-        
-        
+    public void refresh() { 
+        //TODO: implement
     }
 
     @Override
     public void search() {
-        
+        IDialogContent dialogContent =  buildSearchDialog();
+        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
+        StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
+        StoreCenter.getInstance().dispatch(action);
     }
 
-    private Node buildAddDialog(){
-        ManagerDialog<EProductAttributes> dialog = new ManagerDialog<>();
-
-        EProductAttributes attributes[] = 
-        {EProductAttributes.ArticleId, EProductAttributes.ArticleName, EProductAttributes.Price, EProductAttributes.Quantity};
-
-        dialog.setAttributes(attributes);
-
-        dialog.loadFxml();
-
-        return dialog.getView();
-
-    }
 
     @Override
     public void notifyEvent(StoreEvent event) {
 
        switch(event.getAction()){
-        case Add: addTableProduct();
+        case Add: addTableElement((IProduct)event.getData());
             break;
-        case Remove: removeTableProduct();
+        case Remove: removeTableElement((int)event.getData());
             break;  
-        case Update: updateTableProduct();
+        case Update: updateTableElement();
             break;
-        case Search: setTableProducts();
+        case Search: setTableProducts((List<IProduct>)event.getData());
             break;          
           default:
                break;
@@ -93,13 +87,21 @@ public class StockHelper implements IStockHelper{
         
     }
 
-    private void addTableProduct(){}
+    private void addTableElement(IProduct product) {
+        tableStock.getItems().add(product);
+    }
 
-    private void removeTableProduct(){}
+    private void removeTableElement(int index){
+        tableStock.getItems().remove(index);
+    }
 
-    private void updateTableProduct(){}
+    private void updateTableElement(){
+        //TODO : implement
+    }
 
-    private void setTableProducts(){}
+    private void setTableProducts(List<IProduct> product){
+        tableStock.getItems().setAll(product);
+    }
 
     private void setColumns(){
        
@@ -127,6 +129,104 @@ public class StockHelper implements IStockHelper{
     public void notifySelected() {
         tableStock.getItems().clear();
         setColumns();
+    }
+
+    private IDialogContent buildAddDialog(){
+        ManagerDialog dialog = new ManagerDialog();
+
+        EProductAttributes rawAttributes[] = 
+        {EProductAttributes.ArticleId, EProductAttributes.ArticleName, EProductAttributes.Price, EProductAttributes.Quantity};
+
+        String[] attributes = EnumAttributesToString(rawAttributes);
+
+
+        dialog.setAttributes(attributes);
+
+        dialog.setOnConfirm(new Consumer<Object>(){
+            @Override
+            public void accept(Object data) {
+                StoreEvent event = new StoreEvent(EStoreEvents.StockEvent, EStoreEventAction.Add,data);
+                StoreDispatch action = new StoreDispatch(EStores.DataStore, event);
+                StoreCenter.getInstance().dispatch(action);
+            }
+        });
+
+        dialog.loadFxml();
+        return dialog;
+    }
+
+    private IDialogContent buildUpdateDialog(){
+        ManagerDialog dialog = new ManagerDialog();
+
+        EProductAttributes rawAttributes[] = 
+        {EProductAttributes.ArticleId, EProductAttributes.ArticleName, EProductAttributes.Price, EProductAttributes.Quantity};
+
+        String[] attributes = EnumAttributesToString(rawAttributes);
+
+        dialog.setOnConfirm(new Consumer<Object>(){
+            @Override
+            public void accept(Object data) {
+                StoreEvent event = new StoreEvent(EStoreEvents.StockEvent, EStoreEventAction.Update,data);
+                StoreDispatch action = new StoreDispatch(EStores.DataStore, event);
+                StoreCenter.getInstance().dispatch(action);
+            }
+        });
+
+        dialog.setAttributes(attributes);
+        dialog.loadFxml();
+        return dialog;
+
+    }
+
+    private IDialogContent buildRemoveDialog(int id){
+        ConfirmationDialog dialog = new ConfirmationDialog();
+
+        dialog.setOnConfirm(new Consumer<Object>(){
+            @Override
+            public void accept(Object data) {
+                StoreEvent event = new StoreEvent(EStoreEvents.StockEvent, EStoreEventAction.Remove,id);
+                StoreDispatch action = new StoreDispatch(EStores.DataStore, event);
+                StoreCenter.getInstance().dispatch(action);
+            }
+        });
+
+        dialog.setMessage(Messages.deleteElement);
+        
+        dialog.loadFxml();
+        return dialog;
+
+    }
+
+
+    private IDialogContent buildSearchDialog(){
+        FilterDialog dialog = new FilterDialog();
+
+        EProductAttributes rawAttributes[] = 
+        {EProductAttributes.ArticleId, EProductAttributes.ArticleName, EProductAttributes.Price, EProductAttributes.Quantity};
+
+        String[] attributes = EnumAttributesToString(rawAttributes);
+
+        dialog.setOnConfirm(new Consumer<Object>(){
+            @Override
+            public void accept(Object data) {
+                StoreEvent event = new StoreEvent(EStoreEvents.StockEvent, EStoreEventAction.Search,data);
+                StoreDispatch action = new StoreDispatch(EStores.DataStore, event);
+                StoreCenter.getInstance().dispatch(action);
+            }
+        });
+
+        dialog.setAttributes(attributes);
+        dialog.loadFxml();
+        return dialog;
+
+    }
+
+    private String[] EnumAttributesToString(EProductAttributes[] attributes){
+        String[] result = new String[attributes.length];
+        for (int i = 0 ; i < attributes.length ;i++){
+            result[i] = attributes[i].toString();
+        }
+        return result;
     }
     
 }

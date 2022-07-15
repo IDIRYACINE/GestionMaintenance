@@ -1,6 +1,7 @@
 package idir.embag.Application.Controllers.Stock;
 
 import java.util.Comparator;
+import java.util.List;
 
 import idir.embag.DataModels.Metadata.EFamilyCodeAttributes;
 import idir.embag.DataModels.Products.IProduct;
@@ -10,12 +11,12 @@ import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.EventStore.Stores.Generics.StoreEvent.StoreEvent;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
+import idir.embag.Ui.Components.IDialogContent;
 import idir.embag.Ui.Components.FilterDialog.FilterDialog;
 import idir.embag.Ui.Components.MangerDialog.ManagerDialog;
 import idir.embag.Ui.Constants.Names;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
-import javafx.scene.Node;
 
 @SuppressWarnings("unchecked")
 public class FamilyCodesHelper implements IStockHelper{
@@ -28,7 +29,7 @@ public class FamilyCodesHelper implements IStockHelper{
 
     @Override
     public void update(IProduct product) {
-        Node dialogContent =  buildUpdateDialog();
+        IDialogContent dialogContent =  buildUpdateDialog();
 
         StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
 
@@ -41,7 +42,7 @@ public class FamilyCodesHelper implements IStockHelper{
     @Override
     public void remove(int id) {
 
-        Node dialogContent =  buildRemoveDialog();
+        IDialogContent dialogContent =  buildRemoveDialog();
 
         StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
 
@@ -54,7 +55,7 @@ public class FamilyCodesHelper implements IStockHelper{
     @Override
     public void add() {
       
-        Node dialogContent =  buildAddDialog();
+        IDialogContent dialogContent =  buildAddDialog();
 
         StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
 
@@ -72,7 +73,7 @@ public class FamilyCodesHelper implements IStockHelper{
 
     @Override
     public void search() {
-        Node dialogContent =  buildSearchDialog();
+        IDialogContent dialogContent =  buildSearchDialog();
 
         StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
 
@@ -85,14 +86,15 @@ public class FamilyCodesHelper implements IStockHelper{
 
     @Override
     public void notifyEvent(StoreEvent event) {
+
         switch(event.getAction()){
-            case Add: addTableElement();
+            case Add: addTableElement((IProduct)event.getData());
                 break;
-            case Remove: removeTableElement();
+            case Remove: removeTableElement((int)event.getData());
                 break;  
             case Update: updateTableElement();
                 break;
-            case Search: setTableElements();
+            case Search: setTableProducts((List<IProduct>)event.getData());
                 break;          
               default:
                    break;
@@ -106,10 +108,22 @@ public class FamilyCodesHelper implements IStockHelper{
         setColumns();
     }
 
-    private void addTableElement(){}
-    private void removeTableElement(){}
-    private void updateTableElement(){}
-    private void setTableElements(){}
+   
+    private void addTableElement(IProduct product) {
+        tableStock.getItems().add(product);
+    }
+
+    private void removeTableElement(int index){
+        tableStock.getItems().remove(index);
+    }
+
+    private void updateTableElement(){
+        //TODO : implement
+    }
+
+    private void setTableProducts(List<IProduct> product){
+        tableStock.getItems().setAll(product);
+    }
 
     private void setColumns(){
         MFXTableColumn<IProduct> idColumn = new MFXTableColumn<>(Names.FamilyCode, true, Comparator.comparing(IProduct::getArticleId));
@@ -122,60 +136,60 @@ public class FamilyCodesHelper implements IStockHelper{
    
 
 
-    private Node buildAddDialog(){
-        ManagerDialog<EFamilyCodeAttributes> dialog = new ManagerDialog<>();
+    private IDialogContent buildAddDialog(){
+        ManagerDialog dialog = new ManagerDialog();
 
-        EFamilyCodeAttributes attributes[] = 
-        {EFamilyCodeAttributes.FamilyCode, EFamilyCodeAttributes.FamilyName};
+        String attributes[] = 
+        {EFamilyCodeAttributes.FamilyCode.toString(), EFamilyCodeAttributes.FamilyName.toString()};
 
         dialog.setAttributes(attributes);
 
         dialog.loadFxml();
 
-        return dialog.getView();
+        return dialog;
 
     }
 
-    private Node buildUpdateDialog(){
-        ManagerDialog<EFamilyCodeAttributes> dialog = new ManagerDialog<>();
+    private IDialogContent buildUpdateDialog(){
+        ManagerDialog dialog = new ManagerDialog();
 
-        EFamilyCodeAttributes attributes[] = 
-        {EFamilyCodeAttributes.FamilyName};
+        String attributes[] = 
+        {EFamilyCodeAttributes.FamilyName.toString()};
 
         dialog.setAttributes(attributes);
 
         dialog.loadFxml();
 
-        return dialog.getView();
+        return dialog;
 
     }
 
-    private Node buildRemoveDialog(){
-        ManagerDialog<EFamilyCodeAttributes> dialog = new ManagerDialog<>();
+    private IDialogContent buildRemoveDialog(){
+        ManagerDialog dialog = new ManagerDialog();
 
-        EFamilyCodeAttributes attributes[] = 
-        {EFamilyCodeAttributes.FamilyName};
+        String attributes[] = 
+        {EFamilyCodeAttributes.FamilyName.toString()};
 
         dialog.setAttributes(attributes);
 
         dialog.loadFxml();
 
-        return dialog.getView();
+        return dialog;
 
     }
 
 
-    private Node buildSearchDialog(){
-        FilterDialog<EFamilyCodeAttributes> dialog = new FilterDialog<>();
+    private IDialogContent buildSearchDialog(){
+        FilterDialog dialog = new FilterDialog();
 
-        EFamilyCodeAttributes attributes[] = 
-        {EFamilyCodeAttributes.FamilyCode};
+        String attributes[] = 
+        {EFamilyCodeAttributes.FamilyCode.toString()};
 
         dialog.setAttributes(attributes);
 
         dialog.loadFxml();
 
-        return dialog.getView();
+        return dialog;
 
     }
 

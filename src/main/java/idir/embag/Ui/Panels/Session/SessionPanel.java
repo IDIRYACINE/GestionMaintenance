@@ -3,7 +3,7 @@ package idir.embag.Ui.Panels.Session;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import idir.embag.DataModels.Workers.SessionRecord;
+import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.Ui.Components.MangerDialog.WorkersManagerDialog;
 import idir.embag.Ui.Panels.Generics.INodeView;
 import io.github.palexdev.materialfx.controls.MFXButton;

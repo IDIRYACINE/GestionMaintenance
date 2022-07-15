@@ -8,7 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
-public class AttributeSelector<T> implements Initializable{
+public class AttributeSelector implements Initializable{
 
     @FXML
     private Label attrbLabel;
@@ -16,15 +16,15 @@ public class AttributeSelector<T> implements Initializable{
     @FXML
     private MFXCheckbox attrbCheckBox;
 
-    private T attribute;
+    private String attribute;
 
-    public AttributeSelector(T attribute) {
+    public AttributeSelector(String attribute) {
         this.attribute = attribute;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        attrbLabel.setText(attribute.toString());
+        attrbLabel.setText(attribute);
     }
 
 

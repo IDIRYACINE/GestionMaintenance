@@ -3,7 +3,7 @@ package idir.embag.EventStore.Stores.NavigationStore;
 import idir.embag.Application.Controllers.Navigation.INavigationController;
 import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.EventStore.Stores.Generics.StoreEvent.StoreEvent;
-import javafx.scene.Node;
+import idir.embag.Ui.Components.IDialogContent;
 
 public class NavigationStore {
 
@@ -25,7 +25,7 @@ public class NavigationStore {
             navigationController.navigateToPanel(((int)event.getData()));
         }
         else{
-            navigationController.displayPopup((Node)event.getData());
+            navigationController.displayPopup((IDialogContent)event.getData());
         }
     }
 

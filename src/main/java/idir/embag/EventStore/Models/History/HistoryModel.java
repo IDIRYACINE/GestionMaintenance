@@ -7,9 +7,7 @@ import idir.embag.EventStore.Stores.DataStore.IDataDelegate;
 import idir.embag.Infrastructure.Database.ISessionQuery;
 import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Infrastructure.Database.Generics.SearchWrapper;
-import idir.embag.Infrastructure.Database.Generics.MDatabase.SessionsRecordsAttributes;
 
-@SuppressWarnings("unchecked")
 public class HistoryModel implements IDataDelegate{
 
     ISessionQuery sessionQuery;
@@ -22,7 +20,7 @@ public class HistoryModel implements IDataDelegate{
     public void add(Object data) {
         
         try {
-            sessionQuery.RegisterSessionRecord((AttributeWrapper<SessionsRecordsAttributes>[]) data);
+            sessionQuery.RegisterSessionRecord((AttributeWrapper[]) data);
         } catch (SQLException e) {
             e.printStackTrace();
         }

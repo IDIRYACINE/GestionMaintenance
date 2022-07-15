@@ -2,7 +2,7 @@ package idir.embag.EventStore.Models.Workers;
 
 import java.util.List;
 
-import idir.embag.DataModels.Workers.EWorker;
+import idir.embag.DataModels.Metadata.EWorker;
 import idir.embag.DataModels.Workers.Worker;
 
 public class WorkersManager implements IWorkersManager{

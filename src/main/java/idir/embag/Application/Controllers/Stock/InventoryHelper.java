@@ -1,9 +1,19 @@
 package idir.embag.Application.Controllers.Stock;
 
 import java.util.Comparator;
+import java.util.List;
 
+import idir.embag.DataModels.Metadata.EProductAttributes;
 import idir.embag.DataModels.Products.IProduct;
+import idir.embag.EventStore.Stores.Generics.StoreDispatch.EStores;
+import idir.embag.EventStore.Stores.Generics.StoreDispatch.StoreDispatch;
+import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEventAction;
+import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.EventStore.Stores.Generics.StoreEvent.StoreEvent;
+import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
+import idir.embag.Ui.Components.IDialogContent;
+import idir.embag.Ui.Components.FilterDialog.FilterDialog;
+import idir.embag.Ui.Components.MangerDialog.ManagerDialog;
 import idir.embag.Ui.Constants.Names;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
@@ -22,20 +32,26 @@ public class InventoryHelper implements IStockHelper{
 
     @Override
     public void update(IProduct product) {
-        // TODO Auto-generated method stub
-        
+        IDialogContent dialogContent =  buildUpdateDialog();
+        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
+        StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
+        StoreCenter.getInstance().dispatch(action);
     }
 
     @Override
     public void remove(int id) {
-        // TODO Auto-generated method stub
-        
+        IDialogContent dialogContent =  buildRemoveDialog();
+        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
+        StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
+        StoreCenter.getInstance().dispatch(action);   
     }
 
     @Override
     public void add() {
-        // TODO Auto-generated method stub
-        
+        IDialogContent dialogContent =  buildAddDialog();
+        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
+        StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
+        StoreCenter.getInstance().dispatch(action);
     }
 
     @Override
@@ -46,25 +62,45 @@ public class InventoryHelper implements IStockHelper{
 
     @Override
     public void search() {
-        // TODO Auto-generated method stub
-        
+        IDialogContent dialogContent =  buildSearchDialog();
+        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
+        StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
+        StoreCenter.getInstance().dispatch(action);
     }
 
     @Override
     public void notifyEvent(StoreEvent event) {
+        
         switch(event.getAction()){
-            case Add:
+            case Add: addTableElement((IProduct)event.getData());
                 break;
-            case Remove:
+            case Remove: removeTableElement((int)event.getData());
                 break;  
-            case Update:
+            case Update: updateTableElement();
                 break;
-            case Search:
+            case Search: setTableProducts((List<IProduct>)event.getData());
                 break;          
               default:
                    break;
            }
         
+    }
+
+
+    private void addTableElement(IProduct product) {
+        tableStock.getItems().add(product);
+    }
+
+    private void removeTableElement(int index){
+        tableStock.getItems().remove(index);
+    }
+
+    private void updateTableElement(){
+        //TODO : implement
+    }
+
+    private void setTableProducts(List<IProduct> product){
+        tableStock.getItems().setAll(product);
     }
 
     private void setColumns(){
@@ -89,6 +125,78 @@ public class InventoryHelper implements IStockHelper{
     public void notifySelected() {
         tableStock.getItems().clear();
         setColumns();
+    }
+
+    private IDialogContent buildAddDialog(){
+        ManagerDialog dialog = new ManagerDialog();
+
+        EProductAttributes rawAttributes[] = 
+        {EProductAttributes.ArticleId, EProductAttributes.ArticleName, EProductAttributes.Price, EProductAttributes.Quantity};
+        
+        String[] attributes = EnumAttributesToString(rawAttributes);
+
+        dialog.setAttributes(attributes);
+
+        dialog.loadFxml();
+
+        return dialog;
+
+    }
+
+    private IDialogContent buildUpdateDialog(){
+        ManagerDialog dialog = new ManagerDialog();
+
+        EProductAttributes rawAttributes[] = 
+        {EProductAttributes.ArticleId, EProductAttributes.ArticleName, EProductAttributes.Price, EProductAttributes.Quantity};
+        String[] attributes = EnumAttributesToString(rawAttributes);
+
+        dialog.setAttributes(attributes);
+
+        dialog.loadFxml();
+
+        return dialog;
+
+    }
+
+    private IDialogContent buildRemoveDialog(){
+        ManagerDialog dialog = new ManagerDialog();
+
+        EProductAttributes rawAttributes[] = 
+        {EProductAttributes.ArticleId, EProductAttributes.ArticleName, EProductAttributes.Price, EProductAttributes.Quantity};
+        String[] attributes = EnumAttributesToString(rawAttributes);
+
+        dialog.setAttributes(attributes);
+
+        dialog.loadFxml();
+
+        return dialog;
+
+    }
+
+
+    private IDialogContent buildSearchDialog(){
+        FilterDialog dialog = new FilterDialog();
+
+        EProductAttributes rawAttributes[] = 
+        {EProductAttributes.ArticleId, EProductAttributes.ArticleName, EProductAttributes.Price, EProductAttributes.Quantity};
+        String[] attributes = EnumAttributesToString(rawAttributes);
+
+        dialog.setAttributes(attributes);
+
+        dialog.loadFxml();
+
+        return dialog;
+
+    }
+
+
+
+    private String[] EnumAttributesToString(EProductAttributes[] attributes){
+        String[] result = new String[attributes.length];
+        for (int i = 0 ; i < attributes.length ;i++){
+            result[i] = attributes[i].toString();
+        }
+        return result;
     }
     
 }
