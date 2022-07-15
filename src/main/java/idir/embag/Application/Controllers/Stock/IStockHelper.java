@@ -1,22 +1,34 @@
 package idir.embag.Application.Controllers.Stock;
 
+import java.util.Map;
+import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Products.IProduct;
+import idir.embag.EventStore.Stores.Generics.StoreDispatch.EStores;
+import idir.embag.EventStore.Stores.Generics.StoreDispatch.StoreDispatch;
+import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEventAction;
+import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.EventStore.Stores.Generics.StoreEvent.StoreEvent;
+import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 
-public interface IStockHelper {
+public abstract class IStockHelper {
 
-    void update(IProduct product);
+    abstract void update(IProduct product , int cellIndex);
 
-    void remove(int id);
+    abstract void remove(int elementId , int cellIndex);
 
-    void add();
+    abstract void add();
 
-    void refresh();
+    abstract void refresh();
 
-    void search();
+    abstract void search();
 
-    void notifyEvent(StoreEvent event);
+    abstract void notifyEvent(StoreEvent event);
 
-    void notifySelected();
-    
+    abstract void notifySelected();
+
+    protected void dispatchEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent, Map<EEventDataKeys,Object> data) {
+        StoreEvent event = new StoreEvent(storeEvent, actionEvent,data);
+        StoreDispatch action = new StoreDispatch(store, event);
+        StoreCenter.getInstance().dispatch(action);
+    }
 }

@@ -33,6 +33,8 @@ public class ConfirmationDialog extends INodeView implements Initializable , IDi
     
     private String message;
 
+    private EEventDataKeys key = EEventDataKeys.None;
+
     public ConfirmationDialog() {
         fxmlPath = "/views/Forms/ConfirmationDialog.fxml";
     }
@@ -75,6 +77,12 @@ public class ConfirmationDialog extends INodeView implements Initializable , IDi
     @Override
     public void setOnCancel(Runnable callback) {
         cancelTask = callback;
+    }
+
+
+    @Override
+    public void setEventKey(EEventDataKeys key) {
+       this.key = key;
     }
 
 

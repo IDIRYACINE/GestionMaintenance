@@ -39,8 +39,8 @@ public class StockController {
         selectedStockHelper.add();
     }
 
-    public void remove(int id){
-        selectedStockHelper.remove(id);
+    public void remove(int id, int cellIndex){
+        selectedStockHelper.remove(id,cellIndex);
     }
 
     public void search(){
@@ -51,8 +51,8 @@ public class StockController {
         selectedStockHelper.refresh();
     }
 
-    public void update(IProduct product) {
-        selectedStockHelper.update(product);
+    public void update(IProduct product , int cellIndex) {
+        selectedStockHelper.update(product,cellIndex);
     }
 
     public void notifyEvent(StoreEvent event) {

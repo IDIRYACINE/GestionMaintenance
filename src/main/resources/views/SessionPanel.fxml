@@ -25,7 +25,7 @@
             </HBox>
          </children>
       </HBox>
-      <MFXTableView fx:id="tableSessionRecord" footerVisible="false" prefHeight="636.0" prefWidth="1332.0" />
+      <MFXTableView fx:id="tableSession" footerVisible="false" prefHeight="636.0" prefWidth="1332.0" />
      
 
    </children>

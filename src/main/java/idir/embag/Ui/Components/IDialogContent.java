@@ -10,4 +10,5 @@ public interface IDialogContent {
     public Node getView();
     public void setOnConfirm(Consumer<Map<EEventDataKeys,Object>> callback);
     public void setOnCancel(Runnable callback);
+    public void setEventKey(EEventDataKeys key);
 }

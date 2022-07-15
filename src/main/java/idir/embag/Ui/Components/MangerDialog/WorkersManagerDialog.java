@@ -33,6 +33,8 @@ public class WorkersManagerDialog extends INodeView implements Initializable,IDi
     private Runnable cancelTask;
     private Consumer<Map<EEventDataKeys,Object>> confirmTask;
 
+    private EEventDataKeys key = EEventDataKeys.None;
+
     public WorkersManagerDialog() {
         fxmlPath = "/views/ManagerDialog/WorkersManagerDialog.fxml";
     }
@@ -80,6 +82,11 @@ public class WorkersManagerDialog extends INodeView implements Initializable,IDi
     @Override
     public void setOnCancel(Runnable callback) {
         cancelTask = callback;
+    }
+
+    @Override
+    public void setEventKey(EEventDataKeys key) {
+        this.key = key;
     }
 
   

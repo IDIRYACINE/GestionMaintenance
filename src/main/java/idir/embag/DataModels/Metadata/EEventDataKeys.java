@@ -15,4 +15,8 @@ public enum EEventDataKeys {
     QuantityShift,
     TPriceShift,
     Date,
+    None, 
+    Codebar, 
+    Product,
+    CellIndex,
 }

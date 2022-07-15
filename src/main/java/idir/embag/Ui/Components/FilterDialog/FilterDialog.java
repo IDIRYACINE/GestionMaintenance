@@ -45,6 +45,8 @@ public class FilterDialog extends INodeView implements Initializable , IDialogCo
     private Runnable cancelTask;
     private Consumer<Map<EEventDataKeys,Object>> confirmTask;
 
+    private EEventDataKeys key = EEventDataKeys.None;
+
     public FilterDialog() {
         fxmlPath = "/views/FilterDialog/FilterDialog.fxml";
     }
@@ -81,7 +83,7 @@ public class FilterDialog extends INodeView implements Initializable , IDialogCo
         for(int i = 0 ; i < attributes.length;i++){
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/FilterDialog/AttributeWrapperCell.fxml"));    
-                controller = new AttributeField(attributes[i]);
+                controller = new AttributeField(attributes[i],EEventDataKeys.None);
                 attributesFieldControllers.add(controller);
                 loader.setController(controller);
                 selectedAttributesNodes.add(loader.load());
@@ -135,6 +137,12 @@ public class FilterDialog extends INodeView implements Initializable , IDialogCo
     @Override
     public void setOnCancel(Runnable callback) {
         cancelTask = callback;
+    }
+
+
+    @Override
+    public void setEventKey(EEventDataKeys key) {
+        this.key = key;
     }
     
 }

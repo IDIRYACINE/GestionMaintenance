@@ -3,11 +3,12 @@ package idir.embag.EventStore.Models.History;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.EventStore.Stores.DataStore.IDataDelegate;
 import idir.embag.Infrastructure.Database.ISessionQuery;
+import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
 
+@SuppressWarnings("unchecked")
 public class HistoryModel implements IDataDelegate{
 
     ISessionQuery sessionQuery;
@@ -17,25 +18,25 @@ public class HistoryModel implements IDataDelegate{
     }
 
     @Override
-    public void add(Map<EEventDataKeys,Object> data) {
-        
+    public void add(Object data) {
         try {
-            sessionQuery.RegisterSessionRecord(data);
+            Map<EEventDataKeys,AttributeWrapper> result = (Map<EEventDataKeys, AttributeWrapper>) data;
+            sessionQuery.RegisterSessionRecord(result.values());
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void remove(int id) {}
+    public void remove(Object data) {}
 
     @Override
-    public void update(int id, Map<EEventDataKeys,Object> data) {
+    public void update(Object data) {
 
     }
 
     @Override
-    public List<Object> search(Map<EEventDataKeys,Object> data) {
+    public List<Object> search(Object data) {
         List<Object> result = null;
         /* TODO: implement this 
         try {

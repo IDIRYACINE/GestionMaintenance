@@ -3,12 +3,12 @@ package idir.embag.EventStore.Models.Stock;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.EventStore.Stores.DataStore.IDataDelegate;
 import idir.embag.Infrastructure.Database.IProductQuery;
+import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
 
-
+@SuppressWarnings("unchecked")
 public class FamilyModel implements IDataDelegate{
 
     private IProductQuery productQuery;
@@ -18,9 +18,10 @@ public class FamilyModel implements IDataDelegate{
     }
 
     @Override
-    public void add(Map<EEventDataKeys,Object> data) {
+    public void add(Object data) {
+        Map<EEventDataKeys,AttributeWrapper> result = (Map<EEventDataKeys, AttributeWrapper>) data;
         try {
-            productQuery.RegisterFamilyCode(data);
+            productQuery.RegisterFamilyCode(result.values());
         } catch (SQLException e) {
            
             e.printStackTrace();
@@ -29,9 +30,10 @@ public class FamilyModel implements IDataDelegate{
     }
 
     @Override
-    public void remove(int id) {
+    public void remove(Object data) {
+        Map<EEventDataKeys,AttributeWrapper> result = (Map<EEventDataKeys, AttributeWrapper>) data;
        try {
-        productQuery.UnregisterFamilyCode(id);
+        productQuery.UnregisterFamilyCode((int) result.get(EEventDataKeys.Id).getValue());
     } catch (SQLException e) {
         e.printStackTrace();
     }
@@ -39,9 +41,11 @@ public class FamilyModel implements IDataDelegate{
     }
 
     @Override
-    public void update(int id, Map<EEventDataKeys,Object> data) {
+    public void update(Object data) {
+        Map<EEventDataKeys,AttributeWrapper> result = (Map<EEventDataKeys, AttributeWrapper>) data;
+
         try {
-            productQuery.UpdateFamilyCode(id, data);
+            productQuery.UpdateFamilyCode((int) result.get(EEventDataKeys.Id).getValue(), result.values());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -49,7 +53,7 @@ public class FamilyModel implements IDataDelegate{
     }
 
     @Override
-    public List<Object> search(Map<EEventDataKeys,Object> data) {
+    public List<Object> search(Object data) {
         List<Object> result = null;
         /*  TODO: implement this
         try {

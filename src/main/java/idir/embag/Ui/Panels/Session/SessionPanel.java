@@ -3,6 +3,8 @@ package idir.embag.Ui.Panels.Session;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import idir.embag.Application.Controllers.Session.ISessionController;
+import idir.embag.Application.Controllers.Session.SessionController;
 import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.Ui.Components.MangerDialog.WorkersManagerDialog;
 import idir.embag.Ui.Panels.Generics.INodeView;
@@ -22,9 +24,9 @@ public class SessionPanel extends INodeView implements Initializable {
     private MFXButton btnAdd, btnEdit, btnDelete, btnRefresh,btnSearch;
     
     @FXML
-    private MFXTableView<SessionRecord> tableStock;
+    private MFXTableView<SessionRecord> tableSession;
 
-   
+    private ISessionController controller;
 
     public SessionPanel() {
         fxmlPath = "/views/SessionPanel.fxml";
@@ -50,6 +52,9 @@ public class SessionPanel extends INodeView implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        controller = new SessionController(tableSession);
+        controller.notifyActive();
     }
+
     
 }

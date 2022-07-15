@@ -1,32 +1,31 @@
 package idir.embag.Infrastructure.Database.Generics;
 
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
-import idir.embag.DataModels.Metadata.EEventDataKeys;
 
 public abstract class IQuery {
     
-    protected String InsertWrapperToQuery(Map<EEventDataKeys,Object> attrs){
+    protected String InsertWrapperToQuery(Collection<AttributeWrapper> attrs){
         String result = " (";
         String values = " VALUES(";
 
-        Iterator<EEventDataKeys> keys = attrs.keySet().iterator();
-
-        Iterator<Object> rawValues = attrs.values().iterator();
-        
         int length = attrs.size();
         int lastElementIndex = length - 1;
         int i = 0;
 
-        while (keys.hasNext()) {
+        Iterator<AttributeWrapper> iterator = attrs.iterator();
+
+
+        while (iterator.hasNext()) {
+            AttributeWrapper attr = iterator.next();
 
             if(i<lastElementIndex){    
-            result += keys.next() +",";
-            values += rawValues.next() +",";
+            result += attr.getAttributeName() +",";
+            values += attr.getValue() +",";
             }
             else{
-                result += keys.next() +")";
-                values += rawValues.next() +")";
+                result += attr.getAttributeName() +")";
+                values += attr.getValue() +")";
             }
 
             i++;
@@ -36,22 +35,22 @@ public abstract class IQuery {
         return result + values;
     }
 
-    protected <T> String UpdateWrapperToQuery(Map<EEventDataKeys,Object> attrs){
+    protected <T> String UpdateWrapperToQuery(Collection<AttributeWrapper> attrs){
         String result = " Set ";
-
-        Iterator<EEventDataKeys> keys = attrs.keySet().iterator();
-        Iterator<Object> rawValues = attrs.values().iterator();
-        
+                
         int length = attrs.size();
         int lastElementIndex = length - 1;
         int i = 0;
 
-        while (keys.hasNext()) {
+        Iterator<AttributeWrapper> iterator = attrs.iterator();
+
+        while (iterator.hasNext()) {
+            AttributeWrapper attr = iterator.next();
             if(i<lastElementIndex){    
-            result += keys.next() + "=" + rawValues.next() + ",";
+            result += attr.getAttributeName() + "=" + attr.getValue() + ",";
             }
             else{
-                result += keys.next() + "=" + rawValues.next() + ")";
+                result += attr.getAttributeName() + "=" + attr.getValue() + ")";
             }
             i++;
         }

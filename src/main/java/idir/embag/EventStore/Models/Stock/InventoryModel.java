@@ -7,43 +7,47 @@ import java.util.Map;
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.EventStore.Stores.DataStore.IDataDelegate;
 import idir.embag.Infrastructure.Database.IProductQuery;
+import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
 
-public class InventoryModel  implements IDataDelegate {
+@SuppressWarnings("unchecked")
+public class InventoryModel implements IDataDelegate {
 
     IProductQuery productQuery;
 
-    
-    
     public InventoryModel(IProductQuery productQuery) {
         this.productQuery = productQuery;
     }
 
-    public void add(Map<EEventDataKeys,Object> data) {
+    public void add(Object data) {
+        Map<EEventDataKeys,AttributeWrapper> result = (Map<EEventDataKeys, AttributeWrapper>) data;
         try {
-            productQuery.RegisterInventoryProduct( data);
+            productQuery.RegisterInventoryProduct(result.values());
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void remove(int id) {
+    public void remove(Object data) {
+        Map<EEventDataKeys,AttributeWrapper> result = (Map<EEventDataKeys, AttributeWrapper>) data;
+
         try {
-            productQuery.UnregisterInventoryProduct(id);
+            productQuery.UnregisterInventoryProduct((int) result.get(EEventDataKeys.Id).getValue());
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void update(int id , Map<EEventDataKeys,Object> data) {
+    public void update(Object data) {
+        Map<EEventDataKeys,AttributeWrapper> result = (Map<EEventDataKeys, AttributeWrapper>) data;
         try {
-            productQuery.UpdateInventoryProduct(id,  data);
+            productQuery.UpdateInventoryProduct((int) result.get(EEventDataKeys.Id).getValue() ,result.values());
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public List<Object> search(Map<EEventDataKeys,Object> data) {
+    public List<Object> search(Object data) {
 
        List<Object> result = null;
        /* Todo : implement this

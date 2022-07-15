@@ -55,5 +55,38 @@ public class StockProduct implements IProduct{
     public int getArticleId() {
         return articleId;
     }
+
+    @Override
+    public void setArticleId(int articleId) {
+        this.articleId = articleId;
+    }
+
+    @Override
+    public void setArticleCode(int articleCode) {
+        this.articleCodebar = articleCode;
+        
+    }
+
+    @Override
+    public void setArticleName(String articleName) {
+       this.articleName = articleName;
+    }
+
+    @Override
+    public void setFamilyCode(int familyCode) {
+        this.familyCode = familyCode;
+        
+    }
+
+    @Override
+    public void setQuantity(int quantity) {
+        this.articleQuantity = quantity;
+        
+    }
+
+    @Override
+    public void setPrice(double price) {
+        this.articlePrice = price;
+    }
     
 }

@@ -1,6 +1,7 @@
 package idir.embag.Infrastructure.Database.Generics;
 
 public class AttributeWrapper{
+    
     private String attributeName;
 
     private String value;

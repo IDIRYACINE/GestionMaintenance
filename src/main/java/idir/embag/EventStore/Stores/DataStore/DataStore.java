@@ -47,7 +47,7 @@ public class DataStore implements IDataStore {
     @Override
     public void update(StoreEvent event) {
         IDataDelegate dataDelegate = dataDelegates.get(event.getEvent());
-        dataDelegate.update((int)event.getData().get(EEventDataKeys.Id), event.getData());
+        dataDelegate.update(event.getData());
     }
 
     @Override
@@ -58,12 +58,12 @@ public class DataStore implements IDataStore {
 
     @Override
     public void subscribe(StoreEvent event) {
-        subscribers.get(event.getEvent()).add((IEventSubscriber) event.getData());   
+        subscribers.get(event.getEvent()).add((IEventSubscriber) event.getData().get(EEventDataKeys.Subscriber));   
     }
 
     @Override
     public void unsubscribe(StoreEvent event) {
-        subscribers.get(event.getEvent()).remove((IEventSubscriber) event.getData());   
+        subscribers.get(event.getEvent()).remove((IEventSubscriber) event.getData().get(EEventDataKeys.Subscriber));   
     }
 
     @Override

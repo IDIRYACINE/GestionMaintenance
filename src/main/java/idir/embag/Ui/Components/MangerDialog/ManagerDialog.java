@@ -37,7 +37,10 @@ public class ManagerDialog extends INodeView implements Initializable , IDialogC
     private ArrayList<AttributeField> attributesFieldControllers;
 
     private Runnable cancelTask;
+
     private Consumer<Map<EEventDataKeys,Object>> confirmTask;
+
+    private EEventDataKeys key = EEventDataKeys.None;
 
     public ManagerDialog() {
         fxmlPath = "/views/ManagerDialog/ManagerDialog.fxml";
@@ -57,8 +60,8 @@ public class ManagerDialog extends INodeView implements Initializable , IDialogC
 
     @FXML
     private void onConfirm(){
-        //TODO: get attributes from fields
         Map<EEventDataKeys,Object> data = new HashMap<>();
+        getAttributeWrappers(data);
         confirmTask.accept(data);
         cancelTask.run();
     }
@@ -84,7 +87,7 @@ public class ManagerDialog extends INodeView implements Initializable , IDialogC
         for(int i = 0 ; i < attributes.length;i++){
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/ManagerDialog/AttributeRow.fxml"));  
-                controller = new AttributeField(attributes[i]);
+                controller = new AttributeField(attributes[i],EEventDataKeys.None);
                 attributesFieldControllers.add(controller);
                 loader.setController(controller);
                 nodes.add(loader.load());
@@ -108,12 +111,21 @@ public class ManagerDialog extends INodeView implements Initializable , IDialogC
         cancelTask = callback;
     }
 
-    private AttributeWrapper[] getAttributeWrappers(){
+    private void getAttributeWrappers(Map<EEventDataKeys,Object> data){
         AttributeWrapper[] wrappers = new AttributeWrapper[attributesFieldControllers.size()];
+
         for(int i = 0 ; i < attributesFieldControllers.size() ; i++){
             wrappers[i] = attributesFieldControllers.get(i).getAttributeWrapper();
         }
-        return wrappers;
+
+        data.put(key, wrappers);
+
+    }
+
+
+    @Override
+    public void setEventKey(EEventDataKeys key) {
+        this.key = key;
     }
 
 

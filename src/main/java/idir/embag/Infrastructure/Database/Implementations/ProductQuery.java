@@ -2,11 +2,11 @@ package idir.embag.Infrastructure.Database.Implementations;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
+import java.util.Collection;
 
-import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.Infrastructure.Database.IDatabase;
 import idir.embag.Infrastructure.Database.IProductQuery;
+import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Infrastructure.Database.Generics.MDatabase;
 import idir.embag.Infrastructure.Database.Generics.SearchWrapper;
 
@@ -23,7 +23,7 @@ public class ProductQuery extends IProductQuery{
     }
 
     @Override
-    public void RegisterStockProduct(Map<EEventDataKeys,Object> attributes) throws SQLException {
+    public void RegisterStockProduct(Collection<AttributeWrapper> attributes) throws SQLException {
         String query = "INSERT INTO "+STOCK_TABLE_NAME+ InsertWrapperToQuery(attributes);
         database.InsertQuery(query);
     }
@@ -32,7 +32,7 @@ public class ProductQuery extends IProductQuery{
     public void UnregisterStockProduct(int articleId) throws SQLException {}
 
     @Override
-    public void UpdateStockProduct(int articleId, Map<EEventDataKeys,Object> attributes) throws SQLException {
+    public void UpdateStockProduct(int articleId, Collection<AttributeWrapper> attributes) throws SQLException {
         String whereClause = " WHERE "+MDatabase.StockAttributes.ArticleId + "=" + articleId;
         String query = "UPDATE "+STOCK_TABLE_NAME+ UpdateWrapperToQuery(attributes)+ whereClause;
         database.UpdateQuery(query);
@@ -40,7 +40,7 @@ public class ProductQuery extends IProductQuery{
     }
 
     @Override
-    public void RegisterInventoryProduct(Map<EEventDataKeys,Object> attributes) throws SQLException {
+    public void RegisterInventoryProduct(Collection<AttributeWrapper> attributes) throws SQLException {
         String query = "INSERT INTO "+INVENTORY_TABLE_NAME+ InsertWrapperToQuery(attributes);
         database.InsertQuery(query);
         
@@ -50,7 +50,7 @@ public class ProductQuery extends IProductQuery{
     public void UnregisterInventoryProduct(int articleId) throws SQLException {}
 
     @Override
-    public void UpdateInventoryProduct(int articleId, Map<EEventDataKeys,Object> attributes)
+    public void UpdateInventoryProduct(int articleId, Collection<AttributeWrapper> attributes)
             throws SQLException {
 
         String whereClause = " WHERE "+MDatabase.InventoryAttributes.ArticleId + "=" + articleId;
@@ -60,14 +60,14 @@ public class ProductQuery extends IProductQuery{
     }
 
     @Override
-    public void RegisterFamilyCode(Map<EEventDataKeys,Object> attributes) throws SQLException {
+    public void RegisterFamilyCode(Collection<AttributeWrapper> attributes) throws SQLException {
         String query = "INSERT INTO "+FAMILIES_TABLE_NAME+ InsertWrapperToQuery(attributes);
         database.InsertQuery(query);
         
     }
 
     @Override
-    public void UpdateFamilyCode(int familyId, Map<EEventDataKeys,Object> attributes)
+    public void UpdateFamilyCode(int familyId, Collection<AttributeWrapper> attributes)
             throws SQLException {
         String whereClause = " WHERE "+MDatabase.FamilliesCodeAttributes.FamilyCode + "=" + familyId;
         String query = "UPDATE "+STOCK_TABLE_NAME+ UpdateWrapperToQuery(attributes) +whereClause;

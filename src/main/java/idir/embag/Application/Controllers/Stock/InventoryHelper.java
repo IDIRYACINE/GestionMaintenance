@@ -9,11 +9,9 @@ import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Metadata.EProductAttributes;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.EventStore.Stores.Generics.StoreDispatch.EStores;
-import idir.embag.EventStore.Stores.Generics.StoreDispatch.StoreDispatch;
 import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.EventStore.Stores.Generics.StoreEvent.StoreEvent;
-import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Ui.Components.IDialogContent;
 import idir.embag.Ui.Components.FilterDialog.FilterDialog;
 import idir.embag.Ui.Components.MangerDialog.ManagerDialog;
@@ -23,7 +21,7 @@ import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 
 @SuppressWarnings("unchecked")
-public class InventoryHelper implements IStockHelper{
+public class InventoryHelper extends IStockHelper{
     
     private MFXTableView<IProduct> tableStock;
 
@@ -34,26 +32,24 @@ public class InventoryHelper implements IStockHelper{
     }
 
     @Override
-    public void update(IProduct product) {
-        IDialogContent dialogContent =  buildUpdateDialog();
+    public void update(IProduct product, int cellIndex) {
+        IDialogContent dialogContent =  buildUpdateDialog(product,cellIndex);
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
 
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
-        StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
-        StoreCenter.getInstance().dispatch(action);
+        dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
+
     }
 
     @Override
-    public void remove(int id) {
-        IDialogContent dialogContent =  buildRemoveDialog();
+    public void remove(int id, int cellIndex) {
+        IDialogContent dialogContent =  buildRemoveDialog(id,cellIndex);
         
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
 
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
-        StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
-        StoreCenter.getInstance().dispatch(action);   
+        dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
+
     }
 
     @Override
@@ -62,9 +58,8 @@ public class InventoryHelper implements IStockHelper{
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
 
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
-        StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
-        StoreCenter.getInstance().dispatch(action);
+        dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
+
     }
 
     @Override
@@ -79,9 +74,7 @@ public class InventoryHelper implements IStockHelper{
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
 
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
-        StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
-        StoreCenter.getInstance().dispatch(action);
+        dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
     }
 
     @Override
@@ -159,7 +152,7 @@ public class InventoryHelper implements IStockHelper{
 
     }
 
-    private IDialogContent buildUpdateDialog(){
+    private IDialogContent buildUpdateDialog(IProduct product, int cellIndex){
         ManagerDialog dialog = new ManagerDialog();
 
         EProductAttributes rawAttributes[] = 
@@ -174,7 +167,7 @@ public class InventoryHelper implements IStockHelper{
 
     }
 
-    private IDialogContent buildRemoveDialog(){
+    private IDialogContent buildRemoveDialog(int articleId , int cellIndex){
         ManagerDialog dialog = new ManagerDialog();
 
         EProductAttributes rawAttributes[] = 

@@ -119,7 +119,3 @@ public class StockPanel extends INodeView  implements  Initializable,IEventSubsc
 
 
 }
-
-
-    
-

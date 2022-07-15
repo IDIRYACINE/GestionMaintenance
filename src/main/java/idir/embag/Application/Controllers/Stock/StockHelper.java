@@ -5,16 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Metadata.EProductAttributes;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.EventStore.Stores.Generics.StoreDispatch.EStores;
-import idir.embag.EventStore.Stores.Generics.StoreDispatch.StoreDispatch;
 import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.EventStore.Stores.Generics.StoreEvent.StoreEvent;
-import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Ui.Components.IDialogContent;
 import idir.embag.Ui.Components.ConfirmationDialog.ConfirmationDialog;
 import idir.embag.Ui.Components.FilterDialog.FilterDialog;
@@ -26,7 +23,7 @@ import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 
 @SuppressWarnings("unchecked")
-public class StockHelper implements IStockHelper{
+public class StockHelper extends IStockHelper{
     
     private MFXTableView<IProduct> tableStock;
 
@@ -35,27 +32,24 @@ public class StockHelper implements IStockHelper{
     }
 
     @Override
-    public void update(IProduct product) {
-        IDialogContent dialogContent =  buildUpdateDialog();
+    public void update(IProduct product,int cellIndex) {
+        IDialogContent dialogContent =  buildUpdateDialog(product,cellIndex);
 
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
 
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
-        StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
-        StoreCenter.getInstance().dispatch(action);
+        dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
+        
     }
 
     @Override
-    public void remove(int id) {
-        IDialogContent dialogContent =  buildRemoveDialog(id);
+    public void remove(int elementId,int cellIndex) {
+        IDialogContent dialogContent =  buildRemoveDialog(elementId,cellIndex);
 
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
 
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
-        StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
-        StoreCenter.getInstance().dispatch(action);
+        dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
     }
 
     @Override
@@ -64,10 +58,7 @@ public class StockHelper implements IStockHelper{
 
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
-
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
-        StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
-        StoreCenter.getInstance().dispatch(action);
+        dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
     }
 
     @Override
@@ -81,20 +72,18 @@ public class StockHelper implements IStockHelper{
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
 
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
-        StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
-        StoreCenter.getInstance().dispatch(action);
+        dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
     }
 
 
     @Override
     public void notifyEvent(StoreEvent event) {
        switch(event.getAction()){
-        case Add: addTableElement((IProduct)event.getData());
+        case Add: addTableElement((IProduct)event.getData().get(EEventDataKeys.Product));
             break;
         case Remove: removeTableElement((int)event.getData().get(EEventDataKeys.Id));
             break;  
-        case Update: updateTableElement();
+        case Update: updateTableElement((int)event.getData().get(EEventDataKeys.CellIndex));
             break;
         case Search: setTableProducts((List<IProduct>)event.getData());
             break;          
@@ -112,8 +101,8 @@ public class StockHelper implements IStockHelper{
         tableStock.getItems().remove(index);
     }
 
-    private void updateTableElement(){
-        //TODO : implement
+    private void updateTableElement(int index){
+        tableStock.getCell(index).updateRow();
     }
 
     private void setTableProducts(List<IProduct> product){
@@ -129,7 +118,7 @@ public class StockHelper implements IStockHelper{
         MFXTableColumn<IProduct> familyColumn = new MFXTableColumn<>(Names.FamilyCode, true, Comparator.comparing(IProduct::getFamilyCode));
         MFXTableColumn<IProduct> priceColumn = new MFXTableColumn<>(Names.Price, true, Comparator.comparing(IProduct::getPrice));
 		MFXTableColumn<IProduct> stockColumn = new MFXTableColumn<>(Names.Quantity, true, Comparator.comparing(IProduct::getQuantity));
-
+        
 		idColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getArticleId));
 		nameColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getArticleName));
 		stockColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getQuantity));
@@ -162,9 +151,8 @@ public class StockHelper implements IStockHelper{
         dialog.setOnConfirm(new Consumer<Map<EEventDataKeys,Object>>(){
             @Override
             public void accept(Map<EEventDataKeys,Object> data) {
-                StoreEvent event = new StoreEvent(EStoreEvents.StockEvent, EStoreEventAction.Add,data);
-                StoreDispatch action = new StoreDispatch(EStores.DataStore, event);
-                StoreCenter.getInstance().dispatch(action);
+                dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Add, data);
+
             }
         });
 
@@ -172,7 +160,7 @@ public class StockHelper implements IStockHelper{
         return dialog;
     }
 
-    private IDialogContent buildUpdateDialog(){
+    private IDialogContent buildUpdateDialog(IProduct product,int cellIndex){
         ManagerDialog dialog = new ManagerDialog();
 
         EProductAttributes rawAttributes[] = 
@@ -183,9 +171,10 @@ public class StockHelper implements IStockHelper{
         dialog.setOnConfirm(new Consumer<Map<EEventDataKeys,Object>>(){
             @Override
             public void accept(Map<EEventDataKeys,Object>  data) {
-                StoreEvent event = new StoreEvent(EStoreEvents.StockEvent, EStoreEventAction.Update,data);
-                StoreDispatch action = new StoreDispatch(EStores.DataStore, event);
-                StoreCenter.getInstance().dispatch(action);
+                data.put(EEventDataKeys.CellIndex, cellIndex);
+                data.put(EEventDataKeys.ArticleId, product.getArticleId());
+
+                dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Update, data);
             }
         });
 
@@ -195,17 +184,16 @@ public class StockHelper implements IStockHelper{
 
     }
 
-    private IDialogContent buildRemoveDialog(int id){
+    private IDialogContent buildRemoveDialog(int articleId , int cellIndex){
         ConfirmationDialog dialog = new ConfirmationDialog();
 
         dialog.setOnConfirm(new Consumer<Map<EEventDataKeys,Object>>(){
             @Override
             public void accept(Map<EEventDataKeys,Object> data) {
-                data.put(EEventDataKeys.Id, id);
+                data.put(EEventDataKeys.Id, articleId);
 
-                StoreEvent event = new StoreEvent(EStoreEvents.StockEvent, EStoreEventAction.Remove,data);
-                StoreDispatch action = new StoreDispatch(EStores.DataStore, event);
-                StoreCenter.getInstance().dispatch(action);
+                dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Remove, data);
+
             }
         });
 
@@ -228,9 +216,7 @@ public class StockHelper implements IStockHelper{
         dialog.setOnConfirm(new Consumer<Map<EEventDataKeys,Object>> (){
             @Override
             public void accept(Map<EEventDataKeys,Object> data) {
-                StoreEvent event = new StoreEvent(EStoreEvents.StockEvent, EStoreEventAction.Search,data);
-                StoreDispatch action = new StoreDispatch(EStores.DataStore, event);
-                StoreCenter.getInstance().dispatch(action);
+                dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Search, data);
             }
         });
 
@@ -247,5 +233,6 @@ public class StockHelper implements IStockHelper{
         }
         return result;
     }
+
     
 }
