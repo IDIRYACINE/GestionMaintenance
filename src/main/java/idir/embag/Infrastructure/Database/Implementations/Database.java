@@ -55,17 +55,9 @@ public class Database implements IDatabase{
     }
 
     @Override
-    public ResultSet SearchQuery(String query) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public void InsertQuery(String query)  {
-        PreparedStatement statement;
         try {
-            statement = connection.prepareStatement(query);
-            statement.executeQuery();
+            connection.createStatement().execute(query);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -73,10 +65,9 @@ public class Database implements IDatabase{
 
     @Override
     public void DeleteQuery(String query) {
-        PreparedStatement statement;
+        
         try {
-            statement = connection.prepareStatement(query);
-            statement.executeQuery();
+            connection.createStatement().execute(query);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -93,10 +84,8 @@ public class Database implements IDatabase{
 
     @Override
     public void UpdateQuery(String query) {
-        PreparedStatement statement;
         try {
-            statement = connection.prepareStatement(query);
-            statement.executeQuery();
+            connection.createStatement().execute(query);
         } catch (SQLException e) {
             e.printStackTrace();
         }

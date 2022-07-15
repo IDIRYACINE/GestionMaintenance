@@ -1,9 +1,12 @@
 package idir.embag.Ui.Components.ConfirmationDialog;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.Ui.Components.IDialogContent;
 import idir.embag.Ui.Panels.Generics.INodeView;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -26,7 +29,7 @@ public class ConfirmationDialog extends INodeView implements Initializable , IDi
 
     private Runnable cancelTask;
 
-    private Consumer<Object> confirmTask;
+    private Consumer<Map<EEventDataKeys,Object>> confirmTask;
     
     private String message;
 
@@ -47,7 +50,9 @@ public class ConfirmationDialog extends INodeView implements Initializable , IDi
 
     @FXML
     private void onConfirm(){
-        confirmTask.accept("Test");
+        //TODO : implement this
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        confirmTask.accept(data);
         cancelTask.run();
     }
 
@@ -62,7 +67,7 @@ public class ConfirmationDialog extends INodeView implements Initializable , IDi
 
 
     @Override
-    public void setOnConfirm(Consumer<Object> callback) {
+    public void setOnConfirm(Consumer<Map<EEventDataKeys,Object>> callback) {
         confirmTask = callback;
     }
 

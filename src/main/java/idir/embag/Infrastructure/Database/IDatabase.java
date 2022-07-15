@@ -11,8 +11,6 @@ public interface IDatabase {
 
     public ResultSet SelectQuery(String query) throws SQLException;
 
-    public ResultSet SearchQuery(String query) throws SQLException;
-
     public void InsertQuery(String query);
 
     public void DeleteQuery(String query);

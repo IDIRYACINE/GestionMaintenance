@@ -1,11 +1,12 @@
 package idir.embag.Infrastructure.Database.Implementations;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Map;
 
+import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.Infrastructure.Database.IDatabase;
 import idir.embag.Infrastructure.Database.ISessionQuery;
-import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Infrastructure.Database.Generics.MDatabase;
 import idir.embag.Infrastructure.Database.Generics.SearchWrapper;
 
@@ -25,14 +26,14 @@ public class SessionQuery extends ISessionQuery{
 
     
     @Override
-    public void RegisterSession(AttributeWrapper[] attributes) throws SQLException {
+    public void RegisterSession(Map<EEventDataKeys,Object> attributes) throws SQLException {
         String query = "INSERT INTO "+SESSION_TABLE_NAME+ InsertWrapperToQuery(attributes);
         database.InsertQuery(query);
         
     }
 
     @Override
-    public void UpdateSession(int sessionId, AttributeWrapper[] attributes)
+    public void UpdateSession(int sessionId, Map<EEventDataKeys,Object> attributes)
             throws SQLException {
                 String whereClause = " WHERE "+MDatabase.StockAttributes.ArticleId + "=" + sessionId;
                 String query = "UPDATE "+SESSION_TABLE_NAME+ UpdateWrapperToQuery(attributes)+ whereClause;
@@ -41,7 +42,7 @@ public class SessionQuery extends ISessionQuery{
     }
 
     @Override
-    public void RegisterSessionGroup(AttributeWrapper[] attributes) throws SQLException {
+    public void RegisterSessionGroup(Map<EEventDataKeys,Object> attributes) throws SQLException {
         String query = "INSERT INTO "+GROUPS_TABLE_NAME+ InsertWrapperToQuery(attributes);
         database.InsertQuery(query);
         
@@ -51,7 +52,7 @@ public class SessionQuery extends ISessionQuery{
     public void UnregisterSessionGroup(int groupId) throws SQLException {}
 
     @Override
-    public void UpdateSessionGroup(int groupId, AttributeWrapper[] attributes)
+    public void UpdateSessionGroup(int groupId, Map<EEventDataKeys,Object> attributes)
             throws SQLException {
                 String whereClause = " WHERE "+MDatabase.SessionsGroupsAttributes.Id + "=" + groupId;
                 String query = "UPDATE "+GROUPS_TABLE_NAME+ UpdateWrapperToQuery(attributes)+ whereClause;
@@ -60,7 +61,7 @@ public class SessionQuery extends ISessionQuery{
     }
 
     @Override
-    public void RegsiterSessionWorker(int workerId, AttributeWrapper[] attributes)
+    public void RegsiterSessionWorker(int workerId, Map<EEventDataKeys,Object> attributes)
             throws SQLException {
                 String whereClause = " WHERE "+MDatabase.SessionWorkersAttributes.WorkerId + "=" + workerId;
                 String query = "UPDATE "+SESSION_WORKERS_TABLE_NAME+ UpdateWrapperToQuery(attributes)+ whereClause;
@@ -72,7 +73,7 @@ public class SessionQuery extends ISessionQuery{
     public void UnregisterGroupWorker(int workerId) throws SQLException {}
 
     @Override
-    public void RegisterSessionRecord(AttributeWrapper[] attributes) throws SQLException {
+    public void RegisterSessionRecord(Map<EEventDataKeys,Object> attributes) throws SQLException {
         String query = "INSERT INTO "+RECORDS_TABLE_NAME+ InsertWrapperToQuery(attributes);
         database.InsertQuery(query);
         
@@ -163,24 +164,23 @@ public class SessionQuery extends ISessionQuery{
 
 
     @Override
-    public List<Object> SearchSessionGroup(SearchWrapper parametrers) throws SQLException {
+    public ResultSet SearchSessionGroup(SearchWrapper parametrers) throws SQLException {
         // TODO Auto-generated method stub
         return null;
     }
 
 
     @Override
-    public List<Object> SearchSessionWorker(SearchWrapper parametrers) throws SQLException {
+    public ResultSet SearchSessionWorker(SearchWrapper parametrers) throws SQLException {
         // TODO Auto-generated method stub
         return null;
     }
 
 
     @Override
-    public List<Object> SearchSessionRecord(SearchWrapper parametrers) throws SQLException {
+    public ResultSet SearchSessionRecord(SearchWrapper parametrers) throws SQLException {
         // TODO Auto-generated method stub
         return null;
     }
-
 
 }

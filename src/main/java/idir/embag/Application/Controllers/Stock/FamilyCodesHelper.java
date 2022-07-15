@@ -1,8 +1,11 @@
 package idir.embag.Application.Controllers.Stock;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Metadata.EFamilyCodeAttributes;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.EventStore.Stores.Generics.StoreDispatch.EStores;
@@ -31,7 +34,10 @@ public class FamilyCodesHelper implements IStockHelper{
     public void update(IProduct product) {
         IDialogContent dialogContent =  buildUpdateDialog();
 
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialogContent);
+
+        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
 
         StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
 
@@ -44,7 +50,10 @@ public class FamilyCodesHelper implements IStockHelper{
 
         IDialogContent dialogContent =  buildRemoveDialog();
 
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialogContent);
+
+        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
 
         StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
 
@@ -57,7 +66,10 @@ public class FamilyCodesHelper implements IStockHelper{
       
         IDialogContent dialogContent =  buildAddDialog();
 
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialogContent);
+
+        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
 
         StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
 
@@ -75,7 +87,10 @@ public class FamilyCodesHelper implements IStockHelper{
     public void search() {
         IDialogContent dialogContent =  buildSearchDialog();
 
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialogContent);
+
+        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
 
         StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
 
@@ -90,7 +105,7 @@ public class FamilyCodesHelper implements IStockHelper{
         switch(event.getAction()){
             case Add: addTableElement((IProduct)event.getData());
                 break;
-            case Remove: removeTableElement((int)event.getData());
+            case Remove: removeTableElement((int)event.getData().get(EEventDataKeys.Id));
                 break;  
             case Update: updateTableElement();
                 break;

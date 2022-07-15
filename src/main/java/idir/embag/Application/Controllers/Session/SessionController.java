@@ -1,7 +1,11 @@
 package idir.embag.Application.Controllers.Session;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.EventStore.Stores.Generics.StoreDispatch.EStores;
 import idir.embag.EventStore.Stores.Generics.StoreDispatch.StoreDispatch;
@@ -29,7 +33,10 @@ public class SessionController implements ISessionController{
     @Override
     public void manageSessionWorkers() {
         IDialogContent dialogContent =  buildWorkersManagerDialog();
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialogContent);
+
+        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
         StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
         StoreCenter.getInstance().dispatch(action);
     }
@@ -38,7 +45,10 @@ public class SessionController implements ISessionController{
     @Override
     public void manageSessionGroups() {
         IDialogContent dialogContent =  buildGroupsManagerDialog();
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialogContent);
+
+        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
         StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
         StoreCenter.getInstance().dispatch(action);
     }
@@ -50,7 +60,7 @@ public class SessionController implements ISessionController{
         switch(event.getAction()){
             case Add: addTableElement((SessionRecord)event.getData());
                 break;
-            case Remove: removeTableElement((int)event.getData());
+            case Remove: removeTableElement((int)event.getData().get(EEventDataKeys.Id));
                 break;  
             case Update: updateTableElement();
                 break;
@@ -120,6 +130,12 @@ public class SessionController implements ISessionController{
     @Override
     public void notifyActive() {
         setColumns();        
+    }
+
+    @Override
+    public void closeSession() {
+        // TODO Auto-generated method stub
+        
     }
 
 

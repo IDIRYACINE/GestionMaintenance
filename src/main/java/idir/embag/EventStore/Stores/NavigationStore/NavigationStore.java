@@ -1,6 +1,9 @@
 package idir.embag.EventStore.Stores.NavigationStore;
 
+import java.util.Map;
+
 import idir.embag.Application.Controllers.Navigation.INavigationController;
+import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.EventStore.Stores.Generics.StoreEvent.StoreEvent;
 import idir.embag.Ui.Components.IDialogContent;
@@ -21,11 +24,13 @@ public class NavigationStore {
     }
 
     public void dispatch(StoreEvent event) {
+        Map<EEventDataKeys,Object> data = event.getData();
+        
         if(event.getAction() == EStoreEventAction.Navigation){
-            navigationController.navigateToPanel(((int)event.getData()));
+            navigationController.navigateToPanel((int) data.get(EEventDataKeys.PanelId));
         }
         else{
-            navigationController.displayPopup((IDialogContent)event.getData());
+            navigationController.displayPopup((IDialogContent)data.get(EEventDataKeys.DialogContent));
         }
     }
 

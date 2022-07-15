@@ -18,7 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-
+@SuppressWarnings("unused")
 public class App extends Application {
     public static ExecutorService executorService = Executors.newSingleThreadExecutor();
     public static StackPane stackPane;

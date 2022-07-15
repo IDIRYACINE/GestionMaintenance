@@ -3,9 +3,13 @@ package idir.embag.Ui.Components.MangerDialog;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import idir.embag.DataModels.Metadata.EEventDataKeys;
+import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Ui.Components.IDialogContent;
 import idir.embag.Ui.Components.FilterDialog.AttributeField;
 import idir.embag.Ui.Panels.Generics.INodeView;
@@ -16,7 +20,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.util.Callback;
 
 public class ManagerDialog extends INodeView implements Initializable , IDialogContent {
 
@@ -34,7 +37,7 @@ public class ManagerDialog extends INodeView implements Initializable , IDialogC
     private ArrayList<AttributeField> attributesFieldControllers;
 
     private Runnable cancelTask;
-    private Consumer<Object> confirmTask;
+    private Consumer<Map<EEventDataKeys,Object>> confirmTask;
 
     public ManagerDialog() {
         fxmlPath = "/views/ManagerDialog/ManagerDialog.fxml";
@@ -54,7 +57,9 @@ public class ManagerDialog extends INodeView implements Initializable , IDialogC
 
     @FXML
     private void onConfirm(){
-        confirmTask.accept("getAttributes()");
+        //TODO: get attributes from fields
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        confirmTask.accept(data);
         cancelTask.run();
     }
 
@@ -69,10 +74,6 @@ public class ManagerDialog extends INodeView implements Initializable , IDialogC
 
     public void setAttributes(String[] attributes){
         this.attributes = attributes;
-    }
-
-    public void setOnConfirmCallback(Callback<String,Void> callback){
-
     }
 
     private void setupFieldRows(){          
@@ -97,7 +98,7 @@ public class ManagerDialog extends INodeView implements Initializable , IDialogC
 
 
     @Override
-    public void setOnConfirm(Consumer<Object> callback) {
+    public void setOnConfirm(Consumer<Map<EEventDataKeys,Object>> callback) {
         confirmTask = callback;
     }
 
@@ -105,6 +106,14 @@ public class ManagerDialog extends INodeView implements Initializable , IDialogC
     @Override
     public void setOnCancel(Runnable callback) {
         cancelTask = callback;
+    }
+
+    private AttributeWrapper[] getAttributeWrappers(){
+        AttributeWrapper[] wrappers = new AttributeWrapper[attributesFieldControllers.size()];
+        for(int i = 0 ; i < attributesFieldControllers.size() ; i++){
+            wrappers[i] = attributesFieldControllers.get(i).getAttributeWrapper();
+        }
+        return wrappers;
     }
 
 

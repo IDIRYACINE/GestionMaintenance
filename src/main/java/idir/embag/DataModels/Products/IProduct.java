@@ -5,7 +5,7 @@ public interface IProduct {
     public int getArticleCode();
     public String getArticleName();
     public int getFamilyCode();
-    public int getStockQuantity();
-    public int getStockPrice();
+    public int getQuantity();
+    public double getPrice();
     
 }

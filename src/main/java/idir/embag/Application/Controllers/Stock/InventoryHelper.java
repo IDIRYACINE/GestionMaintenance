@@ -1,8 +1,11 @@
 package idir.embag.Application.Controllers.Stock;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Metadata.EProductAttributes;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.EventStore.Stores.Generics.StoreDispatch.EStores;
@@ -33,7 +36,10 @@ public class InventoryHelper implements IStockHelper{
     @Override
     public void update(IProduct product) {
         IDialogContent dialogContent =  buildUpdateDialog();
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialogContent);
+
+        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
         StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
         StoreCenter.getInstance().dispatch(action);
     }
@@ -41,7 +47,11 @@ public class InventoryHelper implements IStockHelper{
     @Override
     public void remove(int id) {
         IDialogContent dialogContent =  buildRemoveDialog();
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
+        
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialogContent);
+
+        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
         StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
         StoreCenter.getInstance().dispatch(action);   
     }
@@ -49,7 +59,10 @@ public class InventoryHelper implements IStockHelper{
     @Override
     public void add() {
         IDialogContent dialogContent =  buildAddDialog();
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialogContent);
+
+        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
         StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
         StoreCenter.getInstance().dispatch(action);
     }
@@ -63,7 +76,10 @@ public class InventoryHelper implements IStockHelper{
     @Override
     public void search() {
         IDialogContent dialogContent =  buildSearchDialog();
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialogContent);
+
+        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
         StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
         StoreCenter.getInstance().dispatch(action);
     }
@@ -74,7 +90,7 @@ public class InventoryHelper implements IStockHelper{
         switch(event.getAction()){
             case Add: addTableElement((IProduct)event.getData());
                 break;
-            case Remove: removeTableElement((int)event.getData());
+            case Remove: removeTableElement((int)event.getData().get(EEventDataKeys.Id));
                 break;  
             case Update: updateTableElement();
                 break;
@@ -109,13 +125,13 @@ public class InventoryHelper implements IStockHelper{
         MFXTableColumn<IProduct> codebarColumn = new MFXTableColumn<>(Names.Codebar, true, Comparator.comparing(IProduct::getArticleCode));
 
         MFXTableColumn<IProduct> familyColumn = new MFXTableColumn<>(Names.FamilyCode, true, Comparator.comparing(IProduct::getFamilyCode));
-        MFXTableColumn<IProduct> priceColumn = new MFXTableColumn<>(Names.Price, true, Comparator.comparing(IProduct::getStockPrice));
+        MFXTableColumn<IProduct> priceColumn = new MFXTableColumn<>(Names.Price, true, Comparator.comparing(IProduct::getPrice));
 
 		idColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getArticleId));
 		nameColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getArticleName));
 
         codebarColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getArticleCode));
-		priceColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getStockPrice));
+		priceColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getPrice));
 		familyColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getFamilyCode));
 
         tableStock.getTableColumns().setAll(idColumn,codebarColumn,nameColumn,familyColumn,priceColumn);

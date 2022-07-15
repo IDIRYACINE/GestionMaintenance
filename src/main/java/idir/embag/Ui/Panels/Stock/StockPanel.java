@@ -1,6 +1,8 @@
 package idir.embag.Ui.Panels.Stock;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import idir.embag.Application.Controllers.Stock.FamilyCodesHelper;
@@ -8,6 +10,7 @@ import idir.embag.Application.Controllers.Stock.IStockHelper;
 import idir.embag.Application.Controllers.Stock.InventoryHelper;
 import idir.embag.Application.Controllers.Stock.StockController;
 import idir.embag.Application.Controllers.Stock.StockHelper;
+import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Metadata.EStockTypes;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.EventStore.Stores.Generics.IEventSubscriber;
@@ -47,8 +50,10 @@ public class StockPanel extends INodeView  implements  Initializable,IEventSubsc
     }
 
     private void subscribeToEvents(){
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.Subscriber, this);
 
-        StoreEvent event = new StoreEvent(EStoreEvents.SubscribtionEvent, EStoreEventAction.Subscribe, this);
+        StoreEvent event = new StoreEvent(EStoreEvents.StockEvent, EStoreEventAction.Subscribe, data);
 
         StoreDispatch action = new StoreDispatch(EStores.DataStore,event);
         StoreCenter.getInstance().dispatch(action);

@@ -3,9 +3,12 @@ package idir.embag.Ui.Components.FilterDialog;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.Ui.Components.IDialogContent;
 import idir.embag.Ui.Panels.Generics.INodeView;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -40,7 +43,7 @@ public class FilterDialog extends INodeView implements Initializable , IDialogCo
     private ArrayList<HBox> attributeSelectorNodes;
 
     private Runnable cancelTask;
-    private Consumer<Object> confirmTask;
+    private Consumer<Map<EEventDataKeys,Object>> confirmTask;
 
     public FilterDialog() {
         fxmlPath = "/views/FilterDialog/FilterDialog.fxml";
@@ -61,7 +64,9 @@ public class FilterDialog extends INodeView implements Initializable , IDialogCo
 
     @FXML
     private void onConfirm(){
-        confirmTask.accept("test");
+        //TODO: fix this
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        confirmTask.accept(data);
         cancelTask.run();
     }
 
@@ -122,7 +127,7 @@ public class FilterDialog extends INodeView implements Initializable , IDialogCo
 
 
     @Override
-    public void setOnConfirm(Consumer<Object> callback) {
+    public void setOnConfirm(Consumer<Map<EEventDataKeys,Object>> callback) {
         confirmTask = callback;
     }
 

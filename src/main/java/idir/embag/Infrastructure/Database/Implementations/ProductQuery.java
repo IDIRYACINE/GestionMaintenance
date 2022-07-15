@@ -1,11 +1,12 @@
 package idir.embag.Infrastructure.Database.Implementations;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Map;
 
+import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.Infrastructure.Database.IDatabase;
 import idir.embag.Infrastructure.Database.IProductQuery;
-import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Infrastructure.Database.Generics.MDatabase;
 import idir.embag.Infrastructure.Database.Generics.SearchWrapper;
 
@@ -22,7 +23,7 @@ public class ProductQuery extends IProductQuery{
     }
 
     @Override
-    public void RegisterStockProduct(AttributeWrapper[] attributes) throws SQLException {
+    public void RegisterStockProduct(Map<EEventDataKeys,Object> attributes) throws SQLException {
         String query = "INSERT INTO "+STOCK_TABLE_NAME+ InsertWrapperToQuery(attributes);
         database.InsertQuery(query);
     }
@@ -31,7 +32,7 @@ public class ProductQuery extends IProductQuery{
     public void UnregisterStockProduct(int articleId) throws SQLException {}
 
     @Override
-    public void UpdateStockProduct(int articleId, AttributeWrapper[] attributes) throws SQLException {
+    public void UpdateStockProduct(int articleId, Map<EEventDataKeys,Object> attributes) throws SQLException {
         String whereClause = " WHERE "+MDatabase.StockAttributes.ArticleId + "=" + articleId;
         String query = "UPDATE "+STOCK_TABLE_NAME+ UpdateWrapperToQuery(attributes)+ whereClause;
         database.UpdateQuery(query);
@@ -39,7 +40,7 @@ public class ProductQuery extends IProductQuery{
     }
 
     @Override
-    public void RegisterInventoryProduct(AttributeWrapper[] attributes) throws SQLException {
+    public void RegisterInventoryProduct(Map<EEventDataKeys,Object> attributes) throws SQLException {
         String query = "INSERT INTO "+INVENTORY_TABLE_NAME+ InsertWrapperToQuery(attributes);
         database.InsertQuery(query);
         
@@ -49,7 +50,7 @@ public class ProductQuery extends IProductQuery{
     public void UnregisterInventoryProduct(int articleId) throws SQLException {}
 
     @Override
-    public void UpdateInventoryProduct(int articleId, AttributeWrapper[] attributes)
+    public void UpdateInventoryProduct(int articleId, Map<EEventDataKeys,Object> attributes)
             throws SQLException {
 
         String whereClause = " WHERE "+MDatabase.InventoryAttributes.ArticleId + "=" + articleId;
@@ -59,14 +60,14 @@ public class ProductQuery extends IProductQuery{
     }
 
     @Override
-    public void RegisterFamilyCode(AttributeWrapper[] attributes) throws SQLException {
+    public void RegisterFamilyCode(Map<EEventDataKeys,Object> attributes) throws SQLException {
         String query = "INSERT INTO "+FAMILIES_TABLE_NAME+ InsertWrapperToQuery(attributes);
         database.InsertQuery(query);
         
     }
 
     @Override
-    public void UpdateFamilyCode(int familyId, AttributeWrapper[] attributes)
+    public void UpdateFamilyCode(int familyId, Map<EEventDataKeys,Object> attributes)
             throws SQLException {
         String whereClause = " WHERE "+MDatabase.FamilliesCodeAttributes.FamilyCode + "=" + familyId;
         String query = "UPDATE "+STOCK_TABLE_NAME+ UpdateWrapperToQuery(attributes) +whereClause;
@@ -124,22 +125,23 @@ public class ProductQuery extends IProductQuery{
     }
 
     @Override
-    public List<Object> SearchStockProduct(SearchWrapper parametrers) throws SQLException {
+    public ResultSet SearchStockProduct(SearchWrapper parametrers) throws SQLException {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public List<Object> SearchInventoryProduct(SearchWrapper parametrers) throws SQLException {
+    public ResultSet SearchInventoryProduct(SearchWrapper parametrers) throws SQLException {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public List<Object> SearchFamilyCode(SearchWrapper parametrers) throws SQLException {
+    public ResultSet SearchFamilyCode(SearchWrapper parametrers) throws SQLException {
         // TODO Auto-generated method stub
         return null;
     }
+
 
 
 

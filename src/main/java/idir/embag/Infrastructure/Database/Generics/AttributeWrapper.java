@@ -27,7 +27,7 @@ public class AttributeWrapper{
             this.value = value.toString();
             return;
         }
-        this.value = (String) value;
+        this.value = "'" +(String) value + "'";
     }
     
 }

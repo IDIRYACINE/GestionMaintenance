@@ -2,10 +2,13 @@ package idir.embag.Ui.Components;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import idir.embag.Application.Controllers.Navigation.INavigationController;
+import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.EventStore.Stores.Generics.StoreDispatch.EStores;
 import idir.embag.EventStore.Stores.Generics.StoreDispatch.StoreDispatch;
 import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEventAction;
@@ -130,10 +133,13 @@ public class NavigationSidebar extends INodeView  implements Initializable{
     }
 
     private void dispatchNavigationEvent(int panelId){
+      Map<EEventDataKeys,Object> data = new HashMap<>();
+      data.put(EEventDataKeys.PanelId,panelId);
+
       StoreEvent event = new StoreEvent(
         EStoreEvents.NavigationEvent,
         EStoreEventAction.Navigation,
-        panelId);
+        data);
 
       StoreDispatch dispatch = new StoreDispatch(EStores.NavigationStore,event);
 

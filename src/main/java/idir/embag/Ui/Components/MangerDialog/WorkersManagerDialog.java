@@ -2,9 +2,12 @@ package idir.embag.Ui.Components.MangerDialog;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Metadata.ESessionWorker;
 import idir.embag.Ui.Components.IDialogContent;
 import idir.embag.Ui.Panels.Generics.INodeView;
@@ -28,7 +31,7 @@ public class WorkersManagerDialog extends INodeView implements Initializable,IDi
     private MFXTableView<ESessionWorker> tableSessionWorkers;
 
     private Runnable cancelTask;
-    private Consumer<Object> confirmTask;
+    private Consumer<Map<EEventDataKeys,Object>> confirmTask;
 
     public WorkersManagerDialog() {
         fxmlPath = "/views/ManagerDialog/WorkersManagerDialog.fxml";
@@ -65,11 +68,12 @@ public class WorkersManagerDialog extends INodeView implements Initializable,IDi
     @FXML
     private void onUpdate(){
         //TODO: properly handle this
-        confirmTask.accept("t");
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        confirmTask.accept(data);
     }
 
     @Override
-    public void setOnConfirm(Consumer<Object> callback) {
+    public void setOnConfirm(Consumer<Map<EEventDataKeys,Object>> callback) {
         confirmTask = callback;
     }
 

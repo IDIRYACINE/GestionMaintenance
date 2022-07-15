@@ -1,9 +1,12 @@
 package idir.embag.Application.Controllers.Stock;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
+import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Metadata.EProductAttributes;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.EventStore.Stores.Generics.StoreDispatch.EStores;
@@ -34,7 +37,11 @@ public class StockHelper implements IStockHelper{
     @Override
     public void update(IProduct product) {
         IDialogContent dialogContent =  buildUpdateDialog();
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
+
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialogContent);
+
+        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
         StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
         StoreCenter.getInstance().dispatch(action);
     }
@@ -42,7 +49,11 @@ public class StockHelper implements IStockHelper{
     @Override
     public void remove(int id) {
         IDialogContent dialogContent =  buildRemoveDialog(id);
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
+
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialogContent);
+
+        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
         StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
         StoreCenter.getInstance().dispatch(action);
     }
@@ -50,7 +61,11 @@ public class StockHelper implements IStockHelper{
     @Override
     public void add() {
         IDialogContent dialogContent =  buildAddDialog();
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
+
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialogContent);
+
+        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
         StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
         StoreCenter.getInstance().dispatch(action);
     }
@@ -63,7 +78,10 @@ public class StockHelper implements IStockHelper{
     @Override
     public void search() {
         IDialogContent dialogContent =  buildSearchDialog();
-        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,dialogContent);
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialogContent);
+
+        StoreEvent event = new StoreEvent(EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,data);
         StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
         StoreCenter.getInstance().dispatch(action);
     }
@@ -71,11 +89,10 @@ public class StockHelper implements IStockHelper{
 
     @Override
     public void notifyEvent(StoreEvent event) {
-
        switch(event.getAction()){
         case Add: addTableElement((IProduct)event.getData());
             break;
-        case Remove: removeTableElement((int)event.getData());
+        case Remove: removeTableElement((int)event.getData().get(EEventDataKeys.Id));
             break;  
         case Update: updateTableElement();
             break;
@@ -110,15 +127,15 @@ public class StockHelper implements IStockHelper{
         MFXTableColumn<IProduct> codebarColumn = new MFXTableColumn<>(Names.Codebar, true, Comparator.comparing(IProduct::getArticleCode));
 
         MFXTableColumn<IProduct> familyColumn = new MFXTableColumn<>(Names.FamilyCode, true, Comparator.comparing(IProduct::getFamilyCode));
-        MFXTableColumn<IProduct> priceColumn = new MFXTableColumn<>(Names.Price, true, Comparator.comparing(IProduct::getStockPrice));
-		MFXTableColumn<IProduct> stockColumn = new MFXTableColumn<>(Names.Quantity, true, Comparator.comparing(IProduct::getStockQuantity));
+        MFXTableColumn<IProduct> priceColumn = new MFXTableColumn<>(Names.Price, true, Comparator.comparing(IProduct::getPrice));
+		MFXTableColumn<IProduct> stockColumn = new MFXTableColumn<>(Names.Quantity, true, Comparator.comparing(IProduct::getQuantity));
 
 		idColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getArticleId));
 		nameColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getArticleName));
-		stockColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getStockPrice));
+		stockColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getQuantity));
 
         codebarColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getArticleCode));
-		priceColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getStockPrice));
+		priceColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getPrice));
 		familyColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getFamilyCode));
 
         tableStock.getTableColumns().setAll(idColumn,codebarColumn,nameColumn,familyColumn,priceColumn,stockColumn);
@@ -142,9 +159,9 @@ public class StockHelper implements IStockHelper{
 
         dialog.setAttributes(attributes);
 
-        dialog.setOnConfirm(new Consumer<Object>(){
+        dialog.setOnConfirm(new Consumer<Map<EEventDataKeys,Object>>(){
             @Override
-            public void accept(Object data) {
+            public void accept(Map<EEventDataKeys,Object> data) {
                 StoreEvent event = new StoreEvent(EStoreEvents.StockEvent, EStoreEventAction.Add,data);
                 StoreDispatch action = new StoreDispatch(EStores.DataStore, event);
                 StoreCenter.getInstance().dispatch(action);
@@ -163,9 +180,9 @@ public class StockHelper implements IStockHelper{
 
         String[] attributes = EnumAttributesToString(rawAttributes);
 
-        dialog.setOnConfirm(new Consumer<Object>(){
+        dialog.setOnConfirm(new Consumer<Map<EEventDataKeys,Object>>(){
             @Override
-            public void accept(Object data) {
+            public void accept(Map<EEventDataKeys,Object>  data) {
                 StoreEvent event = new StoreEvent(EStoreEvents.StockEvent, EStoreEventAction.Update,data);
                 StoreDispatch action = new StoreDispatch(EStores.DataStore, event);
                 StoreCenter.getInstance().dispatch(action);
@@ -181,10 +198,12 @@ public class StockHelper implements IStockHelper{
     private IDialogContent buildRemoveDialog(int id){
         ConfirmationDialog dialog = new ConfirmationDialog();
 
-        dialog.setOnConfirm(new Consumer<Object>(){
+        dialog.setOnConfirm(new Consumer<Map<EEventDataKeys,Object>>(){
             @Override
-            public void accept(Object data) {
-                StoreEvent event = new StoreEvent(EStoreEvents.StockEvent, EStoreEventAction.Remove,id);
+            public void accept(Map<EEventDataKeys,Object> data) {
+                data.put(EEventDataKeys.Id, id);
+
+                StoreEvent event = new StoreEvent(EStoreEvents.StockEvent, EStoreEventAction.Remove,data);
                 StoreDispatch action = new StoreDispatch(EStores.DataStore, event);
                 StoreCenter.getInstance().dispatch(action);
             }
@@ -206,9 +225,9 @@ public class StockHelper implements IStockHelper{
 
         String[] attributes = EnumAttributesToString(rawAttributes);
 
-        dialog.setOnConfirm(new Consumer<Object>(){
+        dialog.setOnConfirm(new Consumer<Map<EEventDataKeys,Object>> (){
             @Override
-            public void accept(Object data) {
+            public void accept(Map<EEventDataKeys,Object> data) {
                 StoreEvent event = new StoreEvent(EStoreEvents.StockEvent, EStoreEventAction.Search,data);
                 StoreDispatch action = new StoreDispatch(EStores.DataStore, event);
                 StoreCenter.getInstance().dispatch(action);

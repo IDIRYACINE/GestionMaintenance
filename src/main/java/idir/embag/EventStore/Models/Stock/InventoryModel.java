@@ -2,11 +2,11 @@ package idir.embag.EventStore.Models.Stock;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
+import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.EventStore.Stores.DataStore.IDataDelegate;
 import idir.embag.Infrastructure.Database.IProductQuery;
-import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
-import idir.embag.Infrastructure.Database.Generics.SearchWrapper;
 
 public class InventoryModel  implements IDataDelegate {
 
@@ -18,9 +18,9 @@ public class InventoryModel  implements IDataDelegate {
         this.productQuery = productQuery;
     }
 
-    public void add(Object data) {
+    public void add(Map<EEventDataKeys,Object> data) {
         try {
-            productQuery.RegisterInventoryProduct((AttributeWrapper[]) data);
+            productQuery.RegisterInventoryProduct( data);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -34,23 +34,24 @@ public class InventoryModel  implements IDataDelegate {
         }
     }
 
-    public void update(int id , Object data) {
+    public void update(int id , Map<EEventDataKeys,Object> data) {
         try {
-            productQuery.UpdateInventoryProduct(id, (AttributeWrapper[]) data);
+            productQuery.UpdateInventoryProduct(id,  data);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public List<Object> search(Object data) {
+    public List<Object> search(Map<EEventDataKeys,Object> data) {
 
        List<Object> result = null;
+       /* Todo : implement this
        try {
         result = productQuery.SearchInventoryProduct((SearchWrapper) data);
         } catch (SQLException e) {
         e.printStackTrace();
-        }
+        }*/
 
         return result;
     }

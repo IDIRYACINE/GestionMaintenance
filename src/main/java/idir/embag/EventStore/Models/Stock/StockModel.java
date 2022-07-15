@@ -2,7 +2,9 @@ package idir.embag.EventStore.Models.Stock;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
+import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.EventStore.Stores.DataStore.IDataDelegate;
 import idir.embag.Infrastructure.Database.IProductQuery;
 import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
@@ -17,9 +19,9 @@ public class StockModel implements IDataDelegate{
     }
 
     @Override
-    public void add(Object data) {
+    public void add(Map<EEventDataKeys,Object> data) {
         try {
-            productQuery.RegisterStockProduct((AttributeWrapper[]) data);
+            productQuery.RegisterStockProduct( data);
         } catch (SQLException e) {
         
             e.printStackTrace();
@@ -39,9 +41,9 @@ public class StockModel implements IDataDelegate{
     }
 
     @Override
-    public void update(int id, Object data) {
+    public void update(int id, Map<EEventDataKeys,Object> data) {
         try {
-            productQuery.UpdateStockProduct(id, (AttributeWrapper[]) data);
+            productQuery.UpdateStockProduct(id,  data);
         } catch (SQLException e) {
             
             e.printStackTrace();
@@ -50,14 +52,15 @@ public class StockModel implements IDataDelegate{
     }
 
     @Override
-    public List<Object> search(Object data) {
+    public List<Object> search(Map<EEventDataKeys,Object> data) {
         List<Object> result = null;
+        /*  TODO : Implement
         try {
             result = productQuery.SearchStockProduct((SearchWrapper) data);
         } catch (SQLException e) {
            
             e.printStackTrace();
-        }
+        }*/
         
         return result;
     }
