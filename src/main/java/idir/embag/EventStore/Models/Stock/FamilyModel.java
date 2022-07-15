@@ -6,10 +6,8 @@ import java.util.List;
 import idir.embag.EventStore.Stores.DataStore.IDataDelegate;
 import idir.embag.Infrastructure.Database.IProductQuery;
 import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
-import idir.embag.Infrastructure.Database.Generics.MDatabase;
 import idir.embag.Infrastructure.Database.Generics.SearchWrapper;
 
-@SuppressWarnings("unchecked")
 public class FamilyModel implements IDataDelegate{
 
     private IProductQuery productQuery;
@@ -21,7 +19,7 @@ public class FamilyModel implements IDataDelegate{
     @Override
     public void add(Object data) {
         try {
-            productQuery.RegisterFamilyCode((AttributeWrapper<MDatabase.FamilliesCodeAttributes>[])data);
+            productQuery.RegisterFamilyCode((AttributeWrapper[])data);
         } catch (SQLException e) {
            
             e.printStackTrace();
@@ -42,7 +40,7 @@ public class FamilyModel implements IDataDelegate{
     @Override
     public void update(int id, Object data) {
         try {
-            productQuery.UpdateFamilyCode(id, (AttributeWrapper<MDatabase.FamilliesCodeAttributes>[])data);
+            productQuery.UpdateFamilyCode(id, (AttributeWrapper[])data);
         } catch (SQLException e) {
             e.printStackTrace();
         }

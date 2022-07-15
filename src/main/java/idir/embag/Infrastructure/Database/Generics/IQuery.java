@@ -2,7 +2,7 @@ package idir.embag.Infrastructure.Database.Generics;
 
 public abstract class IQuery {
     
-    protected <T> String InsertWrapperToQuery(AttributeWrapper<T>[] attrs){
+    protected <T> String InsertWrapperToQuery(AttributeWrapper[] attrs){
         String result = " (";
         String values = " VALUES(";
         int length = attrs.length;
@@ -20,7 +20,7 @@ public abstract class IQuery {
         return result + values;
     }
 
-    protected <T> String UpdateWrapperToQuery(AttributeWrapper<T>[] attrs){
+    protected <T> String UpdateWrapperToQuery(AttributeWrapper[] attrs){
         String result = " Set ";
         
         int length = attrs.length;

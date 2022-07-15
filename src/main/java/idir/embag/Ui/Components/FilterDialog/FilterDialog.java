@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
+
+import idir.embag.Ui.Components.IDialogContent;
 import idir.embag.Ui.Panels.Generics.INodeView;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXListView;
@@ -14,7 +17,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class FilterDialog<T> extends INodeView implements Initializable{
+public class FilterDialog extends INodeView implements Initializable , IDialogContent{
 
     @FXML
     private VBox root;
@@ -28,17 +31,19 @@ public class FilterDialog<T> extends INodeView implements Initializable{
     @FXML
     private MFXListView<HBox> listViewSelectedAttrb;
 
-    private T[] attributes;
+    private String[] attributes;
 
-    private ArrayList<AttributeField<T>> attributesFieldControllers;
+    private ArrayList<AttributeField> attributesFieldControllers;
     private ArrayList<HBox> selectedAttributesNodes;
 
-    private ArrayList<AttributeSelector<T>> attributeSelectorControllers;
+    private ArrayList<AttributeSelector> attributeSelectorControllers;
     private ArrayList<HBox> attributeSelectorNodes;
+
+    private Runnable cancelTask;
+    private Consumer<Object> confirmTask;
 
     public FilterDialog() {
         fxmlPath = "/views/FilterDialog/FilterDialog.fxml";
-        
     }
 
    
@@ -55,18 +60,23 @@ public class FilterDialog<T> extends INodeView implements Initializable{
     }
 
     @FXML
-    private void onConfirm(){}
+    private void onConfirm(){
+        confirmTask.accept("test");
+        cancelTask.run();
+    }
 
     @FXML
-    private void onCancel(){}
+    private void onCancel(){
+        cancelTask.run();
+    }
 
     private void setupSelectedAttributes(){
-        AttributeField<T> controller ;
+        AttributeField controller ;
 
         for(int i = 0 ; i < attributes.length;i++){
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/FilterDialog/AttributeWrapperCell.fxml"));    
-                controller = new AttributeField<T>(attributes[i]);
+                controller = new AttributeField(attributes[i]);
                 attributesFieldControllers.add(controller);
                 loader.setController(controller);
                 selectedAttributesNodes.add(loader.load());
@@ -81,11 +91,11 @@ public class FilterDialog<T> extends INodeView implements Initializable{
 
     private void setupAttributesSelector(){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/ManagerDialog/AttributeRow.fxml"));     
-        AttributeSelector<T> controller ;
+        AttributeSelector controller ;
 
         for(int i = 0 ; i < attributes.length;i++){
             try {
-                controller = new AttributeSelector<T>(attributes[i]);
+                controller = new AttributeSelector(attributes[i]);
                 attributeSelectorControllers.add(controller);
                 loader.setController(controller);
                 attributeSelectorNodes.add(loader.load());
@@ -99,15 +109,27 @@ public class FilterDialog<T> extends INodeView implements Initializable{
     }
 
     private void setup(){
-        attributesFieldControllers = new ArrayList<AttributeField<T>>();
+        attributesFieldControllers = new ArrayList<AttributeField>();
         selectedAttributesNodes = new ArrayList<>();
 
-        attributeSelectorControllers = new ArrayList<AttributeSelector<T>>();
+        attributeSelectorControllers = new ArrayList<AttributeSelector>();
         attributeSelectorNodes = new ArrayList<>();
     }
 
-    public void setAttributes(T[] attributes){
+    public void setAttributes(String[] attributes){
         this.attributes = attributes;
+    }
+
+
+    @Override
+    public void setOnConfirm(Consumer<Object> callback) {
+        confirmTask = callback;
+    }
+
+
+    @Override
+    public void setOnCancel(Runnable callback) {
+        cancelTask = callback;
     }
     
 }

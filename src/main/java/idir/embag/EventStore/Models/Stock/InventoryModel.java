@@ -7,9 +7,7 @@ import idir.embag.EventStore.Stores.DataStore.IDataDelegate;
 import idir.embag.Infrastructure.Database.IProductQuery;
 import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Infrastructure.Database.Generics.SearchWrapper;
-import idir.embag.Infrastructure.Database.Generics.MDatabase.InventoryAttributes;
 
-@SuppressWarnings("unchecked")
 public class InventoryModel  implements IDataDelegate {
 
     IProductQuery productQuery;
@@ -22,7 +20,7 @@ public class InventoryModel  implements IDataDelegate {
 
     public void add(Object data) {
         try {
-            productQuery.RegisterInventoryProduct((AttributeWrapper<InventoryAttributes>[]) data);
+            productQuery.RegisterInventoryProduct((AttributeWrapper[]) data);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -38,7 +36,7 @@ public class InventoryModel  implements IDataDelegate {
 
     public void update(int id , Object data) {
         try {
-            productQuery.UpdateInventoryProduct(id, (AttributeWrapper<InventoryAttributes>[]) data);
+            productQuery.UpdateInventoryProduct(id, (AttributeWrapper[]) data);
         } catch (SQLException e) {
             e.printStackTrace();
         }

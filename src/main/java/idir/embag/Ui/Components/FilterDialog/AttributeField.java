@@ -9,7 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
-public class AttributeField<T> implements Initializable {
+public class AttributeField implements Initializable {
 
     @FXML 
     private Label attributeLabel;
@@ -17,15 +17,14 @@ public class AttributeField<T> implements Initializable {
     @FXML 
     private MFXTextField attributeField;
 
-    private AttributeWrapper<T> attributeWrapper;
+    private AttributeWrapper attributeWrapper;
 
-
-    public AttributeField(T attribute) {
-        this.attributeWrapper = new AttributeWrapper<T>(attribute,"");
+    public AttributeField(String attribute) {
+        this.attributeWrapper = new AttributeWrapper(attribute,"");
     }
 
 
-    public AttributeWrapper<T> getAttributeWrapper(){
+    public AttributeWrapper getAttributeWrapper(){
         attributeWrapper.setValue(attributeField.getText());
         return attributeWrapper;
     }

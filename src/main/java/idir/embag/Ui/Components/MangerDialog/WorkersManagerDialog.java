@@ -3,8 +3,10 @@ package idir.embag.Ui.Components.MangerDialog;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
-import idir.embag.DataModels.Workers.ESessionWorker;
+import idir.embag.DataModels.Metadata.ESessionWorker;
+import idir.embag.Ui.Components.IDialogContent;
 import idir.embag.Ui.Panels.Generics.INodeView;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
@@ -14,7 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 
-public class WorkersManagerDialog extends INodeView implements Initializable{
+public class WorkersManagerDialog extends INodeView implements Initializable,IDialogContent {
     
     @FXML
     private VBox root;
@@ -25,7 +27,8 @@ public class WorkersManagerDialog extends INodeView implements Initializable{
     @FXML
     private MFXTableView<ESessionWorker> tableSessionWorkers;
 
-    
+    private Runnable cancelTask;
+    private Consumer<Object> confirmTask;
 
     public WorkersManagerDialog() {
         fxmlPath = "/views/ManagerDialog/WorkersManagerDialog.fxml";
@@ -55,9 +58,26 @@ public class WorkersManagerDialog extends INodeView implements Initializable{
     }
 
     @FXML
-    private void onRemove(){}
+    private void onRemove(){
+        cancelTask.run();
+    }
 
     @FXML
-    private void onUpdate(){}
-    
+    private void onUpdate(){
+        //TODO: properly handle this
+        confirmTask.accept("t");
+    }
+
+    @Override
+    public void setOnConfirm(Consumer<Object> callback) {
+        confirmTask = callback;
+    }
+
+    @Override
+    public void setOnCancel(Runnable callback) {
+        cancelTask = callback;
+    }
+
+  
+
 }

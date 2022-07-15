@@ -1,20 +1,20 @@
 package idir.embag.Infrastructure.Database.Generics;
 
-public class AttributeWrapper<T>{
-    private T attributeName;
+public class AttributeWrapper{
+    private String attributeName;
 
     private String value;
 
-    public AttributeWrapper(T attributeName, Object value) {
+    public AttributeWrapper(String attributeName, Object value) {
         this.attributeName = attributeName;
         setValue(value);
     }
 
-    public T getAttributeName() {
+    public String getAttributeName() {
         return attributeName;
     }
 
-    public void setAttributeName(T attributeName) {
+    public void setAttributeName(String attributeName) {
         this.attributeName = attributeName;
     }
 

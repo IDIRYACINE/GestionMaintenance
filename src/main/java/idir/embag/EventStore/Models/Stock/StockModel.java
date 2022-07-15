@@ -7,9 +7,7 @@ import idir.embag.EventStore.Stores.DataStore.IDataDelegate;
 import idir.embag.Infrastructure.Database.IProductQuery;
 import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Infrastructure.Database.Generics.SearchWrapper;
-import idir.embag.Infrastructure.Database.Generics.MDatabase.StockAttributes;
 
-@SuppressWarnings("unchecked")
 public class StockModel implements IDataDelegate{
 
     IProductQuery productQuery;
@@ -21,7 +19,7 @@ public class StockModel implements IDataDelegate{
     @Override
     public void add(Object data) {
         try {
-            productQuery.RegisterStockProduct((AttributeWrapper<StockAttributes>[]) data);
+            productQuery.RegisterStockProduct((AttributeWrapper[]) data);
         } catch (SQLException e) {
         
             e.printStackTrace();
@@ -43,7 +41,7 @@ public class StockModel implements IDataDelegate{
     @Override
     public void update(int id, Object data) {
         try {
-            productQuery.UpdateStockProduct(id, (AttributeWrapper<StockAttributes>[]) data);
+            productQuery.UpdateStockProduct(id, (AttributeWrapper[]) data);
         } catch (SQLException e) {
             
             e.printStackTrace();

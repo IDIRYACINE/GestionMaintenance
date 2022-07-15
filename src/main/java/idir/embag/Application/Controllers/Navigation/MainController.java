@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import idir.embag.EventStore.Stores.NavigationStore.NavigationStore;
+import idir.embag.Ui.Components.IDialogContent;
 import idir.embag.Ui.Components.NavigationSidebar;
 import idir.embag.Ui.Panels.Generics.INodeView;
 import idir.embag.Ui.Panels.Historique.HistoryPanel;
@@ -67,12 +68,20 @@ public class MainController  implements Initializable,INavigationController  {
     }
 
     @Override
-    public void displayPopup(Node node) {
+    public void displayPopup(IDialogContent content) {
+
       dialog = MFXGenericDialogBuilder.build()
-      .setContent(node)
+      .setContent(content.getView())
       .setShowAlwaysOnTop(true)
       .toStageDialogBuilder()
       .get();
+
+      content.setOnCancel(new Runnable(){
+        @Override
+        public void run() {
+          dialog.close();
+        }
+      });
       
       dialog.show();
     }

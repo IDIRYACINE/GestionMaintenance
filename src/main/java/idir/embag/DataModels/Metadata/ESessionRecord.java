@@ -1,4 +1,4 @@
-package idir.embag.DataModels.Session;
+package idir.embag.DataModels.Metadata;
 
 public enum ESessionRecord {
     StartDate,

@@ -2,96 +2,96 @@ package idir.embag.Infrastructure.Database.Generics;
 
 public class MDatabase {
 
-public static enum Tables{
-    Stock,
-    Sessions,
-    Inventory,
-    Workers,
-    SessionsGroups,
-    FamilyCodes,
-    SessionsRecords,
-    CodeBars,
-    SessionWorkers,
-    ActiveSession,
+public static class Tables{
+    public static final String Stock = "Stock";
+    public static final String Sessions = "Sessions";
+    public static final String Inventory = "Inventory";
+    public static final String Workers = "Workers";
+    public static final String SessionsGroups = "SessionsGroups";
+    public static final String FamilyCodes = "FamilyCodes";
+    public static final String SessionsRecords = "SessionsRecords";
+    public static final String CodeBars = "CodeBars";
+    public static final String SessionWorkers = "SessionWorkers";
+    public static final String ActiveSession = "ActiveSession";
 }
 
-public static enum StockAttributes {
-    ArticleId,
-    ArticleName,
-    Price,
-    Quantity,
-    FamilyCode,
+public static class StockAttributes {
+    public static final String ArticleId = "ArticleId";
+    public static final String ArticleName = "ArticleName";
+    public static final String Price = "Price";
+    public static final String Quantity = "Quantity";
+    public static final String FamilyCode = "FamilyCode";
 }
 
-public static enum InventoryAttributes{
-    ArticleId,
-    ArticleCode,
-    ArticleName,
-    StockId,
-    Price,
-    FamilyCode,
+public static class InventoryAttributes{
+    public static final String ArticleId = "ArticleId";
+    public static final String ArticleCode = "ArticleCode";
+    public static final String ArticleName = "ArticleName";
+    public static final String StockId = "StockId";
+    public static final String Price = "Price";
+    public static final String FamilyCode = "FamilyCode";
 
    
 }
 
-public static enum FamilliesCodeAttributes{
-    FamilyCode,
-    FamilyName,
+public static class FamilliesCodeAttributes{
+    public static final String FamilyCode = "FamilyCode";
+    public static final String FamilyName = "FamilyName";
 }
 
-public static enum CodeBarsAttributes{
-    Code,
-    Type,
-    Link,
+public static class CodeBarsAttributes{
+    public static final String Code = "Code";
+    public static final String Type = "Type";
+    public static final String Link = "Link";
 }
 
-public static enum SessionsAttributes{
-    SessionId,
-    StartDate,
-    EndDate,
-    PriceShiftValue,
-    QuantityShiftValue,
+public static class SessionsAttributes{
+    public static final String SessionId = "SessionId";
+    public static final String StartDate = "StartDate";
+    public static final String EndDate = "EndDate";
+    public static final String PriceShiftValue = "PriceShiftValue";
+    public static final String QuantityShiftValue = "QuantityShiftValue";
 }
 
-public static enum SessionsRecordsAttributes{
-    RecordId,
-    SessionId ,
-    WorkerId ,
-    GroupId ,
-    InventoryId ,
-    RecordDate ,
-    StockQuantity ,
-    RecordQuantity ,
-    StockPrice ,
-    QuantityShift ,
-    PriceShift ,
+public static class SessionsRecordsAttributes{
+    public static final String RecordId = "RecordId";
+    public static final String SessionId = "SessionId";
+    public static final String WorkerId  = "WorkerId";
+    public static final String GroupId = "GroupId";
+    public static final String InventoryId = "InventoryId";
+    public static final String RecordDate = "RecordDate";
+    public static final String StockQuantity = "StockQuantity";
+    public static final String RecordQuantity = "RecordQuantity";
+    public static final String StockPrice = "StockPrice";
+    public static final String QuantityShift = "QuantityShift";
+    public static final String PriceShift = "PriceShift";
 }
 
-public static enum SessionsGroupsAttributes{
-    Id,
-    SessionId,
-    Name,
+public static class SessionsGroupsAttributes{
+    public static final String Id = "Id";
+    public static final String SessionId = "SessionId";
+    public static final String Name = "Name";
 }
 
-public static enum WorkersAttributes{
-    WorkerId,
-    Name,
-    Email,
-    Phone
+public static class WorkersAttributes{
+    public static final String  WorkerId = "WorkerId";
+    public static final String Name = "Name";
+    public static final String Email = "Email";
+    public static final String Phone = "Phone";
 }
 
-public static enum SessionWorkersAttributes{
-    Id,
-    WorkerId,
-    GroupId,
+public static class SessionWorkersAttributes{
+    public static final String Id = "Id";
+    public static final String WorkerId = "WorkerId";
+    public static final String GroupId = "GroupId";
 
 }
 
 
-public static enum ActiveSessionAttributes{
-    Id,
-    WorkerId,
-    Password
+public static class ActiveSessionAttributes{
+    public static final String Id = "Id";
+    public static final String WorkerId = "WorkerId";
+    public static final String Password = "Password";
 }
     
 }

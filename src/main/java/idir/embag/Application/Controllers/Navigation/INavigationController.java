@@ -1,12 +1,12 @@
 package idir.embag.Application.Controllers.Navigation;
 
-import javafx.scene.Node;
+import idir.embag.Ui.Components.IDialogContent;
 
 public interface INavigationController {
 
     
     public void navigateToPanel(int panelId);
     
-    public void displayPopup(Node node);
+    public void displayPopup(IDialogContent content);
     
 }

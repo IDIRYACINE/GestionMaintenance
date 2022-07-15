@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
+import idir.embag.Ui.Components.IDialogContent;
 import idir.embag.Ui.Components.FilterDialog.AttributeField;
 import idir.embag.Ui.Panels.Generics.INodeView;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -16,7 +18,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
-public class ManagerDialog<T> extends INodeView implements Initializable {
+public class ManagerDialog extends INodeView implements Initializable , IDialogContent {
 
     @FXML
     private BorderPane root;
@@ -27,9 +29,12 @@ public class ManagerDialog<T> extends INodeView implements Initializable {
     @FXML
     private VBox fieldsContainer;
 
-    private T[] attributes;
+    private String[] attributes;
 
-    private ArrayList<AttributeField<T>> attributesFieldControllers;
+    private ArrayList<AttributeField> attributesFieldControllers;
+
+    private Runnable cancelTask;
+    private Consumer<Object> confirmTask;
 
     public ManagerDialog() {
         fxmlPath = "/views/ManagerDialog/ManagerDialog.fxml";
@@ -49,19 +54,20 @@ public class ManagerDialog<T> extends INodeView implements Initializable {
 
     @FXML
     private void onConfirm(){
-        
+        confirmTask.accept("getAttributes()");
+        cancelTask.run();
     }
 
     @FXML
     private void onCancel(){
-
+        cancelTask.run();
     }
 
     public void setOnConfirmText(String title){
         btnConfirm.setText(title);
     }
 
-    public void setAttributes(T[] attributes){
+    public void setAttributes(String[] attributes){
         this.attributes = attributes;
     }
 
@@ -72,12 +78,12 @@ public class ManagerDialog<T> extends INodeView implements Initializable {
     private void setupFieldRows(){          
         attributesFieldControllers = new ArrayList<>();
         ArrayList<Node> nodes  = new ArrayList<>();
-        AttributeField<T> controller ;
+        AttributeField controller ;
 
         for(int i = 0 ; i < attributes.length;i++){
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/ManagerDialog/AttributeRow.fxml"));  
-                controller = new AttributeField<T>(attributes[i]);
+                controller = new AttributeField(attributes[i]);
                 attributesFieldControllers.add(controller);
                 loader.setController(controller);
                 nodes.add(loader.load());
@@ -87,6 +93,18 @@ public class ManagerDialog<T> extends INodeView implements Initializable {
         }
         fieldsContainer.getChildren().addAll(nodes);
 
+    }
+
+
+    @Override
+    public void setOnConfirm(Consumer<Object> callback) {
+        confirmTask = callback;
+    }
+
+
+    @Override
+    public void setOnCancel(Runnable callback) {
+        cancelTask = callback;
     }
 
 

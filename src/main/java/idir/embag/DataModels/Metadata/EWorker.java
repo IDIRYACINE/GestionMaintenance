@@ -1,4 +1,4 @@
-package idir.embag.DataModels.Workers;
+package idir.embag.DataModels.Metadata;
 
 public enum EWorker {
     FullName,
