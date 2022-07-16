@@ -1,17 +1,18 @@
 package idir.embag.EventStore.Stores.StoreCenter;
 
-import idir.embag.Application.Controllers.Navigation.INavigationController;
 import idir.embag.EventStore.Models.History.HistoryModel;
 import idir.embag.EventStore.Models.Stock.FamilyModel;
 import idir.embag.EventStore.Models.Stock.InventoryModel;
 import idir.embag.EventStore.Models.Stock.StockModel;
 import idir.embag.EventStore.Stores.DataStore.DataStore;
-import idir.embag.EventStore.Stores.DataStore.IDataStore;
-import idir.embag.EventStore.Stores.Generics.StoreDispatch.EStores;
-import idir.embag.EventStore.Stores.Generics.StoreDispatch.StoreDispatch;
 import idir.embag.EventStore.Stores.NavigationStore.NavigationStore;
 import idir.embag.Infrastructure.ServicesCenter;
 import idir.embag.Infrastructure.Initialisers.DatabaseInitialiser;
+import idir.embag.Types.Application.Navigation.INavigationController;
+import idir.embag.Types.Stores.DataStore.IDataStore;
+import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
+import idir.embag.Types.Stores.Generics.StoreDispatch.StoreDispatch;
+import idir.embag.Types.Stores.StoreCenter.IStoresCenter;
 
 public class StoreCenter implements IStoresCenter{
 

@@ -3,10 +3,10 @@ package idir.embag.Ui.Panels.Workers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import idir.embag.Application.Controllers.Workers.IWorkersController;
-import idir.embag.Application.Controllers.Workers.WorkersController;
+import idir.embag.Application.Workers.WorkersController;
 import idir.embag.DataModels.Workers.Worker;
-import idir.embag.Ui.Panels.Generics.INodeView;
+import idir.embag.Types.Application.Workers.IWorkersController;
+import idir.embag.Types.Panels.Generics.INodeView;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import javafx.fxml.FXML;

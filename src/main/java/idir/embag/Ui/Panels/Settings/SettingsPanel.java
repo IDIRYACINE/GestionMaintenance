@@ -4,7 +4,7 @@ package idir.embag.Ui.Panels.Settings;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import idir.embag.Ui.Panels.Generics.INodeView;
+import idir.embag.Types.Panels.Generics.INodeView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;

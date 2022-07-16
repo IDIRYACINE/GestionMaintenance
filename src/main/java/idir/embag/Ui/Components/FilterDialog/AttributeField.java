@@ -4,7 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import idir.embag.DataModels.Metadata.EEventDataKeys;
-import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
+import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

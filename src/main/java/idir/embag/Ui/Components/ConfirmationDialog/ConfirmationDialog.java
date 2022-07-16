@@ -7,8 +7,8 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import idir.embag.DataModels.Metadata.EEventDataKeys;
-import idir.embag.Ui.Components.IDialogContent;
-import idir.embag.Ui.Panels.Generics.INodeView;
+import idir.embag.Types.Panels.Components.IDialogContent;
+import idir.embag.Types.Panels.Generics.INodeView;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -32,8 +32,6 @@ public class ConfirmationDialog extends INodeView implements Initializable , IDi
     private Consumer<Map<EEventDataKeys,Object>> confirmTask;
     
     private String message;
-
-    private EEventDataKeys key = EEventDataKeys.None;
 
     public ConfirmationDialog() {
         fxmlPath = "/views/Forms/ConfirmationDialog.fxml";
@@ -82,7 +80,6 @@ public class ConfirmationDialog extends INodeView implements Initializable , IDi
 
     @Override
     public void setEventKey(EEventDataKeys key) {
-       this.key = key;
     }
 
 

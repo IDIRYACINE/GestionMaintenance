@@ -4,7 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import idir.embag.DataModels.Session.SessionRecord;
-import idir.embag.Ui.Panels.Generics.INodeView;
+import idir.embag.Types.Panels.Generics.INodeView;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import javafx.fxml.FXML;

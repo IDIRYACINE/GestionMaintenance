@@ -3,11 +3,10 @@ package idir.embag.Ui.Panels.Session;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import idir.embag.Application.Controllers.Session.ISessionController;
-import idir.embag.Application.Controllers.Session.SessionController;
+import idir.embag.Application.Session.SessionController;
 import idir.embag.DataModels.Session.SessionRecord;
-import idir.embag.Ui.Components.MangerDialog.WorkersManagerDialog;
-import idir.embag.Ui.Panels.Generics.INodeView;
+import idir.embag.Types.Panels.Generics.INodeView;
+import idir.embag.Ui.Components.MangerDialog.SessionWorkersDialog;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import javafx.fxml.FXML;
@@ -26,7 +25,7 @@ public class SessionPanel extends INodeView implements Initializable {
     @FXML
     private MFXTableView<SessionRecord> tableSession;
 
-    private ISessionController controller;
+    private SessionController controller;
 
     public SessionPanel() {
         fxmlPath = "/views/SessionPanel.fxml";
@@ -42,7 +41,7 @@ public class SessionPanel extends INodeView implements Initializable {
     private void manageWorkers(){
        
         // Build Dialog content and set it up
-        WorkersManagerDialog fDialog = new WorkersManagerDialog();
+        SessionWorkersDialog fDialog = new SessionWorkersDialog();
         fDialog.loadFxml();
         
        // Dispatch a display event to store

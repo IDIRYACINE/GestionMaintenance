@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import idir.embag.Application.Controllers.Navigation.INavigationController;
-import idir.embag.Application.Controllers.Navigation.MainController;
-import idir.embag.EventStore.Stores.StoreCenter.IStoresCenter;
+import idir.embag.Application.Navigation.MainController;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Infrastructure.ServicesCenter;
+import idir.embag.Types.Application.Navigation.INavigationController;
+import idir.embag.Types.Stores.StoreCenter.IStoresCenter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

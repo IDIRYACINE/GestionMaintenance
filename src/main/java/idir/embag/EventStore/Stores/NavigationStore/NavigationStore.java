@@ -2,11 +2,11 @@ package idir.embag.EventStore.Stores.NavigationStore;
 
 import java.util.Map;
 
-import idir.embag.Application.Controllers.Navigation.INavigationController;
 import idir.embag.DataModels.Metadata.EEventDataKeys;
-import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEventAction;
-import idir.embag.EventStore.Stores.Generics.StoreEvent.StoreEvent;
-import idir.embag.Ui.Components.IDialogContent;
+import idir.embag.Types.Application.Navigation.INavigationController;
+import idir.embag.Types.Panels.Components.IDialogContent;
+import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
+import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 
 public class NavigationStore {
 

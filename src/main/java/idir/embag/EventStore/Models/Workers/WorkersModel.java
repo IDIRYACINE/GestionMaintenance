@@ -1,6 +1,6 @@
 package idir.embag.EventStore.Models.Workers;
 
-import idir.embag.Infrastructure.Database.IWorkerQuery;
+import idir.embag.Types.Infrastructure.Database.IWorkerQuery;
 
 public class WorkersModel {
 

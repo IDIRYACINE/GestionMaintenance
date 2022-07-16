@@ -3,10 +3,11 @@ package idir.embag.EventStore.Models.History;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+
 import idir.embag.DataModels.Metadata.EEventDataKeys;
-import idir.embag.EventStore.Stores.DataStore.IDataDelegate;
-import idir.embag.Infrastructure.Database.ISessionQuery;
-import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
+import idir.embag.Types.Infrastructure.Database.ISessionQuery;
+import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
+import idir.embag.Types.Stores.DataStore.IDataDelegate;
 
 @SuppressWarnings("unchecked")
 public class HistoryModel implements IDataDelegate{

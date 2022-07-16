@@ -9,10 +9,10 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import idir.embag.DataModels.Metadata.EEventDataKeys;
-import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
-import idir.embag.Ui.Components.IDialogContent;
+import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
+import idir.embag.Types.Panels.Components.IDialogContent;
+import idir.embag.Types.Panels.Generics.INodeView;
 import idir.embag.Ui.Components.FilterDialog.AttributeField;
-import idir.embag.Ui.Panels.Generics.INodeView;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

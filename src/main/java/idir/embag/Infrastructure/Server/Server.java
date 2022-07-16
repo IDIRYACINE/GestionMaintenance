@@ -1,5 +1,7 @@
 package idir.embag.Infrastructure.Server;
 
+import idir.embag.Types.Infrastructure.Server.IServer;
+
 public class Server implements IServer{
 
     @Override

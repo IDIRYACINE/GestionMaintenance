@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import idir.embag.Types.Infrastructure.DataConverters.IDataConverter;
 
 public class Excel implements IDataConverter {
 
@@ -119,10 +120,9 @@ public class Excel implements IDataConverter {
                  
                 while (cellIterator.hasNext()) 
                 {
-                    Cell cell = cellIterator.next();
-                    //TODO: do something with the cell
+                   //TODO: do something
                 }
-                //TODO: do something with the row
+               
             }
             
             workbook.close();

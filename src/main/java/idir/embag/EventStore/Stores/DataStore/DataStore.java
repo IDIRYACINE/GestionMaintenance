@@ -6,10 +6,12 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import idir.embag.DataModels.Metadata.EEventDataKeys;
-import idir.embag.EventStore.Stores.Generics.IEventSubscriber;
-import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEventAction;
-import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEvents;
-import idir.embag.EventStore.Stores.Generics.StoreEvent.StoreEvent;
+import idir.embag.Types.Stores.DataStore.IDataDelegate;
+import idir.embag.Types.Stores.DataStore.IDataStore;
+import idir.embag.Types.Stores.Generics.IEventSubscriber;
+import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
+import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
+import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 
 public class DataStore implements IDataStore {
     

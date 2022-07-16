@@ -9,8 +9,8 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import idir.embag.DataModels.Metadata.EEventDataKeys;
-import idir.embag.Ui.Components.IDialogContent;
-import idir.embag.Ui.Panels.Generics.INodeView;
+import idir.embag.Types.Panels.Components.IDialogContent;
+import idir.embag.Types.Panels.Generics.INodeView;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXListView;
 import javafx.fxml.FXML;
@@ -44,8 +44,6 @@ public class FilterDialog extends INodeView implements Initializable , IDialogCo
 
     private Runnable cancelTask;
     private Consumer<Map<EEventDataKeys,Object>> confirmTask;
-
-    private EEventDataKeys key = EEventDataKeys.None;
 
     public FilterDialog() {
         fxmlPath = "/views/FilterDialog/FilterDialog.fxml";
@@ -142,7 +140,6 @@ public class FilterDialog extends INodeView implements Initializable , IDialogCo
 
     @Override
     public void setEventKey(EEventDataKeys key) {
-        this.key = key;
     }
     
 }

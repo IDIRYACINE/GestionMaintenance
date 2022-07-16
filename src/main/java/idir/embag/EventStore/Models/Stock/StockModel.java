@@ -4,18 +4,19 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.DataModels.Products.StockProduct;
-import idir.embag.EventStore.Stores.DataStore.IDataDelegate;
-import idir.embag.EventStore.Stores.Generics.StoreDispatch.EStores;
-import idir.embag.EventStore.Stores.Generics.StoreDispatch.StoreDispatch;
-import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEventAction;
-import idir.embag.EventStore.Stores.Generics.StoreEvent.EStoreEvents;
-import idir.embag.EventStore.Stores.Generics.StoreEvent.StoreEvent;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
-import idir.embag.Infrastructure.Database.IProductQuery;
-import idir.embag.Infrastructure.Database.Generics.AttributeWrapper;
+import idir.embag.Types.Infrastructure.Database.IProductQuery;
+import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
+import idir.embag.Types.Stores.DataStore.IDataDelegate;
+import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
+import idir.embag.Types.Stores.Generics.StoreDispatch.StoreDispatch;
+import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
+import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
+import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 
 @SuppressWarnings("unchecked")
 public class StockModel implements IDataDelegate{
