@@ -1,10 +1,9 @@
 package idir.embag.EventStore.Models.Stock;
 
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.DataModels.Products.StockProduct;
@@ -28,17 +27,14 @@ public class StockModel implements IDataDelegate{
     }
 
     @Override
-    public void add(Object data) {
-        Map<EEventDataKeys,AttributeWrapper> result = (Map<EEventDataKeys, AttributeWrapper>) data;
-
+    public void add(Map<EEventDataKeys,Object> data) {
+        
         try {
-            productQuery.RegisterStockProduct(result.values());
-            IProduct product = buildProduct(result);
+            productQuery.RegisterStockProduct((Collection<AttributeWrapper>)data.get(EEventDataKeys.AttributeWrappersList));
+            IProduct product = buildProduct(data);
+            data.put(EEventDataKeys.Product, product);
 
-            Map<EEventDataKeys,Object> otherData = new HashMap<>();
-            otherData.put(EEventDataKeys.Product, product);
-
-            dispatchEvent(EStores.DataStore, EStoreEvents.NotificationEvent, EStoreEventAction.Notify, otherData);
+            dispatchEvent(EStores.DataStore, EStoreEvents.NotificationEvent, EStoreEventAction.Add, data);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -46,10 +42,12 @@ public class StockModel implements IDataDelegate{
     }
 
     @Override
-    public void remove(Object data) {
-        Map<EEventDataKeys,AttributeWrapper> result = (Map<EEventDataKeys, AttributeWrapper>) data;
+    public void remove(Map<EEventDataKeys,Object> data) {
+        IProduct product = (IProduct)data.get(EEventDataKeys.Product);
+        
         try {
-            productQuery.UnregisterStockProduct((int) result.get(EEventDataKeys.Id).getValue());
+            productQuery.UnregisterStockProduct(product.getArticleId());
+            dispatchEvent(EStores.DataStore, EStoreEvents.NotificationEvent, EStoreEventAction.Remove, data);
         } catch (SQLException e) {
            
             e.printStackTrace();
@@ -58,10 +56,14 @@ public class StockModel implements IDataDelegate{
     }
 
     @Override
-    public void update(Object data) {
-        Map<EEventDataKeys,AttributeWrapper> result = (Map<EEventDataKeys, AttributeWrapper>) data;
+    public void update(Map<EEventDataKeys,Object> data) {
+        IProduct product = (IProduct)data.get(EEventDataKeys.Product);
+        Collection<AttributeWrapper> wrappers = (Collection<AttributeWrapper>)data.get(EEventDataKeys.AttributeWrappersList);
         try {
-            productQuery.UpdateStockProduct((int) result.get(EEventDataKeys.Id).getValue(),result.values());
+            productQuery.UpdateStockProduct(product.getArticleId(),wrappers);
+            updateProduct(product,data);
+            dispatchEvent(EStores.DataStore, EStoreEvents.NotificationEvent, EStoreEventAction.Update, data);
+
         } catch (SQLException e) {
             
             e.printStackTrace();
@@ -69,27 +71,24 @@ public class StockModel implements IDataDelegate{
         
     }
 
+    private void updateProduct(IProduct product, Map<EEventDataKeys, Object> data) {
+
+    }
+
     @Override
-    public List<Object> search(Object data) {
+    public List<Object> search(Map<EEventDataKeys,Object> data) {
         List<Object> result = null;
-        /*  TODO : Implement
-        try {
-            result = productQuery.SearchStockProduct((SearchWrapper) data);
-        } catch (SQLException e) {
-           
-            e.printStackTrace();
-        }*/
         
         return result;
     }
 
-    private IProduct buildProduct(Map<EEventDataKeys,AttributeWrapper> data) {
-        int articleId = (int) data.get(EEventDataKeys.ArticleId).getValue();
-        String name = (String) data.get(EEventDataKeys.ArticleName).getValue();
-        int quantity = (int) data.get(EEventDataKeys.Quantity).getValue();
-        int price = (int) data.get(EEventDataKeys.Price).getValue();
-        int familyCode = (int) data.get(EEventDataKeys.FamilyCode).getValue();
-        int codebar = (int) data.get(EEventDataKeys.Codebar).getValue();
+    private IProduct buildProduct(Map<EEventDataKeys,Object> data) {
+        int articleId = (int) data.get(EEventDataKeys.ArticleId);
+        String name = (String) data.get(EEventDataKeys.ArticleName);
+        int quantity = (int) data.get(EEventDataKeys.Quantity);
+        int price = (int) data.get(EEventDataKeys.Price);
+        int familyCode = (int) data.get(EEventDataKeys.FamilyCode);
+        int codebar = (int) data.get(EEventDataKeys.Codebar);
 
         IProduct product = new StockProduct(articleId, name, codebar, quantity, price, familyCode);
 

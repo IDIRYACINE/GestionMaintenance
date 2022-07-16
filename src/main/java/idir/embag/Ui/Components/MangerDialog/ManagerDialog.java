@@ -3,6 +3,7 @@ package idir.embag.Ui.Components.MangerDialog;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -112,13 +113,13 @@ public class ManagerDialog extends INodeView implements Initializable , IDialogC
     }
 
     private void getAttributeWrappers(Map<EEventDataKeys,Object> data){
-        AttributeWrapper[] wrappers = new AttributeWrapper[attributesFieldControllers.size()];
+        Collection<AttributeWrapper> wrappersCollection = new ArrayList<>();
 
         for(int i = 0 ; i < attributesFieldControllers.size() ; i++){
-            wrappers[i] = attributesFieldControllers.get(i).getAttributeWrapper();
+            wrappersCollection.add(attributesFieldControllers.get(i).getAttributeWrapper());
         }
 
-        data.put(key, wrappers);
+        data.put(key, wrappersCollection);
 
     }
 

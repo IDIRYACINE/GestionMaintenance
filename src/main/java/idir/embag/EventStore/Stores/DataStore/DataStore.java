@@ -43,7 +43,7 @@ public class DataStore implements IDataStore {
     @Override
     public void remove(StoreEvent event) {
         IDataDelegate dataDelegate = dataDelegates.get(event.getEvent());
-        dataDelegate.remove((int)event.getData().get(EEventDataKeys.Id));
+        dataDelegate.remove(event.getData());
     }
 
     @Override

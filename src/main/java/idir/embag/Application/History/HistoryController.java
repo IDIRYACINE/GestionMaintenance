@@ -9,6 +9,5 @@ public class HistoryController implements IHistoryController{
         // TODO Auto-generated method stub
         
     }
-
     
 }

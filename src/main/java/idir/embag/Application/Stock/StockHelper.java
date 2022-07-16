@@ -35,11 +35,11 @@ public class StockHelper extends IStockHelper{
 
     @Override
     public void update(IProduct product) {
-        int cellIndex = tableStock.getItems().indexOf(product);
-        IDialogContent dialogContent =  buildUpdateDialog(product,cellIndex);
+        IDialogContent dialogContent =  buildUpdateDialog();
 
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
+        data.put(EEventDataKeys.Product, product);
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
         
@@ -47,11 +47,11 @@ public class StockHelper extends IStockHelper{
 
     @Override
     public void remove(IProduct product) {
-        int cellIndex = tableStock.getItems().indexOf(product);
-        IDialogContent dialogContent =  buildRemoveDialog(product.getArticleId(),cellIndex);
+        IDialogContent dialogContent =  buildRemoveDialog();
 
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
+        data.put(EEventDataKeys.Product, product);
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
     }
@@ -85,9 +85,9 @@ public class StockHelper extends IStockHelper{
        switch(event.getAction()){
         case Add: addTableElement((IProduct)event.getData().get(EEventDataKeys.Product));
             break;
-        case Remove: removeTableElement((int)event.getData().get(EEventDataKeys.Id));
+        case Remove: removeTableElement((IProduct)event.getData().get(EEventDataKeys.Product));
             break;  
-        case Update: updateTableElement((int)event.getData().get(EEventDataKeys.CellIndex));
+        case Update: updateTableElement((IProduct)event.getData().get(EEventDataKeys.Product));
             break;
         case Search: setTableProducts((List<IProduct>)event.getData());
             break;          
@@ -101,11 +101,13 @@ public class StockHelper extends IStockHelper{
         tableStock.getItems().add(product);
     }
 
-    private void removeTableElement(int index){
+    private void removeTableElement(IProduct product){
+        int index = tableStock.getItems().indexOf(product);
         tableStock.getItems().remove(index);
     }
 
-    private void updateTableElement(int index){
+    private void updateTableElement(IProduct product){
+        int index = tableStock.getItems().indexOf(product);
         tableStock.getCell(index).updateRow();
     }
 
@@ -151,20 +153,18 @@ public class StockHelper extends IStockHelper{
 
 
         dialog.setAttributes(attributes);
-
-        dialog.setOnConfirm(new Consumer<Map<EEventDataKeys,Object>>(){
-            @Override
-            public void accept(Map<EEventDataKeys,Object> data) {
+        dialog.setEventKey(EEventDataKeys.AttributeWrappersList);
+        
+        dialog.setOnConfirm(data -> {
+                data.remove(EEventDataKeys.DialogContent);
                 dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Add, data);
-
-            }
         });
 
         dialog.loadFxml();
         return dialog;
     }
 
-    private IDialogContent buildUpdateDialog(IProduct product,int cellIndex){
+    private IDialogContent buildUpdateDialog(){
         ManagerDialog dialog = new ManagerDialog();
 
         EProductAttributes rawAttributes[] = 
@@ -172,14 +172,11 @@ public class StockHelper extends IStockHelper{
 
         String[] attributes = EnumAttributesToString(rawAttributes);
 
-        dialog.setOnConfirm(new Consumer<Map<EEventDataKeys,Object>>(){
-            @Override
-            public void accept(Map<EEventDataKeys,Object>  data) {
-                data.put(EEventDataKeys.CellIndex, cellIndex);
-                data.put(EEventDataKeys.ArticleId, product.getArticleId());
+        dialog.setEventKey(EEventDataKeys.AttributeWrappersList);
 
-                dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Update, data);
-            }
+        dialog.setOnConfirm(data ->{
+            data.remove(EEventDataKeys.DialogContent);
+            dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Update, data);
         });
 
         dialog.setAttributes(attributes);
@@ -188,17 +185,12 @@ public class StockHelper extends IStockHelper{
 
     }
 
-    private IDialogContent buildRemoveDialog(int articleId , int cellIndex){
+    private IDialogContent buildRemoveDialog(){
         ConfirmationDialog dialog = new ConfirmationDialog();
 
-        dialog.setOnConfirm(new Consumer<Map<EEventDataKeys,Object>>(){
-            @Override
-            public void accept(Map<EEventDataKeys,Object> data) {
-                data.put(EEventDataKeys.Id, articleId);
-
-                dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Remove, data);
-
-            }
+        dialog.setOnConfirm(data ->{
+            data.remove(EEventDataKeys.DialogContent);
+            dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Remove, data);
         });
 
         dialog.setMessage(Messages.deleteElement);

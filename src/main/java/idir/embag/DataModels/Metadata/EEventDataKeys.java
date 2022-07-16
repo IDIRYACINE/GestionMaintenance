@@ -18,5 +18,12 @@ public enum EEventDataKeys {
     None, 
     Codebar, 
     Product,
-    CellIndex,
+    CellIndex, 
+    SessionRecord,
+    SessionRecordList, 
+    SessionGroup, 
+    SessionGroupRaw, 
+    SessionWorker,
+    SessionWorkerRaw, 
+    AttributeWrappersList,
 }

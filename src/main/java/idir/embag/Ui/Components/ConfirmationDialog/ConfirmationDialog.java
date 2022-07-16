@@ -80,6 +80,7 @@ public class ConfirmationDialog extends INodeView implements Initializable , IDi
 
     @Override
     public void setEventKey(EEventDataKeys key) {
+        
     }
 
 

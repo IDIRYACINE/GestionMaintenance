@@ -21,6 +21,6 @@
             <MFXButton fx:id="btnUpdateWorker" alignment="CENTER" onAction="#onUpdateWorker" text="Update Worker" />
          </children>
       </HBox>
-      <MFXTableView fx:id="tableSessionWorkers1" footerVisible="false" prefHeight="275.0" prefWidth="725.0" />
+      <MFXTableView fx:id="tableSessionWorkers" footerVisible="false" prefHeight="275.0" prefWidth="725.0" />
    </children>
 </VBox>

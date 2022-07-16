@@ -21,11 +21,11 @@ public abstract class IQuery {
 
             if(i<lastElementIndex){    
             result += attr.getAttributeName() +",";
-            values += attr.getValue() +",";
+            values += "'" +attr.getValue() +"',";
             }
             else{
                 result += attr.getAttributeName() +")";
-                values += attr.getValue() +")";
+                values += "'" +attr.getValue() +"')";
             }
 
             i++;

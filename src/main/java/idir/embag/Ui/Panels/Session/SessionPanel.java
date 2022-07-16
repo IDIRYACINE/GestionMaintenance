@@ -6,7 +6,8 @@ import java.util.ResourceBundle;
 import idir.embag.Application.Session.SessionController;
 import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.Types.Panels.Generics.INodeView;
-import idir.embag.Ui.Components.MangerDialog.SessionWorkersDialog;
+import idir.embag.Types.Stores.Generics.IEventSubscriber;
+import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import javafx.fxml.FXML;
@@ -14,13 +15,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 
-public class SessionPanel extends INodeView implements Initializable {
+public class SessionPanel extends INodeView implements Initializable,IEventSubscriber {
     
     @FXML
     private VBox root;
 
     @FXML
-    private MFXButton btnAdd, btnEdit, btnDelete, btnRefresh,btnSearch;
+    private MFXButton btnManageWorkers, btnCloseSession, btnExport, btnRefresh;
     
     @FXML
     private MFXTableView<SessionRecord> tableSession;
@@ -29,6 +30,7 @@ public class SessionPanel extends INodeView implements Initializable {
 
     public SessionPanel() {
         fxmlPath = "/views/SessionPanel.fxml";
+        controller = new SessionController();
     }
 
     @Override
@@ -37,22 +39,34 @@ public class SessionPanel extends INodeView implements Initializable {
     }
 
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        controller.notifyActive(tableSession);
+    }
+
+    @FXML
+    private void closeSession(){
+        controller.closeSession();
+    }
+
+    @FXML
+    private void refresh(){
+        controller.refresh();
+    }
+
+    @FXML
+    private void export(){
+        controller.export();
+    }
+
     @FXML
     private void manageWorkers(){
-       
-        // Build Dialog content and set it up
-        SessionWorkersDialog fDialog = new SessionWorkersDialog();
-        fDialog.loadFxml();
-        
-       // Dispatch a display event to store
-       
-        
+        controller.manageSessionGroups();
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        controller = new SessionController(tableSession);
-        controller.notifyActive();
+    public void notifyEvent(StoreEvent event) {
+        controller.notifyEvent(event);
     }
 
     

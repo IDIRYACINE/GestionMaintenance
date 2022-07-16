@@ -1,10 +1,12 @@
 package idir.embag.EventStore.Models.Stock;
 
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import idir.embag.DataModels.Metadata.EEventDataKeys;
+import idir.embag.DataModels.Products.IProduct;
 import idir.embag.Types.Infrastructure.Database.IProductQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Stores.DataStore.IDataDelegate;
@@ -18,36 +20,37 @@ public class InventoryModel implements IDataDelegate {
         this.productQuery = productQuery;
     }
 
-    public void add(Object data) {
-        Map<EEventDataKeys,AttributeWrapper> result = (Map<EEventDataKeys, AttributeWrapper>) data;
+    public void add(Map<EEventDataKeys,Object> data) {
         try {
-            productQuery.RegisterInventoryProduct(result.values());
+            productQuery.RegisterInventoryProduct((Collection<AttributeWrapper>)data.get(EEventDataKeys.AttributeWrappersList));
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void remove(Object data) {
-        Map<EEventDataKeys,AttributeWrapper> result = (Map<EEventDataKeys, AttributeWrapper>) data;
-
+    public void remove(Map<EEventDataKeys,Object> data) {
+        IProduct product = (IProduct)data.get(EEventDataKeys.Product);
         try {
-            productQuery.UnregisterInventoryProduct((int) result.get(EEventDataKeys.Id).getValue());
+            productQuery.UnregisterInventoryProduct(product.getArticleId());
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void update(Object data) {
-        Map<EEventDataKeys,AttributeWrapper> result = (Map<EEventDataKeys, AttributeWrapper>) data;
+    public void update(Map<EEventDataKeys,Object> data) {
+        IProduct product = (IProduct)data.get(EEventDataKeys.Product);
+        Collection<AttributeWrapper> wrappers = (Collection<AttributeWrapper>)data.get(EEventDataKeys.AttributeWrappersList);
+
         try {
-            productQuery.UpdateInventoryProduct((int) result.get(EEventDataKeys.Id).getValue() ,result.values());
+            productQuery.UpdateInventoryProduct(product.getArticleId() ,wrappers);
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public List<Object> search(Object data) {
+    public List<Object> search(Map<EEventDataKeys,Object> data) {
 
        List<Object> result = null;
        /* Todo : implement this
