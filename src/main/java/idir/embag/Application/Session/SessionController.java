@@ -45,7 +45,7 @@ public class SessionController {
     public void notifyEvent(StoreEvent event) {
        switch(event.getAction()){
               case Add:
-                addRecord((SessionRecord) event.getData().get(EEventDataKeys.SessionRecord));
+                addRecord((SessionRecord) event.getData().get(EEventDataKeys.SessionRecordInstance));
                 break;
               case Refresh:
                 setRecords((SessionRecord[]) event.getData().get(EEventDataKeys.SessionRecordList));

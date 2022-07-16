@@ -5,9 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-
 import idir.embag.DataModels.Metadata.EEventDataKeys;
-import idir.embag.DataModels.Metadata.EProductAttributes;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.Types.Application.Stock.IStockHelper;
 import idir.embag.Types.Panels.Components.IDialogContent;
@@ -39,7 +37,7 @@ public class StockHelper extends IStockHelper{
 
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
-        data.put(EEventDataKeys.Product, product);
+        data.put(EEventDataKeys.ProductInstance, product);
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
         
@@ -51,7 +49,7 @@ public class StockHelper extends IStockHelper{
 
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
-        data.put(EEventDataKeys.Product, product);
+        data.put(EEventDataKeys.ProductInstance, product);
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
     }
@@ -83,11 +81,11 @@ public class StockHelper extends IStockHelper{
     @Override
     public void notifyEvent(StoreEvent event) {
        switch(event.getAction()){
-        case Add: addTableElement((IProduct)event.getData().get(EEventDataKeys.Product));
+        case Add: addTableElement((IProduct)event.getData().get(EEventDataKeys.ProductInstance));
             break;
-        case Remove: removeTableElement((IProduct)event.getData().get(EEventDataKeys.Product));
+        case Remove: removeTableElement((IProduct)event.getData().get(EEventDataKeys.ProductInstance));
             break;  
-        case Update: updateTableElement((IProduct)event.getData().get(EEventDataKeys.Product));
+        case Update: updateTableElement((IProduct)event.getData().get(EEventDataKeys.ProductInstance));
             break;
         case Search: setTableProducts((List<IProduct>)event.getData());
             break;          
@@ -146,10 +144,8 @@ public class StockHelper extends IStockHelper{
     private IDialogContent buildAddDialog(){
         ManagerDialog dialog = new ManagerDialog();
 
-        EProductAttributes rawAttributes[] = 
-        {EProductAttributes.ArticleId, EProductAttributes.ArticleName, EProductAttributes.Price, EProductAttributes.Quantity};
-
-        String[] attributes = EnumAttributesToString(rawAttributes);
+        EEventDataKeys[] attributes = {EEventDataKeys.ArticleId, EEventDataKeys.ArticleName,
+            EEventDataKeys.Price, EEventDataKeys.Quantity};
 
 
         dialog.setAttributes(attributes);
@@ -167,10 +163,8 @@ public class StockHelper extends IStockHelper{
     private IDialogContent buildUpdateDialog(){
         ManagerDialog dialog = new ManagerDialog();
 
-        EProductAttributes rawAttributes[] = 
-        {EProductAttributes.ArticleId, EProductAttributes.ArticleName, EProductAttributes.Price, EProductAttributes.Quantity};
-
-        String[] attributes = EnumAttributesToString(rawAttributes);
+        EEventDataKeys[] attributes = {
+            EEventDataKeys.ArticleId, EEventDataKeys.ArticleName, EEventDataKeys.Price, EEventDataKeys.Quantity};
 
         dialog.setEventKey(EEventDataKeys.AttributeWrappersList);
 
@@ -203,11 +197,8 @@ public class StockHelper extends IStockHelper{
 
     private IDialogContent buildSearchDialog(){
         FilterDialog dialog = new FilterDialog();
-
-        EProductAttributes rawAttributes[] = 
-        {EProductAttributes.ArticleId, EProductAttributes.ArticleName, EProductAttributes.Price, EProductAttributes.Quantity};
-
-        String[] attributes = EnumAttributesToString(rawAttributes);
+        
+        EEventDataKeys[] attributes = {EEventDataKeys.ArticleId, EEventDataKeys.ArticleName, EEventDataKeys.Price, EEventDataKeys.Quantity};
 
         dialog.setOnConfirm(new Consumer<Map<EEventDataKeys,Object>> (){
             @Override
@@ -221,14 +212,5 @@ public class StockHelper extends IStockHelper{
         return dialog;
 
     }
-
-    private String[] EnumAttributesToString(EProductAttributes[] attributes){
-        String[] result = new String[attributes.length];
-        for (int i = 0 ; i < attributes.length ;i++){
-            result[i] = attributes[i].toString();
-        }
-        return result;
-    }
-
     
 }

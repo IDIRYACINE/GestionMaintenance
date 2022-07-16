@@ -32,7 +32,7 @@ public class StockModel implements IDataDelegate{
         try {
             productQuery.RegisterStockProduct((Collection<AttributeWrapper>)data.get(EEventDataKeys.AttributeWrappersList));
             IProduct product = buildProduct(data);
-            data.put(EEventDataKeys.Product, product);
+            data.put(EEventDataKeys.ProductInstance, product);
 
             dispatchEvent(EStores.DataStore, EStoreEvents.NotificationEvent, EStoreEventAction.Add, data);
         } catch (SQLException e) {
@@ -43,7 +43,7 @@ public class StockModel implements IDataDelegate{
 
     @Override
     public void remove(Map<EEventDataKeys,Object> data) {
-        IProduct product = (IProduct)data.get(EEventDataKeys.Product);
+        IProduct product = (IProduct)data.get(EEventDataKeys.ProductInstance);
         
         try {
             productQuery.UnregisterStockProduct(product.getArticleId());
@@ -57,7 +57,7 @@ public class StockModel implements IDataDelegate{
 
     @Override
     public void update(Map<EEventDataKeys,Object> data) {
-        IProduct product = (IProduct)data.get(EEventDataKeys.Product);
+        IProduct product = (IProduct)data.get(EEventDataKeys.ProductInstance);
         Collection<AttributeWrapper> wrappers = (Collection<AttributeWrapper>)data.get(EEventDataKeys.AttributeWrappersList);
         try {
             productQuery.UpdateStockProduct(product.getArticleId(),wrappers);
@@ -88,7 +88,7 @@ public class StockModel implements IDataDelegate{
         int quantity = (int) data.get(EEventDataKeys.Quantity);
         int price = (int) data.get(EEventDataKeys.Price);
         int familyCode = (int) data.get(EEventDataKeys.FamilyCode);
-        int codebar = (int) data.get(EEventDataKeys.Codebar);
+        int codebar = (int) data.get(EEventDataKeys.ArticleCode);
 
         IProduct product = new StockProduct(articleId, name, codebar, quantity, price, familyCode);
 

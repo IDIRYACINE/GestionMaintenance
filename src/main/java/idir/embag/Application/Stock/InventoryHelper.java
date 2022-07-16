@@ -4,9 +4,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import idir.embag.DataModels.Metadata.EEventDataKeys;
-import idir.embag.DataModels.Metadata.EProductAttributes;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.Types.Application.Stock.IStockHelper;
 import idir.embag.Types.Panels.Components.IDialogContent;
@@ -84,11 +82,11 @@ public class InventoryHelper extends IStockHelper{
     public void notifyEvent(StoreEvent event) {
         
         switch(event.getAction()){
-            case Add: addTableElement((IProduct)event.getData());
+            case Add: addTableElement((IProduct)event.getData().get(EEventDataKeys.ProductInstance));
                 break;
-            case Remove: removeTableElement((int)event.getData().get(EEventDataKeys.Id));
+            case Remove: removeTableElement((IProduct)event.getData().get(EEventDataKeys.ProductInstance));
                 break;  
-            case Update: updateTableElement();
+            case Update: updateTableElement((IProduct)event.getData().get(EEventDataKeys.ProductInstance));
                 break;
             case Search: setTableProducts((List<IProduct>)event.getData());
                 break;          
@@ -103,12 +101,14 @@ public class InventoryHelper extends IStockHelper{
         tableStock.getItems().add(product);
     }
 
-    private void removeTableElement(int index){
+    private void removeTableElement(IProduct product){
+        int index = tableStock.getItems().indexOf(product);
         tableStock.getItems().remove(index);
     }
 
-    private void updateTableElement(){
-        //TODO : implement
+    private void updateTableElement(IProduct product){
+        int index = tableStock.getItems().indexOf(product);
+        tableStock.getCell(index).updateRow();
     }
 
     private void setTableProducts(List<IProduct> product){
@@ -141,11 +141,9 @@ public class InventoryHelper extends IStockHelper{
 
     private IDialogContent buildAddDialog(){
         ManagerDialog dialog = new ManagerDialog();
-
-        EProductAttributes rawAttributes[] = 
-        {EProductAttributes.ArticleId, EProductAttributes.ArticleName, EProductAttributes.Price, EProductAttributes.Quantity};
         
-        String[] attributes = EnumAttributesToString(rawAttributes);
+        EEventDataKeys[] attributes = {EEventDataKeys.ArticleId, EEventDataKeys.ArticleName, 
+            EEventDataKeys.Price, EEventDataKeys.Quantity};
 
         dialog.setAttributes(attributes);
 
@@ -158,9 +156,8 @@ public class InventoryHelper extends IStockHelper{
     private IDialogContent buildUpdateDialog(IProduct product, int cellIndex){
         ManagerDialog dialog = new ManagerDialog();
 
-        EProductAttributes rawAttributes[] = 
-        {EProductAttributes.ArticleId, EProductAttributes.ArticleName, EProductAttributes.Price, EProductAttributes.Quantity};
-        String[] attributes = EnumAttributesToString(rawAttributes);
+        EEventDataKeys[] attributes = {EEventDataKeys.ArticleId, EEventDataKeys.ArticleName, 
+            EEventDataKeys.Price, EEventDataKeys.Quantity};
 
         dialog.setAttributes(attributes);
 
@@ -173,9 +170,9 @@ public class InventoryHelper extends IStockHelper{
     private IDialogContent buildRemoveDialog(int articleId , int cellIndex){
         ManagerDialog dialog = new ManagerDialog();
 
-        EProductAttributes rawAttributes[] = 
-        {EProductAttributes.ArticleId, EProductAttributes.ArticleName, EProductAttributes.Price, EProductAttributes.Quantity};
-        String[] attributes = EnumAttributesToString(rawAttributes);
+        EEventDataKeys[] attributes = {EEventDataKeys.ArticleId, EEventDataKeys.ArticleName, 
+            EEventDataKeys.Price, EEventDataKeys.Quantity};
+
 
         dialog.setAttributes(attributes);
 
@@ -189,9 +186,8 @@ public class InventoryHelper extends IStockHelper{
     private IDialogContent buildSearchDialog(){
         FilterDialog dialog = new FilterDialog();
 
-        EProductAttributes rawAttributes[] = 
-        {EProductAttributes.ArticleId, EProductAttributes.ArticleName, EProductAttributes.Price, EProductAttributes.Quantity};
-        String[] attributes = EnumAttributesToString(rawAttributes);
+        EEventDataKeys[] attributes = {EEventDataKeys.ArticleId, EEventDataKeys.ArticleName, 
+            EEventDataKeys.Price, EEventDataKeys.Quantity};
 
         dialog.setAttributes(attributes);
 
@@ -201,14 +197,4 @@ public class InventoryHelper extends IStockHelper{
 
     }
 
-
-
-    private String[] EnumAttributesToString(EProductAttributes[] attributes){
-        String[] result = new String[attributes.length];
-        for (int i = 0 ; i < attributes.length ;i++){
-            result[i] = attributes[i].toString();
-        }
-        return result;
-    }
-    
 }

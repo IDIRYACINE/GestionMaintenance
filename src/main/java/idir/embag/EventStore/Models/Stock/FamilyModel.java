@@ -33,7 +33,7 @@ public class FamilyModel implements IDataDelegate{
 
     @Override
     public void remove(Map<EEventDataKeys,Object> data) {
-        IProduct product = (IProduct)data.get(EEventDataKeys.Product);
+        IProduct product = (IProduct)data.get(EEventDataKeys.ProductInstance);
 
        try {
         productQuery.UnregisterFamilyCode(product.getArticleId());
@@ -45,7 +45,7 @@ public class FamilyModel implements IDataDelegate{
 
     @Override
     public void update(Map<EEventDataKeys,Object> data) {
-        IProduct product = (IProduct)data.get(EEventDataKeys.Product);
+        IProduct product = (IProduct)data.get(EEventDataKeys.ProductInstance);
         Collection<AttributeWrapper> wrappers = (Collection<AttributeWrapper>)data.get(EEventDataKeys.AttributeWrappersList);
 
         try {

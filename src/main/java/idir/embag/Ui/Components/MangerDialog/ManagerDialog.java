@@ -3,12 +3,10 @@ package idir.embag.Ui.Components.MangerDialog;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
-
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Panels.Components.IDialogContent;
@@ -33,20 +31,19 @@ public class ManagerDialog extends INodeView implements Initializable , IDialogC
     @FXML
     private VBox fieldsContainer;
 
-    private String[] attributes;
+    private EEventDataKeys[] attributes;
 
-    private ArrayList<AttributeField> attributesFieldControllers;
+    private Map<EEventDataKeys,AttributeWrapper> attributesWrappers;
 
     private Runnable cancelTask;
 
     private Consumer<Map<EEventDataKeys,Object>> confirmTask;
 
-    private EEventDataKeys key = EEventDataKeys.None;
+    private EEventDataKeys key ;
 
     public ManagerDialog() {
         fxmlPath = "/views/ManagerDialog/ManagerDialog.fxml";
     }
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -76,20 +73,22 @@ public class ManagerDialog extends INodeView implements Initializable , IDialogC
         btnConfirm.setText(title);
     }
 
-    public void setAttributes(String[] attributes){
+    public void setAttributes(EEventDataKeys[] attributes){
         this.attributes = attributes;
     }
 
     private void setupFieldRows(){          
-        attributesFieldControllers = new ArrayList<>();
+        attributesWrappers = new HashMap<>();
         ArrayList<Node> nodes  = new ArrayList<>();
         AttributeField controller ;
+        AttributeWrapper wrapper ;
 
         for(int i = 0 ; i < attributes.length;i++){
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/ManagerDialog/AttributeRow.fxml"));  
-                controller = new AttributeField(attributes[i],EEventDataKeys.None);
-                attributesFieldControllers.add(controller);
+                wrapper = new AttributeWrapper(attributes[i], "");
+                controller = new AttributeField(wrapper);
+                attributesWrappers.put(attributes[i],wrapper);
                 loader.setController(controller);
                 nodes.add(loader.load());
             } catch (IOException e) {
@@ -113,14 +112,7 @@ public class ManagerDialog extends INodeView implements Initializable , IDialogC
     }
 
     private void getAttributeWrappers(Map<EEventDataKeys,Object> data){
-        Collection<AttributeWrapper> wrappersCollection = new ArrayList<>();
-
-        for(int i = 0 ; i < attributesFieldControllers.size() ; i++){
-            wrappersCollection.add(attributesFieldControllers.get(i).getAttributeWrapper());
-        }
-
-        data.put(key, wrappersCollection);
-
+        data.put(key, attributesWrappers);
     }
 
 

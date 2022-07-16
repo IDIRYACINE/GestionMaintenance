@@ -1,13 +1,15 @@
 package idir.embag.Types.Infrastructure.Database.Generics;
 
+import idir.embag.DataModels.Metadata.EEventDataKeys;
+
 public class AttributeWrapper{
     
     private String attributeName;
 
     private String value;
 
-    public AttributeWrapper(String attributeName, Object value) {
-        this.attributeName = attributeName;
+    public AttributeWrapper(EEventDataKeys attributeName, Object value) {
+        this.attributeName = attributeName.toString();
         setValue(value);
     }
 
@@ -24,10 +26,6 @@ public class AttributeWrapper{
     }
 
     public void setValue(Object value) {
-        if(!(value instanceof String)){
-            this.value = value.toString();
-            return;
-        }
         this.value = (String) value;
     }
     

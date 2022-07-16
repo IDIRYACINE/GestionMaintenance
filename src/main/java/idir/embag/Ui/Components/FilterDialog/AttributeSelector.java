@@ -3,6 +3,7 @@ package idir.embag.Ui.Components.FilterDialog;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import idir.embag.DataModels.Metadata.EEventDataKeys;
 import io.github.palexdev.materialfx.controls.MFXCheckbox;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,15 +17,15 @@ public class AttributeSelector implements Initializable{
     @FXML
     private MFXCheckbox attrbCheckBox;
 
-    private String attribute;
+    private EEventDataKeys attribute;
 
-    public AttributeSelector(String attribute) {
+    public AttributeSelector(EEventDataKeys attribute) {
         this.attribute = attribute;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        attrbLabel.setText(attribute);
+        attrbLabel.setText(attribute.toString());
     }
 
 

@@ -2,13 +2,12 @@ package idir.embag.Ui.Components.FilterDialog;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
-
 import idir.embag.DataModels.Metadata.EEventDataKeys;
+import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -34,13 +33,11 @@ public class FilterDialog extends INodeView implements Initializable , IDialogCo
     @FXML
     private MFXListView<HBox> listViewSelectedAttrb;
 
-    private String[] attributes;
+    private EEventDataKeys[] attributes;
 
-    private ArrayList<AttributeField> attributesFieldControllers;
-    private ArrayList<HBox> selectedAttributesNodes;
-
-    private ArrayList<AttributeSelector> attributeSelectorControllers;
-    private ArrayList<HBox> attributeSelectorNodes;
+    private Map<EEventDataKeys,AttributeWrapper> attributesWrappers;
+    private Map<EEventDataKeys,HBox> selectedAttributesNodes;
+    private Map<EEventDataKeys,HBox> unselectedAttributesNodes; 
 
     private Runnable cancelTask;
     private Consumer<Map<EEventDataKeys,Object>> confirmTask;
@@ -54,7 +51,6 @@ public class FilterDialog extends INodeView implements Initializable , IDialogCo
     public void initialize(URL location, ResourceBundle resources) {
         setup();
         setupAttributesSelector();
-        setupSelectedAttributes();
     }
 
     @Override
@@ -75,53 +71,33 @@ public class FilterDialog extends INodeView implements Initializable , IDialogCo
         cancelTask.run();
     }
 
-    private void setupSelectedAttributes(){
-        AttributeField controller ;
-
-        for(int i = 0 ; i < attributes.length;i++){
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/FilterDialog/AttributeWrapperCell.fxml"));    
-                controller = new AttributeField(attributes[i],EEventDataKeys.None);
-                attributesFieldControllers.add(controller);
-                loader.setController(controller);
-                selectedAttributesNodes.add(loader.load());
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        listViewSelectedAttrb.getItems().addAll(selectedAttributesNodes);
-
-    }
 
     private void setupAttributesSelector(){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/ManagerDialog/AttributeRow.fxml"));     
         AttributeSelector controller ;
+        
+        HBox[] attributeSelectorNodes = new HBox[attributes.length];
 
         for(int i = 0 ; i < attributes.length;i++){
             try {
                 controller = new AttributeSelector(attributes[i]);
-                attributeSelectorControllers.add(controller);
                 loader.setController(controller);
-                attributeSelectorNodes.add(loader.load());
-
+                attributeSelectorNodes[i] = loader.load();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        listViewAttrb.getItems().addAll(attributeSelectorNodes);
 
+        listViewAttrb.getItems().setAll(attributeSelectorNodes);
     }
 
     private void setup(){
-        attributesFieldControllers = new ArrayList<AttributeField>();
-        selectedAttributesNodes = new ArrayList<>();
-
-        attributeSelectorControllers = new ArrayList<AttributeSelector>();
-        attributeSelectorNodes = new ArrayList<>();
+        attributesWrappers = new HashMap<>();      
+        selectedAttributesNodes = new HashMap<>();
+        unselectedAttributesNodes = new HashMap<>();
     }
 
-    public void setAttributes(String[] attributes){
+    public void setAttributes(EEventDataKeys[] attributes){
         this.attributes = attributes;
     }
 

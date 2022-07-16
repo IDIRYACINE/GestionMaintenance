@@ -22,7 +22,7 @@ public class HistoryModel implements IDataDelegate{
     @Override
     public void add(Map<EEventDataKeys,Object> data) {
         try {
-            sessionQuery.RegisterSessionRecord((Collection<AttributeWrapper>) data.get(EEventDataKeys.SessionRecord));
+            sessionQuery.RegisterSessionRecord((Collection<AttributeWrapper>) data.get(EEventDataKeys.SessionRecordInstance));
         } catch (SQLException e) {
             e.printStackTrace();
         }

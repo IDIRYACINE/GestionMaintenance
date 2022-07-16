@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import idir.embag.DataModels.Metadata.EEventDataKeys;
-import idir.embag.DataModels.Metadata.ESessionWorker;
 import idir.embag.DataModels.Workers.SessionWorker;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Panels.Components.IDialogContent;
@@ -47,7 +46,7 @@ public class SessionWorkersHelper  {
         Map<EEventDataKeys,Object> data = new HashMap<>();
 
         IDialogContent content = buildUpdateDialog();
-        data.put(EEventDataKeys.SessionGroup, worker);
+        data.put(EEventDataKeys.SessionGroupInstance, worker);
         data.put(EEventDataKeys.DialogContent, content);
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
@@ -58,13 +57,13 @@ public class SessionWorkersHelper  {
         
         IDialogContent content = buildDeleteDialog();
         data.put(EEventDataKeys.DialogContent, content);
-        data.put(EEventDataKeys.SessionGroup, worker);
+        data.put(EEventDataKeys.SessionGroupInstance, worker);
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
     }
 
     public void notifyEvent(StoreEvent event) {
-        callbacks.get(event.getAction()).accept((SessionWorker) event.getData().get(EEventDataKeys.SessionWorker)); 
+        callbacks.get(event.getAction()).accept((SessionWorker) event.getData().get(EEventDataKeys.SessionGroupInstance)); 
     }
 
     
@@ -90,7 +89,10 @@ public class SessionWorkersHelper  {
         ManagerDialog dialog = new ManagerDialog();
         dialog.setEventKey(EEventDataKeys.AttributeWrappersList);
         
-        String[] attributes = EnumAttributesToString(ESessionWorker.values());
+        EEventDataKeys[] attributes = {
+            EEventDataKeys.FullName,EEventDataKeys.Password,EEventDataKeys.GroupName
+        };
+
         dialog.setAttributes(attributes);
 
         dialog.loadFxml();
@@ -108,7 +110,9 @@ public class SessionWorkersHelper  {
         ManagerDialog dialog = new ManagerDialog();
         dialog.setEventKey(EEventDataKeys.AttributeWrappersList);
 
-        String[] attributes = EnumAttributesToString(ESessionWorker.values());
+        EEventDataKeys[] attributes = {
+                EEventDataKeys.FullName,EEventDataKeys.Password,EEventDataKeys.GroupName};
+
         dialog.setAttributes(attributes);
 
         dialog.loadFxml();
@@ -158,13 +162,4 @@ public class SessionWorkersHelper  {
     }
 
 
-    private String[] EnumAttributesToString(ESessionWorker[] attributes){
-        String[] result = new String[attributes.length];
-        for (int i = 0 ; i < attributes.length ;i++){
-            result[i] = attributes[i].toString();
-        }
-        return result;
-    }
-
-    
 }

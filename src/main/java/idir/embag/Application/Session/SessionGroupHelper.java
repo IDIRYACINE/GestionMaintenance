@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import idir.embag.DataModels.Metadata.EEventDataKeys;
-import idir.embag.DataModels.Metadata.ESessionGroup;
 import idir.embag.DataModels.Session.SessionGroup;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Panels.Components.IDialogContent;
@@ -47,7 +46,7 @@ public class SessionGroupHelper{
         Map<EEventDataKeys,Object> data = new HashMap<>();
 
         IDialogContent content = buildUpdateDialog();
-        data.put(EEventDataKeys.SessionGroup, group);
+        data.put(EEventDataKeys.SessionGroupInstance, group);
         data.put(EEventDataKeys.DialogContent, content);
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
@@ -58,13 +57,13 @@ public class SessionGroupHelper{
         
         IDialogContent content = buildDeleteDialog();
         data.put(EEventDataKeys.DialogContent, content);
-        data.put(EEventDataKeys.SessionGroup, group);
+        data.put(EEventDataKeys.SessionGroupInstance, group);
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
     }
 
     public void notifyEvent(StoreEvent event) {
-        callbacks.get(event.getAction()).accept((SessionGroup) event.getData().get(EEventDataKeys.SessionGroup)); 
+        callbacks.get(event.getAction()).accept((SessionGroup) event.getData().get(EEventDataKeys.SessionGroupInstance)); 
     }
 
     
@@ -97,7 +96,10 @@ public class SessionGroupHelper{
         ManagerDialog dialog = new ManagerDialog();
         dialog.setEventKey(EEventDataKeys.AttributeWrappersList);
 
-        String[] attributes = EnumAttributesToString(ESessionGroup.values());
+        EEventDataKeys[] attributes = {
+
+        };
+
         dialog.setAttributes(attributes);
 
         dialog.loadFxml();
@@ -115,7 +117,10 @@ public class SessionGroupHelper{
         ManagerDialog dialog = new ManagerDialog();
         dialog.setEventKey(EEventDataKeys.AttributeWrappersList);
         
-        String[] attributes = EnumAttributesToString(ESessionGroup.values());
+        EEventDataKeys[] attributes = {
+
+        };
+
         dialog.setAttributes(attributes);
 
         dialog.loadFxml();
@@ -155,12 +160,4 @@ public class SessionGroupHelper{
     }
     
     
-    private String[] EnumAttributesToString(ESessionGroup[] attributes){
-        String[] result = new String[attributes.length];
-        for (int i = 0 ; i < attributes.length ;i++){
-            result[i] = attributes[i].toString();
-        }
-        return result;
-    }
-
 }
