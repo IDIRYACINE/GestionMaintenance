@@ -50,7 +50,7 @@ public abstract class IQuery {
             result += attr.getAttributeName() + "=" + attr.getValue() + ",";
             }
             else{
-                result += attr.getAttributeName() + "=" + attr.getValue() + ")";
+                result += attr.getAttributeName() + "=" + attr.getValue() ;
             }
             i++;
         }

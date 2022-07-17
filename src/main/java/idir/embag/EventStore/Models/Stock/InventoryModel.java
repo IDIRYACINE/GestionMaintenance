@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import idir.embag.DataModels.Metadata.EEventDataKeys;
-import idir.embag.DataModels.Products.IProduct;
 import idir.embag.Types.Infrastructure.Database.IProductQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Stores.DataStore.IDataDelegate;
@@ -23,27 +22,27 @@ public class InventoryModel implements IDataDelegate {
     public void add(Map<EEventDataKeys,Object> data) {
         try {
             productQuery.RegisterInventoryProduct((Collection<AttributeWrapper>)data.get(EEventDataKeys.AttributeWrappersList));
+            ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public void remove(Map<EEventDataKeys,Object> data) {
-        IProduct product = (IProduct)data.get(EEventDataKeys.ProductInstance);
         try {
-            productQuery.UnregisterInventoryProduct(product.getArticleId());
+            productQuery.UnregisterInventoryProduct((int) data.get(EEventDataKeys.ArticleId));
+            ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public void update(Map<EEventDataKeys,Object> data) {
-        IProduct product = (IProduct)data.get(EEventDataKeys.ProductInstance);
         Collection<AttributeWrapper> wrappers = (Collection<AttributeWrapper>)data.get(EEventDataKeys.AttributeWrappersList);
 
         try {
-            productQuery.UpdateInventoryProduct(product.getArticleId() ,wrappers);
-            
+            productQuery.UpdateInventoryProduct((int) data.get(EEventDataKeys.ArticleId) ,wrappers);
+            ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();            
         } catch (SQLException e) {
             e.printStackTrace();
         }

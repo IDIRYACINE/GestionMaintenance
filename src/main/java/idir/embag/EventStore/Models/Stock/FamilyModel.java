@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import idir.embag.DataModels.Metadata.EEventDataKeys;
-import idir.embag.DataModels.Products.IProduct;
 import idir.embag.Types.Infrastructure.Database.IProductQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Stores.DataStore.IDataDelegate;
@@ -24,6 +23,7 @@ public class FamilyModel implements IDataDelegate{
     public void add(Map<EEventDataKeys,Object> data) {
         try {
             productQuery.RegisterFamilyCode((Collection<AttributeWrapper>)data.get(EEventDataKeys.AttributeWrappersList));
+            ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();
         } catch (SQLException e) {
            
             e.printStackTrace();
@@ -33,10 +33,10 @@ public class FamilyModel implements IDataDelegate{
 
     @Override
     public void remove(Map<EEventDataKeys,Object> data) {
-        IProduct product = (IProduct)data.get(EEventDataKeys.ProductInstance);
 
        try {
-        productQuery.UnregisterFamilyCode(product.getArticleId());
+        productQuery.UnregisterFamilyCode((int) data.get(EEventDataKeys.ArticleId));
+        ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();
     } catch (SQLException e) {
         e.printStackTrace();
     }
@@ -45,11 +45,11 @@ public class FamilyModel implements IDataDelegate{
 
     @Override
     public void update(Map<EEventDataKeys,Object> data) {
-        IProduct product = (IProduct)data.get(EEventDataKeys.ProductInstance);
         Collection<AttributeWrapper> wrappers = (Collection<AttributeWrapper>)data.get(EEventDataKeys.AttributeWrappersList);
 
         try {
-            productQuery.UpdateFamilyCode(product.getArticleId(), wrappers);
+            productQuery.UpdateFamilyCode((int)data.get(EEventDataKeys.ArticleId), wrappers);
+            ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();
         } catch (SQLException e) {
             e.printStackTrace();
         }

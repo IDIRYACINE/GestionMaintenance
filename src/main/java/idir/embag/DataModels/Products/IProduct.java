@@ -7,6 +7,7 @@ public interface IProduct {
     public int getFamilyCode();
     public int getQuantity();
     public double getPrice();
+    public int getStockId();
 
     public void setArticleId(int articleId);
     public void setArticleCode(int articleCode);
@@ -14,6 +15,7 @@ public interface IProduct {
     public void setFamilyCode(int familyCode);
     public void setQuantity(int quantity);
     public void setPrice(double price);
+    public void setStockId(int parseInt);
 
     
 }

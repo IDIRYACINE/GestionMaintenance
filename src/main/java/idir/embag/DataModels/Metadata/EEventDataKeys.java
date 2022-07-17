@@ -1,5 +1,9 @@
 package idir.embag.DataModels.Metadata;
 
+/**
+ * The keys used are the same as in the database columns.  
+*/
+
 public enum EEventDataKeys {
     FamilyCode,
     FamilyName,
@@ -21,6 +25,7 @@ public enum EEventDataKeys {
     Phone,
     Password,
     AttributeWrappersList,
+    AttributeWrappersMap,
     DialogContent,
     ProductInstance,
     SessionGroupInstance,
@@ -29,5 +34,7 @@ public enum EEventDataKeys {
     ArticleCode,
     PanelId,
     Subscriber,
+    StockId,
+    OnSucessCallback,
 
 }

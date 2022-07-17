@@ -14,16 +14,18 @@ public class InventoryProduct implements IProduct{
     
     private int familyCode;
 
-    
+    private int stockId;
+
 
     public InventoryProduct(int articleId, String articleName, int articleCodebar, int articleQuantity, double articlePrice,
-            int familyCode) {
+            int familyCode,int stockId) {
         this.articleId = articleId;
         this.articleName = articleName;
         this.articleCodebar = articleCodebar;
         this.articleQuantity = articleQuantity;
         this.articlePrice = articlePrice;
         this.familyCode = familyCode;
+        this.stockId = stockId;
     }
 
     @Override
@@ -87,6 +89,16 @@ public class InventoryProduct implements IProduct{
     @Override
     public void setPrice(double price) {
         this.articlePrice = price;
+    }
+
+    @Override
+    public int getStockId() {
+        return stockId;
+    }
+
+    @Override
+    public void setStockId(int id) {
+        stockId = id;        
     }
     
     

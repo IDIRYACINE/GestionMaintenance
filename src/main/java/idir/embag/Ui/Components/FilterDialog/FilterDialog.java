@@ -60,7 +60,6 @@ public class FilterDialog extends INodeView implements Initializable , IDialogCo
 
     @FXML
     private void onConfirm(){
-        //TODO: fix this
         Map<EEventDataKeys,Object> data = new HashMap<>();
         confirmTask.accept(data);
         cancelTask.run();

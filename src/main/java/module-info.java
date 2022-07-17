@@ -28,6 +28,7 @@ module idir.embag {
     opens idir.embag.Application.Settings to javafx.base,javafx.fxml;
     opens idir.embag.Ui.Components.FilterDialog to  javafx.base,javafx.fxml;
     opens idir.embag.Ui.Components.MangerDialog to  javafx.base,javafx.fxml;
+    opens idir.embag.Ui.Components.Editors to  javafx.base,javafx.fxml;
 
     exports idir.embag;
 }

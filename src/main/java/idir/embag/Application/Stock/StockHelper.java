@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Products.IProduct;
+import idir.embag.DataModels.Products.StockProduct;
 import idir.embag.Types.Application.Stock.IStockHelper;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
@@ -14,8 +15,8 @@ import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 import idir.embag.Ui.Components.ConfirmationDialog.ConfirmationDialog;
+import idir.embag.Ui.Components.Editors.StockEditor;
 import idir.embag.Ui.Components.FilterDialog.FilterDialog;
-import idir.embag.Ui.Components.MangerDialog.ManagerDialog;
 import idir.embag.Ui.Constants.Messages;
 import idir.embag.Ui.Constants.Names;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
@@ -33,11 +34,23 @@ public class StockHelper extends IStockHelper{
 
     @Override
     public void update(IProduct product) {
-        IDialogContent dialogContent =  buildUpdateDialog();
+        StockEditor dialogContent =  new StockEditor(product);
+
+        Runnable sucessCallback = () -> {
+            updateTableElement(product);
+        };
+
+        dialogContent.setOnConfirm(requestData -> {
+            requestData.put(EEventDataKeys.OnSucessCallback, sucessCallback);
+
+            dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Update, requestData);
+        });
 
         Map<EEventDataKeys,Object> data = new HashMap<>();
-        data.put(EEventDataKeys.DialogContent, dialogContent);
-        data.put(EEventDataKeys.ProductInstance, product);
+        data.put(EEventDataKeys.DialogContent, dialogContent);  
+
+        dialogContent.loadFxml();
+
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
         
@@ -45,28 +58,54 @@ public class StockHelper extends IStockHelper{
 
     @Override
     public void remove(IProduct product) {
-        IDialogContent dialogContent =  buildRemoveDialog();
+        ConfirmationDialog dialogContent =  new ConfirmationDialog();
+
+        dialogContent.setMessage(Messages.deleteElement);
 
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
-        data.put(EEventDataKeys.ProductInstance, product);
+        
+        Runnable sucessCallback = () -> {
+            removeTableElement(product);
+        };
+
+        dialogContent.setOnConfirm(requestData -> {
+            requestData.put(EEventDataKeys.OnSucessCallback, sucessCallback);
+
+            dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Remove, requestData);
+        });
+
+        dialogContent.loadFxml();
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
     }
 
     @Override
     public void add() {
-        IDialogContent dialogContent =  buildAddDialog();
+        IProduct product = new StockProduct(0, "", 0, 0, 0, 0);
+        StockEditor dialogContent =  new StockEditor(product);
 
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
+
+        Runnable sucessCallback = () -> {
+            addTableElement(product);
+        };
+
+        dialogContent.setOnConfirm(requestData -> {
+
+            requestData.put(EEventDataKeys.OnSucessCallback, sucessCallback);
+
+            dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Add, requestData);
+        });
+
+        dialogContent.loadFxml();
+
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
     }
 
     @Override
-    public void refresh() { 
-        //TODO: implement
-    }
+    public void refresh() {}
 
     @Override
     public void search() {
@@ -89,10 +128,9 @@ public class StockHelper extends IStockHelper{
             break;
         case Search: setTableProducts((List<IProduct>)event.getData());
             break;          
-          default:
-               break;
+        default:
+            break;
        }
-        
     }
 
     private void addTableElement(IProduct product) {
@@ -141,60 +179,7 @@ public class StockHelper extends IStockHelper{
         setColumns();
     }
 
-    private IDialogContent buildAddDialog(){
-        ManagerDialog dialog = new ManagerDialog();
-
-        EEventDataKeys[] attributes = {EEventDataKeys.ArticleId, EEventDataKeys.ArticleName,
-            EEventDataKeys.Price, EEventDataKeys.Quantity};
-
-
-        dialog.setAttributes(attributes);
-        dialog.setEventKey(EEventDataKeys.AttributeWrappersList);
-        
-        dialog.setOnConfirm(data -> {
-                data.remove(EEventDataKeys.DialogContent);
-                dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Add, data);
-        });
-
-        dialog.loadFxml();
-        return dialog;
-    }
-
-    private IDialogContent buildUpdateDialog(){
-        ManagerDialog dialog = new ManagerDialog();
-
-        EEventDataKeys[] attributes = {
-            EEventDataKeys.ArticleId, EEventDataKeys.ArticleName, EEventDataKeys.Price, EEventDataKeys.Quantity};
-
-        dialog.setEventKey(EEventDataKeys.AttributeWrappersList);
-
-        dialog.setOnConfirm(data ->{
-            data.remove(EEventDataKeys.DialogContent);
-            dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Update, data);
-        });
-
-        dialog.setAttributes(attributes);
-        dialog.loadFxml();
-        return dialog;
-
-    }
-
-    private IDialogContent buildRemoveDialog(){
-        ConfirmationDialog dialog = new ConfirmationDialog();
-
-        dialog.setOnConfirm(data ->{
-            data.remove(EEventDataKeys.DialogContent);
-            dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Remove, data);
-        });
-
-        dialog.setMessage(Messages.deleteElement);
-        
-        dialog.loadFxml();
-        return dialog;
-
-    }
-
-
+   
     private IDialogContent buildSearchDialog(){
         FilterDialog dialog = new FilterDialog();
         
@@ -210,7 +195,6 @@ public class StockHelper extends IStockHelper{
         dialog.setAttributes(attributes);
         dialog.loadFxml();
         return dialog;
-
     }
     
 }

@@ -54,7 +54,10 @@ public class ProductQuery extends IProductQuery{
             throws SQLException {
 
         String whereClause = " WHERE "+MDatabase.InventoryAttributes.ArticleId + "=" + articleId;
-        String query = "UPDATE "+STOCK_TABLE_NAME+ UpdateWrapperToQuery(attributes) + whereClause;
+        String query = "UPDATE "+INVENTORY_TABLE_NAME+ UpdateWrapperToQuery(attributes) + whereClause;
+        
+        System.out.println(query);
+
         database.UpdateQuery(query);
         
     }
@@ -70,7 +73,7 @@ public class ProductQuery extends IProductQuery{
     public void UpdateFamilyCode(int familyId, Collection<AttributeWrapper> attributes)
             throws SQLException {
         String whereClause = " WHERE "+MDatabase.FamilliesCodeAttributes.FamilyCode + "=" + familyId;
-        String query = "UPDATE "+STOCK_TABLE_NAME+ UpdateWrapperToQuery(attributes) +whereClause;
+        String query = "UPDATE "+FAMILIES_TABLE_NAME+ UpdateWrapperToQuery(attributes) +whereClause;
         database.UpdateQuery(query);
         
     }

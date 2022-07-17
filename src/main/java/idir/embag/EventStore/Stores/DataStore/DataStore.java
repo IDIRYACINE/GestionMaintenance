@@ -26,6 +26,7 @@ public class DataStore implements IDataStore {
 
        dataDelegates.put(EStoreEvents.StockEvent, stockDelegate);
        dataDelegates.put(EStoreEvents.InventoryEvent, inventoryDelegate);
+       dataDelegates.put(EStoreEvents.FamilyCodeEvent, familyDelegate);
        dataDelegates.put(EStoreEvents.HistoryEvent, historyDelegate);
        dataDelegates.put(EStoreEvents.SessionWorkerEvent, familyDelegate);
 

@@ -6,14 +6,17 @@ import java.util.List;
 import java.util.Map;
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Products.IProduct;
+import idir.embag.DataModels.Products.InventoryProduct;
 import idir.embag.Types.Application.Stock.IStockHelper;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
+import idir.embag.Ui.Components.ConfirmationDialog.ConfirmationDialog;
+import idir.embag.Ui.Components.Editors.InventoryEditor;
 import idir.embag.Ui.Components.FilterDialog.FilterDialog;
-import idir.embag.Ui.Components.MangerDialog.ManagerDialog;
+import idir.embag.Ui.Constants.Messages;
 import idir.embag.Ui.Constants.Names;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
@@ -24,43 +27,82 @@ public class InventoryHelper extends IStockHelper{
     
     private MFXTableView<IProduct> tableStock;
 
-    
-
     public InventoryHelper(MFXTableView<IProduct> tableStock) {
         this.tableStock = tableStock;
     }
 
     @Override
     public void update(IProduct product) {
-        int cellIndex = tableStock.getItems().indexOf(product);
-        IDialogContent dialogContent =  buildUpdateDialog(product,cellIndex);
+        InventoryEditor dialogContent =  new InventoryEditor(product);
+
+        Runnable sucessCallback = () -> {
+            updateTableElement(product);
+        };
+
+        dialogContent.setOnConfirm(requestData -> {
+            requestData.put(EEventDataKeys.OnSucessCallback, sucessCallback);
+
+            dispatchEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Update, requestData);
+        });
+
+        dialogContent.loadFxml();
+
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
-
+        
     }
 
     @Override
     public void remove(IProduct product) {
-        int cellIndex = tableStock.getItems().indexOf(product);
-        IDialogContent dialogContent =  buildRemoveDialog(product.getArticleId(),cellIndex);
-        
+        ConfirmationDialog dialogContent =  new ConfirmationDialog();
+
+        dialogContent.setMessage(Messages.deleteElement);
+
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
+        
+        Runnable sucessCallback = () -> {
+            removeTableElement(product);
+        };
+
+        dialogContent.setOnConfirm(requestData -> {
+            requestData.put(EEventDataKeys.OnSucessCallback, sucessCallback);
+
+            dispatchEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Remove, requestData);
+        });
+
+        dialogContent.loadFxml();
+
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
-
     }
 
     @Override
     public void add() {
-        IDialogContent dialogContent =  buildAddDialog();
+        IProduct product = new InventoryProduct(0, "", 0, 0, 0, 0, 0);
+        InventoryEditor dialogContent =  new InventoryEditor(product);
+
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
 
-        dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
+        Runnable sucessCallback = () -> {
+            addTableElement(product);
+        };
+        
 
+        dialogContent.setOnConfirm(requestData -> {
+
+            requestData.put(EEventDataKeys.OnSucessCallback, sucessCallback);
+
+            dispatchEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Add, requestData);
+        });
+
+        dialogContent.loadFxml();
+
+
+        dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
     }
 
     @Override
@@ -139,50 +181,7 @@ public class InventoryHelper extends IStockHelper{
         setColumns();
     }
 
-    private IDialogContent buildAddDialog(){
-        ManagerDialog dialog = new ManagerDialog();
-        
-        EEventDataKeys[] attributes = {EEventDataKeys.ArticleId, EEventDataKeys.ArticleName, 
-            EEventDataKeys.Price, EEventDataKeys.Quantity};
-
-        dialog.setAttributes(attributes);
-
-        dialog.loadFxml();
-
-        return dialog;
-
-    }
-
-    private IDialogContent buildUpdateDialog(IProduct product, int cellIndex){
-        ManagerDialog dialog = new ManagerDialog();
-
-        EEventDataKeys[] attributes = {EEventDataKeys.ArticleId, EEventDataKeys.ArticleName, 
-            EEventDataKeys.Price, EEventDataKeys.Quantity};
-
-        dialog.setAttributes(attributes);
-
-        dialog.loadFxml();
-
-        return dialog;
-
-    }
-
-    private IDialogContent buildRemoveDialog(int articleId , int cellIndex){
-        ManagerDialog dialog = new ManagerDialog();
-
-        EEventDataKeys[] attributes = {EEventDataKeys.ArticleId, EEventDataKeys.ArticleName, 
-            EEventDataKeys.Price, EEventDataKeys.Quantity};
-
-
-        dialog.setAttributes(attributes);
-
-        dialog.loadFxml();
-
-        return dialog;
-
-    }
-
-
+   
     private IDialogContent buildSearchDialog(){
         FilterDialog dialog = new FilterDialog();
 

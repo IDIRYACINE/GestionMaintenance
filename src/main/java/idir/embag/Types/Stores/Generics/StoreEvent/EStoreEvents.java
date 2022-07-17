@@ -7,6 +7,7 @@ public enum EStoreEvents {
     HistoryEvent,
     SettingsEvent,
     InventoryEvent,
+    FamilyCodeEvent,
     WorkersEvent,
     SessionEvent,
     NavigationEvent,

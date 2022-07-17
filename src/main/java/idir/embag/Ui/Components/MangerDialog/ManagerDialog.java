@@ -40,7 +40,7 @@ public class ManagerDialog extends INodeView implements Initializable , IDialogC
     private Consumer<Map<EEventDataKeys,Object>> confirmTask;
 
     private EEventDataKeys key ;
-
+    
     public ManagerDialog() {
         fxmlPath = "/views/ManagerDialog/ManagerDialog.fxml";
     }

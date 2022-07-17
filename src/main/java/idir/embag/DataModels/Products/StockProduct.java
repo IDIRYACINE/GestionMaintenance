@@ -88,5 +88,13 @@ public class StockProduct implements IProduct{
     public void setPrice(double price) {
         this.articlePrice = price;
     }
+
+    @Override
+    public int getStockId() {
+        return 0;
+    }
+
+    @Override
+    public void setStockId(int parseInt) {}
     
 }

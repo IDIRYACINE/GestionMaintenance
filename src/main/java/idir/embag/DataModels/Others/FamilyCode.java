@@ -67,4 +67,12 @@ public class FamilyCode implements IProduct{
     @Override
     public void setPrice(double price) {}
 
+    @Override
+    public int getStockId() {
+        return 0;
+    }
+
+    @Override
+    public void setStockId(int parseInt) {}
+
 }
