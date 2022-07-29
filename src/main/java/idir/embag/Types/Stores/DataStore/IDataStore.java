@@ -7,5 +7,6 @@ public interface IDataStore extends IStore{
     public void add(StoreEvent event);
     public void remove(StoreEvent event);
     public void update(StoreEvent event);
-    public void get(StoreEvent event);
+    public void search(StoreEvent event);
+    public void load(StoreEvent event);
 }

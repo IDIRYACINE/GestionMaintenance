@@ -54,7 +54,7 @@ public class DataStore implements IDataStore {
     }
 
     @Override
-    public void get(StoreEvent event) {
+    public void search(StoreEvent event) {
         IDataDelegate dataDelegate = dataDelegates.get(event.getEvent());
         dataDelegate.search(event.getData());
     }
@@ -75,6 +75,13 @@ public class DataStore implements IDataStore {
         actions.get(action).accept(event);
     }
 
+
+    @Override
+    public void load(StoreEvent event) {
+        IDataDelegate dataDelegate = dataDelegates.get(event.getEvent());
+        dataDelegate.load(event.getData());
+    }
+
     @Override
     public void notifySubscribers(StoreEvent event) {
         for(IEventSubscriber subscriber : subscribers.get(event.getEvent())) {
@@ -93,11 +100,11 @@ public class DataStore implements IDataStore {
         actions.put(EStoreEventAction.Add, this::add);
         actions.put(EStoreEventAction.Remove, this::remove);
         actions.put(EStoreEventAction.Update, this::update);
-        actions.put(EStoreEventAction.Get, this::get);
+        actions.put(EStoreEventAction.Search, this::search);
+        actions.put(EStoreEventAction.Load, this::load);
         actions.put(EStoreEventAction.Subscribe, this::subscribe);
         actions.put(EStoreEventAction.Unsubscribe, this::unsubscribe);
         actions.put(EStoreEventAction.Notify, this::notifySubscribers);
     }
-
     
 }

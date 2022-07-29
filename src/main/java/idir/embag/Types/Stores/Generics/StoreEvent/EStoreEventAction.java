@@ -4,7 +4,7 @@ public enum EStoreEventAction {
     Add,
     Remove,
     Update,
-    Get,
+    Load,
     Search,
     Navigation,
     Dialog,

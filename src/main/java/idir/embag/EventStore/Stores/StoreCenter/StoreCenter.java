@@ -8,6 +8,7 @@ import idir.embag.EventStore.Stores.DataStore.DataStore;
 import idir.embag.EventStore.Stores.NavigationStore.NavigationStore;
 import idir.embag.Infrastructure.ServicesCenter;
 import idir.embag.Infrastructure.Initialisers.DatabaseInitialiser;
+import idir.embag.Repository.FamilyCodeRepository;
 import idir.embag.Types.Application.Navigation.INavigationController;
 import idir.embag.Types.Stores.DataStore.IDataStore;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
@@ -55,7 +56,9 @@ public class StoreCenter implements IStoresCenter{
       StockModel stockModel = new StockModel(databaseInitialiser.getProductQuery());
       InventoryModel inventoryModel = new InventoryModel(databaseInitialiser.getProductQuery());
       HistoryModel historyModel = new HistoryModel(databaseInitialiser.getSessionQuery());
-      FamilyModel familyModel = new FamilyModel(databaseInitialiser.getProductQuery());
+
+      FamilyModel familyModel = new FamilyModel(databaseInitialiser.getProductQuery(),
+        new FamilyCodeRepository());
 
 
       dataStore = new DataStore(stockModel, inventoryModel, historyModel, familyModel);

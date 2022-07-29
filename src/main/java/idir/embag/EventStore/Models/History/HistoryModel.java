@@ -41,5 +41,11 @@ public class HistoryModel implements IDataDelegate{
         List<Object> result = null;
         return result;
     }
+
+    @Override
+    public void load(Map<EEventDataKeys, Object> data) {
+        // TODO Auto-generated method stub
+        
+    }
     
 }

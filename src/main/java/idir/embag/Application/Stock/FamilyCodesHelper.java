@@ -1,8 +1,8 @@
 package idir.embag.Application.Stock;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Others.FamilyCode;
@@ -102,7 +102,9 @@ public class FamilyCodesHelper extends IStockHelper{
     }
     
     @Override
-    public void refresh() {}
+    public void refresh() {
+        dispatchEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Load,null);
+    }
 
     @Override
     public void search() {
@@ -125,8 +127,10 @@ public class FamilyCodesHelper extends IStockHelper{
                 break;  
             case Update: updateTableElement((IProduct)event.getData().get(EEventDataKeys.ProductInstance));
                 break;
-            case Search: setTableProducts((List<IProduct>)event.getData());
-                break;          
+            case Search: setTableProducts((Collection<IProduct>)event.getData());
+                break;    
+            case Load: setTableProducts((Collection<IProduct>)event.getData());
+                break;              
               default:
                    break;
            }
@@ -154,7 +158,7 @@ public class FamilyCodesHelper extends IStockHelper{
         tableStock.getCell(index).updateRow();
     }
 
-    private void setTableProducts(List<IProduct> product){
+    private void setTableProducts(Collection<IProduct> product){
         tableStock.getItems().setAll(product);
     }
 

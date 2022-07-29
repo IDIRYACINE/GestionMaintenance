@@ -6,7 +6,6 @@ public class StockProduct implements IProduct{
 
     private String articleName;
 
-    private int articleCodebar;
 
     private int articleQuantity;
 
@@ -16,11 +15,10 @@ public class StockProduct implements IProduct{
 
     
 
-    public StockProduct(int articleId, String articleName, int articleCodebar, int articleQuantity, double articlePrice,
+    public StockProduct(int articleId, String articleName, int articleQuantity, double articlePrice,
             int familyCode) {
         this.articleId = articleId;
         this.articleName = articleName;
-        this.articleCodebar = articleCodebar;
         this.articleQuantity = articleQuantity;
         this.articlePrice = articlePrice;
         this.familyCode = familyCode;
@@ -28,7 +26,7 @@ public class StockProduct implements IProduct{
 
     @Override
     public int getArticleCode() {
-        return articleCodebar;
+        return 0;
     }
 
     @Override
@@ -63,8 +61,6 @@ public class StockProduct implements IProduct{
 
     @Override
     public void setArticleCode(int articleCode) {
-        this.articleCodebar = articleCode;
-        
     }
 
     @Override

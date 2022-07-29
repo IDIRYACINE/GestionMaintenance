@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox fx:id="rootPanel" prefHeight="833.0" prefWidth="1691.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:id="rootPanel" prefHeight="807.0" prefWidth="1489.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox fx:id="leftPanel" alignment="CENTER_LEFT" prefHeight="833.0" prefWidth="260.0" spacing="20.0" />
       <StackPane fx:id="rightPanel" prefHeight="833.0" prefWidth="1431.0" />

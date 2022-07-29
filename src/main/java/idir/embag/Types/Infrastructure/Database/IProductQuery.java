@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.IQuery;
+import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 
 public abstract class IProductQuery extends IQuery{
@@ -26,11 +27,13 @@ public abstract class IProductQuery extends IQuery{
     public abstract ResultSet SearchInventoryProduct(SearchWrapper parametrers) throws SQLException;
     public abstract ResultSet SearchStockProduct(SearchWrapper parametrers)  throws SQLException;
 
+    public abstract ResultSet LoadFamilyCode(LoadWrapper parametrers) throws SQLException;
+    public abstract ResultSet LoadInventoryProduct(LoadWrapper parametrers) throws SQLException;
+    public abstract ResultSet LoadStockProduct(LoadWrapper parametrers)  throws SQLException;
+
+
     public abstract void CreateFamiLCodeTable() throws SQLException;
     public abstract void CreateInventoryTable() throws SQLException;
     public abstract void CreateStockTable() throws SQLException;
-
-
-    
     
 }

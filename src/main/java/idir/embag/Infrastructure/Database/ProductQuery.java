@@ -7,6 +7,7 @@ import java.util.Collection;
 import idir.embag.Types.Infrastructure.Database.IDatabase;
 import idir.embag.Types.Infrastructure.Database.IProductQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
+import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.MDatabase;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 
@@ -143,6 +144,36 @@ public class ProductQuery extends IProductQuery{
     public ResultSet SearchFamilyCode(SearchWrapper parametrers) throws SQLException {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public ResultSet LoadFamilyCode(LoadWrapper parametrers) throws SQLException {
+        // TODO optimise this query
+
+        String extraClause = " LIMITS "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
+        String query = "SELECT * FROM "+FAMILIES_TABLE_NAME+ extraClause;
+        ResultSet result = database.SelectQuery(query);
+        return result;
+    }
+
+    @Override
+    public ResultSet LoadInventoryProduct(LoadWrapper parametrers) throws SQLException {
+         // TODO optimise this query
+
+         String extraClause = " LIMITS "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
+         String query = "SELECT * FROM "+FAMILIES_TABLE_NAME+ extraClause;
+         ResultSet result = database.SelectQuery(query);
+         return result;
+    }
+
+    @Override
+    public ResultSet LoadStockProduct(LoadWrapper parametrers) throws SQLException {
+         // TODO optimise this query
+
+         String extraClause = " LIMITS "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
+         String query = "SELECT * FROM "+FAMILIES_TABLE_NAME+ extraClause;
+         ResultSet result = database.SelectQuery(query);
+         return result;
     }
 
 

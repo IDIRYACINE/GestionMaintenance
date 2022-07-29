@@ -1,13 +1,16 @@
 package idir.embag.EventStore.Models.Stock;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.Types.Infrastructure.Database.IProductQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
+import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Stores.DataStore.IDataDelegate;
 
 @SuppressWarnings("unchecked")
@@ -63,6 +66,19 @@ public class StockModel implements IDataDelegate{
         List<Object> result = null;
         
         return result;
+    }
+
+    @Override
+    public void load(Map<EEventDataKeys,Object> data) {
+        //TODO : change method to get a proper load wrapper
+        LoadWrapper loadWrapper = new LoadWrapper(0,0);
+        try{
+            ResultSet result = productQuery.LoadStockProduct(loadWrapper);
+            ((Consumer<ResultSet>) data.get(EEventDataKeys.OnSucessCallback)).accept(result);
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
     }
 
 }

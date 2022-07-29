@@ -10,4 +10,5 @@ public interface IDataDelegate {
     public void remove(Map<EEventDataKeys,Object> data);
     public void update(Map<EEventDataKeys,Object> data);
     public List<Object> search(Map<EEventDataKeys,Object> data);
+    public void load(Map<EEventDataKeys,Object> data);
 }

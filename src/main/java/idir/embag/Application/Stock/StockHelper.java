@@ -82,7 +82,7 @@ public class StockHelper extends IStockHelper{
 
     @Override
     public void add() {
-        IProduct product = new StockProduct(0, "", 0, 0, 0, 0);
+        IProduct product = new StockProduct(0, "",  0, 0, 0);
         StockEditor dialogContent =  new StockEditor(product);
 
         Map<EEventDataKeys,Object> data = new HashMap<>();
@@ -105,7 +105,9 @@ public class StockHelper extends IStockHelper{
     }
 
     @Override
-    public void refresh() {}
+    public void refresh() {
+        dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Load,null);
+    }
 
     @Override
     public void search() {
