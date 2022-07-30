@@ -23,8 +23,6 @@ public abstract class IStockHelper {
 
     public abstract void search();
 
-    public abstract void notifyEvent(StoreEvent event);
-
     public abstract void notifySelected();
 
     protected void dispatchEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent, Map<EEventDataKeys,Object> data) {

@@ -32,7 +32,7 @@ public abstract class IProductQuery extends IQuery{
     public abstract ResultSet LoadStockProduct(LoadWrapper parametrers)  throws SQLException;
 
 
-    public abstract void CreateFamiLCodeTable() throws SQLException;
+    public abstract void CreateFamiLyCodesTable() throws SQLException;
     public abstract void CreateInventoryTable() throws SQLException;
     public abstract void CreateStockTable() throws SQLException;
     

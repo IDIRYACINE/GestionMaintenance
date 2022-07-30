@@ -7,8 +7,10 @@ import java.util.Map;
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Others.FamilyCode;
 import idir.embag.DataModels.Products.IProduct;
+import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Application.Stock.IStockHelper;
 import idir.embag.Types.Panels.Components.IDialogContent;
+import idir.embag.Types.Stores.Generics.IEventSubscriber;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
@@ -20,14 +22,16 @@ import idir.embag.Ui.Constants.Messages;
 import idir.embag.Ui.Constants.Names;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
+import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 
 @SuppressWarnings("unchecked")
-public class FamilyCodesHelper extends IStockHelper{
+public class FamilyCodesHelper extends IStockHelper implements IEventSubscriber{
     
     private MFXTableView<IProduct> tableStock;
 
     public FamilyCodesHelper(MFXTableView<IProduct> tableStock) {
         this.tableStock = tableStock;
+        StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.FamilyCodeEvent, this);
     }
 
     @Override
@@ -129,7 +133,7 @@ public class FamilyCodesHelper extends IStockHelper{
                 break;
             case Search: setTableProducts((Collection<IProduct>)event.getData());
                 break;    
-            case Load: setTableProducts((Collection<IProduct>)event.getData());
+            case Load: setTableProducts((Collection<IProduct>)event.getData().get(EEventDataKeys.ProductsCollection));
                 break;              
               default:
                    break;
@@ -163,8 +167,11 @@ public class FamilyCodesHelper extends IStockHelper{
     }
 
     private void setColumns(){
-        MFXTableColumn<IProduct> idColumn = new MFXTableColumn<>(Names.FamilyCode, true, Comparator.comparing(IProduct::getArticleId));
+        MFXTableColumn<IProduct> idColumn = new MFXTableColumn<>(Names.FamilyCode, true, Comparator.comparing(IProduct::getFamilyCode));
 		MFXTableColumn<IProduct> nameColumn = new MFXTableColumn<>(Names.FamilyName, true, Comparator.comparing(IProduct::getArticleName));
+        
+        idColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getFamilyCode));
+        nameColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getArticleName));
 
         tableStock.getTableColumns().setAll(idColumn,nameColumn);
         
@@ -173,13 +180,10 @@ public class FamilyCodesHelper extends IStockHelper{
    
     private IDialogContent buildSearchDialog(){
         FilterDialog dialog = new FilterDialog();
-
-
-
         dialog.loadFxml();
-
         return dialog;
-
     }
+
+
 
 }

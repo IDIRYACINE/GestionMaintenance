@@ -38,7 +38,7 @@ public class DatabaseInitialiser {
 
     public void createTables(){
         try{
-        productQuery.CreateFamiLCodeTable();
+        productQuery.CreateFamiLyCodesTable();
         productQuery.CreateStockTable();
         productQuery.CreateInventoryTable();
 
@@ -52,7 +52,7 @@ public class DatabaseInitialiser {
 
         }
         catch(Exception e){
-            e.printStackTrace();
+            
         }
 
     }

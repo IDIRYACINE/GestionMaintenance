@@ -81,7 +81,7 @@ public class SessionQuery extends ISessionQuery{
 
     @Override
     public void CreateSessionTable() throws SQLException {
-        String query = "CREATE TABLE "+ SESSION_TABLE_NAME +" (\n"
+        String query = "CREATE TABLE IF NOT EXISTS "+ SESSION_TABLE_NAME +" (\n"
             + MDatabase.SessionsAttributes.SessionId+" INTEGER PRIMARY KEY AUTOINCREMENT,\n"
             + MDatabase.SessionsAttributes.StartDate+" DATE,\n"
             + MDatabase.SessionsAttributes.EndDate+" DATE,\n"
@@ -95,7 +95,7 @@ public class SessionQuery extends ISessionQuery{
 
     @Override
     public void CreateSessionGroupTable() throws SQLException {
-        String query = "CREATE TABLE "+ GROUPS_TABLE_NAME +" (\n"
+        String query = "CREATE TABLE IF NOT EXISTS "+ GROUPS_TABLE_NAME +" (\n"
             + MDatabase.SessionsGroupsAttributes.Id+" INTEGER PRIMARY KEY AUTOINCREMENT,\n"
             + MDatabase.SessionsGroupsAttributes.SessionId+" INTEGER,\n"
             + MDatabase.SessionsGroupsAttributes.Name+" TEXT,\n"
@@ -110,7 +110,7 @@ public class SessionQuery extends ISessionQuery{
 
     @Override
     public void CreateSessionRecordTable() throws SQLException {
-        String query = "CREATE TABLE "+ RECORDS_TABLE_NAME +" (\n"
+        String query = "CREATE TABLE IF NOT EXISTS "+ RECORDS_TABLE_NAME +" (\n"
             + MDatabase.SessionsRecordsAttributes.RecordId + " INTEGER PRIMARY KEY AUTOINCREMENT,\n"
             + MDatabase.SessionsRecordsAttributes.SessionId + " INTEGER,\n"
             + MDatabase.SessionsRecordsAttributes.WorkerId + " INTEGER,\n"
@@ -144,7 +144,7 @@ public class SessionQuery extends ISessionQuery{
 
     @Override
     public void CreateSessionWorkersTabel() throws SQLException {
-        String query = "CREATE TABLE "+ SESSION_WORKERS_TABLE_NAME +" (\n"
+        String query = "CREATE TABLE IF NOT EXISTS "+ SESSION_WORKERS_TABLE_NAME +" (\n"
             + MDatabase.SessionWorkersAttributes.Id + " INTEGER PRIMARY KEY AUTOINCREMENT,\n"
             + MDatabase.SessionWorkersAttributes.GroupId + " INTEGER,\n"
             + MDatabase.SessionWorkersAttributes.WorkerId + " INTEGER,\n"

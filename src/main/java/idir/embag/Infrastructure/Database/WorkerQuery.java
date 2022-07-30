@@ -42,7 +42,7 @@ public class WorkerQuery extends IWorkerQuery{
 
     @Override
     public void CreateWorkerTable() throws SQLException {
-        String query = "CREATE TABLE "+ WORKERS_TABLE_NAME +" (\n"
+        String query = "CREATE TABLE IF NOT EXISTS "+ WORKERS_TABLE_NAME +" (\n"
            + MDatabase.WorkersAttributes.WorkerId+" INTEGER PRIMARY KEY AUTOINCREMENT,\n"
            + MDatabase.WorkersAttributes.Name+" TEXT,\n"
            + MDatabase.WorkersAttributes.Email+" TEXT,\n"

@@ -83,8 +83,8 @@ public class ProductQuery extends IProductQuery{
     public void UnregisterFamilyCode(int familyId) throws SQLException {}
 
     @Override
-    public void CreateFamiLCodeTable() throws SQLException {
-        String query = "CREATE TABLE "+FAMILIES_TABLE_NAME+"("+
+    public void CreateFamiLyCodesTable() throws SQLException {
+        String query = "CREATE TABLE IF NOT EXISTS "+FAMILIES_TABLE_NAME+"("+
                 MDatabase.FamilliesCodeAttributes.FamilyCode+" INTEGER PRIMARY KEY,"+
                 MDatabase.FamilliesCodeAttributes.FamilyName+" TEXT)";
 
@@ -93,7 +93,7 @@ public class ProductQuery extends IProductQuery{
 
     @Override
     public void CreateInventoryTable() throws SQLException {
-        String query = "CREATE TABLE "+INVENTORY_TABLE_NAME+"("
+        String query = "CREATE TABLE IF NOT EXISTS "+INVENTORY_TABLE_NAME+"("
                 + MDatabase.InventoryAttributes.ArticleId +" INTEGER PRIMARY KEY,\n"
                 + MDatabase.InventoryAttributes.ArticleName +" TEXT,\n"
                 + MDatabase.InventoryAttributes.StockId +" INTEGER,\n"
@@ -114,7 +114,7 @@ public class ProductQuery extends IProductQuery{
     @Override
     public void CreateStockTable() throws SQLException {
 
-        String query = "CREATE TABLE "+ STOCK_TABLE_NAME +" (\n"
+        String query = "CREATE TABLE IF NOT EXISTS "+ STOCK_TABLE_NAME +" (\n"
            + MDatabase.StockAttributes.ArticleId + " INTEGER PRIMARY KEY,\n"
            + MDatabase.StockAttributes.ArticleName + " TEXT,\n"
            + MDatabase.StockAttributes.Price + " REAL,\n"
@@ -150,7 +150,7 @@ public class ProductQuery extends IProductQuery{
     public ResultSet LoadFamilyCode(LoadWrapper parametrers) throws SQLException {
         // TODO optimise this query
 
-        String extraClause = " LIMITS "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
+        String extraClause = " LIMIT "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
         String query = "SELECT * FROM "+FAMILIES_TABLE_NAME+ extraClause;
         ResultSet result = database.SelectQuery(query);
         return result;
@@ -160,7 +160,7 @@ public class ProductQuery extends IProductQuery{
     public ResultSet LoadInventoryProduct(LoadWrapper parametrers) throws SQLException {
          // TODO optimise this query
 
-         String extraClause = " LIMITS "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
+         String extraClause = " LIMIT "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
          String query = "SELECT * FROM "+FAMILIES_TABLE_NAME+ extraClause;
          ResultSet result = database.SelectQuery(query);
          return result;
@@ -170,7 +170,7 @@ public class ProductQuery extends IProductQuery{
     public ResultSet LoadStockProduct(LoadWrapper parametrers) throws SQLException {
          // TODO optimise this query
 
-         String extraClause = " LIMITS "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
+         String extraClause = " LIMIT "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
          String query = "SELECT * FROM "+FAMILIES_TABLE_NAME+ extraClause;
          ResultSet result = database.SelectQuery(query);
          return result;

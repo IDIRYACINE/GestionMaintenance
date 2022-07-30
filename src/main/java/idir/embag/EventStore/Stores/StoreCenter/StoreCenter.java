@@ -1,5 +1,9 @@
 package idir.embag.EventStore.Stores.StoreCenter;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.EventStore.Models.History.HistoryModel;
 import idir.embag.EventStore.Models.Stock.FamilyModel;
 import idir.embag.EventStore.Models.Stock.InventoryModel;
@@ -9,10 +13,16 @@ import idir.embag.EventStore.Stores.NavigationStore.NavigationStore;
 import idir.embag.Infrastructure.ServicesCenter;
 import idir.embag.Infrastructure.Initialisers.DatabaseInitialiser;
 import idir.embag.Repository.FamilyCodeRepository;
+import idir.embag.Repository.InventoryRepository;
+import idir.embag.Repository.StockRepository;
 import idir.embag.Types.Application.Navigation.INavigationController;
 import idir.embag.Types.Stores.DataStore.IDataStore;
+import idir.embag.Types.Stores.Generics.IEventSubscriber;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
 import idir.embag.Types.Stores.Generics.StoreDispatch.StoreDispatch;
+import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
+import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
+import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 import idir.embag.Types.Stores.StoreCenter.IStoresCenter;
 
 public class StoreCenter implements IStoresCenter{
@@ -52,13 +62,39 @@ public class StoreCenter implements IStoresCenter{
         
     }
 
+    @Override
+    public void notify(StoreDispatch action) {
+      dataStore.notifySubscribers(action.getEvent());  
+    }
+
+    @Override
+    public void subscribeToEvents(EStores store ,EStoreEvents storeEvent, IEventSubscriber subscriber){
+      Map<EEventDataKeys,Object> data = new HashMap<>();
+      data.put(EEventDataKeys.Subscriber, subscriber);
+
+      StoreEvent event = new StoreEvent(storeEvent, EStoreEventAction.Subscribe, data);
+
+      StoreDispatch action = new StoreDispatch(store,event);
+      dispatch(action);
+    }
+
+    @Override
+    public void unsubscribeFromEvents(EStores store ,EStoreEvents storeEvent, IEventSubscriber subscriber){
+      Map<EEventDataKeys,Object> data = new HashMap<>();
+      data.put(EEventDataKeys.Subscriber, subscriber);
+
+      StoreEvent event = new StoreEvent(storeEvent, EStoreEventAction.Unsubscribe, data);
+
+      StoreDispatch action = new StoreDispatch(store,event);
+      dispatch(action);
+    }
+
     private void setupDataStore(DatabaseInitialiser databaseInitialiser){
-      StockModel stockModel = new StockModel(databaseInitialiser.getProductQuery());
-      InventoryModel inventoryModel = new InventoryModel(databaseInitialiser.getProductQuery());
+      StockModel stockModel = new StockModel(databaseInitialiser.getProductQuery(), new StockRepository());
+      InventoryModel inventoryModel = new InventoryModel(databaseInitialiser.getProductQuery(),new InventoryRepository());
       HistoryModel historyModel = new HistoryModel(databaseInitialiser.getSessionQuery());
 
-      FamilyModel familyModel = new FamilyModel(databaseInitialiser.getProductQuery(),
-        new FamilyCodeRepository());
+      FamilyModel familyModel = new FamilyModel(databaseInitialiser.getProductQuery(),new FamilyCodeRepository());
 
 
       dataStore = new DataStore(stockModel, inventoryModel, historyModel, familyModel);

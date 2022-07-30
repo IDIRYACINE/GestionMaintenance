@@ -1,14 +1,17 @@
 package idir.embag.Application.Stock;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.DataModels.Products.InventoryProduct;
+import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Application.Stock.IStockHelper;
 import idir.embag.Types.Panels.Components.IDialogContent;
+import idir.embag.Types.Stores.Generics.IEventSubscriber;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
@@ -23,12 +26,13 @@ import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 
 @SuppressWarnings("unchecked")
-public class InventoryHelper extends IStockHelper{
+public class InventoryHelper extends IStockHelper implements IEventSubscriber{
     
     private MFXTableView<IProduct> tableStock;
 
     public InventoryHelper(MFXTableView<IProduct> tableStock) {
         this.tableStock = tableStock;
+        StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.InventoryEvent, this);
     }
 
     @Override
@@ -107,8 +111,7 @@ public class InventoryHelper extends IStockHelper{
 
     @Override
     public void refresh() {
-        // TODO Auto-generated method stub
-        
+        dispatchEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Load,null);        
     }
 
     @Override
@@ -130,8 +133,10 @@ public class InventoryHelper extends IStockHelper{
                 break;  
             case Update: updateTableElement((IProduct)event.getData().get(EEventDataKeys.ProductInstance));
                 break;
-            case Search: setTableProducts((List<IProduct>)event.getData());
+            case Search: setTableProducts((Collection<IProduct>)event.getData());
                 break;          
+            case Load: setTableProducts((Collection<IProduct>)event.getData().get(EEventDataKeys.ProductsCollection));
+                break;
               default:
                    break;
            }
@@ -153,7 +158,7 @@ public class InventoryHelper extends IStockHelper{
         tableStock.getCell(index).updateRow();
     }
 
-    private void setTableProducts(List<IProduct> product){
+    private void setTableProducts(Collection<IProduct> product){
         tableStock.getItems().setAll(product);
     }
 

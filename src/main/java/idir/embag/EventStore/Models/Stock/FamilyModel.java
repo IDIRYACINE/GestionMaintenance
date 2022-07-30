@@ -92,17 +92,17 @@ public class FamilyModel implements IDataDelegate{
 
             Map<EEventDataKeys,Object> response = new HashMap<>();
             response.put(EEventDataKeys.ProductsCollection, familyCodes);
-            dispatchEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Notify, response);
+            notfiyEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Load, response);
         }
         catch(SQLException e){
             e.printStackTrace();
         }
     }
 
-    private void dispatchEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent, Map<EEventDataKeys,Object> data) {
+    private void notfiyEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent, Map<EEventDataKeys,Object> data) {
         StoreEvent event = new StoreEvent(storeEvent, actionEvent,data);
         StoreDispatch action = new StoreDispatch(store, event);
-        StoreCenter.getInstance().dispatch(action);
+        StoreCenter.getInstance().notify(action);
     }
     
 }

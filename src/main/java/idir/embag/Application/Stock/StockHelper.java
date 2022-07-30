@@ -1,15 +1,17 @@
 package idir.embag.Application.Stock;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.DataModels.Products.StockProduct;
+import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Application.Stock.IStockHelper;
 import idir.embag.Types.Panels.Components.IDialogContent;
+import idir.embag.Types.Stores.Generics.IEventSubscriber;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
@@ -24,12 +26,14 @@ import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 
 @SuppressWarnings("unchecked")
-public class StockHelper extends IStockHelper{
+public class StockHelper extends IStockHelper implements IEventSubscriber{
     
     private MFXTableView<IProduct> tableStock;
 
     public StockHelper(MFXTableView<IProduct> tableStock) {
         this.tableStock = tableStock;
+        StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.StockEvent, this);
+
     }
 
     @Override
@@ -128,8 +132,10 @@ public class StockHelper extends IStockHelper{
             break;  
         case Update: updateTableElement((IProduct)event.getData().get(EEventDataKeys.ProductInstance));
             break;
-        case Search: setTableProducts((List<IProduct>)event.getData());
+        case Search: setTableProducts((Collection<IProduct>)event.getData());
             break;          
+        case Load: setTableProducts((Collection<IProduct>)event.getData().get(EEventDataKeys.ProductsCollection));
+                break;
         default:
             break;
        }
@@ -149,7 +155,7 @@ public class StockHelper extends IStockHelper{
         tableStock.getCell(index).updateRow();
     }
 
-    private void setTableProducts(List<IProduct> product){
+    private void setTableProducts(Collection<IProduct> product){
         tableStock.getItems().setAll(product);
     }
 

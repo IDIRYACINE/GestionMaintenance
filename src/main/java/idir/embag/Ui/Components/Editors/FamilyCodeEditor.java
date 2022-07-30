@@ -85,13 +85,13 @@ public class FamilyCodeEditor extends INodeView implements Initializable , IDial
         product.setFamilyCode(Integer.parseInt(familyCodeField.getText()));
 
         data.put(EEventDataKeys.AttributeWrappersList,getAttributeWrappers());
-        data.put(EEventDataKeys.ArticleId, product.getArticleId());
+        data.put(EEventDataKeys.ArticleId, product.getFamilyCode());
     }
 
     private Collection<AttributeWrapper> getAttributeWrappers(){
         Collection<AttributeWrapper> attributes = new ArrayList<AttributeWrapper>();
 
-        attributes.add(new AttributeWrapper(EEventDataKeys.ArticleName,familyNameField.getText()));
+        attributes.add(new AttributeWrapper(EEventDataKeys.FamilyName,familyNameField.getText()));
         attributes.add(new AttributeWrapper(EEventDataKeys.FamilyCode,familyCodeField.getText()));
 
 

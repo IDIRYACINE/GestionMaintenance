@@ -3,23 +3,33 @@ package idir.embag.EventStore.Models.Stock;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import idir.embag.DataModels.Metadata.EEventDataKeys;
+import idir.embag.DataModels.Products.IProduct;
+import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
+import idir.embag.Repository.InventoryRepository;
 import idir.embag.Types.Infrastructure.Database.IProductQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Stores.DataStore.IDataDelegate;
+import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
+import idir.embag.Types.Stores.Generics.StoreDispatch.StoreDispatch;
+import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
+import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
+import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 
 @SuppressWarnings("unchecked")
 public class InventoryModel implements IDataDelegate {
 
     IProductQuery productQuery;
+    InventoryRepository inventoryRepository;
 
-    public InventoryModel(IProductQuery productQuery) {
+    public InventoryModel(IProductQuery productQuery,InventoryRepository inventoryRepository) {
         this.productQuery = productQuery;
+        this.inventoryRepository = inventoryRepository;
     }
 
     public void add(Map<EEventDataKeys,Object> data) {
@@ -68,17 +78,25 @@ public class InventoryModel implements IDataDelegate {
     @Override
     public void load(Map<EEventDataKeys,Object> data) {
         //TODO : change method to get a proper load wrapper
-        LoadWrapper loadWrapper = new LoadWrapper(0,0);
+        LoadWrapper loadWrapper = new LoadWrapper(10,0);
         try{
-            ResultSet result = productQuery.LoadInventoryProduct(loadWrapper);
-            ((Consumer<ResultSet>) data.get(EEventDataKeys.OnSucessCallback)).accept(result);
+            ResultSet rawData = productQuery.LoadInventoryProduct(loadWrapper);
+            Collection<IProduct> products = inventoryRepository.resultSetToProduct(rawData);
+
+            Map<EEventDataKeys,Object> response = new HashMap<>();
+            response.put(EEventDataKeys.ProductsCollection, products);
+            notfiyEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Load, response);
         }
         catch(SQLException e){
             e.printStackTrace();
         }
     }
 
-   
+    private void notfiyEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent, Map<EEventDataKeys,Object> data) {
+        StoreEvent event = new StoreEvent(storeEvent, actionEvent,data);
+        StoreDispatch action = new StoreDispatch(store, event);
+        StoreCenter.getInstance().notify(action);
+    }
 
 }
 
