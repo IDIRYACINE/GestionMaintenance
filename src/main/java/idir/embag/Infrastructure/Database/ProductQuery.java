@@ -10,6 +10,8 @@ import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.MDatabase;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
+import idir.embag.Types.Infrastructure.Database.Generics.MDatabase.InventoryAttributes;
+import idir.embag.Types.Infrastructure.Database.Generics.MDatabase.StockAttributes;
 
 public class ProductQuery extends IProductQuery{
     
@@ -36,6 +38,7 @@ public class ProductQuery extends IProductQuery{
     public void UpdateStockProduct(int articleId, Collection<AttributeWrapper> attributes) throws SQLException {
         String whereClause = " WHERE "+MDatabase.StockAttributes.ArticleId + "=" + articleId;
         String query = "UPDATE "+STOCK_TABLE_NAME+ UpdateWrapperToQuery(attributes)+ whereClause;
+
         database.UpdateQuery(query);
         
     }
@@ -57,8 +60,6 @@ public class ProductQuery extends IProductQuery{
         String whereClause = " WHERE "+MDatabase.InventoryAttributes.ArticleId + "=" + articleId;
         String query = "UPDATE "+INVENTORY_TABLE_NAME+ UpdateWrapperToQuery(attributes) + whereClause;
         
-        System.out.println(query);
-
         database.UpdateQuery(query);
         
     }
@@ -95,10 +96,8 @@ public class ProductQuery extends IProductQuery{
     public void CreateInventoryTable() throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS "+INVENTORY_TABLE_NAME+"("
                 + MDatabase.InventoryAttributes.ArticleId +" INTEGER PRIMARY KEY,\n"
-                + MDatabase.InventoryAttributes.ArticleName +" TEXT,\n"
                 + MDatabase.InventoryAttributes.StockId +" INTEGER,\n"
-                + MDatabase.InventoryAttributes.FamilyCode +" INTEGER,\n"
-                + MDatabase.InventoryAttributes.Price +" REAL,\n"
+                + MDatabase.InventoryAttributes.ArticleCode +" INTEGER,\n"
 
                 + "FOREIGN KEY ("+ MDatabase.InventoryAttributes.FamilyCode +")\n"
                 + "REFERENCES "+ FAMILIES_TABLE_NAME +"(" +MDatabase.FamilliesCodeAttributes.FamilyCode +")\n"  
@@ -148,8 +147,6 @@ public class ProductQuery extends IProductQuery{
 
     @Override
     public ResultSet LoadFamilyCode(LoadWrapper parametrers) throws SQLException {
-        // TODO optimise this query
-
         String extraClause = " LIMIT "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
         String query = "SELECT * FROM "+FAMILIES_TABLE_NAME+ extraClause;
         ResultSet result = database.SelectQuery(query);
@@ -158,20 +155,28 @@ public class ProductQuery extends IProductQuery{
 
     @Override
     public ResultSet LoadInventoryProduct(LoadWrapper parametrers) throws SQLException {
-         // TODO optimise this query
-
          String extraClause = " LIMIT "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
-         String query = "SELECT * FROM "+FAMILIES_TABLE_NAME+ extraClause;
+         String joinClause = " INNER JOIN " +STOCK_TABLE_NAME +" ON "
+         +INVENTORY_TABLE_NAME + "."+ InventoryAttributes.StockId
+         +"=" + STOCK_TABLE_NAME + "." + StockAttributes.ArticleId ;
+
+         String query = "SELECT "
+         + INVENTORY_TABLE_NAME + "." + InventoryAttributes.ArticleId +" ,"
+         + INVENTORY_TABLE_NAME + "." + InventoryAttributes.ArticleCode +" ,"
+         + STOCK_TABLE_NAME + "." + StockAttributes.Price +" ,"
+         + STOCK_TABLE_NAME + "." + StockAttributes.FamilyCode +" ,"
+         + STOCK_TABLE_NAME + "." + StockAttributes.ArticleName
+
+         +" FROM "+INVENTORY_TABLE_NAME +joinClause+ extraClause;
+         System.out.println(query);
          ResultSet result = database.SelectQuery(query);
          return result;
     }
 
     @Override
     public ResultSet LoadStockProduct(LoadWrapper parametrers) throws SQLException {
-         // TODO optimise this query
-
          String extraClause = " LIMIT "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
-         String query = "SELECT * FROM "+FAMILIES_TABLE_NAME+ extraClause;
+         String query = "SELECT * FROM "+STOCK_TABLE_NAME+ extraClause;
          ResultSet result = database.SelectQuery(query);
          return result;
     }

@@ -41,6 +41,7 @@ public class MainController  implements Initializable,INavigationController  {
     public void initialize(URL location, ResourceBundle resources) {
       loadPanels();
       loadNavigationPane();
+      navigateToPanel(NavigationStore.StockPanelId);
     }
 
     @Override

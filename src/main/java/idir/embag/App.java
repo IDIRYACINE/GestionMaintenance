@@ -49,15 +49,9 @@ public class App extends Application {
     }
 
     private void setup(INavigationController navigationController){
-
         servicesCenter = ServicesCenter.getInstance();
-        
-        storesCenter = StoreCenter.getInstance(servicesCenter,navigationController);
-
-        
+        storesCenter = StoreCenter.getInstance(servicesCenter,navigationController);        
         servicesCenter.getDatabaseInitialiser().createTables();
-        
-        
     }
    
 

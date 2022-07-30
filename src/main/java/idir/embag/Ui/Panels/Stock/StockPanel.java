@@ -63,6 +63,7 @@ public class StockPanel extends INodeView  implements  Initializable {
         controller.add();
     }
 
+
     @FXML
     private void onEdit(){
         IProduct product = tableStock.getSelectionModel().getSelectedValues().get(0);

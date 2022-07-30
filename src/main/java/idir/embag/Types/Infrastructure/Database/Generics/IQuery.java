@@ -47,10 +47,10 @@ public abstract class IQuery {
         while (iterator.hasNext()) {
             AttributeWrapper attr = iterator.next();
             if(i<lastElementIndex){    
-            result += attr.getAttributeName() + "=" + attr.getValue() + ",";
+            result += attr.getAttributeName() + "= '" +  attr.getValue() + "',";
             }
             else{
-                result += attr.getAttributeName() + "=" + attr.getValue() ;
+                result += attr.getAttributeName() + "= ' " + attr.getValue()+ " '" ;
             }
             i++;
         }

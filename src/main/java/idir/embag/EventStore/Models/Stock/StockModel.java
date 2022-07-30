@@ -80,7 +80,7 @@ public class StockModel implements IDataDelegate{
     @Override
     public void load(Map<EEventDataKeys,Object> data) {
         //TODO : change method to get a proper load wrapper
-        LoadWrapper loadWrapper = new LoadWrapper(0,0);
+        LoadWrapper loadWrapper = new LoadWrapper(100,0);
         try{
             ResultSet rawData = productQuery.LoadStockProduct(loadWrapper);
             Collection<IProduct> products = stockRepository.resultSetToProduct(rawData);
