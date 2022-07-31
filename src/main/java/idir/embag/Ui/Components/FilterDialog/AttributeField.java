@@ -34,7 +34,8 @@ public class AttributeField implements Initializable {
         attributeLabel.setText(attributeWrapper.getAttributeName().toString());
     }
 
-
+    
+    
 
 }
     

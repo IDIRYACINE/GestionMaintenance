@@ -4,9 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
@@ -62,9 +60,9 @@ public class InventoryModel implements IDataDelegate {
     }
 
     @Override
-    public List<Object> search(Map<EEventDataKeys,Object> data) {
+    public void search(Map<EEventDataKeys,Object> data) {
 
-       List<Object> result = null;
+       
        /* Todo : implement this
        try {
         result = productQuery.SearchInventoryProduct((SearchWrapper) data);
@@ -72,7 +70,6 @@ public class InventoryModel implements IDataDelegate {
         e.printStackTrace();
         }*/
 
-        return result;
     }
 
     @Override

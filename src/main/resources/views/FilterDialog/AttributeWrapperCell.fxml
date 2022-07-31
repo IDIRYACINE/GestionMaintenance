@@ -4,10 +4,18 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 
-
 <HBox fx:id="root" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+   <!-- store controller as userData property -->
+    <userData>
+        <fx:reference source="controller" />
+    </userData>
+    <properties>
+        <!-- store controller at key "controller" in properties map -->
+        <controller><fx:reference source="controller" /></controller> 
+    </properties>
+    
    <children>
-      <Label fx:id="attrbLabel" prefWidth="100.0" text="Label" />
-      <MFXTextField fx:id="attrbValue" prefWidth="200.0" />
+      <Label fx:id="attributeLabel" prefWidth="100.0" text="Label" />
+      <MFXTextField fx:id="attributeField" maxHeight="100.0" minWidth="200.0" />
    </children>
 </HBox>

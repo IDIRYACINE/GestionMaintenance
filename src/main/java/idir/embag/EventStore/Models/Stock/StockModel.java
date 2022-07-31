@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Products.IProduct;
@@ -71,10 +70,8 @@ public class StockModel implements IDataDelegate{
 
 
     @Override
-    public List<Object> search(Map<EEventDataKeys,Object> data) {
-        List<Object> result = null;
+    public void search(Map<EEventDataKeys,Object> data) {
         
-        return result;
     }
 
     @Override

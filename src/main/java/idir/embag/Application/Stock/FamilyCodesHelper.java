@@ -180,6 +180,14 @@ public class FamilyCodesHelper extends IStockHelper implements IEventSubscriber{
    
     private IDialogContent buildSearchDialog(){
         FilterDialog dialog = new FilterDialog();
+
+        EEventDataKeys[] attributes = {EEventDataKeys.FamilyCode, EEventDataKeys.FamilyName};
+        dialog.setAttributes(attributes);
+
+        dialog.setOnConfirm(requestData -> {
+            dispatchEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Search, requestData);
+        });
+
         dialog.loadFxml();
         return dialog;
     }

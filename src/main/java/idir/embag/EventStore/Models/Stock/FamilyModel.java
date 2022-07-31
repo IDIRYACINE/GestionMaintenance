@@ -4,9 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
@@ -70,8 +68,8 @@ public class FamilyModel implements IDataDelegate{
     }
 
     @Override
-    public List<Object> search(Map<EEventDataKeys,Object> data) {
-        List<Object> result = null;
+    public void search(Map<EEventDataKeys,Object> data) {
+       
         /*  TODO: implement this
         try {
             result = productQuery.SearchFamilyCode((SearchWrapper) data);
@@ -79,7 +77,6 @@ public class FamilyModel implements IDataDelegate{
             e.printStackTrace();
         }*/
         
-        return result;
     }
 
     @Override

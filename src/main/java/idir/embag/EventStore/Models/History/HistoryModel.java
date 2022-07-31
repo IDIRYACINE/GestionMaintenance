@@ -2,7 +2,6 @@ package idir.embag.EventStore.Models.History;
 
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 import idir.embag.DataModels.Metadata.EEventDataKeys;
@@ -37,9 +36,7 @@ public class HistoryModel implements IDataDelegate{
     }
 
     @Override
-    public List<Object> search(Map<EEventDataKeys,Object> data) {
-        List<Object> result = null;
-        return result;
+    public void search(Map<EEventDataKeys,Object> data) {
     }
 
     @Override
