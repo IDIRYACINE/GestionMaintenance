@@ -35,7 +35,7 @@ public class WorkerQuery extends IWorkerQuery{
 
     @Override
     public void UpdateWorker(int workerId, Collection<AttributeWrapper> attributes ) throws SQLException {
-        String whereClause = " WHERE "+MDatabase.StockAttributes.ArticleId + "=" + workerId;
+        String whereClause = " WHERE "+MDatabase.WorkersAttributes.WorkerId + "=" + workerId;
         String query = "UPDATE "+WORKERS_TABLE_NAME+ UpdateWrapperToQuery(attributes)+ whereClause;
         database.UpdateQuery(query);
     }

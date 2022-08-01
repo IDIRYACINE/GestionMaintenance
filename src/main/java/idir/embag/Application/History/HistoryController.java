@@ -28,6 +28,7 @@ public class HistoryController implements  IHistoryController, IEventSubscriber 
     public HistoryController(MFXTableView<SessionRecord> tableSessionRecords) {
         this.tableSessionRecords = tableSessionRecords;
         StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.SessionRecordsEvent, this);
+        setColumns();
     }
 
     
@@ -53,10 +54,6 @@ public class HistoryController implements  IHistoryController, IEventSubscriber 
     public void notifyEvent(StoreEvent event) {
         switch(event.getAction()){
             case Add: addTableElement((SessionRecord)event.getData().get(EEventDataKeys.SessionRecordInstance));
-                break;
-            case Remove: removeTableElement((SessionRecord)event.getData().get(EEventDataKeys.SessionRecordInstance));
-                break;  
-            case Update: updateTableElement((SessionRecord)event.getData().get(EEventDataKeys.SessionRecordInstance));
                 break;
             case Search: setTableElements((Collection<SessionRecord>)event.getData().get(EEventDataKeys.SessionRecordsCollection));
                 break;          
@@ -87,16 +84,6 @@ public class HistoryController implements  IHistoryController, IEventSubscriber 
 
     private void addTableElement(SessionRecord SessionRecord) {
         tableSessionRecords.getItems().add(SessionRecord);
-    }
-
-    private void removeTableElement(SessionRecord SessionRecord){
-        int index = tableSessionRecords.getItems().indexOf(SessionRecord);
-        tableSessionRecords.getItems().remove(index);
-    }
-
-    private void updateTableElement(SessionRecord SessionRecord){
-        int index = tableSessionRecords.getItems().indexOf(SessionRecord);
-        tableSessionRecords.getCell(index).updateRow();
     }
 
     private void setTableElements(Collection<SessionRecord> SessionRecords){

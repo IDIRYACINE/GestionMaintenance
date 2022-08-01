@@ -50,7 +50,6 @@ public class ConfirmationDialog extends INodeView implements Initializable , IDi
 
     @FXML
     private void onConfirm(){
-        //TODO : implement this
         Map<EEventDataKeys,Object> data = new HashMap<>();
         confirmTask.accept(data);
         cancelTask.run();

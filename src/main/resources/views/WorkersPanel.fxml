@@ -13,11 +13,11 @@
             <Insets left="20.0" right="20.0" top="20.0" />
          </padding>
          <children>
-            <MFXButton fx:id="btnAdd" text="Ajouter" />
-            <MFXButton fx:id="btnEdit" text="Modifier" />
-            <MFXButton fx:id="btnSearch" text="Rechercher" />
-            <MFXButton fx:id="btnAddSessionWorker" text="Ajouter au session" />
-            <MFXButton fx:id="btnRefresh" text="Refresher" />
+            <MFXButton fx:id="btnAdd" onAction="#addWorker" text="Ajouter" />
+            <MFXButton fx:id="btnEdit" onAction="#updateWorker" text="Modifier" />
+            <MFXButton fx:id="btnSearch" onAction="#searchWorkers" text="Rechercher" />
+            <MFXButton fx:id="btnAddSessionWorker" onAction="#addWorkerToSession" text="Ajouter au session" />
+            <MFXButton fx:id="btnRefresh" onAction="#refresh" text="Refresher" />
          </children>
       </HBox>
       <MFXTableView fx:id="tableWorkers" footerVisible="false" prefHeight="636.0" prefWidth="1332.0" />

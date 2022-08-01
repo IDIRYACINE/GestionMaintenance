@@ -7,7 +7,7 @@ import java.util.Collection;
 import idir.embag.DataModels.Workers.Worker;
 import idir.embag.Types.Infrastructure.Database.Generics.MDatabase;
 
-public class WorkerRepository {
+public class WorkersRepository {
     
     public Collection<Worker> resultSetToProduct(ResultSet source){
         Collection<Worker> result = new ArrayList<Worker>();

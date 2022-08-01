@@ -9,13 +9,13 @@
 
 <MFXGenericDialog maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <Label text="Cetter Action est permanante" BorderPane.alignment="CENTER" />
+      <Label fx:id="labelMessage" text="Message" BorderPane.alignment="CENTER" />
    </center>
    <bottom>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <MFXButton text="Anuuler" />
-            <MFXButton text="Confirmer" />
+            <MFXButton text="Anuuler" onAction="#onConfirm"/>
+            <MFXButton text="Confirmer" onAction="#onCancel"/>
          </children>
       </HBox>
    </bottom>

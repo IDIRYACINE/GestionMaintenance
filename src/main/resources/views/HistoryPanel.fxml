@@ -18,7 +18,7 @@
             <MFXButton fx:id="btnExport" text="Exporter" />
          </children>
       </HBox>
-      <MFXTableView fx:id="tableSessionRecord" footerVisible="false" prefHeight="636.0" prefWidth="1332.0" />
+      <MFXTableView fx:id="tableSessionRecords" footerVisible="false" prefHeight="636.0" prefWidth="1332.0" />
     
 
    </children>

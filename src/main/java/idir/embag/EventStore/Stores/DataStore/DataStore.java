@@ -21,14 +21,13 @@ public class DataStore implements IDataStore {
 
     private Map<EStoreEventAction , Consumer<StoreEvent>> actions = new HashMap<>();
        
-    public DataStore(IDataDelegate stockDelegate, IDataDelegate inventoryDelegate, IDataDelegate historyDelegate,
-            IDataDelegate familyDelegate) {
+    public DataStore(IDataDelegate[] delegates) {
 
-       dataDelegates.put(EStoreEvents.StockEvent, stockDelegate);
-       dataDelegates.put(EStoreEvents.InventoryEvent, inventoryDelegate);
-       dataDelegates.put(EStoreEvents.FamilyCodeEvent, familyDelegate);
-       dataDelegates.put(EStoreEvents.SessionRecordsEvent, historyDelegate);
-       dataDelegates.put(EStoreEvents.SessionWorkerEvent, familyDelegate);
+       dataDelegates.put(EStoreEvents.StockEvent, delegates[IDataStore.STOCK_DELEGATE]);
+       dataDelegates.put(EStoreEvents.InventoryEvent, delegates[IDataStore.INVENTORY_DELEGATE]);
+       dataDelegates.put(EStoreEvents.FamilyCodeEvent, delegates[IDataStore.FAMILY_DELEGATE]);
+       dataDelegates.put(EStoreEvents.SessionRecordsEvent, delegates[IDataStore.SESSION_DELEGATE]);
+       dataDelegates.put(EStoreEvents.WorkersEvent, delegates[IDataStore.WORKER_DELEGATE]);
 
        setupSubscribers();
        setupActions();

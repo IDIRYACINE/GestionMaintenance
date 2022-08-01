@@ -9,7 +9,7 @@ import java.util.Map;
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Workers.Worker;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
-import idir.embag.Repository.WorkerRepository;
+import idir.embag.Repository.WorkersRepository;
 import idir.embag.Types.Infrastructure.Database.IWorkerQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
@@ -25,10 +25,11 @@ import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 public class WorkersModel implements IDataDelegate{
 
     IWorkerQuery workerQuery;
-    WorkerRepository workerRepository;
+    WorkersRepository workerRepository;
 
-    public WorkersModel(IWorkerQuery workerQuery) {
+    public WorkersModel(IWorkerQuery workerQuery,WorkersRepository workerRepository) {
         this.workerQuery = workerQuery;
+        this.workerRepository = workerRepository;
     }
 
     public void add(Map<EEventDataKeys,Object> data) {
@@ -42,7 +43,7 @@ public class WorkersModel implements IDataDelegate{
 
     public void remove(Map<EEventDataKeys,Object> data) {
         try {
-            workerQuery.UnregisterWorker((int) data.get(EEventDataKeys.ArticleId));
+            workerQuery.UnregisterWorker((int) data.get(EEventDataKeys.WorkerId));
             ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -83,11 +84,11 @@ public class WorkersModel implements IDataDelegate{
         LoadWrapper loadWrapper = new LoadWrapper(10,0);
         try{
             ResultSet rawData = workerQuery.LoadSWorkers(loadWrapper);
-            Collection<Worker> products = workerRepository.resultSetToProduct(rawData);
+            Collection<Worker> workers = workerRepository.resultSetToProduct(rawData);
 
             Map<EEventDataKeys,Object> response = new HashMap<>();
-            response.put(EEventDataKeys.ProductsCollection, products);
-            notfiyEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Load, response);
+            response.put(EEventDataKeys.WorkersCollection, workers);
+            notfiyEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Load, response);
         }
         catch(SQLException e){
             e.printStackTrace();

@@ -7,6 +7,7 @@ import java.util.Map;
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
+import idir.embag.Types.Stores.Generics.IEventSubscriber;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
 import idir.embag.Types.Stores.Generics.StoreDispatch.StoreDispatch;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
@@ -18,30 +19,38 @@ import idir.embag.Ui.Constants.Messages;
 import idir.embag.Ui.Constants.Names;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
+import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 
 @SuppressWarnings("unchecked")
-public class SessionController {
+public class SessionController implements IEventSubscriber {
     
     private MFXTableView<SessionRecord> tableRecord;
     
+    public SessionController(MFXTableView<SessionRecord> tableRecord) {
+        this.tableRecord = tableRecord;
+        StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.SessionEvent, this);
+        setColumns();
+    }
+
     public void refresh() {
-        //TODO : REFRESH
+        dispatchEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.Load,null);        
     }
 
     public void manageSessionGroups() {
 
         SessionWorkersDialog dialog = new SessionWorkersDialog();
-        dialog.loadFxml();
         
-        //dialog.setCallbacks();
         Map<EEventDataKeys,Object> data = new HashMap<>();
 
         data.put(EEventDataKeys.DialogContent, dialog);
+        
+        dialog.loadFxml();
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
         
     }
     
+    @Override
     public void notifyEvent(StoreEvent event) {
        switch(event.getAction()){
               case Add:
@@ -53,11 +62,6 @@ public class SessionController {
               default:
                 break;
        }
-    }
-    
-    public void notifyActive(MFXTableView<SessionRecord> tableRecord ) {
-        this.tableRecord = tableRecord;
-        setColumns();
     }
 
     public void closeSession() {
@@ -74,7 +78,6 @@ public class SessionController {
     }
 
     public void export() {
-        // TODO : Export to Excel
     }
 
     private void addRecord(SessionRecord record) {
@@ -96,7 +99,16 @@ public class SessionController {
 		MFXTableColumn<SessionRecord> inventoryQuantiyColumn = new MFXTableColumn<>(Names.Quantity, true, Comparator.comparing(SessionRecord::getQuantityInventory));
         MFXTableColumn<SessionRecord> stockQuantiyColumn = new MFXTableColumn<>(Names.QuantityShift, true, Comparator.comparing(SessionRecord::getQuantityStock));
 
-
+        idColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getRecordId));
+        nameColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getArticleName));
+        priceColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getPrix));
+        priceShiftColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getPriceShift));
+        workerIdColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getworkerName));
+        groupIdColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getGroupId));
+        dateColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getDate));
+        inventoryQuantiyColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getQuantityInventory));
+        stockQuantiyColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getQuantityStock));
+        
         tableRecord.getTableColumns().setAll(idColumn,nameColumn,groupIdColumn,workerIdColumn,dateColumn,
                 inventoryQuantiyColumn,stockQuantiyColumn,priceColumn,priceShiftColumn);
         

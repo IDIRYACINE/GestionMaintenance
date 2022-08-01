@@ -56,7 +56,6 @@ public class WorkerEditor extends INodeView implements Initializable , IDialogCo
         workerEmailField.setText(worker.getEmail());
         workerNameField.setText(worker.getName());
         workerPhoneField.setText(String.valueOf(worker.getPhone()));
-       
     }
 
     @Override
@@ -91,9 +90,9 @@ public class WorkerEditor extends INodeView implements Initializable , IDialogCo
     private Collection<AttributeWrapper> getAttributeWrappers(){
         Collection<AttributeWrapper> attributes = new ArrayList<AttributeWrapper>();
         
-        attributes.add(new AttributeWrapper(EEventDataKeys.WorkerName,worker.getName()));
-        attributes.add(new AttributeWrapper(EEventDataKeys.WorkerEmail,worker.getEmail()));
-        attributes.add(new AttributeWrapper(EEventDataKeys.WorkerPhone,worker.getPhone()));
+        attributes.add(new AttributeWrapper(EEventDataKeys.WorkerName,workerNameField.getText()));
+        attributes.add(new AttributeWrapper(EEventDataKeys.WorkerEmail,workerEmailField.getText()));
+        attributes.add(new AttributeWrapper(EEventDataKeys.WorkerPhone,workerPhoneField.getText()));
 
         return attributes;
     }

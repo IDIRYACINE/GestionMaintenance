@@ -8,6 +8,7 @@ import idir.embag.EventStore.Models.History.HistoryModel;
 import idir.embag.EventStore.Models.Stock.FamilyModel;
 import idir.embag.EventStore.Models.Stock.InventoryModel;
 import idir.embag.EventStore.Models.Stock.StockModel;
+import idir.embag.EventStore.Models.Workers.WorkersModel;
 import idir.embag.EventStore.Stores.DataStore.DataStore;
 import idir.embag.EventStore.Stores.NavigationStore.NavigationStore;
 import idir.embag.Infrastructure.ServicesCenter;
@@ -15,7 +16,9 @@ import idir.embag.Infrastructure.Initialisers.DatabaseInitialiser;
 import idir.embag.Repository.FamilyCodeRepository;
 import idir.embag.Repository.InventoryRepository;
 import idir.embag.Repository.StockRepository;
+import idir.embag.Repository.WorkersRepository;
 import idir.embag.Types.Application.Navigation.INavigationController;
+import idir.embag.Types.Stores.DataStore.IDataDelegate;
 import idir.embag.Types.Stores.DataStore.IDataStore;
 import idir.embag.Types.Stores.Generics.IEventSubscriber;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
@@ -93,11 +96,17 @@ public class StoreCenter implements IStoresCenter{
       StockModel stockModel = new StockModel(databaseInitialiser.getProductQuery(), new StockRepository());
       InventoryModel inventoryModel = new InventoryModel(databaseInitialiser.getProductQuery(),new InventoryRepository());
       HistoryModel historyModel = new HistoryModel(databaseInitialiser.getSessionQuery());
-
       FamilyModel familyModel = new FamilyModel(databaseInitialiser.getProductQuery(),new FamilyCodeRepository());
+      WorkersModel workersModel = new WorkersModel(databaseInitialiser.getWorkerQuery(),new WorkersRepository());
 
+      IDataDelegate[] delegates = new IDataDelegate[IDataStore.DELEGATES_COUNT];
+      delegates[IDataStore.STOCK_DELEGATE] = stockModel;
+      delegates[IDataStore.INVENTORY_DELEGATE] = inventoryModel;
+      delegates[IDataStore.HISTORY_DELEGATE] = historyModel;
+      delegates[IDataStore.FAMILY_DELEGATE] = familyModel;
+      delegates[IDataStore.WORKER_DELEGATE] = workersModel;
 
-      dataStore = new DataStore(stockModel, inventoryModel, historyModel, familyModel);
+      dataStore = new DataStore(delegates);
     }
 
     private void setupNavigationStore(INavigationController navigationController){

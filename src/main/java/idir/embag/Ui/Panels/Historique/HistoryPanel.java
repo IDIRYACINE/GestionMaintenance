@@ -3,7 +3,9 @@ package idir.embag.Ui.Panels.Historique;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import idir.embag.Application.History.HistoryController;
 import idir.embag.DataModels.Session.SessionRecord;
+import idir.embag.Types.Application.History.IHistoryController;
 import idir.embag.Types.Panels.Generics.INodeView;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTableView;
@@ -21,9 +23,9 @@ public class HistoryPanel extends INodeView  implements Initializable {
     private MFXButton btnExport, btnRefresh,btnSearch;
     
     @FXML
-    private MFXTableView<SessionRecord> tableStock;
+    private MFXTableView<SessionRecord> tableSessionRecords;
 
-    
+    private IHistoryController controller;
 
     public HistoryPanel() {
         fxmlPath = "/views/HistoryPanel.fxml";
@@ -36,8 +38,18 @@ public class HistoryPanel extends INodeView  implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        controller = new HistoryController(tableSessionRecords);
     }
 
+    @FXML
+    private void refresh(){
+        controller.refresh();
+    }
+
+    @FXML
+    private void search(){
+        controller.searchRecords();
+    }
 }
     
 

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Workers.Worker;
@@ -23,6 +24,7 @@ import idir.embag.Ui.Constants.Messages;
 import idir.embag.Ui.Constants.Names;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
+import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 
 @SuppressWarnings("unchecked")
 public class WorkersController implements IWorkersController , IEventSubscriber {
@@ -45,6 +47,11 @@ public class WorkersController implements IWorkersController , IEventSubscriber 
 		MFXTableColumn<Worker> nameColumn = new MFXTableColumn<>(Names.WorkerName, true, Comparator.comparing(Worker::getName));
         MFXTableColumn<Worker> emailColumn = new MFXTableColumn<>(Names.WorkerEmail, true, Comparator.comparing(Worker::getEmail));
         MFXTableColumn<Worker> phoneColumn = new MFXTableColumn<>(Names.WorkerPhone, true, Comparator.comparing(Worker::getPhone));
+
+        idColumn.setRowCellFactory(worker -> new MFXTableRowCell<>(Worker::getId));
+        nameColumn.setRowCellFactory(worker -> new MFXTableRowCell<>(Worker::getName));
+        emailColumn.setRowCellFactory(worker -> new MFXTableRowCell<>(Worker::getEmail));
+        phoneColumn.setRowCellFactory(worker -> new MFXTableRowCell<>(Worker::getPhone));
 
         tableWorkers.getTableColumns().setAll(idColumn,nameColumn,emailColumn,phoneColumn);
     }
@@ -112,7 +119,7 @@ public class WorkersController implements IWorkersController , IEventSubscriber 
         dialogContent.setOnConfirm(requestData -> {
             requestData.put(EEventDataKeys.OnSucessCallback, sucessCallback);
 
-            dispatchEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Update, requestData);
+            dispatchEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Update, requestData);
         });
 
         dialogContent.loadFxml();
@@ -140,7 +147,7 @@ public class WorkersController implements IWorkersController , IEventSubscriber 
         dialogContent.setOnConfirm(requestData -> {
             requestData.put(EEventDataKeys.OnSucessCallback, sucessCallback);
 
-            dispatchEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Remove, requestData);
+            dispatchEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Remove, requestData);
         });
 
         dialogContent.loadFxml();
@@ -151,16 +158,39 @@ public class WorkersController implements IWorkersController , IEventSubscriber 
 
     @Override
     public void addWorkerToSession(Worker worker) {
-        // TODO Auto-generated method stub
+        ConfirmationDialog dialogContent =  new ConfirmationDialog();
+
+        dialogContent.setMessage(Messages.addWorkerToSession);
+
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialogContent);
         
+        dialogContent.setOnConfirm(requestData -> {
+            requestData.put(EEventDataKeys.AddSessionWorker, true);
+            
+            dispatchEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Add, requestData);
+        });
+
+        dialogContent.loadFxml();
+
+
+        dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
+ 
     }
 
     @Override
     public void searchWorkers() {
         IDialogContent dialogContent =  buildSearchDialog();
-        
+       
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
+
+        dialogContent.setOnConfirm(new Consumer<Map<EEventDataKeys,Object>> (){
+            @Override
+            public void accept(Map<EEventDataKeys,Object> data) {
+                dispatchEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Search, data);
+            }
+        });
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
 

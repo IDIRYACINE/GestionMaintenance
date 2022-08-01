@@ -7,7 +7,6 @@ import idir.embag.Application.Workers.WorkersController;
 import idir.embag.DataModels.Workers.Worker;
 import idir.embag.Types.Application.Workers.IWorkersController;
 import idir.embag.Types.Panels.Generics.INodeView;
-import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,9 +17,6 @@ public class WorkersPanel extends INodeView implements Initializable{
     
     @FXML
     private VBox root;
-
-    @FXML
-    private MFXButton btnAdd, btnEdit, btnDelete, btnRefresh,btnSearch;
     
     @FXML
     private MFXTableView<Worker> tableWorkers;
@@ -30,8 +26,6 @@ public class WorkersPanel extends INodeView implements Initializable{
     public WorkersPanel() {
         fxmlPath = "/views/WorkersPanel.fxml";
     }
-
-   
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -63,6 +57,15 @@ public class WorkersPanel extends INodeView implements Initializable{
         controller.archive(worker);
     }
 
+    @FXML
+    private void searchWorkers(){
+        controller.searchWorkers();
+    }
+
+    @FXML
+    private void refresh(){
+        controller.refresh();
+    }
 
     @FXML
     private void addWorkerToSession(){

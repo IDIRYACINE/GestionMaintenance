@@ -16,7 +16,7 @@
                   <Insets left="20.0" right="20.0" top="20.0" />
                </padding>
                <children>
-                  <MFXButton fx:id="btnManageWorkers" onAction="#manageWorkers" onMouseClicked="#manageWorkers" text="Manager Worker" />
+                  <MFXButton fx:id="btnManageWorkers" onAction="#manageWorkers" text="Manager Worker" />
                   <MFXButton fx:id="btnCloseSession" onAction="#closeSession" text="Close Session" />
                   <MFXButton fx:id="btnExport" onAction="#export" text="Exporter" />
                   <MFXButton fx:id="btnRefresh" onAction="#refresh" text="Refresher" />

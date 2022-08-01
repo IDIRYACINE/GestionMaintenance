@@ -6,22 +6,16 @@ import java.util.ResourceBundle;
 import idir.embag.Application.Session.SessionController;
 import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.Types.Panels.Generics.INodeView;
-import idir.embag.Types.Stores.Generics.IEventSubscriber;
-import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
-import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 
-public class SessionPanel extends INodeView implements Initializable,IEventSubscriber {
+public class SessionPanel extends INodeView implements Initializable {
     
     @FXML
     private VBox root;
-
-    @FXML
-    private MFXButton btnManageWorkers, btnCloseSession, btnExport, btnRefresh;
     
     @FXML
     private MFXTableView<SessionRecord> tableSession;
@@ -30,7 +24,7 @@ public class SessionPanel extends INodeView implements Initializable,IEventSubsc
 
     public SessionPanel() {
         fxmlPath = "/views/SessionPanel.fxml";
-        controller = new SessionController();
+        
     }
 
     @Override
@@ -41,7 +35,7 @@ public class SessionPanel extends INodeView implements Initializable,IEventSubsc
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        controller.notifyActive(tableSession);
+        controller = new SessionController(tableSession);
     }
 
     @FXML
@@ -64,10 +58,6 @@ public class SessionPanel extends INodeView implements Initializable,IEventSubsc
         controller.manageSessionGroups();
     }
 
-    @Override
-    public void notifyEvent(StoreEvent event) {
-        controller.notifyEvent(event);
-    }
 
     
 }

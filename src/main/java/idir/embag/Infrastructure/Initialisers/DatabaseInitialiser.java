@@ -16,8 +16,6 @@ public class DatabaseInitialiser {
     private IWorkerQuery workerQuery;
     private IDatabase database;
 
-    
-
     public DatabaseInitialiser() {
         database = new Database("Data/TestDatabase.db");
         productQuery = new ProductQuery(database);

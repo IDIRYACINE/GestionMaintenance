@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Products.IProduct;
@@ -194,6 +195,13 @@ public class InventoryHelper extends IStockHelper implements IEventSubscriber{
             EEventDataKeys.Price, EEventDataKeys.Quantity};
 
         dialog.setAttributes(attributes);
+        
+        dialog.setOnConfirm(new Consumer<Map<EEventDataKeys,Object>> (){
+            @Override
+            public void accept(Map<EEventDataKeys,Object> data) {
+                dispatchEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Search, data);
+            }
+        });
 
         dialog.loadFxml();
 
