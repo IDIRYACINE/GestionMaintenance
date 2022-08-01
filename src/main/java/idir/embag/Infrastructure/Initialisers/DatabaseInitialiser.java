@@ -46,7 +46,7 @@ public class DatabaseInitialiser {
 
         sessionQuery.CreateSessionTable();
         sessionQuery.CreateSessionGroupTable();
-        sessionQuery.CreateSessionWorkersTabel();
+        sessionQuery.CreateSessionWorkersTable();
         sessionQuery.CreateSessionRecordTable();
 
 

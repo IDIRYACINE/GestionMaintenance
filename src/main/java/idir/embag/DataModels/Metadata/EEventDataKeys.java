@@ -36,6 +36,8 @@ public enum EEventDataKeys {
     Subscriber,
     StockId,
     OnSucessCallback, 
-    ProductsCollection,
+    ProductsCollection, 
+    SearchWrapperList,
+    SearchWrapper,
 
 }

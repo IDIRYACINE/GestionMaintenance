@@ -4,9 +4,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
+import idir.embag.Types.Infrastructure.Database.Generics.MDatabase.SessionsGroupsAttributes;
+import idir.embag.Types.Infrastructure.Database.Generics.MDatabase.SessionsRecordsAttributes;
+import idir.embag.Types.Infrastructure.Database.Generics.MDatabase.StockAttributes;
+import idir.embag.Types.Infrastructure.Database.Generics.MDatabase.WorkersAttributes;
 import idir.embag.Types.Infrastructure.Database.IDatabase;
 import idir.embag.Types.Infrastructure.Database.ISessionQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
+import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.MDatabase;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 
@@ -18,7 +23,7 @@ public class SessionQuery extends ISessionQuery{
     private static final String RECORDS_TABLE_NAME = MDatabase.Tables.SessionsRecords;
     private static final String SESSION_WORKERS_TABLE_NAME = MDatabase.Tables.SessionWorkers;
     private static final String GROUPS_TABLE_NAME = MDatabase.Tables.SessionsGroups;
-
+    private static final String WORKERS_TABLE_NAME = MDatabase.Tables.Workers;
 
     public SessionQuery(IDatabase database) {
         this.database = database;
@@ -143,7 +148,7 @@ public class SessionQuery extends ISessionQuery{
     }
 
     @Override
-    public void CreateSessionWorkersTabel() throws SQLException {
+    public void CreateSessionWorkersTable() throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS "+ SESSION_WORKERS_TABLE_NAME +" (\n"
             + MDatabase.SessionWorkersAttributes.Id + " INTEGER PRIMARY KEY AUTOINCREMENT,\n"
             + MDatabase.SessionWorkersAttributes.GroupId + " INTEGER,\n"
@@ -165,22 +170,129 @@ public class SessionQuery extends ISessionQuery{
 
     @Override
     public ResultSet SearchSessionGroup(SearchWrapper parametrers) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        String whereClause = " WHERE "+ SearchWrapperToWhereClause(parametrers);
+        String query = "SELECT * FROM "+GROUPS_TABLE_NAME+ whereClause;
+
+        ResultSet result = database.SelectQuery(query);
+        return result;
     }
 
 
     @Override
     public ResultSet SearchSessionWorker(SearchWrapper parametrers) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        String whereClause = " WHERE "+ SearchWrapperToWhereClause(parametrers);
+
+        String joinClause = " INNER JOIN " +WORKERS_TABLE_NAME +" ON "
+            +RECORDS_TABLE_NAME + "."+ SessionsRecordsAttributes.WorkerId
+            +"=" + WORKERS_TABLE_NAME + "." + WorkersAttributes.WorkerId
+
+            +" INNER JOIN " +GROUPS_TABLE_NAME +" ON "
+            +RECORDS_TABLE_NAME + "."+ SessionsRecordsAttributes.GroupId
+            +"=" + GROUPS_TABLE_NAME + "." + SessionsGroupsAttributes.Id ;
+
+        String query = "SELECT "
+            + WORKERS_TABLE_NAME + "." + WorkersAttributes.WorkerId+" ,"
+            + WORKERS_TABLE_NAME + "." + WorkersAttributes.Name+" ,"
+            + WORKERS_TABLE_NAME + "." + WorkersAttributes.Phone+" ,"
+            + GROUPS_TABLE_NAME + "." + SessionsGroupsAttributes.Id +" ,"
+            + GROUPS_TABLE_NAME + "." + SessionsGroupsAttributes.Name +" ,"
+            +" FROM "+RECORDS_TABLE_NAME +joinClause+ whereClause;
+
+        ResultSet result = database.SelectQuery(query);
+        return result;
     }
 
 
     @Override
     public ResultSet SearchSessionRecord(SearchWrapper parametrers) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        String whereClause = " WHERE "+ SearchWrapperToWhereClause(parametrers);
+
+        String joinClause = " INNER JOIN " +WORKERS_TABLE_NAME +" ON "
+            +RECORDS_TABLE_NAME + "."+ SessionsRecordsAttributes.WorkerId
+            +"=" + WORKERS_TABLE_NAME + "." + WorkersAttributes.WorkerId
+
+            +" INNER JOIN " +MDatabase.Tables.Stock +" ON "
+            +RECORDS_TABLE_NAME + "."+ SessionsRecordsAttributes.InventoryId
+            +"=" + MDatabase.Tables.Stock + "." + StockAttributes.ArticleId ;
+
+        String query = "SELECT "
+            + RECORDS_TABLE_NAME + "." + SessionsRecordsAttributes.RecordId+" ,"
+            + RECORDS_TABLE_NAME + "." + SessionsRecordsAttributes.RecordDate +" ,"
+            + RECORDS_TABLE_NAME + "." + SessionsRecordsAttributes.PriceShift +" ,"
+            + RECORDS_TABLE_NAME + "." + SessionsRecordsAttributes.QuantityShift +" ,"
+            + RECORDS_TABLE_NAME + "." + SessionsRecordsAttributes.RecordQuantity +" ,"
+            + RECORDS_TABLE_NAME + "." + SessionsRecordsAttributes.StockQuantity +" ,"
+            + RECORDS_TABLE_NAME + "." + SessionsRecordsAttributes.StockPrice +" ,"
+            + RECORDS_TABLE_NAME + "." + SessionsRecordsAttributes.SessionId +" ,"
+            + WORKERS_TABLE_NAME + "." + WorkersAttributes.Name +" ,"
+            + MDatabase.Tables.Stock + "." + StockAttributes.ArticleName +" ,"
+            +" FROM "+RECORDS_TABLE_NAME +joinClause+ whereClause;
+
+        ResultSet result = database.SelectQuery(query);
+        return result;
+    }
+
+
+    @Override
+    public ResultSet LoadSessionRecord(LoadWrapper parametrers) throws SQLException {
+        String extraClause = " LIMIT "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
+        String joinClause = " INNER JOIN " +WORKERS_TABLE_NAME +" ON "
+        +RECORDS_TABLE_NAME + "."+ SessionsRecordsAttributes.WorkerId
+        +"=" + WORKERS_TABLE_NAME + "." + WorkersAttributes.WorkerId
+
+        +" INNER JOIN " +MDatabase.Tables.Stock +" ON "
+        +RECORDS_TABLE_NAME + "."+ SessionsRecordsAttributes.InventoryId
+        +"=" + MDatabase.Tables.Stock + "." + StockAttributes.ArticleId ;
+
+        String query = "SELECT "
+        + RECORDS_TABLE_NAME + "." + SessionsRecordsAttributes.RecordId+" ,"
+        + RECORDS_TABLE_NAME + "." + SessionsRecordsAttributes.RecordDate +" ,"
+        + RECORDS_TABLE_NAME + "." + SessionsRecordsAttributes.PriceShift +" ,"
+        + RECORDS_TABLE_NAME + "." + SessionsRecordsAttributes.QuantityShift +" ,"
+        + RECORDS_TABLE_NAME + "." + SessionsRecordsAttributes.RecordQuantity +" ,"
+        + RECORDS_TABLE_NAME + "." + SessionsRecordsAttributes.StockQuantity +" ,"
+        + RECORDS_TABLE_NAME + "." + SessionsRecordsAttributes.StockPrice +" ,"
+        + RECORDS_TABLE_NAME + "." + SessionsRecordsAttributes.SessionId +" ,"
+        + WORKERS_TABLE_NAME + "." + WorkersAttributes.Name +" ,"
+        + MDatabase.Tables.Stock + "." + StockAttributes.ArticleName +" ,"
+        +" FROM "+RECORDS_TABLE_NAME +joinClause+ extraClause;
+
+    ResultSet result = database.SelectQuery(query);
+    return result;
+    }
+
+
+    @Override
+    public ResultSet LoadSessionGroup(LoadWrapper parametrers) throws SQLException {
+        String extraClause = " LIMIT "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
+        String query = "SELECT * FROM "+GROUPS_TABLE_NAME+ extraClause;
+        ResultSet result = database.SelectQuery(query);
+        return result;
+    }
+
+
+    @Override
+    public ResultSet LoadSessionWorkers(LoadWrapper parametrers) throws SQLException {
+        String extraClause = " LIMIT "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
+
+        String joinClause = " INNER JOIN " +WORKERS_TABLE_NAME +" ON "
+            +RECORDS_TABLE_NAME + "."+ SessionsRecordsAttributes.WorkerId
+            +"=" + WORKERS_TABLE_NAME + "." + WorkersAttributes.WorkerId
+
+            +" INNER JOIN " +GROUPS_TABLE_NAME +" ON "
+            +RECORDS_TABLE_NAME + "."+ SessionsRecordsAttributes.GroupId
+            +"=" + GROUPS_TABLE_NAME + "." + SessionsGroupsAttributes.Id ;
+
+        String query = "SELECT "
+            + WORKERS_TABLE_NAME + "." + WorkersAttributes.WorkerId+" ,"
+            + WORKERS_TABLE_NAME + "." + WorkersAttributes.Name+" ,"
+            + WORKERS_TABLE_NAME + "." + WorkersAttributes.Phone+" ,"
+            + GROUPS_TABLE_NAME + "." + SessionsGroupsAttributes.Id +" ,"
+            + GROUPS_TABLE_NAME + "." + SessionsGroupsAttributes.Name +" ,"
+            +" FROM "+RECORDS_TABLE_NAME +joinClause+ extraClause;
+
+        ResultSet result = database.SelectQuery(query);
+        return result;
     }
 
 }

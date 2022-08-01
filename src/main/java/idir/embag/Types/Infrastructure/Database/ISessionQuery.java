@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.IQuery;
+import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 
 public abstract class ISessionQuery extends IQuery{
@@ -25,9 +26,13 @@ public abstract class ISessionQuery extends IQuery{
     public abstract ResultSet SearchSessionRecord(SearchWrapper parametrers) throws SQLException;
     public abstract ResultSet SearchSessionWorker(SearchWrapper parametrers) throws SQLException;
     public abstract ResultSet SearchSessionGroup(SearchWrapper parametrers) throws SQLException;
+    
+    public abstract ResultSet LoadSessionRecord(LoadWrapper parametrers) throws SQLException;
+    public abstract ResultSet LoadSessionGroup(LoadWrapper parametrers) throws SQLException;
+    public abstract ResultSet LoadSessionWorkers(LoadWrapper parametrers)  throws SQLException;
 
     public abstract void CreateSessionTable() throws SQLException;
     public abstract void CreateSessionGroupTable() throws SQLException;
     public abstract void CreateSessionRecordTable()  throws SQLException;
-    public abstract void CreateSessionWorkersTabel()  throws SQLException;
+    public abstract void CreateSessionWorkersTable()  throws SQLException;
 }

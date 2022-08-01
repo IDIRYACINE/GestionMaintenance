@@ -58,4 +58,28 @@ public abstract class IQuery {
         return result ;
     }
 
+    protected String SearchWrapperToWhereClause(SearchWrapper searchWrapper){
+        String result = "";
+        Collection<AttributeWrapper> attrs = searchWrapper.getSearchAttributes();
+
+        int length = attrs.size();
+        int lastElementIndex = length - 1;
+        int i = 0;
+
+        Iterator<AttributeWrapper> iterator = attrs.iterator();
+
+        while (iterator.hasNext()) {
+            AttributeWrapper attr = iterator.next();
+            if(i<lastElementIndex){    
+            result += attr.getAttributeName() + "= '" +  attr.getValue() + "'AND";
+            }
+            else{
+                result += attr.getAttributeName() + "= '" + attr.getValue()+ "'" ;
+            }
+            i++;
+        }
+
+        return result;
+    }
+
 }

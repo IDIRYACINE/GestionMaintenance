@@ -12,6 +12,7 @@ import idir.embag.Repository.FamilyCodeRepository;
 import idir.embag.Types.Infrastructure.Database.IProductQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
+import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 import idir.embag.Types.Stores.DataStore.IDataDelegate;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
 import idir.embag.Types.Stores.Generics.StoreDispatch.StoreDispatch;
@@ -69,13 +70,19 @@ public class FamilyModel implements IDataDelegate{
 
     @Override
     public void search(Map<EEventDataKeys,Object> data) {
-       
-        /*  TODO: implement this
         try {
-            result = productQuery.SearchFamilyCode((SearchWrapper) data);
+            SearchWrapper searchParams = (SearchWrapper)data.get(EEventDataKeys.SearchWrapper);
+
+            ResultSet result = productQuery.SearchFamilyCode(searchParams);
+            Collection<IProduct> familyCodes = familyCodeRepository.resultSetToProduct(result);
+
+            Map<EEventDataKeys,Object> response = new HashMap<>();
+            response.put(EEventDataKeys.ProductsCollection, familyCodes);
+            notfiyEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Search, response);
+
         } catch (SQLException e) {
             e.printStackTrace();
-        }*/
+        }
         
     }
 

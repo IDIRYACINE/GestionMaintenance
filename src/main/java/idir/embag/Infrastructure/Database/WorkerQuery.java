@@ -7,6 +7,7 @@ import java.util.Collection;
 import idir.embag.Types.Infrastructure.Database.IDatabase;
 import idir.embag.Types.Infrastructure.Database.IWorkerQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
+import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.MDatabase;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 
@@ -56,8 +57,20 @@ public class WorkerQuery extends IWorkerQuery{
 
     @Override
     public ResultSet SearchWorker(SearchWrapper parametrers) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        String whereClause = " WHERE "+ SearchWrapperToWhereClause(parametrers);
+        String query = "SELECT * FROM "+WORKERS_TABLE_NAME+ whereClause;
+        ResultSet result = database.SelectQuery(query);
+        return result;
+    }
+
+
+
+    @Override
+    public ResultSet LoadSWorkers(LoadWrapper parametrers) throws SQLException {
+        String extraClause = " LIMIT "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
+        String query = "SELECT * FROM "+WORKERS_TABLE_NAME+ extraClause;
+        ResultSet result = database.SelectQuery(query);
+        return result;
     }
 
 

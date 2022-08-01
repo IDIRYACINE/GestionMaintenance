@@ -12,6 +12,7 @@ import idir.embag.Repository.StockRepository;
 import idir.embag.Types.Infrastructure.Database.IProductQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
+import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 import idir.embag.Types.Stores.DataStore.IDataDelegate;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
 import idir.embag.Types.Stores.Generics.StoreDispatch.StoreDispatch;
@@ -71,7 +72,19 @@ public class StockModel implements IDataDelegate{
 
     @Override
     public void search(Map<EEventDataKeys,Object> data) {
-        
+        try {
+            SearchWrapper searchParams = (SearchWrapper)data.get(EEventDataKeys.SearchWrapper);
+
+            ResultSet result = productQuery.SearchStockProduct(searchParams);
+            Collection<IProduct> products = stockRepository.resultSetToProduct(result);
+
+            Map<EEventDataKeys,Object> response = new HashMap<>();
+            response.put(EEventDataKeys.ProductsCollection, products);
+            notfiyEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Search, response);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.IQuery;
+import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 
 public abstract class IWorkerQuery extends IQuery{
@@ -16,4 +17,6 @@ public abstract class IWorkerQuery extends IQuery{
 
     public abstract void CreateWorkerTable() throws SQLException;
     public abstract ResultSet SearchWorker(SearchWrapper parametrers) throws SQLException;
+    public abstract ResultSet LoadSWorkers(LoadWrapper parametrers)  throws SQLException;
+
 }

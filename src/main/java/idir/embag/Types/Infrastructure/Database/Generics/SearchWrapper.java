@@ -1,25 +1,18 @@
 package idir.embag.Types.Infrastructure.Database.Generics;
 
-import java.util.List;
+import java.util.Collection;
 
 public class SearchWrapper {
     
-    private List<Object> resultAttributes;
-    private List<Object> SearchAttributes;
+    private Collection<AttributeWrapper> SearchAttributes;
 
-    public SearchWrapper(List<Object> resultAttributes, List<Object> searchAttributes) {
-        this.resultAttributes = resultAttributes;
+    public SearchWrapper(Collection<AttributeWrapper> searchAttributes) {
+
         SearchAttributes = searchAttributes;
     }
 
-    public List<Object> getResultAttributes() {
-        return resultAttributes;
-    }
-
-    public List<Object> getSearchAttributes() {
+    public Collection<AttributeWrapper> getSearchAttributes() {
         return SearchAttributes;
     }
-    
-    
     
 }

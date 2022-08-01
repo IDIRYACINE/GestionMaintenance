@@ -129,20 +129,39 @@ public class ProductQuery extends IProductQuery{
 
     @Override
     public ResultSet SearchStockProduct(SearchWrapper parametrers) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        String whereClause = " WHERE "+ SearchWrapperToWhereClause(parametrers);
+        String query = "SELECT * FROM "+STOCK_TABLE_NAME+ whereClause;
+        ResultSet result = database.SelectQuery(query);
+        return result;
     }
 
     @Override
     public ResultSet SearchInventoryProduct(SearchWrapper parametrers) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        String whereClause = " WHERE "+ SearchWrapperToWhereClause(parametrers);
+
+        String joinClause = " INNER JOIN " +STOCK_TABLE_NAME +" ON "
+         +INVENTORY_TABLE_NAME + "."+ InventoryAttributes.StockId
+         +"=" + STOCK_TABLE_NAME + "." + StockAttributes.ArticleId ;
+
+         String query = "SELECT "
+         + INVENTORY_TABLE_NAME + "." + InventoryAttributes.ArticleId +" ,"
+         + INVENTORY_TABLE_NAME + "." + InventoryAttributes.ArticleCode +" ,"
+         + STOCK_TABLE_NAME + "." + StockAttributes.Price +" ,"
+         + STOCK_TABLE_NAME + "." + StockAttributes.FamilyCode +" ,"
+         + STOCK_TABLE_NAME + "." + StockAttributes.ArticleName
+
+         +" FROM "+INVENTORY_TABLE_NAME +joinClause+ whereClause;
+         
+        ResultSet result = database.SelectQuery(query);
+        return result;
     }
 
     @Override
     public ResultSet SearchFamilyCode(SearchWrapper parametrers) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        String whereClause = " WHERE "+ SearchWrapperToWhereClause(parametrers);
+        String query = "SELECT * FROM "+FAMILIES_TABLE_NAME+ whereClause;
+        ResultSet result = database.SelectQuery(query);
+        return result;
     }
 
     @Override
@@ -168,7 +187,7 @@ public class ProductQuery extends IProductQuery{
          + STOCK_TABLE_NAME + "." + StockAttributes.ArticleName
 
          +" FROM "+INVENTORY_TABLE_NAME +joinClause+ extraClause;
-         System.out.println(query);
+         
          ResultSet result = database.SelectQuery(query);
          return result;
     }

@@ -131,7 +131,7 @@ public class FamilyCodesHelper extends IStockHelper implements IEventSubscriber{
                 break;  
             case Update: updateTableElement((IProduct)event.getData().get(EEventDataKeys.ProductInstance));
                 break;
-            case Search: setTableProducts((Collection<IProduct>)event.getData());
+            case Search: setTableProducts((Collection<IProduct>)event.getData().get(EEventDataKeys.ProductsCollection));
                 break;    
             case Load: setTableProducts((Collection<IProduct>)event.getData().get(EEventDataKeys.ProductsCollection));
                 break;              

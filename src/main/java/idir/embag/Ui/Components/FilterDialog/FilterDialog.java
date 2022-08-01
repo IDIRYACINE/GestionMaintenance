@@ -2,11 +2,15 @@ package idir.embag.Ui.Components.FilterDialog;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+
 import idir.embag.DataModels.Metadata.EEventDataKeys;
+import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
@@ -56,6 +60,7 @@ public class FilterDialog extends INodeView implements Initializable , IDialogCo
     @FXML
     private void onConfirm(){
         Map<EEventDataKeys,Object> data = new HashMap<>();
+        setupConfirmAction(data);
         confirmTask.accept(data);
         cancelTask.run();
     }
@@ -119,15 +124,18 @@ public class FilterDialog extends INodeView implements Initializable , IDialogCo
         listViewSelectedAttrb.getItems().remove(node);
     }
 
-    private void setupConfirmAction(){
-        Map<EEventDataKeys,Object> data = new HashMap<>();
-        // javafx get node controller from node
+    private void setupConfirmAction(Map<EEventDataKeys,Object> data ){
+
+        Collection<AttributeWrapper> searchParameters = new ArrayList<>();
+
         listViewSelectedAttrb.getItems().forEach(node -> {
-            AttributeField controller = (AttributeField) node.getProperties().get("controller");;
-            
+            AttributeField controller = (AttributeField) node.getProperties().get("controller");
+            searchParameters.add(controller.getAttributeWrapper());
         });
 
-        SearchWrapper searchWrapper = new SearchWrapper();
+        SearchWrapper searchWrapper = new SearchWrapper(searchParameters);
+
+        data.put(EEventDataKeys.SearchWrapper,searchWrapper);
     }
     
 }
