@@ -20,6 +20,7 @@ public class Names {
     public static final String WorkerPhone = "Telephone";
     public static final String WorkerEmail = "Email";
     public static final String WorkerName = "Nom";
+    public static final String SessionRecordId = null;
 
 
 
