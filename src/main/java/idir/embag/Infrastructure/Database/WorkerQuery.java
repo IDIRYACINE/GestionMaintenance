@@ -24,7 +24,7 @@ public class WorkerQuery extends IWorkerQuery{
 
 
     @Override
-    public void UnregisterWorker() throws SQLException {}
+    public void UnregisterWorker(int workerId) throws SQLException {}
 
     @Override
     public void RegisterWorker(Collection<AttributeWrapper> attributes ) throws SQLException {

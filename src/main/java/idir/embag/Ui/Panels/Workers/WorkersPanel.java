@@ -45,19 +45,30 @@ public class WorkersPanel extends INodeView implements Initializable{
     }
 
     @FXML
-    private void addWorker(){}
+    private void addWorker(){
+        controller.add();
+    }
 
 
     @FXML
-    private void updateWorker(){}
+    private void updateWorker(){
+        Worker worker = tableWorkers.getSelectionModel().getSelectedValues().get(0);
+        controller.update(worker);
+    }
 
 
     @FXML
-    private void archiveWorker(){}
+    private void archiveWorker(){
+        Worker worker = tableWorkers.getSelectionModel().getSelectedValues().get(0);
+        controller.archive(worker);
+    }
 
 
     @FXML
-    private void addWorkerToSession(){}
+    private void addWorkerToSession(){
+        Worker worker = tableWorkers.getSelectionModel().getSelectedValues().get(0);
+        controller.addWorkerToSession(worker);
+    }
 
 }
 

@@ -39,5 +39,12 @@ public enum EEventDataKeys {
     ProductsCollection, 
     SearchWrapperList,
     SearchWrapper,
-
+    WorkerInstance, 
+    WorkersCollection,
+    WorkerEmail, 
+    WorkerName, 
+    WorkerPhone,
+    SessionRecordsCollection,
+    SessionId, 
+    SessionDate,
 }

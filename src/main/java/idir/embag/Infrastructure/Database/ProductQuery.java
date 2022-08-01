@@ -99,14 +99,9 @@ public class ProductQuery extends IProductQuery{
                 + MDatabase.InventoryAttributes.StockId +" INTEGER,\n"
                 + MDatabase.InventoryAttributes.ArticleCode +" INTEGER,\n"
 
-                + "FOREIGN KEY ("+ MDatabase.InventoryAttributes.FamilyCode +")\n"
-                + "REFERENCES "+ FAMILIES_TABLE_NAME +"(" +MDatabase.FamilliesCodeAttributes.FamilyCode +")\n"  
-                + "ON DELETE CASCADE ON UPDATE NO ACTION,\n"
-
                 + "FOREIGN KEY ("+ MDatabase.InventoryAttributes.StockId +")\n"
                 + "REFERENCES "+ STOCK_TABLE_NAME +"(" +MDatabase.StockAttributes.ArticleId +")\n"  
                 + "ON DELETE CASCADE ON UPDATE NO ACTION)";
-                
         database.CreateQuery(query);
     }
 
@@ -146,6 +141,7 @@ public class ProductQuery extends IProductQuery{
          String query = "SELECT "
          + INVENTORY_TABLE_NAME + "." + InventoryAttributes.ArticleId +" ,"
          + INVENTORY_TABLE_NAME + "." + InventoryAttributes.ArticleCode +" ,"
+         + INVENTORY_TABLE_NAME + "." + InventoryAttributes.StockId +" ,"
          + STOCK_TABLE_NAME + "." + StockAttributes.Price +" ,"
          + STOCK_TABLE_NAME + "." + StockAttributes.FamilyCode +" ,"
          + STOCK_TABLE_NAME + "." + StockAttributes.ArticleName
@@ -182,6 +178,7 @@ public class ProductQuery extends IProductQuery{
          String query = "SELECT "
          + INVENTORY_TABLE_NAME + "." + InventoryAttributes.ArticleId +" ,"
          + INVENTORY_TABLE_NAME + "." + InventoryAttributes.ArticleCode +" ,"
+         + INVENTORY_TABLE_NAME + "." + InventoryAttributes.StockId +" ,"
          + STOCK_TABLE_NAME + "." + StockAttributes.Price +" ,"
          + STOCK_TABLE_NAME + "." + StockAttributes.FamilyCode +" ,"
          + STOCK_TABLE_NAME + "." + StockAttributes.ArticleName

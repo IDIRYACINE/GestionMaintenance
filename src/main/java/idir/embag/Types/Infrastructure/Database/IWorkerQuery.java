@@ -13,7 +13,7 @@ public abstract class IWorkerQuery extends IQuery{
 
     public abstract void RegisterWorker(Collection<AttributeWrapper> attributes) throws SQLException;
     public abstract void UpdateWorker(int workerId,Collection<AttributeWrapper> attributes) throws SQLException;
-    public abstract void UnregisterWorker() throws SQLException;
+    public abstract void UnregisterWorker(int workerId) throws SQLException;
 
     public abstract void CreateWorkerTable() throws SQLException;
     public abstract ResultSet SearchWorker(SearchWrapper parametrers) throws SQLException;

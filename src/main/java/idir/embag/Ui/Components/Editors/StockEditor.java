@@ -82,6 +82,7 @@ public class StockEditor extends INodeView implements Initializable , IDialogCon
     }
 
     private void setupConfirm(Map<EEventDataKeys,Object> data){
+        product.setArticleId(Integer.parseInt(articleIdField.getText()));
         product.setArticleName(articleNameField.getText());
         product.setPrice(Double.parseDouble(articlePriceField.getText()));
         product.setQuantity(Integer.parseInt(articleQuantityField.getText()));

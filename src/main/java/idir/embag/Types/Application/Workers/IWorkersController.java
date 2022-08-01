@@ -1,15 +1,16 @@
 package idir.embag.Types.Application.Workers;
 
-import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
+import idir.embag.DataModels.Workers.Worker;
 
 public interface IWorkersController {
 
     public void notifyActive();
-    public void notifyEvent(StoreEvent event);
-    public void addWorker();
-    public void updateWorker();
-    public void archiveWorker();
-    public void addWorkerToSession();
+    public void add();
+    public void update(Worker worker);
+    public void archive(Worker worker);
+    public void addWorkerToSession(Worker worker);
     public void searchWorkers();
+    public void refresh();
+
 
 }

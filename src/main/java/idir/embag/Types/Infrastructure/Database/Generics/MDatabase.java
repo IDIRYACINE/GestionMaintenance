@@ -75,9 +75,9 @@ public static class SessionsGroupsAttributes{
 
 public static class WorkersAttributes{
     public static final String  WorkerId = "WorkerId";
-    public static final String Name = "Name";
-    public static final String Email = "Email";
-    public static final String Phone = "Phone";
+    public static final String Name = "WorkerName";
+    public static final String Email = "WorkerEmail";
+    public static final String Phone = "WorkerPhone";
 }
 
 public static class SessionWorkersAttributes{

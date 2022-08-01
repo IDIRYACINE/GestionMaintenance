@@ -30,6 +30,22 @@ public class Worker {
         return id;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPhone(int phone) {
+        this.phone = phone;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     
 
     

@@ -1,7 +1,7 @@
 package idir.embag.DataModels.Session;
 
 public class SessionRecord {
-    private String articleId;
+    private int articleId;
     private String articleName;
     private String date;
     private String prix;
@@ -9,13 +9,12 @@ public class SessionRecord {
     private String quantityInventory;
     private String quantityShift;
     private String priceShift;
-    private String totalPriceShift;
     private String groupId;
-    private String workerId;
+    private String workerName;
 
-    public SessionRecord(String articleId, String articleName, String date, String prix, String quantityStock,
-            String quantityInventory, String quantityShift, String priceShift, String totalPriceShift, String groupId,
-            String workerId) {
+    public SessionRecord(int articleId, String articleName, String date, String prix, String quantityStock,
+            String quantityInventory, String quantityShift, String priceShift, String groupId,
+            String workerName) {
 
         this.articleId = articleId;
         this.articleName = articleName;
@@ -25,12 +24,11 @@ public class SessionRecord {
         this.quantityInventory = quantityInventory;
         this.quantityShift = quantityShift;
         this.priceShift = priceShift;
-        this.totalPriceShift = totalPriceShift;
         this.groupId = groupId;
-        this.workerId = workerId;
+        this.workerName = workerName;
     }
 
-    public String getArticleId() {
+    public int getArticleId() {
         return articleId;
     }
 
@@ -62,19 +60,17 @@ public class SessionRecord {
         return priceShift;
     }
 
-    public String getTotalPriceShift() {
-        return totalPriceShift;
-    }
-
     public String getGroupId() {
         return groupId;
     }
 
-    public String getWorkerId() {
-        return workerId;
+    public String getworkerName() {
+        return workerName;
     }
 
-    
+    public int getRecordId() {
+        return 0;
+    }
     
     
 }
