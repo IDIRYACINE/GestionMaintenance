@@ -9,6 +9,7 @@ import idir.embag.DataModels.Others.FamilyCode;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Application.Stock.IStockHelper;
+import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Stores.Generics.IEventSubscriber;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
@@ -37,19 +38,14 @@ public class FamilyCodesHelper extends IStockHelper implements IEventSubscriber{
     @Override
     public void update(IProduct product) {
         FamilyCodeEditor dialogContent =  new FamilyCodeEditor(product);
-
-        Runnable sucessCallback = () -> {
-            updateTableElement(product);
-        };
-
-        dialogContent.setOnConfirm(requestData -> {
-            requestData.put(EEventDataKeys.OnSucessCallback, sucessCallback);
-
-            dispatchEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Update, requestData);
-        });
-
+        
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
+
+        dialogContent.setOnConfirm(requestData -> {
+            requestData.put(EEventDataKeys.ProductInstance, product);
+            dispatchEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Update, requestData);
+        });
 
         dialogContent.loadFxml();
 
@@ -66,13 +62,8 @@ public class FamilyCodesHelper extends IStockHelper implements IEventSubscriber{
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
         
-        Runnable sucessCallback = () -> {
-            removeTableElement(product);
-        };
-
         dialogContent.setOnConfirm(requestData -> {
-            requestData.put(EEventDataKeys.OnSucessCallback, sucessCallback);
-
+            requestData.put(EEventDataKeys.ProductInstance, product);
             dispatchEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Remove, requestData);
         });
 
@@ -89,14 +80,8 @@ public class FamilyCodesHelper extends IStockHelper implements IEventSubscriber{
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
 
-        Runnable sucessCallback = () -> {
-            addTableElement(product);
-        };
-
         dialogContent.setOnConfirm(requestData -> {
-
-            requestData.put(EEventDataKeys.OnSucessCallback, sucessCallback);
-
+            requestData.put(EEventDataKeys.ProductInstance, product);
             dispatchEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Add, requestData);
         });
 
@@ -107,7 +92,11 @@ public class FamilyCodesHelper extends IStockHelper implements IEventSubscriber{
     
     @Override
     public void refresh() {
-        dispatchEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Load,null);
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        LoadWrapper loadWrapper = new LoadWrapper(100,0);
+        data.put(EEventDataKeys.LoadWrapper, loadWrapper);
+
+        dispatchEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Load,data);
     }
 
     @Override

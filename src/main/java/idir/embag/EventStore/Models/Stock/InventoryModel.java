@@ -3,7 +3,6 @@ package idir.embag.EventStore.Models.Stock;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Products.IProduct;
@@ -34,7 +33,7 @@ public class InventoryModel implements IDataDelegate {
     public void add(Map<EEventDataKeys,Object> data) {
         try {
             productQuery.RegisterInventoryProduct((Collection<AttributeWrapper>)data.get(EEventDataKeys.AttributeWrappersList));
-            ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();
+            notfiyEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Add, data);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -43,7 +42,7 @@ public class InventoryModel implements IDataDelegate {
     public void remove(Map<EEventDataKeys,Object> data) {
         try {
             productQuery.UnregisterInventoryProduct((int) data.get(EEventDataKeys.ArticleId));
-            ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();
+            notfiyEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Remove, data);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -54,7 +53,7 @@ public class InventoryModel implements IDataDelegate {
 
         try {
             productQuery.UpdateInventoryProduct((int) data.get(EEventDataKeys.ArticleId) ,wrappers);
-            ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();            
+            notfiyEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Update, data);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -68,9 +67,8 @@ public class InventoryModel implements IDataDelegate {
             ResultSet result = productQuery.SearchInventoryProduct(searchParams);
             Collection<IProduct> products = inventoryRepository.resultSetToProduct(result);
 
-            Map<EEventDataKeys,Object> response = new HashMap<>();
-            response.put(EEventDataKeys.ProductsCollection, products);
-            notfiyEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Search, response);
+            data.put(EEventDataKeys.ProductsCollection, products);
+            notfiyEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Search, data);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -80,14 +78,13 @@ public class InventoryModel implements IDataDelegate {
 
     @Override
     public void load(Map<EEventDataKeys,Object> data) {
-        LoadWrapper loadWrapper = new LoadWrapper(10,0);
+        LoadWrapper loadWrapper = (LoadWrapper)data.get(EEventDataKeys.LoadWrapper);
         try{
             ResultSet rawData = productQuery.LoadInventoryProduct(loadWrapper);
             Collection<IProduct> products = inventoryRepository.resultSetToProduct(rawData);
 
-            Map<EEventDataKeys,Object> response = new HashMap<>();
-            response.put(EEventDataKeys.ProductsCollection, products);
-            notfiyEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Load, response);
+            data.put(EEventDataKeys.ProductsCollection, products);
+            notfiyEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Load, data);
         }
         catch(SQLException e){
             e.printStackTrace();

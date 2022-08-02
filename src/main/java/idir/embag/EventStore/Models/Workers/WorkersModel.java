@@ -3,9 +3,7 @@ package idir.embag.EventStore.Models.Workers;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
-
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Workers.Worker;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
@@ -35,7 +33,8 @@ public class WorkersModel implements IDataDelegate{
     public void add(Map<EEventDataKeys,Object> data) {
         try {
             workerQuery.RegisterWorker((Collection<AttributeWrapper>)data.get(EEventDataKeys.AttributeWrappersList));
-            ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();
+            notfiyEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Add, data);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -44,7 +43,7 @@ public class WorkersModel implements IDataDelegate{
     public void remove(Map<EEventDataKeys,Object> data) {
         try {
             workerQuery.UnregisterWorker((int) data.get(EEventDataKeys.WorkerId));
-            ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();
+            notfiyEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Remove, data);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -55,7 +54,7 @@ public class WorkersModel implements IDataDelegate{
 
         try {
             workerQuery.UpdateWorker((int) data.get(EEventDataKeys.WorkerId) ,wrappers);
-            ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();            
+            notfiyEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Update, data);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -69,9 +68,8 @@ public class WorkersModel implements IDataDelegate{
             ResultSet result = workerQuery.SearchWorker(searchParams);
             Collection<Worker> products = workerRepository.resultSetToProduct(result);
 
-            Map<EEventDataKeys,Object> response = new HashMap<>();
-            response.put(EEventDataKeys.WorkersCollection, products);
-            notfiyEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Search, response);
+            data.put(EEventDataKeys.WorkersCollection, products);
+            notfiyEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Search, data);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -81,14 +79,13 @@ public class WorkersModel implements IDataDelegate{
 
     @Override
     public void load(Map<EEventDataKeys,Object> data) {
-        LoadWrapper loadWrapper = new LoadWrapper(10,0);
+        LoadWrapper loadWrapper = (LoadWrapper) data.get(EEventDataKeys.LoadWrapper);
         try{
             ResultSet rawData = workerQuery.LoadSWorkers(loadWrapper);
             Collection<Worker> workers = workerRepository.resultSetToProduct(rawData);
 
-            Map<EEventDataKeys,Object> response = new HashMap<>();
-            response.put(EEventDataKeys.WorkersCollection, workers);
-            notfiyEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Load, response);
+            data.put(EEventDataKeys.WorkersCollection, workers);
+            notfiyEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Load, data);
         }
         catch(SQLException e){
             e.printStackTrace();

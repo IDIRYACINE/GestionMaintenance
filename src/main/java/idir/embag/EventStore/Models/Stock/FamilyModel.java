@@ -3,7 +3,6 @@ package idir.embag.EventStore.Models.Stock;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Products.IProduct;
@@ -35,7 +34,7 @@ public class FamilyModel implements IDataDelegate{
     public void add(Map<EEventDataKeys,Object> data) {
         try {
             productQuery.RegisterFamilyCode((Collection<AttributeWrapper>)data.get(EEventDataKeys.AttributeWrappersList));
-            ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();
+            notfiyEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Add, data);
         } catch (SQLException e) {
            
             e.printStackTrace();
@@ -48,7 +47,7 @@ public class FamilyModel implements IDataDelegate{
 
        try {
         productQuery.UnregisterFamilyCode((int) data.get(EEventDataKeys.ArticleId));
-        ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();
+        notfiyEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Remove, data);
     } catch (SQLException e) {
         e.printStackTrace();
     }
@@ -61,7 +60,7 @@ public class FamilyModel implements IDataDelegate{
 
         try {
             productQuery.UpdateFamilyCode((int)data.get(EEventDataKeys.ArticleId), wrappers);
-            ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();
+            notfiyEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Update, data);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -76,9 +75,8 @@ public class FamilyModel implements IDataDelegate{
             ResultSet result = productQuery.SearchFamilyCode(searchParams);
             Collection<IProduct> familyCodes = familyCodeRepository.resultSetToProduct(result);
 
-            Map<EEventDataKeys,Object> response = new HashMap<>();
-            response.put(EEventDataKeys.ProductsCollection, familyCodes);
-            notfiyEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Search, response);
+            data.put(EEventDataKeys.ProductsCollection, familyCodes);
+            notfiyEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Search, data);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -88,15 +86,13 @@ public class FamilyModel implements IDataDelegate{
 
     @Override
     public void load(Map<EEventDataKeys,Object> data) {
-        //TODO : change method to get a proper load wrapper
-        LoadWrapper loadWrapper = new LoadWrapper(10,0);
+        LoadWrapper loadWrapper = (LoadWrapper)data.get(EEventDataKeys.LoadWrapper);
         try{
             ResultSet rawData = productQuery.LoadFamilyCode(loadWrapper);
             Collection<IProduct> familyCodes = familyCodeRepository.resultSetToProduct(rawData);
 
-            Map<EEventDataKeys,Object> response = new HashMap<>();
-            response.put(EEventDataKeys.ProductsCollection, familyCodes);
-            notfiyEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Load, response);
+            data.put(EEventDataKeys.ProductsCollection, familyCodes);
+            notfiyEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Load, data);
         }
         catch(SQLException e){
             e.printStackTrace();

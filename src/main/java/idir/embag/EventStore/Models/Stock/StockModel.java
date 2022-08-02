@@ -3,7 +3,6 @@ package idir.embag.EventStore.Models.Stock;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Products.IProduct;
@@ -35,7 +34,7 @@ public class StockModel implements IDataDelegate{
     public void add(Map<EEventDataKeys,Object> data) {
         try {
             productQuery.RegisterStockProduct((Collection<AttributeWrapper>)data.get(EEventDataKeys.AttributeWrappersList));
-            ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();
+            notfiyEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Add, data);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -48,7 +47,7 @@ public class StockModel implements IDataDelegate{
         
         try {
             productQuery.UnregisterStockProduct(product.getArticleId());
-            ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();
+            notfiyEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Remove, data);
         } catch (SQLException e) {
            
             e.printStackTrace();
@@ -61,7 +60,7 @@ public class StockModel implements IDataDelegate{
         Collection<AttributeWrapper> wrappers = (Collection<AttributeWrapper>)data.get(EEventDataKeys.AttributeWrappersList);
         try {
             productQuery.UpdateStockProduct((int) data.get(EEventDataKeys.ArticleId),wrappers);
-            ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();
+            notfiyEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Update, data);
         } catch (SQLException e) {
             
             e.printStackTrace();
@@ -78,9 +77,8 @@ public class StockModel implements IDataDelegate{
             ResultSet result = productQuery.SearchStockProduct(searchParams);
             Collection<IProduct> products = stockRepository.resultSetToProduct(result);
 
-            Map<EEventDataKeys,Object> response = new HashMap<>();
-            response.put(EEventDataKeys.ProductsCollection, products);
-            notfiyEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Search, response);
+            data.put(EEventDataKeys.ProductsCollection, products);
+            notfiyEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Search, data);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -89,15 +87,13 @@ public class StockModel implements IDataDelegate{
 
     @Override
     public void load(Map<EEventDataKeys,Object> data) {
-        //TODO : change method to get a proper load wrapper
-        LoadWrapper loadWrapper = new LoadWrapper(100,0);
+        LoadWrapper loadWrapper = (LoadWrapper)data.get(EEventDataKeys.LoadWrapper);
         try{
             ResultSet rawData = productQuery.LoadStockProduct(loadWrapper);
             Collection<IProduct> products = stockRepository.resultSetToProduct(rawData);
 
-            Map<EEventDataKeys,Object> response = new HashMap<>();
-            response.put(EEventDataKeys.ProductsCollection, products);
-            notfiyEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Load, response);
+            data.put(EEventDataKeys.ProductsCollection, products);
+            notfiyEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Load, data);
         }
         catch(SQLException e){
             e.printStackTrace();

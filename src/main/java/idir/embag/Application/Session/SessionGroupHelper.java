@@ -7,6 +7,7 @@ import java.util.Map;
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Session.SessionGroup;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
+import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Stores.Generics.IEventSubscriber;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
 import idir.embag.Types.Stores.Generics.StoreDispatch.StoreDispatch;
@@ -31,63 +32,50 @@ public class SessionGroupHelper implements IEventSubscriber{
     }
 
     public void add() {
-        Map<EEventDataKeys,Object> data = new HashMap<>();
         SessionGroup sessionGroup = new SessionGroup(0,"",0);
 
         SessionGroupEditor dialog = new SessionGroupEditor(sessionGroup);
 
-        Runnable sucessCallback = () -> {
-            addElement(sessionGroup);
-        };
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialog);
 
         dialog.setOnConfirm(requestData -> {
-            requestData.remove(EEventDataKeys.DialogContent);
-            requestData.put(EEventDataKeys.OnSucessCallback, sucessCallback);
-
+            requestData.put(EEventDataKeys.SessionGroupInstance, sessionGroup);
             dispatchEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Add, requestData);
         });
-
-        data.put(EEventDataKeys.DialogContent, dialog);
 
         dialog.loadFxml();
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
     }
     
-    public void update(SessionGroup group) {
+    public void update(SessionGroup sessionGroup) {
+        
+        SessionGroupEditor dialog = new SessionGroupEditor(sessionGroup);
+
         Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialog);
 
-        SessionGroupEditor dialog = new SessionGroupEditor(group);
-
-        Runnable sucessCallback = () -> {
-            updateElement(group);
-        };
-
-        dialog.setOnConfirm(response -> {
-            response.remove(EEventDataKeys.DialogContent);
-            response.put(EEventDataKeys.OnSucessCallback, sucessCallback);
-
-            dispatchEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Update, response);
+        dialog.setOnConfirm(requestData -> {
+            requestData.put(EEventDataKeys.SessionGroupInstance, sessionGroup);
+            dispatchEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Update, requestData);
         });
         
-        data.put(EEventDataKeys.DialogContent, dialog);
         dialog.loadFxml();
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
     }
 
-    public void delete(SessionGroup group) {
-        Map<EEventDataKeys,Object> data = new HashMap<>();
-        
+    public void delete(SessionGroup sessionGroup) {
         ConfirmationDialog dialog = new ConfirmationDialog();
         dialog.setMessage(Messages.deleteElement);
 
+        Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialog);
-        data.put(EEventDataKeys.SessionGroupInstance, group);
 
-        dialog.setOnConfirm(otherData -> {
-            otherData.remove(EEventDataKeys.DialogContent);
-            dispatchEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Remove, data);
+        dialog.setOnConfirm(requestData -> {
+            requestData.put(EEventDataKeys.SessionGroupInstance, sessionGroup);
+            dispatchEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Remove, requestData);
         });
 
         dialog.loadFxml();
@@ -135,7 +123,11 @@ public class SessionGroupHelper implements IEventSubscriber{
     }
 
     private void refresh(){
-        dispatchEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Load, null);
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        LoadWrapper loadWrapper = new LoadWrapper(100,0);
+        data.put(EEventDataKeys.LoadWrapper, loadWrapper);
+        
+        dispatchEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Load, data);
     }
 
     private void setColumns(){

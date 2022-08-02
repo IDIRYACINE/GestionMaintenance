@@ -10,6 +10,7 @@ import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Workers.Worker;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Application.Workers.IWorkersController;
+import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Stores.Generics.IEventSubscriber;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
@@ -83,49 +84,38 @@ public class WorkersController implements IWorkersController , IEventSubscriber 
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
 
-        Runnable sucessCallback = () -> {
-            addTableElement(worker);
-        };
-        
-
         dialogContent.setOnConfirm(requestData -> {
-
-            requestData.put(EEventDataKeys.OnSucessCallback, sucessCallback);
-
+            requestData.put(EEventDataKeys.WorkerInstance, worker);
             dispatchEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Add, requestData);
         });
 
         dialogContent.loadFxml();
 
-
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
- 
-        
     }
 
     @Override
     public void refresh() {
-        dispatchEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Load,null);        
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        LoadWrapper loadWrapper = new LoadWrapper(100,0);
+        data.put(EEventDataKeys.LoadWrapper, loadWrapper);
+
+        dispatchEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Load,data);        
     }
 
     @Override
     public void update(Worker worker) {
         WorkerEditor dialogContent =  new WorkerEditor(worker);
 
-        Runnable sucessCallback = () -> {
-            updateTableElement(worker);
-        };
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialogContent);
 
         dialogContent.setOnConfirm(requestData -> {
-            requestData.put(EEventDataKeys.OnSucessCallback, sucessCallback);
-
+            requestData.put(EEventDataKeys.WorkerInstance, worker);
             dispatchEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Update, requestData);
         });
 
         dialogContent.loadFxml();
-
-        Map<EEventDataKeys,Object> data = new HashMap<>();
-        data.put(EEventDataKeys.DialogContent, dialogContent);
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
         
@@ -136,17 +126,11 @@ public class WorkersController implements IWorkersController , IEventSubscriber 
         ConfirmationDialog dialogContent =  new ConfirmationDialog();
 
         dialogContent.setMessage(Messages.deleteElement);
-
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
-        
-        Runnable sucessCallback = () -> {
-            removeTableElement(worker);
-        };
 
         dialogContent.setOnConfirm(requestData -> {
-            requestData.put(EEventDataKeys.OnSucessCallback, sucessCallback);
-
+            requestData.put(EEventDataKeys.WorkerInstance, worker);
             dispatchEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Remove, requestData);
         });
 
@@ -166,6 +150,7 @@ public class WorkersController implements IWorkersController , IEventSubscriber 
         data.put(EEventDataKeys.DialogContent, dialogContent);
         
         dialogContent.setOnConfirm(requestData -> {
+            //TODO: add worker to session
             requestData.put(EEventDataKeys.AddSessionWorker, true);
             
             dispatchEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Add, requestData);

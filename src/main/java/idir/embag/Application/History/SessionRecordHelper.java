@@ -8,6 +8,7 @@ import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Application.History.IHistoryHelper;
+import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Stores.Generics.IEventSubscriber;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
@@ -77,7 +78,11 @@ public class SessionRecordHelper implements  IHistoryHelper, IEventSubscriber {
 
     @Override
     public void refresh() {
-        dispatchEvent(EStores.DataStore, EStoreEvents.SessionRecordsEvent, EStoreEventAction.Load,null);        
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        LoadWrapper loadWrapper = new LoadWrapper(100,0);
+        data.put(EEventDataKeys.LoadWrapper, loadWrapper);
+
+        dispatchEvent(EStores.DataStore, EStoreEvents.SessionRecordsEvent, EStoreEventAction.Load,data);        
     }
 
     @Override

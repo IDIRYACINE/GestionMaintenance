@@ -3,9 +3,7 @@ package idir.embag.EventStore.Models.Session;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
-
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Session.SessionGroup;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
@@ -35,7 +33,8 @@ public class SessionGroupModel  implements IDataDelegate{
     public void add(Map<EEventDataKeys,Object> data) {
         try {
           sessionQuery.RegisterSessionGroup((Collection<AttributeWrapper>)data.get(EEventDataKeys.AttributeWrappersList));
-            ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();
+          notfiyEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Add, data);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -59,7 +58,7 @@ public class SessionGroupModel  implements IDataDelegate{
 
         try {
             sessionQuery.UpdateSessionGroup((int)data.get(EEventDataKeys.SessionGroupId), wrappers);
-            ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();
+            notfiyEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Update, data);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -74,9 +73,8 @@ public class SessionGroupModel  implements IDataDelegate{
             ResultSet result = sessionQuery.SearchSessionGroup(searchParams);
             Collection<SessionGroup> groups = sessionRepository.resultSetToGroup(result);
 
-            Map<EEventDataKeys,Object> response = new HashMap<>();
-            response.put(EEventDataKeys.SessionGroupCollection, groups);
-            notfiyEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Search, response);
+            data.put(EEventDataKeys.SessionGroupCollection, groups);
+            notfiyEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Search, data);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -86,14 +84,13 @@ public class SessionGroupModel  implements IDataDelegate{
 
     @Override
     public void load(Map<EEventDataKeys,Object> data) {
-        LoadWrapper loadWrapper = new LoadWrapper(10,0);
+        LoadWrapper loadWrapper = (LoadWrapper)data.get(EEventDataKeys.LoadWrapper);
         try{
             ResultSet rawData = sessionQuery.LoadSessionGroup(loadWrapper);
             Collection<SessionGroup> groups = sessionRepository.resultSetToGroup(rawData);
 
-            Map<EEventDataKeys,Object> response = new HashMap<>();
-            response.put(EEventDataKeys.SessionGroupCollection, groups);
-            notfiyEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Load, response);
+            data.put(EEventDataKeys.SessionGroupCollection, groups);
+            notfiyEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Load, data);
         }
         catch(SQLException e){
             e.printStackTrace();

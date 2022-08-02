@@ -7,7 +7,7 @@ import java.util.Map;
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Workers.SessionWorker;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
-import idir.embag.Types.Panels.Components.IDialogContent;
+import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Stores.Generics.IEventSubscriber;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
 import idir.embag.Types.Stores.Generics.StoreDispatch.StoreDispatch;
@@ -33,30 +33,56 @@ public class SessionWorkersHelper  implements IEventSubscriber {
     }
 
     public void add() {
-        Map<EEventDataKeys,Object> data = new HashMap<>();
 
-        IDialogContent content = buildAddDialog();
-        data.put(EEventDataKeys.DialogContent, content);
+        SessionWorker worker = new SessionWorker(0, "", "", "", 0);
+
+        SessionWorkerEditor dialog = new SessionWorkerEditor(worker);
+
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialog);
+
+        dialog.setOnConfirm(response -> {
+            response.put(EEventDataKeys.SessionWorkerInstance, worker);
+            dispatchEvent(EStores.DataStore, EStoreEvents.SessionWorkerEvent, EStoreEventAction.Add, response);
+        });
+
+        dialog.loadFxml();
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
     }
     
     public void update(SessionWorker worker) {
-        Map<EEventDataKeys,Object> data = new HashMap<>();
 
-        IDialogContent content = buildUpdateDialog(worker);
-        data.put(EEventDataKeys.SessionWorkerInstance, worker);
-        data.put(EEventDataKeys.DialogContent, content);
+        SessionWorkerEditor dialog = new SessionWorkerEditor(worker);
+
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialog);
+
+        dialog.setOnConfirm(response -> {
+            response.put(EEventDataKeys.SessionWorkerInstance, worker);
+            dispatchEvent(EStores.DataStore, EStoreEvents.SessionWorkerEvent, EStoreEventAction.Update, response);
+        });
+
+        dialog.loadFxml();
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
     }
 
     public void delete(SessionWorker worker) {
-        Map<EEventDataKeys,Object> data = new HashMap<>();
         
-        IDialogContent content = buildDeleteDialog();
-        data.put(EEventDataKeys.DialogContent, content);
-        data.put(EEventDataKeys.SessionWorkerInstance, worker);
+        ConfirmationDialog dialog = new ConfirmationDialog();
+
+        dialog.setMessage(Messages.deleteElement);
+
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialog);
+
+        dialog.setOnConfirm(response -> {
+            response.put(EEventDataKeys.SessionWorkerInstance, worker);
+            dispatchEvent(EStores.DataStore, EStoreEvents.SessionWorkerEvent, EStoreEventAction.Remove, response);
+        });
+
+        dialog.loadFxml();
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
     }
@@ -80,6 +106,7 @@ public class SessionWorkersHelper  implements IEventSubscriber {
     public void notifyActive(MFXTableView<SessionWorker> tableSessionWorkers) {
        this.tableSessionWorkers = tableSessionWorkers;
        setColumns();
+       refresh();
     }
 
     private void removeElement(SessionWorker worker){
@@ -97,54 +124,6 @@ public class SessionWorkersHelper  implements IEventSubscriber {
 
     private void setElements(Collection<SessionWorker> workers){
         tableSessionWorkers.getItems().setAll(workers);
-    }
-
-    private IDialogContent buildUpdateDialog(SessionWorker worker){
-        SessionWorkerEditor dialog = new SessionWorkerEditor(worker);
-
-        dialog.loadFxml();
-
-        dialog.setOnConfirm(data -> {
-            data.remove(EEventDataKeys.DialogContent);
-            dispatchEvent(EStores.DataStore, EStoreEvents.SessionWorkerEvent, EStoreEventAction.Update, data);
-        });
-
-        return dialog;
-    }
-
-
-    private IDialogContent buildAddDialog(){
-        SessionWorker sessionWorker = new SessionWorker(0, "", "", "", 0);
-
-        SessionWorkerEditor dialog = new SessionWorkerEditor(sessionWorker);
-
-        Runnable sucessCallback = () -> {
-            addElement(sessionWorker);
-        };
-
-        dialog.setOnConfirm(data -> {
-            data.remove(EEventDataKeys.DialogContent);
-            data.put(EEventDataKeys.OnSucessCallback, sucessCallback);
-            dispatchEvent(EStores.DataStore, EStoreEvents.SessionWorkerEvent, EStoreEventAction.Add, data);
-        });
-
-        dialog.loadFxml();
-
-        return dialog;
-    }
-
-    private IDialogContent buildDeleteDialog(){
-        ConfirmationDialog dialog = new ConfirmationDialog();
-
-        dialog.setMessage(Messages.deleteElement);
-        dialog.loadFxml();
-
-        dialog.setOnConfirm(data -> {
-            data.remove(EEventDataKeys.DialogContent);
-            dispatchEvent(EStores.DataStore, EStoreEvents.SessionWorkerEvent, EStoreEventAction.Remove, data);
-        });
-
-        return dialog;
     }
 
     private void dispatchEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent, Map<EEventDataKeys,Object> data) {
@@ -168,5 +147,13 @@ public class SessionWorkersHelper  implements IEventSubscriber {
         
     }
 
+    private void refresh(){
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        LoadWrapper loadWrapper = new LoadWrapper(100,0);
+        data.put(EEventDataKeys.LoadWrapper, loadWrapper);
+
+        dispatchEvent(EStores.DataStore, EStoreEvents.SessionWorkerEvent, EStoreEventAction.Load, data);
+
+    }
 
 }

@@ -3,9 +3,7 @@ package idir.embag.EventStore.Models.History;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
-
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
@@ -35,7 +33,7 @@ public class HistoryModel implements IDataDelegate{
     public void add(Map<EEventDataKeys,Object> data) {
         try {
           sessionQuery.RegisterSessionRecord((Collection<AttributeWrapper>)data.get(EEventDataKeys.AttributeWrappersList));
-            ((Runnable) data.get(EEventDataKeys.OnSucessCallback)).run();
+          notfiyEvent(EStores.DataStore, EStoreEvents.SessionRecordsEvent, EStoreEventAction.Add, data);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -55,9 +53,8 @@ public class HistoryModel implements IDataDelegate{
             ResultSet result = sessionQuery.SearchSessionRecord(searchParams);
             Collection<SessionRecord> records = sessionRepository.resultSetToRecord(result);
 
-            Map<EEventDataKeys,Object> response = new HashMap<>();
-            response.put(EEventDataKeys.SessionRecordsCollection, records);
-            notfiyEvent(EStores.DataStore, EStoreEvents.SessionRecordsEvent, EStoreEventAction.Search, response);
+            data.put(EEventDataKeys.SessionRecordsCollection, records);
+            notfiyEvent(EStores.DataStore, EStoreEvents.SessionRecordsEvent, EStoreEventAction.Search, data);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -67,14 +64,13 @@ public class HistoryModel implements IDataDelegate{
 
     @Override
     public void load(Map<EEventDataKeys,Object> data) {
-        LoadWrapper loadWrapper = new LoadWrapper(10,0);
+        LoadWrapper loadWrapper = (LoadWrapper)data.get(EEventDataKeys.LoadWrapper);
         try{
             ResultSet rawData = sessionQuery.LoadSessionRecord(loadWrapper);
             Collection<SessionRecord> records = sessionRepository.resultSetToRecord(rawData);
 
-            Map<EEventDataKeys,Object> response = new HashMap<>();
-            response.put(EEventDataKeys.SessionRecordsCollection, records);
-            notfiyEvent(EStores.DataStore, EStoreEvents.SessionRecordsEvent, EStoreEventAction.Load, response);
+            data.put(EEventDataKeys.SessionRecordsCollection, records);
+            notfiyEvent(EStores.DataStore, EStoreEvents.SessionRecordsEvent, EStoreEventAction.Load, data);
         }
         catch(SQLException e){
             e.printStackTrace();

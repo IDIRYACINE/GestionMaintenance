@@ -10,6 +10,7 @@ import idir.embag.DataModels.Products.IProduct;
 import idir.embag.DataModels.Products.StockProduct;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Application.Stock.IStockHelper;
+import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Stores.Generics.IEventSubscriber;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
@@ -40,18 +41,13 @@ public class StockHelper extends IStockHelper implements IEventSubscriber{
     public void update(IProduct product) {
         StockEditor dialogContent =  new StockEditor(product);
 
-        Runnable sucessCallback = () -> {
-            updateTableElement(product);
-        };
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        data.put(EEventDataKeys.DialogContent, dialogContent);
 
         dialogContent.setOnConfirm(requestData -> {
-            requestData.put(EEventDataKeys.OnSucessCallback, sucessCallback);
-
+            requestData.put(EEventDataKeys.ProductInstance, product);
             dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Update, requestData);
         });
-
-        Map<EEventDataKeys,Object> data = new HashMap<>();
-        data.put(EEventDataKeys.DialogContent, dialogContent);  
 
         dialogContent.loadFxml();
 
@@ -68,14 +64,9 @@ public class StockHelper extends IStockHelper implements IEventSubscriber{
 
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
-        
-        Runnable sucessCallback = () -> {
-            removeTableElement(product);
-        };
 
         dialogContent.setOnConfirm(requestData -> {
-            requestData.put(EEventDataKeys.OnSucessCallback, sucessCallback);
-
+            requestData.put(EEventDataKeys.ProductInstance, product);
             dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Remove, requestData);
         });
 
@@ -92,14 +83,8 @@ public class StockHelper extends IStockHelper implements IEventSubscriber{
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
 
-        Runnable sucessCallback = () -> {
-            addTableElement(product);
-        };
-
         dialogContent.setOnConfirm(requestData -> {
-
-            requestData.put(EEventDataKeys.OnSucessCallback, sucessCallback);
-
+            requestData.put(EEventDataKeys.ProductInstance, product);
             dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Add, requestData);
         });
 
@@ -110,7 +95,11 @@ public class StockHelper extends IStockHelper implements IEventSubscriber{
 
     @Override
     public void refresh() {
-        dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Load,null);
+        Map<EEventDataKeys,Object> data = new HashMap<>();
+        LoadWrapper loadWrapper = new LoadWrapper(100,0);
+        data.put(EEventDataKeys.LoadWrapper, loadWrapper);
+
+        dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Load,data);
     }
 
     @Override
