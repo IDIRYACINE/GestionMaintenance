@@ -5,6 +5,9 @@ import java.util.Map;
 
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.EventStore.Models.History.HistoryModel;
+import idir.embag.EventStore.Models.Session.SessionGroupModel;
+import idir.embag.EventStore.Models.Session.SessionModel;
+import idir.embag.EventStore.Models.Session.SessionWorkersModel;
 import idir.embag.EventStore.Models.Stock.FamilyModel;
 import idir.embag.EventStore.Models.Stock.InventoryModel;
 import idir.embag.EventStore.Models.Stock.StockModel;
@@ -15,6 +18,7 @@ import idir.embag.Infrastructure.ServicesCenter;
 import idir.embag.Infrastructure.Initialisers.DatabaseInitialiser;
 import idir.embag.Repository.FamilyCodeRepository;
 import idir.embag.Repository.InventoryRepository;
+import idir.embag.Repository.SessionRepository;
 import idir.embag.Repository.StockRepository;
 import idir.embag.Repository.WorkersRepository;
 import idir.embag.Types.Application.Navigation.INavigationController;
@@ -95,9 +99,14 @@ public class StoreCenter implements IStoresCenter{
     private void setupDataStore(DatabaseInitialiser databaseInitialiser){
       StockModel stockModel = new StockModel(databaseInitialiser.getProductQuery(), new StockRepository());
       InventoryModel inventoryModel = new InventoryModel(databaseInitialiser.getProductQuery(),new InventoryRepository());
-      HistoryModel historyModel = new HistoryModel(databaseInitialiser.getSessionQuery());
       FamilyModel familyModel = new FamilyModel(databaseInitialiser.getProductQuery(),new FamilyCodeRepository());
       WorkersModel workersModel = new WorkersModel(databaseInitialiser.getWorkerQuery(),new WorkersRepository());
+
+      SessionRepository sessionRepository = new SessionRepository();
+      SessionModel sessionModel = new SessionModel(databaseInitialiser.getSessionQuery(),sessionRepository);
+      SessionWorkersModel sessionWorkersModel = new SessionWorkersModel(databaseInitialiser.getSessionQuery(),sessionRepository);
+      SessionGroupModel sessionGroupModel = new SessionGroupModel(databaseInitialiser.getSessionQuery(),sessionRepository);
+      HistoryModel historyModel = new HistoryModel(databaseInitialiser.getSessionQuery(),sessionRepository);
 
       IDataDelegate[] delegates = new IDataDelegate[IDataStore.DELEGATES_COUNT];
       delegates[IDataStore.STOCK_DELEGATE] = stockModel;
@@ -105,6 +114,9 @@ public class StoreCenter implements IStoresCenter{
       delegates[IDataStore.HISTORY_DELEGATE] = historyModel;
       delegates[IDataStore.FAMILY_DELEGATE] = familyModel;
       delegates[IDataStore.WORKER_DELEGATE] = workersModel;
+      delegates[IDataStore.SESSION_DELEGATE] = sessionModel;
+      delegates[IDataStore.SESSION_WORKER_DELEGATE] = sessionWorkersModel;
+      delegates[IDataStore.SESSION_GROUP_DELEGATE] = sessionGroupModel;
 
       dataStore = new DataStore(delegates);
     }

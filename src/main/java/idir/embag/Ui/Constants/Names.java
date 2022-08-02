@@ -20,7 +20,10 @@ public class Names {
     public static final String WorkerPhone = "Telephone";
     public static final String WorkerEmail = "Email";
     public static final String WorkerName = "Nom";
-    public static final String SessionRecordId = null;
+    public static final String SessionRecordId = "Record Id";
+    public static final String SessionId = "Session Id";
+    public static final String GroupName = "Group Name";
+    public static final String Password = "Password";
 
 
 

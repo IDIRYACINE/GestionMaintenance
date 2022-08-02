@@ -9,7 +9,6 @@ import java.util.function.Consumer;
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
-import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -18,8 +17,6 @@ import javafx.scene.layout.VBox;
 
 public class ConfirmationDialog extends INodeView implements Initializable , IDialogContent{
 
-    @FXML
-    private MFXButton btnCancel,btnConfirm;
 
     @FXML
     private Label labelMessage;
@@ -77,11 +74,4 @@ public class ConfirmationDialog extends INodeView implements Initializable , IDi
     }
 
 
-    @Override
-    public void setEventKey(EEventDataKeys key) {
-        
-    }
-
-
-    
 }

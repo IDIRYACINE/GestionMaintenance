@@ -67,10 +67,10 @@ public static class SessionsRecordsAttributes{
     public static final String PriceShift = "PriceShift";
 }
 
-public static class SessionsGroupsAttributes{
-    public static final String Id = "Id";
+public static class SessionGroupsAttributes{
+    public static final String Id = "GroupId";
     public static final String SessionId = "SessionId";
-    public static final String Name = "Name";
+    public static final String Name = "GroupName";
 }
 
 public static class WorkersAttributes{
@@ -81,17 +81,11 @@ public static class WorkersAttributes{
 }
 
 public static class SessionWorkersAttributes{
-    public static final String Id = "Id";
+    public static final String Id = "SessionWorkerId";
     public static final String WorkerId = "WorkerId";
     public static final String GroupId = "GroupId";
-
-}
-
-
-public static class ActiveSessionAttributes{
-    public static final String Id = "Id";
-    public static final String WorkerId = "WorkerId";
     public static final String Password = "Password";
+
 }
     
 }

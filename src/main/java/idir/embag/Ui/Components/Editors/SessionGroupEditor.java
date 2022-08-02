@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import idir.embag.DataModels.Metadata.EEventDataKeys;
-import idir.embag.DataModels.Workers.Worker;
+import idir.embag.DataModels.Session.SessionGroup;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
@@ -17,24 +17,24 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 
-public class WorkerEditor extends INodeView implements Initializable , IDialogContent {
+public class SessionGroupEditor extends INodeView implements Initializable , IDialogContent {
 
     
     @FXML
     private Node root;
 
     @FXML
-    private TextField workerNameField,workerPhoneField,workerEmailField;
+    private TextField groupNameField;
 
     private Runnable cancelTask;
 
     private Consumer<Map<EEventDataKeys,Object>> confirmTask;
 
-    private Worker worker;
+    private SessionGroup group;
 
-    public WorkerEditor(Worker worker) {
-        this.worker = worker;
-        fxmlPath = "/views/Editors/WorkerEditor.fxml";
+    public SessionGroupEditor(SessionGroup group) {
+        this.group = group;
+        fxmlPath = "/views/Editors/SessionGroupEditor.fxml";
 
     }
 
@@ -48,12 +48,10 @@ public class WorkerEditor extends INodeView implements Initializable , IDialogCo
         this.cancelTask = callback;
     }
 
-
+  
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        workerEmailField.setText(worker.getEmail());
-        workerNameField.setText(worker.getName());
-        workerPhoneField.setText(String.valueOf(worker.getPhone()));
+        groupNameField.setText(group.getName());
     }
 
     @Override
@@ -77,23 +75,21 @@ public class WorkerEditor extends INodeView implements Initializable , IDialogCo
     }
 
     private void setupConfirm(Map<EEventDataKeys,Object> data){
-        worker.setEmail(workerEmailField.getText());
-        worker.setName(workerNameField.getText());
-        worker.setPhone(Integer.parseInt(workerPhoneField.getText()));
+        group.setName(groupNameField.getText());
 
         data.put(EEventDataKeys.AttributeWrappersList,getAttributeWrappers());
-        data.put(EEventDataKeys.WorkerId, worker.getId());
+        data.put(EEventDataKeys.SessionGroupId, group.getId());
     }
 
     private Collection<AttributeWrapper> getAttributeWrappers(){
         Collection<AttributeWrapper> attributes = new ArrayList<AttributeWrapper>();
         
-        attributes.add(new AttributeWrapper(EEventDataKeys.WorkerName,workerNameField.getText()));
-        attributes.add(new AttributeWrapper(EEventDataKeys.WorkerEmail,workerEmailField.getText()));
-        attributes.add(new AttributeWrapper(EEventDataKeys.WorkerPhone,workerPhoneField.getText()));
+        attributes.add(new AttributeWrapper(EEventDataKeys.GroupName,groupNameField.getText()));
+        attributes.add(new AttributeWrapper(EEventDataKeys.SessionId,String.valueOf(group.getSessionId())));
 
         return attributes;
     }
 
     
 }
+

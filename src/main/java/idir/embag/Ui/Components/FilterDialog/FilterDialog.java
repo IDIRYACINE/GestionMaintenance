@@ -112,10 +112,6 @@ public class FilterDialog extends INodeView implements Initializable , IDialogCo
     }
 
 
-    @Override
-    public void setEventKey(EEventDataKeys key) {
-    }
-
     private void selectAtrribute(HBox node){
         listViewSelectedAttrb.getItems().add(node);
     }

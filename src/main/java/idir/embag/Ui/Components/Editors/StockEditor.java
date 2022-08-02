@@ -49,8 +49,6 @@ public class StockEditor extends INodeView implements Initializable , IDialogCon
         this.cancelTask = callback;
     }
 
-    @Override
-    public void setEventKey(EEventDataKeys key) {}
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

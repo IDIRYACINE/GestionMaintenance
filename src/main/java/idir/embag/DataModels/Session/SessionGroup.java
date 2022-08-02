@@ -23,6 +23,8 @@ public class SessionGroup {
         return sessionId;
     }
 
-    
+    public void setName(String name) {
+        this.name = name;
+    }
 
 }

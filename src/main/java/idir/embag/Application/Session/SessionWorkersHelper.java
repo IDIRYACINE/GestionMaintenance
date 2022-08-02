@@ -1,36 +1,35 @@
 package idir.embag.Application.Session;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Workers.SessionWorker;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Panels.Components.IDialogContent;
+import idir.embag.Types.Stores.Generics.IEventSubscriber;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
 import idir.embag.Types.Stores.Generics.StoreDispatch.StoreDispatch;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 import idir.embag.Ui.Components.ConfirmationDialog.ConfirmationDialog;
-import idir.embag.Ui.Components.MangerDialog.ManagerDialog;
+import idir.embag.Ui.Components.Editors.SessionWorkerEditor;
 import idir.embag.Ui.Constants.Messages;
 import idir.embag.Ui.Constants.Names;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
+import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 
 @SuppressWarnings("unchecked")
-public class SessionWorkersHelper  {
+public class SessionWorkersHelper  implements IEventSubscriber {
         
    
     private MFXTableView<SessionWorker> tableSessionWorkers;
-
-    private Map<EStoreEventAction , Consumer<SessionWorker>> callbacks = new HashMap<>();
-    
-   
+       
     public SessionWorkersHelper() {
-        setupCallbacks();
+        StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.SessionWorkerEvent, this);
     }
 
     public void add() {
@@ -45,8 +44,8 @@ public class SessionWorkersHelper  {
     public void update(SessionWorker worker) {
         Map<EEventDataKeys,Object> data = new HashMap<>();
 
-        IDialogContent content = buildUpdateDialog();
-        data.put(EEventDataKeys.SessionGroupInstance, worker);
+        IDialogContent content = buildUpdateDialog(worker);
+        data.put(EEventDataKeys.SessionWorkerInstance, worker);
         data.put(EEventDataKeys.DialogContent, content);
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
@@ -57,18 +56,29 @@ public class SessionWorkersHelper  {
         
         IDialogContent content = buildDeleteDialog();
         data.put(EEventDataKeys.DialogContent, content);
-        data.put(EEventDataKeys.SessionGroupInstance, worker);
+        data.put(EEventDataKeys.SessionWorkerInstance, worker);
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
     }
 
     public void notifyEvent(StoreEvent event) {
-        callbacks.get(event.getAction()).accept((SessionWorker) event.getData().get(EEventDataKeys.SessionGroupInstance)); 
+        switch(event.getAction()){
+            case Add: addElement((SessionWorker)event.getData().get(EEventDataKeys.SessionWorkerInstance));
+                break;
+            case Remove: removeElement((SessionWorker)event.getData().get(EEventDataKeys.SessionWorkerInstance));
+                break;  
+            case Update: updateElement((SessionWorker)event.getData().get(EEventDataKeys.SessionWorkerInstance));
+                break;
+            case Load: setElements((Collection<SessionWorker>)event.getData().get(EEventDataKeys.SessionWorkersCollection));
+                break;          
+              default:
+                   break;
+           }
     }
 
     
-    public void notifyActive(MFXTableView<SessionWorker> tableSessionGroups) {
-       this.tableSessionWorkers = tableSessionGroups;
+    public void notifyActive(MFXTableView<SessionWorker> tableSessionWorkers) {
+       this.tableSessionWorkers = tableSessionWorkers;
        setColumns();
     }
 
@@ -85,15 +95,12 @@ public class SessionWorkersHelper  {
         tableSessionWorkers.getCell(index).updateRow();
     }
 
-    private IDialogContent buildUpdateDialog(){
-        ManagerDialog dialog = new ManagerDialog();
-        dialog.setEventKey(EEventDataKeys.AttributeWrappersList);
-        
-        EEventDataKeys[] attributes = {
-            EEventDataKeys.FullName,EEventDataKeys.Password,EEventDataKeys.GroupName
-        };
+    private void setElements(Collection<SessionWorker> workers){
+        tableSessionWorkers.getItems().setAll(workers);
+    }
 
-        dialog.setAttributes(attributes);
+    private IDialogContent buildUpdateDialog(SessionWorker worker){
+        SessionWorkerEditor dialog = new SessionWorkerEditor(worker);
 
         dialog.loadFxml();
 
@@ -107,20 +114,21 @@ public class SessionWorkersHelper  {
 
 
     private IDialogContent buildAddDialog(){
-        ManagerDialog dialog = new ManagerDialog();
-        dialog.setEventKey(EEventDataKeys.AttributeWrappersList);
+        SessionWorker sessionWorker = new SessionWorker(0, "", "", "", 0);
 
-        EEventDataKeys[] attributes = {
-                EEventDataKeys.FullName,EEventDataKeys.Password,EEventDataKeys.GroupName};
+        SessionWorkerEditor dialog = new SessionWorkerEditor(sessionWorker);
 
-        dialog.setAttributes(attributes);
-
-        dialog.loadFxml();
+        Runnable sucessCallback = () -> {
+            addElement(sessionWorker);
+        };
 
         dialog.setOnConfirm(data -> {
             data.remove(EEventDataKeys.DialogContent);
+            data.put(EEventDataKeys.OnSucessCallback, sucessCallback);
             dispatchEvent(EStores.DataStore, EStoreEvents.SessionWorkerEvent, EStoreEventAction.Add, data);
         });
+
+        dialog.loadFxml();
 
         return dialog;
     }
@@ -145,18 +153,17 @@ public class SessionWorkersHelper  {
         StoreCenter.getInstance().dispatch(action);
     }
 
-    private void setupCallbacks(){
-        callbacks.put(EStoreEventAction.Add, this::addElement);
-        callbacks.put(EStoreEventAction.Update, this::updateElement);
-        callbacks.put(EStoreEventAction.Remove, this::removeElement);
-    }
-
     private void setColumns(){
         MFXTableColumn<SessionWorker> idColumn = new MFXTableColumn<>(Names.WorkerId, true, Comparator.comparing(SessionWorker::getWorkerId));
 		MFXTableColumn<SessionWorker> nameColumn = new MFXTableColumn<>(Names.WorkerName, true, Comparator.comparing(SessionWorker::getWorkerName));
-        MFXTableColumn<SessionWorker> groupColumn = new MFXTableColumn<>(Names.WorkerEmail, true, Comparator.comparing(SessionWorker::getGroupName));
-        MFXTableColumn<SessionWorker> passwordColumn = new MFXTableColumn<>(Names.WorkerPhone, true, Comparator.comparing(SessionWorker::getPassword));
-	
+        MFXTableColumn<SessionWorker> groupColumn = new MFXTableColumn<>(Names.GroupName, true, Comparator.comparing(SessionWorker::getGroupName));
+        MFXTableColumn<SessionWorker> passwordColumn = new MFXTableColumn<>(Names.Password, true, Comparator.comparing(SessionWorker::getPassword));
+        
+        idColumn.setRowCellFactory(worker -> new MFXTableRowCell<>(SessionWorker::getWorkerId));
+        nameColumn.setRowCellFactory(worker -> new MFXTableRowCell<>(SessionWorker::getWorkerName));
+        groupColumn.setRowCellFactory(worker -> new MFXTableRowCell<>(SessionWorker::getGroupName));
+        passwordColumn.setRowCellFactory(worker -> new MFXTableRowCell<>(SessionWorker::getPassword));
+
         tableSessionWorkers.getTableColumns().setAll(idColumn,groupColumn,nameColumn,passwordColumn);
         
     }

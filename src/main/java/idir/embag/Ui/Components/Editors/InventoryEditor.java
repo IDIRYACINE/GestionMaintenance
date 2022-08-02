@@ -49,8 +49,7 @@ public class InventoryEditor extends INodeView implements Initializable , IDialo
         this.cancelTask = callback;
     }
 
-    @Override
-    public void setEventKey(EEventDataKeys key) {}
+   
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

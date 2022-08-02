@@ -11,7 +11,6 @@ import idir.embag.DataModels.Session.SessionGroup;
 import idir.embag.DataModels.Workers.SessionWorker;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
-import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -23,9 +22,6 @@ public class SessionWorkersDialog extends INodeView implements Initializable,IDi
     @FXML
     private VBox root;
     
-    @FXML
-    private MFXButton btnUpdateGroup,btnRemoveGroup,btnUpdateWorker,btnRemoveWorker,btnAddGroup;
-
     @FXML
     private MFXTableView<SessionWorker> tableSessionWorkers;
 
@@ -91,12 +87,5 @@ public class SessionWorkersDialog extends INodeView implements Initializable,IDi
     public void setOnCancel(Runnable callback) {
 
     }
-
-    @Override
-    public void setEventKey(EEventDataKeys key) {
-
-    }
-
-  
 
 }

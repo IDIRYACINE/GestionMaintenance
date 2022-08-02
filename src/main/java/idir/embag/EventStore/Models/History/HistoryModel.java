@@ -9,7 +9,7 @@ import java.util.Map;
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
-import idir.embag.Repository.SessionRecordRepository;
+import idir.embag.Repository.SessionRepository;
 import idir.embag.Types.Infrastructure.Database.ISessionQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
@@ -25,10 +25,11 @@ import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 public class HistoryModel implements IDataDelegate{
 
     ISessionQuery sessionQuery;
-    SessionRecordRepository sessionRepository;
+    SessionRepository sessionRepository;
     
-    public HistoryModel(ISessionQuery sessionQuery) {
+    public HistoryModel(ISessionQuery sessionQuery,SessionRepository sessionRepository) {
         this.sessionQuery = sessionQuery;
+        this.sessionRepository = sessionRepository;
     }
 
     public void add(Map<EEventDataKeys,Object> data) {
@@ -52,7 +53,7 @@ public class HistoryModel implements IDataDelegate{
             SearchWrapper searchParams = (SearchWrapper)data.get(EEventDataKeys.SearchWrapper);
 
             ResultSet result = sessionQuery.SearchSessionRecord(searchParams);
-            Collection<SessionRecord> records = sessionRepository.resultSetToProduct(result);
+            Collection<SessionRecord> records = sessionRepository.resultSetToRecord(result);
 
             Map<EEventDataKeys,Object> response = new HashMap<>();
             response.put(EEventDataKeys.SessionRecordsCollection, records);
@@ -69,7 +70,7 @@ public class HistoryModel implements IDataDelegate{
         LoadWrapper loadWrapper = new LoadWrapper(10,0);
         try{
             ResultSet rawData = sessionQuery.LoadSessionRecord(loadWrapper);
-            Collection<SessionRecord> records = sessionRepository.resultSetToProduct(rawData);
+            Collection<SessionRecord> records = sessionRepository.resultSetToRecord(rawData);
 
             Map<EEventDataKeys,Object> response = new HashMap<>();
             response.put(EEventDataKeys.SessionRecordsCollection, records);

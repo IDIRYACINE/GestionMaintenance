@@ -4,7 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
-import idir.embag.Types.Infrastructure.Database.Generics.MDatabase.SessionsGroupsAttributes;
+import idir.embag.Types.Infrastructure.Database.Generics.MDatabase.SessionWorkersAttributes;
+import idir.embag.Types.Infrastructure.Database.Generics.MDatabase.SessionGroupsAttributes;
 import idir.embag.Types.Infrastructure.Database.Generics.MDatabase.SessionsRecordsAttributes;
 import idir.embag.Types.Infrastructure.Database.Generics.MDatabase.StockAttributes;
 import idir.embag.Types.Infrastructure.Database.Generics.MDatabase.WorkersAttributes;
@@ -59,19 +60,17 @@ public class SessionQuery extends ISessionQuery{
     @Override
     public void UpdateSessionGroup(int groupId, Collection<AttributeWrapper> attributes)
             throws SQLException {
-                String whereClause = " WHERE "+MDatabase.SessionsGroupsAttributes.Id + "=" + groupId;
+                String whereClause = " WHERE "+MDatabase.SessionGroupsAttributes.Id + "=" + groupId;
                 String query = "UPDATE "+GROUPS_TABLE_NAME+ UpdateWrapperToQuery(attributes)+ whereClause;
                 database.UpdateQuery(query);
         
     }
 
     @Override
-    public void RegsiterSessionWorker(int workerId, Collection<AttributeWrapper> attributes)
+    public void RegsiterSessionWorker( Collection<AttributeWrapper> attributes)
             throws SQLException {
-                String whereClause = " WHERE "+MDatabase.SessionWorkersAttributes.WorkerId + "=" + workerId;
-                String query = "UPDATE "+SESSION_WORKERS_TABLE_NAME+ UpdateWrapperToQuery(attributes)+ whereClause;
+                String query = "INSERT INTO "+SESSION_WORKERS_TABLE_NAME+ InsertWrapperToQuery(attributes);
                 database.UpdateQuery(query);
-        
     }
 
     @Override
@@ -101,9 +100,9 @@ public class SessionQuery extends ISessionQuery{
     @Override
     public void CreateSessionGroupTable() throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS "+ GROUPS_TABLE_NAME +" (\n"
-            + MDatabase.SessionsGroupsAttributes.Id+" INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-            + MDatabase.SessionsGroupsAttributes.SessionId+" INTEGER,\n"
-            + MDatabase.SessionsGroupsAttributes.Name+" TEXT,\n"
+            + MDatabase.SessionGroupsAttributes.Id+" INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+            + MDatabase.SessionGroupsAttributes.SessionId+" INTEGER,\n"
+            + MDatabase.SessionGroupsAttributes.Name+" TEXT,\n"
            
             + "FOREIGN KEY ("+ MDatabase.SessionsRecordsAttributes.SessionId +")\n"
             + "REFERENCES "+ SESSION_TABLE_NAME +"(" +MDatabase.SessionsAttributes.SessionId +")\n"  
@@ -137,7 +136,7 @@ public class SessionQuery extends ISessionQuery{
             + "ON DELETE CASCADE ON UPDATE NO ACTION, \n"
 
             + "FOREIGN KEY ("+ MDatabase.SessionsRecordsAttributes.GroupId +")\n"
-            + "REFERENCES "+ GROUPS_TABLE_NAME +"(" +MDatabase.SessionsGroupsAttributes.Id +")\n"  
+            + "REFERENCES "+ GROUPS_TABLE_NAME +"(" +MDatabase.SessionGroupsAttributes.Id +")\n"  
             + "ON DELETE CASCADE ON UPDATE NO ACTION, \n"
             
             + "FOREIGN KEY ("+ MDatabase.SessionsRecordsAttributes.InventoryId +")\n"
@@ -152,6 +151,8 @@ public class SessionQuery extends ISessionQuery{
         String query = "CREATE TABLE IF NOT EXISTS "+ SESSION_WORKERS_TABLE_NAME +" (\n"
             + MDatabase.SessionWorkersAttributes.Id + " INTEGER PRIMARY KEY AUTOINCREMENT,\n"
             + MDatabase.SessionWorkersAttributes.GroupId + " INTEGER,\n"
+            + MDatabase.SessionWorkersAttributes.Password+" TEXT,\n"
+
             + MDatabase.SessionWorkersAttributes.WorkerId + " INTEGER,\n"
         
             + "FOREIGN KEY ("+ MDatabase.SessionsRecordsAttributes.WorkerId +")\n"
@@ -159,7 +160,7 @@ public class SessionQuery extends ISessionQuery{
             + "ON DELETE CASCADE ON UPDATE NO ACTION, \n"
 
             + "FOREIGN KEY ("+ MDatabase.SessionsRecordsAttributes.GroupId +")\n"
-            + "REFERENCES "+ GROUPS_TABLE_NAME +"(" +MDatabase.SessionsGroupsAttributes.Id +")\n"  
+            + "REFERENCES "+ GROUPS_TABLE_NAME +"(" +MDatabase.SessionGroupsAttributes.Id +")\n"  
             + "ON DELETE CASCADE ON UPDATE NO ACTION) \n";
             
            
@@ -188,14 +189,15 @@ public class SessionQuery extends ISessionQuery{
 
             +" INNER JOIN " +GROUPS_TABLE_NAME +" ON "
             +RECORDS_TABLE_NAME + "."+ SessionsRecordsAttributes.GroupId
-            +"=" + GROUPS_TABLE_NAME + "." + SessionsGroupsAttributes.Id ;
+            +"=" + GROUPS_TABLE_NAME + "." + SessionGroupsAttributes.Id ;
 
         String query = "SELECT "
             + WORKERS_TABLE_NAME + "." + WorkersAttributes.WorkerId+" ,"
             + WORKERS_TABLE_NAME + "." + WorkersAttributes.Name+" ,"
             + WORKERS_TABLE_NAME + "." + WorkersAttributes.Phone+" ,"
-            + GROUPS_TABLE_NAME + "." + SessionsGroupsAttributes.Id +" ,"
-            + GROUPS_TABLE_NAME + "." + SessionsGroupsAttributes.Name +" ,"
+            + SESSION_WORKERS_TABLE_NAME + "." + SessionWorkersAttributes.Password+" ,"
+            + GROUPS_TABLE_NAME + "." + SessionGroupsAttributes.Id +" ,"
+            + GROUPS_TABLE_NAME + "." + SessionGroupsAttributes.Name +" ,"
             +" FROM "+RECORDS_TABLE_NAME +joinClause+ whereClause;
 
         ResultSet result = database.SelectQuery(query);
@@ -256,7 +258,7 @@ public class SessionQuery extends ISessionQuery{
         + WORKERS_TABLE_NAME + "." + WorkersAttributes.Name +" ,"
         + MDatabase.Tables.Stock + "." + StockAttributes.ArticleName +" ,"
         +" FROM "+RECORDS_TABLE_NAME +joinClause+ extraClause;
-
+        System.out.println(query);
     ResultSet result = database.SelectQuery(query);
     return result;
     }
@@ -281,14 +283,15 @@ public class SessionQuery extends ISessionQuery{
 
             +" INNER JOIN " +GROUPS_TABLE_NAME +" ON "
             +RECORDS_TABLE_NAME + "."+ SessionsRecordsAttributes.GroupId
-            +"=" + GROUPS_TABLE_NAME + "." + SessionsGroupsAttributes.Id ;
+            +"=" + GROUPS_TABLE_NAME + "." + SessionGroupsAttributes.Id ;
 
         String query = "SELECT "
             + WORKERS_TABLE_NAME + "." + WorkersAttributes.WorkerId+" ,"
             + WORKERS_TABLE_NAME + "." + WorkersAttributes.Name+" ,"
             + WORKERS_TABLE_NAME + "." + WorkersAttributes.Phone+" ,"
-            + GROUPS_TABLE_NAME + "." + SessionsGroupsAttributes.Id +" ,"
-            + GROUPS_TABLE_NAME + "." + SessionsGroupsAttributes.Name +" ,"
+            + SESSION_WORKERS_TABLE_NAME + "." + SessionWorkersAttributes.Password+" ,"
+            + GROUPS_TABLE_NAME + "." + SessionGroupsAttributes.Id +" ,"
+            + GROUPS_TABLE_NAME + "." + SessionGroupsAttributes.Name +" ,"
             +" FROM "+RECORDS_TABLE_NAME +joinClause+ extraClause;
 
         ResultSet result = database.SelectQuery(query);

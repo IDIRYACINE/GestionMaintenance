@@ -4,10 +4,13 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import idir.embag.Application.History.HistoryController;
+import idir.embag.Application.History.SessionHelper;
+import idir.embag.Application.History.SessionRecordHelper;
+import idir.embag.DataModels.Metadata.EHistoryTypes;
 import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.Types.Application.History.IHistoryController;
 import idir.embag.Types.Panels.Generics.INodeView;
-import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,7 +23,7 @@ public class HistoryPanel extends INodeView  implements Initializable {
     private VBox root;
 
     @FXML
-    private MFXButton btnExport, btnRefresh,btnSearch;
+    private MFXComboBox<EHistoryTypes> comboHistoryType;
     
     @FXML
     private MFXTableView<SessionRecord> tableSessionRecords;
@@ -38,7 +41,15 @@ public class HistoryPanel extends INodeView  implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        controller = new HistoryController(tableSessionRecords);
+        SessionRecordHelper recordHelper = new SessionRecordHelper(tableSessionRecords);
+
+        // TODO: Session records and records history table swap
+        SessionHelper sessionHelper = new SessionHelper();
+
+        controller = new HistoryController(sessionHelper,recordHelper);
+
+        controller.selectHistoryHelper(EHistoryTypes.SessionRecord);
+        comboHistoryType.getItems().addAll(EHistoryTypes.values());
     }
 
     @FXML
@@ -48,7 +59,13 @@ public class HistoryPanel extends INodeView  implements Initializable {
 
     @FXML
     private void search(){
-        controller.searchRecords();
+        controller.search();
+    }
+
+    @FXML
+    private void onHistoryTypeChanged(){
+        EHistoryTypes HistoryType = comboHistoryType.getSelectionModel().getSelectedItem();
+        controller.selectHistoryHelper(HistoryType);
     }
 }
     

@@ -1,5 +1,6 @@
 package idir.embag.Application.Session;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,7 +58,7 @@ public class SessionController implements IEventSubscriber {
                 addRecord((SessionRecord) event.getData().get(EEventDataKeys.SessionRecordInstance));
                 break;
               case Refresh:
-                setRecords((SessionRecord[]) event.getData().get(EEventDataKeys.SessionRecordList));
+                setRecords((Collection<SessionRecord>) event.getData().get(EEventDataKeys.SessionRecordList));
                 break;
               default:
                 break;
@@ -84,7 +85,7 @@ public class SessionController implements IEventSubscriber {
         tableRecord.getItems().add(record);
     }
 
-    private void setRecords(SessionRecord[] records) {
+    private void setRecords(Collection<SessionRecord> records) {
         tableRecord.getItems().setAll(records);
     }
 

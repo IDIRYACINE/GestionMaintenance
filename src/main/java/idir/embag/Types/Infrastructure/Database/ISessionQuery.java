@@ -18,7 +18,7 @@ public abstract class ISessionQuery extends IQuery{
     public abstract void UnregisterSessionGroup(int groupId) throws SQLException;
     public abstract void UpdateSessionGroup(int groupId , Collection<AttributeWrapper> attributes) throws SQLException;
 
-    public abstract void RegsiterSessionWorker(int workerId,Collection<AttributeWrapper> attributes) throws SQLException;
+    public abstract void RegsiterSessionWorker(Collection<AttributeWrapper> attributes) throws SQLException;
     public abstract void UnregisterGroupWorker(int workerId) throws SQLException;
 
     public abstract void RegisterSessionRecord(Collection<AttributeWrapper> attributes) throws SQLException;
@@ -35,4 +35,5 @@ public abstract class ISessionQuery extends IQuery{
     public abstract void CreateSessionGroupTable() throws SQLException;
     public abstract void CreateSessionRecordTable()  throws SQLException;
     public abstract void CreateSessionWorkersTable()  throws SQLException;
+   
 }

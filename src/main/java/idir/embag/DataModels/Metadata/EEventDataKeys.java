@@ -49,5 +49,12 @@ public enum EEventDataKeys {
     SessionDate,
     ExtraData, 
     AddSessionWorker,
-    SessionGroupName, SessionGroupCollection,
+    SessionGroupName,
+    SessionGroupCollection,
+    SessionGroupId,
+    SessionWorkersCollection,
+    SessionWorkerId,
+    SessionsCollection,
+    SessionInstance,
+    SessionWorkerInstance,
 }
