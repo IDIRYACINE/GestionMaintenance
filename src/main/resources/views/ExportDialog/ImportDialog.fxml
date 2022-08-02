@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXListView?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
 
-
-<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="20.0" 
-   xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="root" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="549.0" prefWidth="624.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox alignment="CENTER_LEFT" spacing="50.0">
          <children>
@@ -34,15 +35,26 @@
                   <VBox>
                      <children>
                         <Label text="End Row" />
-                        <MFXTextField fx:id="fieldRowEnd"/>
+                        <MFXTextField fx:id="fieldRowEnd" />
                      </children>
                   </VBox>
                   <VBox>
                      <children>
                         <Label text="End Column" />
-                        <MFXTextField fx:id="fieldColEnd"/>
+                        <MFXTextField fx:id="fieldColEnd" />
                      </children>
                   </VBox>
+               </children>
+            </VBox>
+            <VBox spacing="20.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="26.0" prefWidth="315.0" spacing="65.0">
+                     <children>
+                        <Label fx:id="selectedFileLabel" prefHeight="18.0" prefWidth="120.0" text="Selecte File" />
+                        <MFXButton fx:id="btnSelectFile" onAction="#selectFile" prefHeight="26.0" prefWidth="122.0" text="Select" />
+                     </children>
+                  </HBox>
+                  <MFXComboBox fx:id="tableComboBox" onAction="#selectTable" prefHeight="24.0" prefWidth="303.0" />
                </children>
             </VBox>
          </children>
@@ -50,19 +62,12 @@
             <Insets />
          </VBox.margin>
       </HBox>
-      <HBox alignment="CENTER_LEFT" spacing="65.0">
+      <MFXListView fx:id="attributesListView" prefHeight="279.0" prefWidth="576.0" />
+      <Line endX="483.5" startX="-100.0" />
+      <HBox alignment="CENTER" spacing="50.0">
          <children>
-            <Label text="Selecte File" />
-            <MFXButton prefWidth="90.0" fx:id="btnSelectFile" onAction="#SelectFile" text="Select" />
-         </children>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-      </HBox>
-      <HBox alignment="CENTER_LEFT" spacing="50.0">
-         <children>
-            <MFXButton fx:id="btnCancel" onAction="#Cancel"  prefWidth="90.0" text="Cancel" />
-            <MFXButton fx:id="btnImport" onAction="#Import" prefWidth="90.0" text="Confirm" />
+            <MFXButton fx:id="btnCancel" onAction="#cancel" prefWidth="90.0" text="Cancel" />
+            <MFXButton fx:id="btnImport" onAction="#importData" prefWidth="90.0" text="Import" />
          </children>
          <VBox.margin>
             <Insets />

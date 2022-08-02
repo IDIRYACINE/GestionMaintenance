@@ -24,6 +24,8 @@ public class Names {
     public static final String SessionId = "Session Id";
     public static final String GroupName = "Group Name";
     public static final String Password = "Password";
+    public static final String ImportFileTitle = "Import File";
+    public static final String ExportFileTitle = "Export File";
 
 
 

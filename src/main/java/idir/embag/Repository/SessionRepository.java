@@ -54,7 +54,7 @@ public class SessionRepository {
         try {
             while (source.next()) {
                 result.add(new SessionWorker(
-                source.getInt(MDatabase.SessionWorkersAttributes.Id),
+                source.getInt(MDatabase.SessionWorkersAttributes.WorkerId),
                 source.getString(MDatabase.WorkersAttributes.Name),
                 source.getString(MDatabase.SessionWorkersAttributes.Password),
                 source.getString(MDatabase.SessionGroupsAttributes.Name),

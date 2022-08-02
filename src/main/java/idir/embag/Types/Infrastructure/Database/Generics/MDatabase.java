@@ -13,6 +13,16 @@ public static class Tables{
     public static final String CodeBars = "CodeBars";
     public static final String SessionWorkers = "SessionWorkers";
     public static final String ActiveSession = "ActiveSession";
+
+    public static final String[] All = {
+            Stock,
+            Sessions,
+            Inventory,
+            Workers,
+            SessionsGroups,
+            FamilyCodes,
+            SessionsRecords,
+    };
 }
 
 public static class StockAttributes {

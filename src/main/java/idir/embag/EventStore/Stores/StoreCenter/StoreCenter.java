@@ -95,6 +95,14 @@ public class StoreCenter implements IStoresCenter{
       StoreDispatch action = new StoreDispatch(store,event);
       dispatch(action);
     }
+    
+    @Override
+    public StoreDispatch createStoreEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent, Map<EEventDataKeys,Object> data) {
+      StoreEvent event = new StoreEvent(storeEvent, actionEvent,data);
+      StoreDispatch action = new StoreDispatch(store, event);
+
+      return action;
+  }
 
     private void setupDataStore(DatabaseInitialiser databaseInitialiser){
       StockModel stockModel = new StockModel(databaseInitialiser.getProductQuery(), new StockRepository());
