@@ -24,7 +24,12 @@ public class WorkerQuery extends IWorkerQuery{
 
 
     @Override
-    public void UnregisterWorker(int workerId) throws SQLException {}
+    public void UnregisterWorker(int workerId) throws SQLException {
+        String whereClause = " WHERE "+MDatabase.WorkersAttributes.WorkerId + "=" + workerId;
+        String query = "DELETE FROM "+WORKERS_TABLE_NAME + whereClause;
+        
+        database.DeleteQuery(query);
+    }
 
     @Override
     public void RegisterWorker(Collection<AttributeWrapper> attributes ) throws SQLException {
@@ -73,6 +78,15 @@ public class WorkerQuery extends IWorkerQuery{
         return result;
     }
 
+    @Override
+    public void CreateIndexes() throws SQLException {
+        String query = "CREATE INDEX " + MDatabase.WorkersIndexes.NamePhoneIndex +" ON "
+        + WORKERS_TABLE_NAME 
+        +"(" + MDatabase.WorkersAttributes.Name 
+        +"," +MDatabase.WorkersAttributes.Phone
+        +")";
 
+        database.CreateQuery(query);
+    }
 
 }

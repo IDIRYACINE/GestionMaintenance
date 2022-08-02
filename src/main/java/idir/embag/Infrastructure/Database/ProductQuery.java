@@ -32,7 +32,12 @@ public class ProductQuery extends IProductQuery{
     }
 
     @Override
-    public void UnregisterStockProduct(int articleId) throws SQLException {}
+    public void UnregisterStockProduct(int articleId) throws SQLException {
+        String whereClause = " WHERE "+MDatabase.StockAttributes.ArticleId + "=" + articleId;
+        String query = "DELETE FROM "+STOCK_TABLE_NAME + whereClause;
+        
+        database.DeleteQuery(query);
+    }
 
     @Override
     public void UpdateStockProduct(int articleId, Collection<AttributeWrapper> attributes) throws SQLException {
@@ -51,7 +56,17 @@ public class ProductQuery extends IProductQuery{
     }
 
     @Override
-    public void UnregisterInventoryProduct(int articleId) throws SQLException {}
+    public void UnregisterInventoryProduct(int articleId,int stockId) throws SQLException {
+        String whereClause = " WHERE "+MDatabase.InventoryAttributes.ArticleId + "=" + articleId;
+        String query = "DELETE FROM "+INVENTORY_TABLE_NAME + whereClause;
+        database.DeleteQuery(query);
+
+        whereClause = " WHERE "+MDatabase.StockAttributes.ArticleId + "=" + stockId;
+        query = "UPDATE "+STOCK_TABLE_NAME+ MDatabase.StockAttributes.Quantity +" -=1" + whereClause;
+
+        database.UpdateQuery(query);
+
+    }
 
     @Override
     public void UpdateInventoryProduct(int articleId, Collection<AttributeWrapper> attributes)
@@ -81,7 +96,12 @@ public class ProductQuery extends IProductQuery{
     }
 
     @Override
-    public void UnregisterFamilyCode(int familyId) throws SQLException {}
+    public void UnregisterFamilyCode(int familyId) throws SQLException {
+        String whereClause = " WHERE "+MDatabase.FamilliesCodeAttributes.FamilyCode + "=" + familyId;
+        String query = "DELETE FROM "+FAMILIES_TABLE_NAME + whereClause;
+        
+        database.DeleteQuery(query);
+    }
 
     @Override
     public void CreateFamiLyCodesTable() throws SQLException {
@@ -195,6 +215,16 @@ public class ProductQuery extends IProductQuery{
          String query = "SELECT * FROM "+STOCK_TABLE_NAME+ extraClause;
          ResultSet result = database.SelectQuery(query);
          return result;
+    }
+
+    @Override
+    public void CreateIndexes() throws SQLException {
+        String query = "CREATE INDEX " + MDatabase.InventoryIdexes.CodeBarIndex +" ON "
+        + INVENTORY_TABLE_NAME 
+        +"(" + MDatabase.InventoryAttributes.ArticleCode 
+        +")";
+
+        database.CreateQuery(query);
     }
 
 

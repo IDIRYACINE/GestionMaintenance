@@ -46,7 +46,7 @@ public class FamilyModel implements IDataDelegate{
     public void remove(Map<EEventDataKeys,Object> data) {
 
        try {
-        productQuery.UnregisterFamilyCode((int) data.get(EEventDataKeys.ArticleId));
+        productQuery.UnregisterFamilyCode((int) data.get(EEventDataKeys.FamilyCode));
         notfiyEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Remove, data);
     } catch (SQLException e) {
         e.printStackTrace();

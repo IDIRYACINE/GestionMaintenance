@@ -45,14 +45,20 @@ public class SessionWorkersModel implements IDataDelegate {
        try {
         sessionQuery.UnregisterGroupWorker((int) data.get(EEventDataKeys.SessionWorkerId));
         notfiyEvent(EStores.DataStore, EStoreEvents.SessionWorkerEvent, EStoreEventAction.Remove, data);
-    } catch (SQLException e) {
+        } catch (SQLException e) {
         e.printStackTrace();
-    }
+        }
         
     }
 
     @Override
     public void update(Map<EEventDataKeys,Object> data) {
+        try {
+            sessionQuery.UpdateSessionWorker((int) data.get(EEventDataKeys.SessionWorkerId),(Collection<AttributeWrapper>)data.get(EEventDataKeys.AttributeWrappersList));
+            notfiyEvent(EStores.DataStore, EStoreEvents.SessionWorkerEvent, EStoreEventAction.Update, data);
+            } catch (SQLException e) {
+            e.printStackTrace();
+            }
     }
 
     @Override

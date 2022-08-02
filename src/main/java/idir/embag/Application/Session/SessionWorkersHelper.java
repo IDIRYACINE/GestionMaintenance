@@ -77,9 +77,11 @@ public class SessionWorkersHelper  implements IEventSubscriber {
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialog);
 
-        dialog.setOnConfirm(response -> {
-            response.put(EEventDataKeys.SessionWorkerInstance, worker);
-            dispatchEvent(EStores.DataStore, EStoreEvents.SessionWorkerEvent, EStoreEventAction.Remove, response);
+        dialog.setOnConfirm(requestData -> {
+            requestData.put(EEventDataKeys.SessionWorkerInstance, worker);
+            requestData.put(EEventDataKeys.SessionWorkerId, worker.getId());
+
+            dispatchEvent(EStores.DataStore, EStoreEvents.SessionWorkerEvent, EStoreEventAction.Remove, requestData);
         });
 
         dialog.loadFxml();

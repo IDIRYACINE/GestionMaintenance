@@ -1,5 +1,6 @@
 package idir.embag.Types.Infrastructure.Database.Generics;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -81,5 +82,7 @@ public abstract class IQuery {
 
         return result;
     }
+
+    public abstract void CreateIndexes() throws SQLException;
 
 }

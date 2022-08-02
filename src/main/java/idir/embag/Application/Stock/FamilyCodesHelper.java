@@ -64,6 +64,8 @@ public class FamilyCodesHelper extends IStockHelper implements IEventSubscriber{
         
         dialogContent.setOnConfirm(requestData -> {
             requestData.put(EEventDataKeys.ProductInstance, product);
+            requestData.put(EEventDataKeys.FamilyCode, product.getFamilyCode());
+
             dispatchEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Remove, requestData);
         });
 

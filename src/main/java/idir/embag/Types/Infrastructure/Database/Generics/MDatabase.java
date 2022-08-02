@@ -74,18 +74,26 @@ public static class SessionGroupsAttributes{
 }
 
 public static class WorkersAttributes{
-    public static final String  WorkerId = "WorkerId";
+    public static final String WorkerId = "WorkerId";
     public static final String Name = "WorkerName";
     public static final String Email = "WorkerEmail";
     public static final String Phone = "WorkerPhone";
 }
 
 public static class SessionWorkersAttributes{
-    public static final String Id = "SessionWorkerId";
     public static final String WorkerId = "WorkerId";
     public static final String GroupId = "GroupId";
     public static final String Password = "Password";
 
 }
+
+public static class WorkersIndexes {
+    public static final String NamePhoneIndex = "WorkersNamePhoneIndex";
+}
+
+public static class InventoryIdexes {
+    public static final String CodeBarIndex = "InventoryCodeBarIndex";
+}
+
     
 }

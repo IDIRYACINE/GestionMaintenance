@@ -1,5 +1,6 @@
 package idir.embag.Application.Workers;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Workers.Worker;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Application.Workers.IWorkersController;
+import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Stores.Generics.IEventSubscriber;
@@ -131,6 +133,8 @@ public class WorkersController implements IWorkersController , IEventSubscriber 
 
         dialogContent.setOnConfirm(requestData -> {
             requestData.put(EEventDataKeys.WorkerInstance, worker);
+            requestData.put(EEventDataKeys.WorkerId, worker.getId());
+
             dispatchEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Remove, requestData);
         });
 
@@ -149,11 +153,13 @@ public class WorkersController implements IWorkersController , IEventSubscriber 
         Map<EEventDataKeys,Object> data = new HashMap<>();
         data.put(EEventDataKeys.DialogContent, dialogContent);
         
+        Collection<AttributeWrapper> attributes = workerToAttributes(worker);
+
         dialogContent.setOnConfirm(requestData -> {
-            //TODO: add worker to session
-            requestData.put(EEventDataKeys.AddSessionWorker, true);
-            
-            dispatchEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Add, requestData);
+            requestData.put(EEventDataKeys.SessionWorkerInstance, worker);
+            requestData.put(EEventDataKeys.AttributeWrappersList, attributes);
+
+            dispatchEvent(EStores.DataStore, EStoreEvents.SessionWorkerEvent, EStoreEventAction.Add, requestData);
         });
 
         dialogContent.loadFxml();
@@ -161,6 +167,15 @@ public class WorkersController implements IWorkersController , IEventSubscriber 
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
  
+    }
+
+    private Collection<AttributeWrapper> workerToAttributes(Worker worker) {
+        Collection<AttributeWrapper> result = new ArrayList<>();
+        result.add(new AttributeWrapper(EEventDataKeys.WorkerId, worker.getId()));
+        result.add(new AttributeWrapper(EEventDataKeys.GroupId, "null"));
+        result.add(new AttributeWrapper(EEventDataKeys.Password, String.valueOf((worker.getPhone()))));
+
+        return result;
     }
 
     @Override

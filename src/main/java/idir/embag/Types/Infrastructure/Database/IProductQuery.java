@@ -16,7 +16,7 @@ public abstract class IProductQuery extends IQuery{
     public abstract void UpdateStockProduct(int articleId , Collection<AttributeWrapper> attributes) throws SQLException;
 
     public abstract void RegisterInventoryProduct(Collection<AttributeWrapper> attributes) throws SQLException;
-    public abstract void UnregisterInventoryProduct(int articleId) throws SQLException;
+    public abstract void UnregisterInventoryProduct(int articleId,int stockId) throws SQLException;
     public abstract void UpdateInventoryProduct(int articleId,Collection<AttributeWrapper> attributes) throws SQLException;
 
     public abstract void RegisterFamilyCode(Collection<AttributeWrapper> attributes) throws SQLException;

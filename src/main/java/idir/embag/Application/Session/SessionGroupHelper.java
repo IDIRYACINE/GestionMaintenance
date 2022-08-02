@@ -75,6 +75,8 @@ public class SessionGroupHelper implements IEventSubscriber{
 
         dialog.setOnConfirm(requestData -> {
             requestData.put(EEventDataKeys.SessionGroupInstance, sessionGroup);
+            requestData.put(EEventDataKeys.SessionGroupId, sessionGroup.getId());
+
             dispatchEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Remove, requestData);
         });
 

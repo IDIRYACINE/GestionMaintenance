@@ -20,6 +20,7 @@ public abstract class ISessionQuery extends IQuery{
 
     public abstract void RegsiterSessionWorker(Collection<AttributeWrapper> attributes) throws SQLException;
     public abstract void UnregisterGroupWorker(int workerId) throws SQLException;
+    public abstract void UpdateSessionWorker(int sessionWorkerId, Collection<AttributeWrapper> collection) throws SQLException;
 
     public abstract void RegisterSessionRecord(Collection<AttributeWrapper> attributes) throws SQLException;
 

@@ -55,7 +55,12 @@ public class SessionQuery extends ISessionQuery{
     }
 
     @Override
-    public void UnregisterSessionGroup(int groupId) throws SQLException {}
+    public void UnregisterSessionGroup(int groupId) throws SQLException {
+        String whereClause = " WHERE "+MDatabase.SessionGroupsAttributes.Id + "=" + groupId;
+        String query = "DELETE FROM "+GROUPS_TABLE_NAME + whereClause;
+        
+        database.DeleteQuery(query);
+    }
 
     @Override
     public void UpdateSessionGroup(int groupId, Collection<AttributeWrapper> attributes)
@@ -74,7 +79,20 @@ public class SessionQuery extends ISessionQuery{
     }
 
     @Override
-    public void UnregisterGroupWorker(int workerId) throws SQLException {}
+    public void UnregisterGroupWorker(int workerId) throws SQLException {
+        String whereClause = " WHERE "+MDatabase.SessionWorkersAttributes.WorkerId + "=" + workerId;
+        String query = "DELETE FROM "+SESSION_WORKERS_TABLE_NAME + whereClause;
+        
+        database.DeleteQuery(query);
+    }
+
+    @Override
+    public void UpdateSessionWorker(int sessionWorkerId, Collection<AttributeWrapper> attributes) throws SQLException {
+        String whereClause = " WHERE "+MDatabase.SessionWorkersAttributes.WorkerId + "=" + sessionWorkerId;
+                String query = "UPDATE "+SESSION_WORKERS_TABLE_NAME+ UpdateWrapperToQuery(attributes)+ whereClause;
+                database.UpdateQuery(query);
+        
+    }
 
     @Override
     public void RegisterSessionRecord(Collection<AttributeWrapper> attributes) throws SQLException {
@@ -149,11 +167,9 @@ public class SessionQuery extends ISessionQuery{
     @Override
     public void CreateSessionWorkersTable() throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS "+ SESSION_WORKERS_TABLE_NAME +" (\n"
-            + MDatabase.SessionWorkersAttributes.Id + " INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+            + MDatabase.SessionWorkersAttributes.WorkerId + " INTEGER PRIMARY KEY ,\n"
             + MDatabase.SessionWorkersAttributes.GroupId + " INTEGER,\n"
             + MDatabase.SessionWorkersAttributes.Password+" TEXT,\n"
-
-            + MDatabase.SessionWorkersAttributes.WorkerId + " INTEGER,\n"
         
             + "FOREIGN KEY ("+ MDatabase.SessionsRecordsAttributes.WorkerId +")\n"
             + "REFERENCES "+ MDatabase.Tables.Workers +"(" +MDatabase.WorkersAttributes.WorkerId +")\n"  
@@ -298,4 +314,8 @@ public class SessionQuery extends ISessionQuery{
         return result;
     }
 
+    @Override
+    public void CreateIndexes() throws SQLException {
+       
+    }
 }

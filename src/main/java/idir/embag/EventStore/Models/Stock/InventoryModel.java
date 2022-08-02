@@ -41,7 +41,7 @@ public class InventoryModel implements IDataDelegate {
 
     public void remove(Map<EEventDataKeys,Object> data) {
         try {
-            productQuery.UnregisterInventoryProduct((int) data.get(EEventDataKeys.ArticleId));
+            productQuery.UnregisterInventoryProduct((int) data.get(EEventDataKeys.ArticleId),(int) data.get(EEventDataKeys.StockId));
             notfiyEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Remove, data);
         } catch (SQLException e) {
             e.printStackTrace();

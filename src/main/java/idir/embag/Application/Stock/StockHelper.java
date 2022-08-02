@@ -67,6 +67,8 @@ public class StockHelper extends IStockHelper implements IEventSubscriber{
 
         dialogContent.setOnConfirm(requestData -> {
             requestData.put(EEventDataKeys.ProductInstance, product);
+            requestData.put(EEventDataKeys.ArticleId, product.getArticleId());
+
             dispatchEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Remove, requestData);
         });
 
