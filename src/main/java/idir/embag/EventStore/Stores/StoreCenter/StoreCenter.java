@@ -71,7 +71,12 @@ public class StoreCenter implements IStoresCenter{
 
     @Override
     public void notify(StoreDispatch action) {
-      dataStore.notifySubscribers(action.getEvent());  
+      dataStore.notifySubscriber(action.getEvent());  
+    }
+
+    @Override
+    public void broadcast(StoreDispatch action) {
+      dataStore.broadcast(action.getEvent());  
     }
 
     @Override

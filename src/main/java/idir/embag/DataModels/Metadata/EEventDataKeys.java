@@ -57,5 +57,5 @@ public enum EEventDataKeys {
     SessionsCollection,
     SessionInstance,
     SessionWorkerInstance,
-    LoadWrapper,
+    LoadWrapper, StoreEvent, ExportedTable, ExportWrapper, ImportWrapper, EStoreEvents, EStoreEvent,
 }

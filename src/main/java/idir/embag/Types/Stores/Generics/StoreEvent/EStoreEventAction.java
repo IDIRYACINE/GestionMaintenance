@@ -13,4 +13,6 @@ public enum EStoreEventAction {
     Refresh,
     Notify, 
     CloseSession,
+    Export,
+    Import, Broadcast, Cancel, Abort, Error, Stop, Done, Completed, NoData,
 }

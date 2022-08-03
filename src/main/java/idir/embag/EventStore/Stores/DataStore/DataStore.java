@@ -85,12 +85,16 @@ public class DataStore implements IDataStore {
     }
 
     @Override
-    public void notifySubscribers(StoreEvent event) {
+    public void broadcast(StoreEvent event) {
         for(IEventSubscriber subscriber : subscribers.get(event.getEvent())) {
             subscriber.notifyEvent(event);
         }
     }
 
+    @Override
+    public void notifySubscriber(StoreEvent event) {
+        ((IEventSubscriber) event.getData().get(EEventDataKeys.Subscriber)).notifyEvent(event);
+    }
 
     private void setupSubscribers() {
         for(EStoreEvents event : EStoreEvents.values()) {
@@ -106,7 +110,9 @@ public class DataStore implements IDataStore {
         actions.put(EStoreEventAction.Load, this::load);
         actions.put(EStoreEventAction.Subscribe, this::subscribe);
         actions.put(EStoreEventAction.Unsubscribe, this::unsubscribe);
-        actions.put(EStoreEventAction.Notify, this::notifySubscribers);
+        actions.put(EStoreEventAction.Notify, this::notifySubscriber);
+        actions.put(EStoreEventAction.Broadcast, this::broadcast);
+
     }
     
 }
