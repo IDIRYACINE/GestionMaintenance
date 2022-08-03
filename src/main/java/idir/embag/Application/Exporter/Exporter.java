@@ -24,12 +24,10 @@ public class Exporter implements IEventSubscriber{
 
     private ImportWrapper importWrapper;
 
-    private void exportData(){
+    private void exportData(Map<EEventDataKeys, Object> data ){
         
-        Map<EEventDataKeys, Object> data = new HashMap<EEventDataKeys, Object>();
         data.put(EEventDataKeys.Subscriber, this);
         data.put(EEventDataKeys.ExportWrapper, exportWrapper);
-
         StoreCenter storeCenter = StoreCenter.getInstance();
         StoreDispatch event = storeCenter.createStoreEvent(EStores.DataConverterStore, exportWrapper.getTargetTable(), EStoreEventAction.Export, data);
         storeCenter.dispatch(event);
@@ -47,10 +45,11 @@ public class Exporter implements IEventSubscriber{
         storeCenter.dispatch(event);
     }
 
-    public void exportDataFromDatabase(EStoreEvents exportedTable){
+    private void exportDataFromDatabase(EStoreEvents exportedTable){
         Map<EEventDataKeys, Object> data = new HashMap<EEventDataKeys, Object>();
         data.put(EEventDataKeys.Subscriber, this);
         data.put(EEventDataKeys.ExportWrapper, exportWrapper);
+        data.put(EEventDataKeys.LoadWrapper, exportWrapper.getLoadWrapper());
 
         StoreCenter storeCenter = StoreCenter.getInstance();
         StoreDispatch event = storeCenter.createStoreEvent(EStores.DataStore, exportedTable, EStoreEventAction.Load, data);
@@ -72,7 +71,7 @@ public class Exporter implements IEventSubscriber{
     public void notifyEvent(StoreEvent event) {
         switch(event.getAction()){
             case Export:
-                exportData();
+                exportData(null);
                 break;
             case Done:
                 nextDataSet();
@@ -83,7 +82,7 @@ public class Exporter implements IEventSubscriber{
             case NoData:
                 onNoData();
                 break;
-            default:
+            default: exportData(event.getData());
                 break;    
         }
     }
@@ -91,7 +90,7 @@ public class Exporter implements IEventSubscriber{
     private void nextDataSet(){
         if(isExporting){
             exportWrapper.nextRowPatch();
-            exportData();
+        
         }
         else if(isImporting){
             importWrapper.nextRowPatch();

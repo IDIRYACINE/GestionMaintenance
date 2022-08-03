@@ -1,14 +1,12 @@
 package idir.embag.Types.Infrastructure.DataConverters;
 
-import java.util.Map;
+import java.util.Collection;
 
-import idir.embag.DataModels.Metadata.EEventDataKeys;
-import idir.embag.Types.Infrastructure.DataConverters.Excel.IExcelCellReader;
 import idir.embag.Types.Infrastructure.DataConverters.Excel.IExcelCellWriter;
 
 public interface IDataConverter {
-    public void exportData(Map<EEventDataKeys,Object> data);
+    public <T> void exportData(IExcelCellWriter<T> cellWriter , Collection<T> data);
     public void importData();
-    public void setupExport(ExportWrapper exportWrapper, IExcelCellWriter cellWriter);
-    public void setupImport(ImportWrapper importWrapper, IExcelCellReader cellReader);
+    public void setupExport(ExportWrapper exportWrapper);
+    public void setupImport(ImportWrapper importWrapper);
 }

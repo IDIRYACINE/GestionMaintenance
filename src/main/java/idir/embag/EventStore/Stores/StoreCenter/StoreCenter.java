@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import idir.embag.DataModels.Metadata.EEventDataKeys;
+import idir.embag.EventStore.Models.DataConverters.ExcelModel;
 import idir.embag.EventStore.Models.History.HistoryModel;
 import idir.embag.EventStore.Models.Session.SessionGroupModel;
 import idir.embag.EventStore.Models.Session.SessionModel;
@@ -12,6 +13,7 @@ import idir.embag.EventStore.Models.Stock.FamilyModel;
 import idir.embag.EventStore.Models.Stock.InventoryModel;
 import idir.embag.EventStore.Models.Stock.StockModel;
 import idir.embag.EventStore.Models.Workers.WorkersModel;
+import idir.embag.EventStore.Stores.DataConverterStore.DataConverterStore;
 import idir.embag.EventStore.Stores.DataStore.DataStore;
 import idir.embag.EventStore.Stores.NavigationStore.NavigationStore;
 import idir.embag.Infrastructure.ServicesCenter;
@@ -22,9 +24,12 @@ import idir.embag.Repository.SessionRepository;
 import idir.embag.Repository.StockRepository;
 import idir.embag.Repository.WorkersRepository;
 import idir.embag.Types.Application.Navigation.INavigationController;
+import idir.embag.Types.Stores.DataConverterStore.IDataConverterDelegate;
+import idir.embag.Types.Stores.DataConverterStore.IDataConverterStore;
 import idir.embag.Types.Stores.DataStore.IDataDelegate;
 import idir.embag.Types.Stores.DataStore.IDataStore;
 import idir.embag.Types.Stores.Generics.IEventSubscriber;
+import idir.embag.Types.Stores.Generics.IStore;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
 import idir.embag.Types.Stores.Generics.StoreDispatch.StoreDispatch;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
@@ -36,6 +41,7 @@ public class StoreCenter implements IStoresCenter{
 
     private static StoreCenter instance;
     
+    private Map<EStores , IStore> stores = new HashMap<>();
 
     public static StoreCenter getInstance(ServicesCenter servicesCenter,INavigationController navigationController) {
         if (instance == null) {
@@ -52,31 +58,26 @@ public class StoreCenter implements IStoresCenter{
 
     private StoreCenter(ServicesCenter servicesCenter,INavigationController navigationController) {
         setupDataStore(servicesCenter.getDatabaseInitialiser());
-        setupNavigationStore(navigationController);
+        setupDataConverterStore();
+        stores.put(EStores.NavigationStore, new NavigationStore(navigationController));
     }
-
-    private IDataStore dataStore;
-    private NavigationStore navigationStore;
   
+   
     @Override
     public void dispatch(StoreDispatch action) {
-      if(action.getStore() == EStores.NavigationStore){
-        navigationStore.dispatch(action.getEvent());
-      }
-      else{
-        dataStore.dispatch(action.getEvent());
-      }
+     stores.get(action.getStore()).dispatch(action.getEvent());
         
     }
 
+
     @Override
     public void notify(StoreDispatch action) {
-      dataStore.notifySubscriber(action.getEvent());  
+      stores.get(action.getStore()).notifySubscriber(action.getEvent());  
     }
 
     @Override
     public void broadcast(StoreDispatch action) {
-      dataStore.broadcast(action.getEvent());  
+      stores.get(action.getStore()).broadcast(action.getEvent());  
     }
 
     @Override
@@ -131,13 +132,15 @@ public class StoreCenter implements IStoresCenter{
       delegates[IDataStore.SESSION_WORKER_DELEGATE] = sessionWorkersModel;
       delegates[IDataStore.SESSION_GROUP_DELEGATE] = sessionGroupModel;
 
-      dataStore = new DataStore(delegates);
+      stores.put(EStores.DataStore, new DataStore(delegates));
     }
 
-    private void setupNavigationStore(INavigationController navigationController){
-        navigationStore = new NavigationStore(navigationController);
+    private void setupDataConverterStore() {
+
+      IDataConverterDelegate[] delegates = new IDataConverterDelegate[DataConverterStore.DELEGATES_COUNT];
+      delegates[IDataConverterStore.FAMILY_DELEGATE] = new ExcelModel();
+      
+      stores.put(EStores.DataConverterStore, new DataConverterStore(delegates));
     }
-
-
 
 }

@@ -30,6 +30,8 @@ module idir.embag {
     opens idir.embag.Ui.Components.MangerDialog to  javafx.base,javafx.fxml;
     opens idir.embag.Ui.Components.Editors to  javafx.base,javafx.fxml;
     opens idir.embag.Ui.Components.ConfirmationDialog to  javafx.base,javafx.fxml;
+    opens idir.embag.Ui.Components.ExportDialogs to  javafx.base,javafx.fxml;
+
 
     exports idir.embag;
 }

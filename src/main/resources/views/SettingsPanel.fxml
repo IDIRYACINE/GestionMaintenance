@@ -14,7 +14,7 @@
          <children>
             <VBox prefHeight="470.0" prefWidth="292.0" spacing="50.0">
                <children>
-                  <Pane fx:id="exportDataPane" onAction="#exportData">
+                  <Pane fx:id="exportDataPane" onMouseClicked="#exportData">
                      <children>
                         <FontAwesomeIconView layoutX="7.0" layoutY="52.0" size="50" wrappingWidth="63.0" />
                         <VBox alignment="TOP_CENTER" layoutX="81.0">
@@ -35,7 +35,7 @@
                         </VBox>
                      </children>
                   </Pane>
-                  <Pane fx:id="ImportDataPane" onAction="#importData">
+                  <Pane fx:id="ImportDataPane" onMouseClicked="#importData">
                      <children>
                         <FontAwesomeIconView layoutX="7.0" layoutY="52.0" size="50" wrappingWidth="63.0" />
                         <VBox alignment="TOP_CENTER" layoutX="81.0">
