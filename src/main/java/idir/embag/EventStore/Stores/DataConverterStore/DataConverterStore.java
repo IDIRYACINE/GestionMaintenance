@@ -17,7 +17,7 @@ public class DataConverterStore implements IDataConverterStore{
 
     private Map<EStoreEvents,IDataConverterDelegate> delegates = new HashMap<>();
     
-    private Map<EStoreEvents,ArrayList<IEventSubscriber>> subscribers = new HashMap<>();
+    private ArrayList<IEventSubscriber> subscribers = new ArrayList<>();
 
     private Map<EStoreEventAction , Consumer<StoreEvent>> actions = new HashMap<>();
 
@@ -29,7 +29,6 @@ public class DataConverterStore implements IDataConverterStore{
         delegates.put(EStoreEvents.WorkersEvent, delegatesList[IDataConverterStore.WORKER_DELEGATE]);
         delegates.put(EStoreEvents.SessionEvent, delegatesList[IDataConverterStore.SESSION_DELEGATE]);
 
-        setupSubscribers();
         setupActions();
     }    
 
@@ -41,12 +40,12 @@ public class DataConverterStore implements IDataConverterStore{
 
     @Override
     public void subscribe(StoreEvent event) {
-        subscribers.get(event.getEvent()).add((IEventSubscriber) event.getData().get(EEventDataKeys.Subscriber));   
+        subscribers.add((IEventSubscriber) event.getData().get(EEventDataKeys.Subscriber));   
     }
 
     @Override
     public void unsubscribe(StoreEvent event) {
-        subscribers.get(event.getEvent()).remove((IEventSubscriber) event.getData().get(EEventDataKeys.Subscriber));   
+        subscribers.remove((IEventSubscriber) event.getData().get(EEventDataKeys.Subscriber));   
     }
 
     @Override
@@ -62,12 +61,6 @@ public class DataConverterStore implements IDataConverterStore{
         
     }
 
-    private void setupSubscribers() {
-        for(EStoreEvents event : EStoreEvents.values()) {
-              subscribers.put(event, new ArrayList<IEventSubscriber>());
-        }
-    }
-
     private void setupActions(){
         actions.put(EStoreEventAction.Subscribe, this::subscribe);
         actions.put(EStoreEventAction.Unsubscribe, this::unsubscribe);
@@ -80,14 +73,16 @@ public class DataConverterStore implements IDataConverterStore{
 
     @Override
     public void notifySubscriber(StoreEvent event) {
-        for(IEventSubscriber subscriber : subscribers.get(event.getEvent())) {
+        for(IEventSubscriber subscriber : subscribers) {
             subscriber.notifyEvent(event);
         }        
     }
 
     @Override
     public void broadcast(StoreEvent event) {
-        // TODO Auto-generated method stub
+        for(IEventSubscriber subscriber : subscribers) {
+            subscriber.notifyEvent(event);
+        }    
         
     }
     

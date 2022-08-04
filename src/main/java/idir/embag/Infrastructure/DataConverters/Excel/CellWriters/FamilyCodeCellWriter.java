@@ -8,16 +8,18 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-
 import idir.embag.DataModels.Others.FamilyCode;
 import idir.embag.Types.Infrastructure.DataConverters.Excel.IExcelCellWriter;
 
 public class FamilyCodeCellWriter implements IExcelCellWriter<FamilyCode> {
 
     Workbook workbook;
+
     Sheet sheet;
 
     String[] columns = {"Family Code", "Family Name"};
+
+    int currentRowIndex;
 
     @Override
     public void writeData(Collection<FamilyCode> data) {
@@ -26,7 +28,6 @@ public class FamilyCodeCellWriter implements IExcelCellWriter<FamilyCode> {
         style.setWrapText(true);
         
         Iterator<FamilyCode> it = data.iterator();
-        int currentRowIndex = 0;
 
         while (it.hasNext()){
 
@@ -51,10 +52,18 @@ public class FamilyCodeCellWriter implements IExcelCellWriter<FamilyCode> {
     public void setup(Workbook workbook) {
         this.workbook = workbook;
         sheet = workbook.getSheetAt(0);
+        currentRowIndex = 1;
+        setupColumns();
     }
 
 
-
+    private void setupColumns() {
+        Row row = sheet.createRow(0);
+        for (int i = 0; i < columns.length; i++) {
+            Cell cell = row.createCell(i);
+            cell.setCellValue(columns[i]);
+        }
+    }
 
 }
     

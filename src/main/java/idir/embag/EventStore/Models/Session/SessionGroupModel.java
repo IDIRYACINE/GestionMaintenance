@@ -102,6 +102,11 @@ public class SessionGroupModel  implements IDataDelegate{
         StoreDispatch action = new StoreDispatch(store, event);
         StoreCenter.getInstance().notify(action);
     }
+
+    @Override
+    public void importCollection(Map<EEventDataKeys, Object> data) {
+        
+    }
     
 
 }

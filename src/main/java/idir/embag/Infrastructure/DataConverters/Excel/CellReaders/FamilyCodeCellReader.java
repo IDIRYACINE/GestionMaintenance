@@ -2,7 +2,6 @@ package idir.embag.Infrastructure.DataConverters.Excel.CellReaders;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -24,14 +23,17 @@ public class FamilyCodeCellReader implements IExcelCellReader {
 
         Collection<AttributeWrapper[]> data = new ArrayList<>();
 
-        Iterator<Row> rowIterator = sheet.iterator();
+        int rowIndex = importWrapper.getStartRow();
 
-        while (rowIterator.hasNext()) 
+        while (rowIndex <= importWrapper.getEndRow()) 
         {
-            Row row = rowIterator.next();
+            Row row = sheet.getRow(rowIndex);
             data.add(readCells(row));
+
+            rowIndex++;
             
         }
+        
         return data;
         
     }
@@ -44,9 +46,11 @@ public class FamilyCodeCellReader implements IExcelCellReader {
     private AttributeWrapper[] readCells(Row row){
         AttributeWrapper[] attributes = new AttributeWrapper[attrbs.length];
 
-        for (int i = 0; i < attrbs.length; i++) {
-            attributes[i] = new AttributeWrapper(attrbs[i], row.getCell(i).getStringCellValue());
-        }
+        int i = 0;
+
+        attributes[i] = new AttributeWrapper(attrbs[i], row.getCell(i).getNumericCellValue());
+        i++;
+        attributes[i] = new AttributeWrapper(attrbs[i], row.getCell(i).getStringCellValue());
 
         return attributes;
     }

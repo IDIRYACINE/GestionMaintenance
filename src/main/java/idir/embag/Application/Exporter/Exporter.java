@@ -5,6 +5,7 @@ import java.util.Map;
 
 import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
+import idir.embag.Types.Generics.EOperationStatus;
 import idir.embag.Types.Infrastructure.DataConverters.ExportWrapper;
 import idir.embag.Types.Infrastructure.DataConverters.ImportWrapper;
 import idir.embag.Types.Stores.Generics.IEventSubscriber;
@@ -23,6 +24,13 @@ public class Exporter implements IEventSubscriber{
     private ExportWrapper exportWrapper;
 
     private ImportWrapper importWrapper;
+
+    
+
+
+    public Exporter() {
+        StoreCenter.getInstance().subscribeToEvents(EStores.DataConverterStore, null, this);
+    }
 
     private void exportData(Map<EEventDataKeys, Object> data ){
         
@@ -69,11 +77,13 @@ public class Exporter implements IEventSubscriber{
 
     @Override
     public void notifyEvent(StoreEvent event) {
-        switch(event.getAction()){
-            case Export:
-                exportData(null);
+        EOperationStatus status = (EOperationStatus)event.getData().get(EEventDataKeys.OperationStatus);
+        
+        switch(status){
+            case Ready:
+                exportData(event.getData());
                 break;
-            case Done:
+            case Completed:
                 nextDataSet();
                 break;
             case Stop:
@@ -90,7 +100,7 @@ public class Exporter implements IEventSubscriber{
     private void nextDataSet(){
         if(isExporting){
             exportWrapper.nextRowPatch();
-        
+            startExport(exportWrapper.getTargetTable(), exportWrapper);
         }
         else if(isImporting){
             importWrapper.nextRowPatch();
@@ -121,6 +131,8 @@ public class Exporter implements IEventSubscriber{
     }
 
 
-   
+   public void unsubscribe(){
+        StoreCenter.getInstance().unsubscribeFromEvents(EStores.DataConverterStore,null,this);
+    }
     
 }

@@ -42,6 +42,9 @@ public class ExportDialog extends INodeView implements Initializable,IDialogCont
 
     private File file;
 
+    private Runnable cancelCallback;
+
+
     public ExportDialog() {
         fxmlPath = "/views/ExportDialog/ExportDialog.fxml";
         controller = new Exporter();
@@ -54,7 +57,7 @@ public class ExportDialog extends INodeView implements Initializable,IDialogCont
 
     @Override
     public void setOnCancel(Runnable callback) {
-        
+        cancelCallback = callback;
     }
 
     @Override
@@ -84,7 +87,7 @@ public class ExportDialog extends INodeView implements Initializable,IDialogCont
         fileChooser.setTitle(Names.ExportFileTitle);
 
         file = fileChooser.showSaveDialog(null);
-        selectedFileLabel.setText(file.getAbsolutePath());
+        selectedFileLabel.setText(file.getName());
     }
 
     @FXML
@@ -103,11 +106,14 @@ public class ExportDialog extends INodeView implements Initializable,IDialogCont
         exportWrapper.setOutputFile(file.getAbsolutePath());
 
         controller.startExport(tableType,exportWrapper);
+
+        cancelCallback.run();
+
     }
 
     @FXML
     private void cancel() {
-        
+        cancelCallback.run();
     }
     
 }

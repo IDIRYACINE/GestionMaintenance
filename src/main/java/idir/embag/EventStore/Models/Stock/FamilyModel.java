@@ -8,6 +8,7 @@ import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Repository.FamilyCodeRepository;
+import idir.embag.Types.Generics.EOperationStatus;
 import idir.embag.Types.Infrastructure.Database.IProductQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
@@ -91,7 +92,14 @@ public class FamilyModel implements IDataDelegate{
             ResultSet rawData = productQuery.LoadFamilyCode(loadWrapper);
             Collection<IProduct> familyCodes = familyCodeRepository.resultSetToProduct(rawData);
 
+            if(familyCodes.size() == 0){
+                data.put(EEventDataKeys.OperationStatus, EOperationStatus.NoData);
+            }else{
+                data.put(EEventDataKeys.OperationStatus, EOperationStatus.Completed);
+            }   
+
             data.put(EEventDataKeys.ProductsCollection, familyCodes);
+
             notfiyEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Load, data);
         }
         catch(SQLException e){
@@ -103,6 +111,19 @@ public class FamilyModel implements IDataDelegate{
         StoreEvent event = new StoreEvent(storeEvent, actionEvent,data);
         StoreDispatch action = new StoreDispatch(store, event);
         StoreCenter.getInstance().notify(action);
+    }
+
+    @Override
+    public void importCollection(Map<EEventDataKeys, Object> data) {
+        try {
+            productQuery.RegisterFamilyCodeCollection((Collection<AttributeWrapper[]>)data.get(EEventDataKeys.AttributeWrappersListCollection));
+            data.put(EEventDataKeys.OperationStatus, EOperationStatus.Completed);
+            notfiyEvent(EStores.DataConverterStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Import, data);
+        } catch (SQLException e) {
+           
+            e.printStackTrace();
+        }
+        
     }
     
 }

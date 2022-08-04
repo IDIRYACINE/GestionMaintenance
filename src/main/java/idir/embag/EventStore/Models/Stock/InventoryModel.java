@@ -8,6 +8,7 @@ import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Repository.InventoryRepository;
+import idir.embag.Types.Generics.EOperationStatus;
 import idir.embag.Types.Infrastructure.Database.IProductQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
@@ -95,6 +96,20 @@ public class InventoryModel implements IDataDelegate {
         StoreEvent event = new StoreEvent(storeEvent, actionEvent,data);
         StoreDispatch action = new StoreDispatch(store, event);
         StoreCenter.getInstance().notify(action);
+    }
+
+    @Override
+    public void importCollection(Map<EEventDataKeys, Object> data) {
+        try {
+            productQuery.RegisterInventoryCollection((Collection<AttributeWrapper[]>)data.get(EEventDataKeys.AttributeWrappersListCollection));
+            data.put(EEventDataKeys.OperationStatus, EOperationStatus.Completed);
+
+            notfiyEvent(EStores.DataConverterStore, EStoreEvents.InventoryEvent, EStoreEventAction.Import, data);
+        } catch (SQLException e) {
+           
+            e.printStackTrace();
+        }
+        
     }
 
 }

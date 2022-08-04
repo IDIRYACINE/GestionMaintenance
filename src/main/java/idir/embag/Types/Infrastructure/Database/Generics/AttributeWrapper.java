@@ -26,7 +26,7 @@ public class AttributeWrapper{
     }
 
     public void setValue(Object value) {
-        this.value = (String) value;
+        this.value = value.toString();
     }
     
 }

@@ -90,10 +90,20 @@ public class DataStore implements IDataStore {
             subscriber.notifyEvent(event);
         }
     }
+    
+    @Override
+    public void importCollection(StoreEvent event) {
+        IDataDelegate dataDelegate = dataDelegates.get(event.getEvent());
+        dataDelegate.importCollection(event.getData());
+    }
 
     @Override
     public void notifySubscriber(StoreEvent event) {
-        ((IEventSubscriber) event.getData().get(EEventDataKeys.Subscriber)).notifyEvent(event);
+        try {
+            ((IEventSubscriber) event.getData().get(EEventDataKeys.Subscriber)).notifyEvent(event);
+        } catch (Exception e) {
+            broadcast(event);
+        }
     }
 
     private void setupSubscribers() {
@@ -112,6 +122,7 @@ public class DataStore implements IDataStore {
         actions.put(EStoreEventAction.Unsubscribe, this::unsubscribe);
         actions.put(EStoreEventAction.Notify, this::notifySubscriber);
         actions.put(EStoreEventAction.Broadcast, this::broadcast);
+        actions.put(EStoreEventAction.Import, this::importCollection);
 
     }
     

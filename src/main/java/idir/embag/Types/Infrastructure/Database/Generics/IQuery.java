@@ -83,6 +83,64 @@ public abstract class IQuery {
         return result;
     }
 
+    protected String InsertCollectionToQuery(Collection<AttributeWrapper[]> collection){
+        String attributes = " ";
+        String values = " VALUES ";
+
+        int collectionLength = collection.size();
+        int lastCollectionIndex = collectionLength - 1;
+
+        int collectionIndex = 0;
+
+        Iterator<AttributeWrapper[]> collectionIterator = collection.iterator();
+
+        AttributeWrapper[] firstAttrs = collection.iterator().next();
+
+        attributes += formatAttributesNames(firstAttrs);
+
+        while (collectionIterator.hasNext()) { 
+            AttributeWrapper[] attrs = collectionIterator.next();
+
+            values += formatAttributesValues(attrs);
+
+            if(collectionIndex != lastCollectionIndex){
+                values += ",";
+            }
+
+            collectionIndex++;
+
+        }
+        return attributes + values;
+    }
+
+    private String formatAttributesValues(AttributeWrapper[] attrs){
+        String result = "(";
+        int length = attrs.length;
+        int lastElementIndex = length - 1;
+
+        for (int i = 0 ;i<lastElementIndex;i++){
+            result += "'" + attrs[i].getValue() + "',";
+
+        }
+        result += "'" + attrs[lastElementIndex].getValue() + "')";
+
+        return result;
+    }
+
+    private String formatAttributesNames(AttributeWrapper[] attrs){
+        String result = "(";
+        int length = attrs.length;
+        int lastElementIndex = length - 1;
+
+        for (int i = 0 ;i<lastElementIndex;i++){
+            result += "'"+ attrs[i].getAttributeName() + "',";
+
+        }
+        result += "'"+ attrs[lastElementIndex].getAttributeName() + "')";
+
+        return result;
+    }
+
     public abstract void CreateIndexes() throws SQLException;
 
 }

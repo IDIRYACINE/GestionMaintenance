@@ -227,6 +227,27 @@ public class ProductQuery extends IProductQuery{
         database.CreateQuery(query);
     }
 
+    @Override
+    public void RegisterStockCollection(Collection<AttributeWrapper[]> collection) throws SQLException {
+        String query = "INSERT INTO "+STOCK_TABLE_NAME+ InsertCollectionToQuery(collection);
+        database.InsertQuery(query);
+        
+    }
+
+    @Override
+    public void RegisterInventoryCollection(Collection<AttributeWrapper[]> collection) throws SQLException {
+        String query = "INSERT INTO "+INVENTORY_TABLE_NAME+ InsertCollectionToQuery(collection);
+        database.InsertQuery(query);
+        
+    }
+
+    @Override
+    public void RegisterFamilyCodeCollection(Collection<AttributeWrapper[]> collection) throws SQLException {
+        String query = "INSERT INTO "+FAMILIES_TABLE_NAME+ InsertCollectionToQuery(collection);
+        database.InsertQuery(query);
+        
+    }
+
 
 
 

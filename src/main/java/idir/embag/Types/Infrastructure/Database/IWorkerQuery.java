@@ -12,6 +12,7 @@ import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 public abstract class IWorkerQuery extends IQuery{
 
     public abstract void RegisterWorker(Collection<AttributeWrapper> attributes) throws SQLException;
+    public abstract void RegisterWorkerCollection(Collection<AttributeWrapper[]> collection) throws SQLException;
     public abstract void UpdateWorker(int workerId,Collection<AttributeWrapper> attributes) throws SQLException;
     public abstract void UnregisterWorker(int workerId) throws SQLException;
 

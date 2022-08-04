@@ -20,4 +20,5 @@ public interface IDataStore extends IStore{
     public void update(StoreEvent event);
     public void search(StoreEvent event);
     public void load(StoreEvent event);
+    public void importCollection(StoreEvent event);
 }

@@ -12,14 +12,17 @@ import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 public abstract class IProductQuery extends IQuery{
     
     public abstract void RegisterStockProduct(Collection<AttributeWrapper> attributes) throws SQLException;
+    public abstract void RegisterStockCollection(Collection<AttributeWrapper[]> collection) throws SQLException;
     public abstract void UnregisterStockProduct(int articleId) throws SQLException;
     public abstract void UpdateStockProduct(int articleId , Collection<AttributeWrapper> attributes) throws SQLException;
 
     public abstract void RegisterInventoryProduct(Collection<AttributeWrapper> attributes) throws SQLException;
+    public abstract void RegisterInventoryCollection(Collection<AttributeWrapper[]> collection) throws SQLException;
     public abstract void UnregisterInventoryProduct(int articleId,int stockId) throws SQLException;
     public abstract void UpdateInventoryProduct(int articleId,Collection<AttributeWrapper> attributes) throws SQLException;
 
     public abstract void RegisterFamilyCode(Collection<AttributeWrapper> attributes) throws SQLException;
+    public abstract void RegisterFamilyCodeCollection(Collection<AttributeWrapper[]> collection) throws SQLException;
     public abstract void UpdateFamilyCode(int familyId,Collection<AttributeWrapper> attributes ) throws SQLException;
     public abstract void UnregisterFamilyCode(int familyId) throws SQLException;
 

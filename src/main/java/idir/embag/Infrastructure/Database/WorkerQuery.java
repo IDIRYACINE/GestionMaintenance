@@ -89,4 +89,12 @@ public class WorkerQuery extends IWorkerQuery{
         database.CreateQuery(query);
     }
 
+
+
+    @Override
+    public void RegisterWorkerCollection(Collection<AttributeWrapper[]> collection) throws SQLException {
+        String query = "INSERT INTO "+WORKERS_TABLE_NAME+ InsertCollectionToQuery(collection);
+        database.InsertQuery(query);        
+    }
+
 }

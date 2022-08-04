@@ -76,6 +76,10 @@ public class HistoryModel implements IDataDelegate{
             e.printStackTrace();
         }
     }
+    
+    @Override
+    public void importCollection(Map<EEventDataKeys, Object> data) {
+    }
 
     private void notfiyEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent, Map<EEventDataKeys,Object> data) {
         StoreEvent event = new StoreEvent(storeEvent, actionEvent,data);

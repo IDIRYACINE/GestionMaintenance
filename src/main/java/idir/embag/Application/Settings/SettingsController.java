@@ -20,7 +20,9 @@ public class SettingsController {
 
         StoreCenter storeCenter = StoreCenter.getInstance();
         StoreDispatch event = storeCenter.createStoreEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
-    
+        
+        dialog.loadFxml();
+
         storeCenter.dispatch(event);
         
     }

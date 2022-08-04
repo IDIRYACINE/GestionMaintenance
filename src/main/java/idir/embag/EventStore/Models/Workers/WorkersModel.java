@@ -8,6 +8,7 @@ import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.DataModels.Workers.Worker;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Repository.WorkersRepository;
+import idir.embag.Types.Generics.EOperationStatus;
 import idir.embag.Types.Infrastructure.Database.IWorkerQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
@@ -96,6 +97,19 @@ public class WorkersModel implements IDataDelegate{
         StoreEvent event = new StoreEvent(storeEvent, actionEvent,data);
         StoreDispatch action = new StoreDispatch(store, event);
         StoreCenter.getInstance().notify(action);
+    }
+
+    @Override
+    public void importCollection(Map<EEventDataKeys, Object> data) {
+        try {
+            workerQuery.RegisterWorkerCollection((Collection<AttributeWrapper[]>)data.get(EEventDataKeys.AttributeWrappersListCollection));
+            data.put(EEventDataKeys.OperationStatus, EOperationStatus.Completed);
+            notfiyEvent(EStores.DataConverterStore, EStoreEvents.WorkersEvent, EStoreEventAction.Import, data);
+        } catch (SQLException e) {
+           
+            e.printStackTrace();
+        }
+        
     }
     
 }

@@ -94,4 +94,8 @@ public class SessionModel  implements IDataDelegate{
         StoreCenter.getInstance().notify(action);
     }
 
+    @Override
+    public void importCollection(Map<EEventDataKeys, Object> data) {
+    }
+
 }

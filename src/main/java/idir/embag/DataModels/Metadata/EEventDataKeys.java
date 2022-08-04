@@ -25,7 +25,7 @@ public enum EEventDataKeys {
     Phone,
     Password,
     AttributeWrappersList,
-    AttributeWrappersMap,
+    AttributeWrappersListCollection,
     DialogContent,
     ProductInstance,
     SessionGroupInstance,
@@ -57,5 +57,5 @@ public enum EEventDataKeys {
     SessionsCollection,
     SessionInstance,
     SessionWorkerInstance,
-    LoadWrapper, StoreEvent, ExportedTable, ExportWrapper, ImportWrapper, EStoreEvents, EStoreEvent,
+    LoadWrapper, StoreEvent, ExportedTable, ExportWrapper, ImportWrapper, EStoreEvents, EStoreEvent, OperationStatus,
 }

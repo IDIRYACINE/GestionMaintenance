@@ -13,7 +13,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import idir.embag.Types.Infrastructure.DataConverters.ExportWrapper;
 import idir.embag.Types.Infrastructure.DataConverters.IDataConverter;
 import idir.embag.Types.Infrastructure.DataConverters.ImportWrapper;
+import idir.embag.Types.Infrastructure.DataConverters.Excel.IExcelCellReader;
 import idir.embag.Types.Infrastructure.DataConverters.Excel.IExcelCellWriter;
+import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 
 public class Excel implements IDataConverter {
 
@@ -46,20 +48,27 @@ public class Excel implements IDataConverter {
 
 
     @Override
-    public void importData() {
+    public Collection<AttributeWrapper[]> importData(IExcelCellReader cellReader) {
+        Collection<AttributeWrapper[]> data = null;
+
         try
         {
             FileInputStream file = new FileInputStream(new File(importWrapper.getInputFile()));
             XSSFWorkbook workbook = new XSSFWorkbook(file);
             
+            cellReader.setup(workbook);
+            data = cellReader.readData(importWrapper);
+
             workbook.close();
             file.close();
+
         } 
         catch (Exception e) 
         {
             e.printStackTrace();
         }
-        
+
+        return data;
     }
 
     @Override
@@ -77,8 +86,6 @@ public class Excel implements IDataConverter {
     @Override
     public void setupImport(ImportWrapper importWrapper) {
         this.importWrapper = importWrapper;
-       
-       
     }
 
     
