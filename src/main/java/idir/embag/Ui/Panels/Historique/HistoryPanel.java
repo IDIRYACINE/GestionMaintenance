@@ -3,9 +3,9 @@ package idir.embag.Ui.Panels.Historique;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import idir.embag.Application.History.HistoryController;
-import idir.embag.Application.History.SessionHelper;
-import idir.embag.Application.History.SessionRecordHelper;
+import idir.embag.Application.Controllers.History.HistoryController;
+import idir.embag.Application.Controllers.History.SessionHelper;
+import idir.embag.Application.Controllers.History.SessionRecordHelper;
 import idir.embag.DataModels.Metadata.EHistoryTypes;
 import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.Types.Application.History.IHistoryController;

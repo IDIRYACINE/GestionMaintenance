@@ -1,16 +1,15 @@
 package idir.embag.Types.Infrastructure.Database.Generics;
 
-import idir.embag.DataModels.Metadata.EEventDataKeys;
-
+@SuppressWarnings("rawtypes")
 public class AttributeWrapper{
     
     private String attributeName;
 
     private String value;
 
-    public AttributeWrapper(EEventDataKeys attributeName, Object value) {
+    public AttributeWrapper(Enum attributeName, Object value) {
         this.attributeName = attributeName.toString();
-        setValue(value);
+        this.value = value.toString();
     }
 
     public String getAttributeName() {

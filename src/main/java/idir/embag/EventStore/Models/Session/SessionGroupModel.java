@@ -4,7 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
-import idir.embag.DataModels.Metadata.EEventDataKeys;
+
+import idir.embag.Application.Utility.DataBundler;
+import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.SessionGroup;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Repository.SessionRepository;
@@ -12,6 +14,7 @@ import idir.embag.Types.Infrastructure.Database.ISessionQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
+import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Stores.DataStore.IDataDelegate;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
 import idir.embag.Types.Stores.Generics.StoreDispatch.StoreDispatch;
@@ -19,7 +22,6 @@ import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 
-@SuppressWarnings("unchecked")
 public class SessionGroupModel  implements IDataDelegate{
 
     ISessionQuery sessionQuery;
@@ -30,9 +32,9 @@ public class SessionGroupModel  implements IDataDelegate{
         this.sessionRepository = sessionRepository;
     }
 
-    public void add(Map<EEventDataKeys,Object> data) {
+    public void add(Map<EEventsDataKeys,Object> data) {
         try {
-          sessionQuery.RegisterSessionGroup((Collection<AttributeWrapper>)data.get(EEventDataKeys.AttributeWrappersList));
+          sessionQuery.RegisterSessionGroup(DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.AttributesCollection));
           notfiyEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Add, data);
 
         } catch (SQLException e) {
@@ -41,11 +43,12 @@ public class SessionGroupModel  implements IDataDelegate{
     }
 
     @Override
-    public void remove(Map<EEventDataKeys,Object> data) {
+    public void remove(Map<EEventsDataKeys,Object> data) {
 
        try {
-        sessionQuery.UnregisterSessionGroup((int) data.get(EEventDataKeys.SessionGroupId));
-        notfiyEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Remove, data);
+            SessionGroup group = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
+            sessionQuery.UnregisterSessionGroup(group.getId());
+            notfiyEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Remove, data);
     } catch (SQLException e) {
         e.printStackTrace();
     }
@@ -53,11 +56,12 @@ public class SessionGroupModel  implements IDataDelegate{
     }
 
     @Override
-    public void update(Map<EEventDataKeys,Object> data) {
-        Collection<AttributeWrapper> wrappers = (Collection<AttributeWrapper>)data.get(EEventDataKeys.AttributeWrappersList);
+    public void update(Map<EEventsDataKeys,Object> data) {
+        Collection<AttributeWrapper> wrappers = DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.AttributesCollection);
+        SessionGroup group = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
 
         try {
-            sessionQuery.UpdateSessionGroup((int)data.get(EEventDataKeys.SessionGroupId), wrappers);
+            sessionQuery.UpdateSessionGroup(group.getId(), wrappers);
             notfiyEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Update, data);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -66,14 +70,14 @@ public class SessionGroupModel  implements IDataDelegate{
     }
 
     @Override
-    public void search(Map<EEventDataKeys,Object> data) {
+    public void search(Map<EEventsDataKeys,Object> data) {
         try {
-            SearchWrapper searchParams = (SearchWrapper)data.get(EEventDataKeys.SearchWrapper);
+            SearchWrapper searchParams =DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.SearchWrapper);
 
             ResultSet result = sessionQuery.SearchSessionGroup(searchParams);
             Collection<SessionGroup> groups = sessionRepository.resultSetToGroup(result);
 
-            data.put(EEventDataKeys.SessionGroupCollection, groups);
+            data.put(EEventsDataKeys.InstanceCollection, groups);
             notfiyEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Search, data);
 
         } catch (SQLException e) {
@@ -83,13 +87,13 @@ public class SessionGroupModel  implements IDataDelegate{
     }
 
     @Override
-    public void load(Map<EEventDataKeys,Object> data) {
-        LoadWrapper loadWrapper = (LoadWrapper)data.get(EEventDataKeys.LoadWrapper);
+    public void load(Map<EEventsDataKeys,Object> data) {
+        LoadWrapper loadWrapper = DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.LoadWrapper);
         try{
             ResultSet rawData = sessionQuery.LoadSessionGroup(loadWrapper);
             Collection<SessionGroup> groups = sessionRepository.resultSetToGroup(rawData);
 
-            data.put(EEventDataKeys.SessionGroupCollection, groups);
+            data.put(EEventsDataKeys.InstanceCollection, groups);
             notfiyEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Load, data);
         }
         catch(SQLException e){
@@ -97,14 +101,14 @@ public class SessionGroupModel  implements IDataDelegate{
         }
     }
 
-    private void notfiyEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent, Map<EEventDataKeys,Object> data) {
+    private void notfiyEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent, Map<EEventsDataKeys,Object> data) {
         StoreEvent event = new StoreEvent(storeEvent, actionEvent,data);
         StoreDispatch action = new StoreDispatch(store, event);
         StoreCenter.getInstance().notify(action);
     }
 
     @Override
-    public void importCollection(Map<EEventDataKeys, Object> data) {
+    public void importCollection(Map<EEventsDataKeys, Object> data) {
         
     }
     

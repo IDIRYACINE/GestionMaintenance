@@ -2,14 +2,14 @@ package idir.embag.Types.Stores.Generics.StoreEvent;
 
 import java.util.Map;
 
-import idir.embag.DataModels.Metadata.EEventDataKeys;
+import idir.embag.DataModels.Metadata.EEventsDataKeys;
 
 public class StoreEvent {
     private EStoreEvents event;
-    private Map<EEventDataKeys,Object> data;
+    private Map<EEventsDataKeys,Object> data;
     private EStoreEventAction action;
 
-    public StoreEvent(EStoreEvents event,EStoreEventAction action, Map<EEventDataKeys,Object> data) {
+    public StoreEvent(EStoreEvents event,EStoreEventAction action, Map<EEventsDataKeys,Object> data) {
         this.event = event;
         this.data = data;
         this.action = action;
@@ -19,7 +19,7 @@ public class StoreEvent {
         return event;
     }
 
-    public Map<EEventDataKeys,Object> getData() {
+    public Map<EEventsDataKeys,Object> getData() {
         return data;
     }
 

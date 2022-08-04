@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
-import idir.embag.Application.Exporter.Exporter;
-import idir.embag.DataModels.Metadata.EEventDataKeys;
+import idir.embag.Application.Controllers.Exporter.Exporter;
+import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.Types.Infrastructure.DataConverters.ImportWrapper;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
@@ -56,7 +56,7 @@ public class ImportDialog extends INodeView implements Initializable,IDialogCont
     }
 
     @Override
-    public void setOnConfirm(Consumer<Map<EEventDataKeys, Object>> callback) {
+    public void setOnConfirm(Consumer<Map<EEventsDataKeys, Object>> callback) {
         
     }
 

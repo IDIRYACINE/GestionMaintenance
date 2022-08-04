@@ -3,7 +3,7 @@ package idir.embag.Ui.Panels.Session;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import idir.embag.Application.Session.SessionController;
+import idir.embag.Application.Controllers.Session.SessionController;
 import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.Types.Panels.Generics.INodeView;
 import io.github.palexdev.materialfx.controls.MFXTableView;

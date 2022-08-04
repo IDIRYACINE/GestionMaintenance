@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
-
-import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import io.github.palexdev.materialfx.controls.MFXCheckbox;
 import javafx.fxml.FXML;
@@ -14,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 
+@SuppressWarnings("rawtypes")
 public class AttributeSelector implements Initializable{
 
     
@@ -25,12 +24,12 @@ public class AttributeSelector implements Initializable{
     @FXML
     private MFXCheckbox attrbCheckBox;
 
-    private EEventDataKeys attribute;
+    private Enum attribute;
 
     private Consumer<HBox> onSelect,onDeselect;
 
-    public AttributeSelector(EEventDataKeys attribute) {
-        this.attribute = attribute;
+    public AttributeSelector(Enum attributes) {
+        this.attribute = attributes;
     }
 
     @Override

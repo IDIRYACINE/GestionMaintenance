@@ -7,9 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
-import idir.embag.DataModels.Metadata.EEventDataKeys;
+
+import idir.embag.Application.Utility.DataBundler;
+import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Workers.Worker;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
+import idir.embag.Types.Infrastructure.Database.Metadata.EWorkerAttributes;
+import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
 import javafx.fxml.FXML;
@@ -28,7 +32,7 @@ public class WorkerEditor extends INodeView implements Initializable , IDialogCo
 
     private Runnable cancelTask;
 
-    private Consumer<Map<EEventDataKeys,Object>> confirmTask;
+    private Consumer<Map<EEventsDataKeys,Object>> confirmTask;
 
     private Worker worker;
 
@@ -39,7 +43,7 @@ public class WorkerEditor extends INodeView implements Initializable , IDialogCo
     }
 
     @Override
-    public void setOnConfirm(Consumer<Map<EEventDataKeys, Object>> callback) {
+    public void setOnConfirm(Consumer<Map<EEventsDataKeys, Object>> callback) {
         this.confirmTask = callback;
     }
 
@@ -64,7 +68,7 @@ public class WorkerEditor extends INodeView implements Initializable , IDialogCo
     @FXML
     private void onConfirm(){
         
-        Map<EEventDataKeys,Object> data = new HashMap<>();
+        Map<EEventsDataKeys,Object> data = new HashMap<>();
         setupConfirm(data);
 
         confirmTask.accept(data);
@@ -76,21 +80,21 @@ public class WorkerEditor extends INodeView implements Initializable , IDialogCo
         cancelTask.run();
     }
 
-    private void setupConfirm(Map<EEventDataKeys,Object> data){
+    private void setupConfirm(Map<EEventsDataKeys,Object> data){
         worker.setEmail(workerEmailField.getText());
         worker.setName(workerNameField.getText());
         worker.setPhone(Integer.parseInt(workerPhoneField.getText()));
 
-        data.put(EEventDataKeys.AttributeWrappersList,getAttributeWrappers());
-        data.put(EEventDataKeys.WorkerId, worker.getId());
+        DataBundler.bundleNestedData(data, EEventsDataKeys.WrappersKeys, EWrappers.AttributesCollection, getAttributeWrappers());
+        data.put(EEventsDataKeys.Instance, worker);
     }
 
     private Collection<AttributeWrapper> getAttributeWrappers(){
         Collection<AttributeWrapper> attributes = new ArrayList<AttributeWrapper>();
         
-        attributes.add(new AttributeWrapper(EEventDataKeys.WorkerName,workerNameField.getText()));
-        attributes.add(new AttributeWrapper(EEventDataKeys.WorkerEmail,workerEmailField.getText()));
-        attributes.add(new AttributeWrapper(EEventDataKeys.WorkerPhone,workerPhoneField.getText()));
+        attributes.add(new AttributeWrapper(EWorkerAttributes.WorkerName,workerNameField.getText()));
+        attributes.add(new AttributeWrapper(EWorkerAttributes.WorkerEmail,workerEmailField.getText()));
+        attributes.add(new AttributeWrapper(EWorkerAttributes.WorkerPhone,workerPhoneField.getText()));
 
         return attributes;
     }

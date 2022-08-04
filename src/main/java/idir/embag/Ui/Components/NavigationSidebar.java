@@ -7,10 +7,12 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import idir.embag.DataModels.Metadata.EEventDataKeys;
+import idir.embag.Application.Utility.DataBundler;
+import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.EventStore.Stores.NavigationStore.NavigationStore;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Application.Navigation.INavigationController;
+import idir.embag.Types.MetaData.ENavigationKeys;
 import idir.embag.Types.Panels.Generics.INodeView;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
 import idir.embag.Types.Stores.Generics.StoreDispatch.StoreDispatch;
@@ -133,8 +135,8 @@ public class NavigationSidebar extends INodeView  implements Initializable{
     }
 
     private void dispatchNavigationEvent(int panelId){
-      Map<EEventDataKeys,Object> data = new HashMap<>();
-      data.put(EEventDataKeys.PanelId,panelId);
+      Map<EEventsDataKeys,Object> data = new HashMap<>();
+      DataBundler.bundleNestedData(data, EEventsDataKeys.NavigationKeys, ENavigationKeys.PanelId, panelId);
 
       StoreEvent event = new StoreEvent(
         EStoreEvents.NavigationEvent,

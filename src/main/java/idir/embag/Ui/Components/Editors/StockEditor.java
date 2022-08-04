@@ -8,9 +8,12 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
-import idir.embag.DataModels.Metadata.EEventDataKeys;
+import idir.embag.Application.Utility.DataBundler;
+import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
+import idir.embag.Types.Infrastructure.Database.Metadata.EStockAttributes;
+import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
 import javafx.fxml.FXML;
@@ -28,7 +31,7 @@ public class StockEditor extends INodeView implements Initializable , IDialogCon
 
     private Runnable cancelTask;
 
-    private Consumer<Map<EEventDataKeys,Object>> confirmTask;
+    private Consumer<Map<EEventsDataKeys,Object>> confirmTask;
 
     private IProduct product;
 
@@ -40,7 +43,7 @@ public class StockEditor extends INodeView implements Initializable , IDialogCon
     }
 
     @Override
-    public void setOnConfirm(Consumer<Map<EEventDataKeys, Object>> callback) {
+    public void setOnConfirm(Consumer<Map<EEventsDataKeys, Object>> callback) {
         this.confirmTask = callback;
     }
 
@@ -67,7 +70,7 @@ public class StockEditor extends INodeView implements Initializable , IDialogCon
     @FXML
     private void onConfirm(){
         
-        Map<EEventDataKeys,Object> data = new HashMap<>();
+        Map<EEventsDataKeys,Object> data = new HashMap<>();
         setupConfirm(data);
 
         confirmTask.accept(data);
@@ -79,26 +82,26 @@ public class StockEditor extends INodeView implements Initializable , IDialogCon
         cancelTask.run();
     }
 
-    private void setupConfirm(Map<EEventDataKeys,Object> data){
+    private void setupConfirm(Map<EEventsDataKeys,Object> data){
         product.setArticleId(Integer.parseInt(articleIdField.getText()));
         product.setArticleName(articleNameField.getText());
         product.setPrice(Double.parseDouble(articlePriceField.getText()));
         product.setQuantity(Integer.parseInt(articleQuantityField.getText()));
         product.setFamilyCode(Integer.parseInt(articleFamilyField.getText()));
 
-        data.put(EEventDataKeys.AttributeWrappersList,getAttributeWrappers());
-        data.put(EEventDataKeys.ArticleId, product.getArticleId());
+        DataBundler.bundleNestedData(data, EEventsDataKeys.WrappersKeys, EWrappers.AttributesCollection, getAttributeWrappers());
+        data.put(EEventsDataKeys.Instance, product);
 
     }
 
     private Collection<AttributeWrapper> getAttributeWrappers(){
         Collection<AttributeWrapper> attributes = new ArrayList<AttributeWrapper>();
 
-        attributes.add(new AttributeWrapper(EEventDataKeys.ArticleId,articleIdField.getText()));
-        attributes.add(new AttributeWrapper(EEventDataKeys.ArticleName,articleNameField.getText()));
-        attributes.add(new AttributeWrapper(EEventDataKeys.Price,articlePriceField.getText()));
-        attributes.add(new AttributeWrapper(EEventDataKeys.Quantity,articleQuantityField.getText()));
-        attributes.add(new AttributeWrapper(EEventDataKeys.FamilyCode,articleFamilyField.getText()));
+        attributes.add(new AttributeWrapper(EStockAttributes.ArticleId,articleIdField.getText()));
+        attributes.add(new AttributeWrapper(EStockAttributes.ArticleName,articleNameField.getText()));
+        attributes.add(new AttributeWrapper(EStockAttributes.Price,articlePriceField.getText()));
+        attributes.add(new AttributeWrapper(EStockAttributes.Quantity,articleQuantityField.getText()));
+        attributes.add(new AttributeWrapper(EStockAttributes.FamilyCode,articleFamilyField.getText()));
 
 
         return attributes;

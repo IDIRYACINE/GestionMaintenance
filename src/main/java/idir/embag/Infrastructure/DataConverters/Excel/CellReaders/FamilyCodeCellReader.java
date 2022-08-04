@@ -7,15 +7,21 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import idir.embag.DataModels.Metadata.EEventDataKeys;
 import idir.embag.Types.Infrastructure.DataConverters.ImportWrapper;
 import idir.embag.Types.Infrastructure.DataConverters.Excel.IExcelCellReader;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
+import idir.embag.Types.Infrastructure.Database.Metadata.EFamilyCodeAttributes;
 
 public class FamilyCodeCellReader implements IExcelCellReader {
 
     Workbook workbook;
-    EEventDataKeys[] attrbs = { EEventDataKeys.FamilyCode,EEventDataKeys.FamilyName };
+    EFamilyCodeAttributes[] attrbs ;
+
+    
+
+    public FamilyCodeCellReader() {
+        attrbs = EFamilyCodeAttributes.values();
+    }
 
     @Override
     public Collection<AttributeWrapper[]> readData(ImportWrapper importWrapper) {

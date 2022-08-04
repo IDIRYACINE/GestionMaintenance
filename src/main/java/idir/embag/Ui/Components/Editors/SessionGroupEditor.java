@@ -7,9 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
-import idir.embag.DataModels.Metadata.EEventDataKeys;
+
+import idir.embag.Application.Utility.DataBundler;
+import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.SessionGroup;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
+import idir.embag.Types.Infrastructure.Database.Metadata.ESessionGroupAttributes;
+import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
 import javafx.fxml.FXML;
@@ -28,7 +32,7 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
 
     private Runnable cancelTask;
 
-    private Consumer<Map<EEventDataKeys,Object>> confirmTask;
+    private Consumer<Map<EEventsDataKeys,Object>> confirmTask;
 
     private SessionGroup group;
 
@@ -39,7 +43,7 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
     }
 
     @Override
-    public void setOnConfirm(Consumer<Map<EEventDataKeys, Object>> callback) {
+    public void setOnConfirm(Consumer<Map<EEventsDataKeys, Object>> callback) {
         this.confirmTask = callback;
     }
 
@@ -62,7 +66,7 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
     @FXML
     private void onConfirm(){
         
-        Map<EEventDataKeys,Object> data = new HashMap<>();
+        Map<EEventsDataKeys,Object> data = new HashMap<>();
         setupConfirm(data);
 
         confirmTask.accept(data);
@@ -74,18 +78,19 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
         cancelTask.run();
     }
 
-    private void setupConfirm(Map<EEventDataKeys,Object> data){
+    private void setupConfirm(Map<EEventsDataKeys,Object> data){
         group.setName(groupNameField.getText());
 
-        data.put(EEventDataKeys.AttributeWrappersList,getAttributeWrappers());
-        data.put(EEventDataKeys.SessionGroupId, group.getId());
+        
+        DataBundler.bundleNestedData(data, EEventsDataKeys.WrappersKeys, EWrappers.AttributesCollection, getAttributeWrappers());
+        data.put(EEventsDataKeys.Instance, group);
     }
 
     private Collection<AttributeWrapper> getAttributeWrappers(){
         Collection<AttributeWrapper> attributes = new ArrayList<AttributeWrapper>();
         
-        attributes.add(new AttributeWrapper(EEventDataKeys.GroupName,groupNameField.getText()));
-        attributes.add(new AttributeWrapper(EEventDataKeys.SessionId,String.valueOf(group.getSessionId())));
+        attributes.add(new AttributeWrapper(ESessionGroupAttributes.GroupName,groupNameField.getText()));
+        attributes.add(new AttributeWrapper(ESessionGroupAttributes.SessionId,String.valueOf(group.getSessionId())));
 
         return attributes;
     }

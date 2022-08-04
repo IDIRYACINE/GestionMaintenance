@@ -4,9 +4,10 @@ import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
-import idir.embag.Application.Session.SessionGroupHelper;
-import idir.embag.Application.Session.SessionWorkersHelper;
-import idir.embag.DataModels.Metadata.EEventDataKeys;
+
+import idir.embag.Application.Controllers.Session.SessionGroupHelper;
+import idir.embag.Application.Controllers.Session.SessionWorkersHelper;
+import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.SessionGroup;
 import idir.embag.DataModels.Workers.SessionWorker;
 import idir.embag.Types.Panels.Components.IDialogContent;
@@ -79,7 +80,7 @@ public class SessionWorkersDialog extends INodeView implements Initializable,IDi
     }
 
     @Override
-    public void setOnConfirm(Consumer<Map<EEventDataKeys,Object>> callback) {
+    public void setOnConfirm(Consumer<Map<EEventsDataKeys,Object>> callback) {
 
     }
 

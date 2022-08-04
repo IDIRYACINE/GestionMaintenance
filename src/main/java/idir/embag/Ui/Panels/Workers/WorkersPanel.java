@@ -3,7 +3,7 @@ package idir.embag.Ui.Panels.Workers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import idir.embag.Application.Workers.WorkersController;
+import idir.embag.Application.Controllers.Workers.WorkersController;
 import idir.embag.DataModels.Workers.Worker;
 import idir.embag.Types.Application.Workers.IWorkersController;
 import idir.embag.Types.Panels.Generics.INodeView;

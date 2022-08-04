@@ -3,10 +3,10 @@ package idir.embag.Ui.Panels.Stock;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import idir.embag.Application.Stock.FamilyCodesHelper;
-import idir.embag.Application.Stock.InventoryHelper;
-import idir.embag.Application.Stock.StockController;
-import idir.embag.Application.Stock.StockHelper;
+import idir.embag.Application.Controllers.Stock.FamilyCodesHelper;
+import idir.embag.Application.Controllers.Stock.InventoryHelper;
+import idir.embag.Application.Controllers.Stock.StockController;
+import idir.embag.Application.Controllers.Stock.StockHelper;
 import idir.embag.DataModels.Metadata.EStockTypes;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.Types.Application.Stock.IStockHelper;

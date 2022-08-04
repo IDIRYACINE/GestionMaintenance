@@ -9,9 +9,11 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
-import idir.embag.DataModels.Metadata.EEventDataKeys;
+import idir.embag.Application.Utility.DataBundler;
+import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
+import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -23,6 +25,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+@SuppressWarnings("rawtypes")
 public class FilterDialog extends INodeView implements Initializable , IDialogContent{
 
     @FXML
@@ -37,10 +40,10 @@ public class FilterDialog extends INodeView implements Initializable , IDialogCo
     @FXML
     private MFXListView<HBox> listViewSelectedAttrb;
 
-    private EEventDataKeys[] attributes;
+    private Enum[] attributes;
 
     private Runnable cancelTask;
-    private Consumer<Map<EEventDataKeys,Object>> confirmTask;
+    private Consumer<Map<EEventsDataKeys,Object>> confirmTask;
 
     public FilterDialog() {
         fxmlPath = "/views/FilterDialog/FilterDialog.fxml";
@@ -59,7 +62,7 @@ public class FilterDialog extends INodeView implements Initializable , IDialogCo
 
     @FXML
     private void onConfirm(){
-        Map<EEventDataKeys,Object> data = new HashMap<>();
+        Map<EEventsDataKeys,Object> data = new HashMap<>();
         setupConfirmAction(data);
         confirmTask.accept(data);
         cancelTask.run();
@@ -95,13 +98,13 @@ public class FilterDialog extends INodeView implements Initializable , IDialogCo
 
 
 
-    public void setAttributes(EEventDataKeys[] attributes){
+    public void setAttributes(Enum[] attributes){
         this.attributes = attributes;
     }
 
 
     @Override
-    public void setOnConfirm(Consumer<Map<EEventDataKeys,Object>> callback) {
+    public void setOnConfirm(Consumer<Map<EEventsDataKeys,Object>> callback) {
         confirmTask = callback;
     }
 
@@ -120,7 +123,7 @@ public class FilterDialog extends INodeView implements Initializable , IDialogCo
         listViewSelectedAttrb.getItems().remove(node);
     }
 
-    private void setupConfirmAction(Map<EEventDataKeys,Object> data ){
+    private void setupConfirmAction(Map<EEventsDataKeys,Object> data ){
 
         Collection<AttributeWrapper> searchParameters = new ArrayList<>();
 
@@ -131,7 +134,7 @@ public class FilterDialog extends INodeView implements Initializable , IDialogCo
 
         SearchWrapper searchWrapper = new SearchWrapper(searchParameters);
 
-        data.put(EEventDataKeys.SearchWrapper,searchWrapper);
+        DataBundler.bundleNestedData(data, EEventsDataKeys.WrappersKeys, EWrappers.SearchWrapper, searchWrapper);
     }
     
 }

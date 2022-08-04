@@ -2,9 +2,10 @@ package idir.embag.EventStore.Stores.NavigationStore;
 
 import java.util.Map;
 
-import idir.embag.DataModels.Metadata.EEventDataKeys;
+import idir.embag.Application.Utility.DataBundler;
+import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.Types.Application.Navigation.INavigationController;
-import idir.embag.Types.Panels.Components.IDialogContent;
+import idir.embag.Types.MetaData.ENavigationKeys;
 import idir.embag.Types.Stores.Generics.IStore;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
@@ -26,13 +27,14 @@ public class NavigationStore implements IStore {
 
     @Override
     public void dispatch(StoreEvent event) {
-        Map<EEventDataKeys,Object> data = event.getData();
+        Map<EEventsDataKeys,Object> data = event.getData();
         
         if(event.getAction() == EStoreEventAction.Navigation){
-            navigationController.navigateToPanel((int) data.get(EEventDataKeys.PanelId));
+            navigationController.navigateToPanel(DataBundler.retrieveNestedValue(data,EEventsDataKeys.NavigationKeys,ENavigationKeys.PanelId));
         }
         else{
-            navigationController.displayPopup((IDialogContent)data.get(EEventDataKeys.DialogContent));
+
+            navigationController.displayPopup(DataBundler.retrieveNestedValue(data,EEventsDataKeys.NavigationKeys,ENavigationKeys.DialogContent));
         }
     }
 

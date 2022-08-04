@@ -2,7 +2,7 @@ package idir.embag.Types.Stores.DataConverterStore;
 
 import java.util.Map;
 
-import idir.embag.DataModels.Metadata.EEventDataKeys;
+import idir.embag.DataModels.Metadata.EEventsDataKeys;
 
 public interface IDataConverterDelegate {
     public static final int STOCK_EXPORTER = 0;
@@ -14,8 +14,8 @@ public interface IDataConverterDelegate {
 
     public static final int EXPOTERS_COUNT = 6;
 
-    public void exportData(Map<EEventDataKeys,Object> data);
-    public void importData(Map<EEventDataKeys,Object> data);
+    public void exportData(Map<EEventsDataKeys,Object> data);
+    public void importData(Map<EEventsDataKeys,Object> data);
    
 
 }

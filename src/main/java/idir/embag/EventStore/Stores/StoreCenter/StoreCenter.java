@@ -3,7 +3,7 @@ package idir.embag.EventStore.Stores.StoreCenter;
 import java.util.HashMap;
 import java.util.Map;
 
-import idir.embag.DataModels.Metadata.EEventDataKeys;
+import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.EventStore.Models.DataConverters.ExcelModel;
 import idir.embag.EventStore.Models.History.HistoryModel;
 import idir.embag.EventStore.Models.Session.SessionGroupModel;
@@ -82,8 +82,8 @@ public class StoreCenter implements IStoresCenter{
 
     @Override
     public void subscribeToEvents(EStores store ,EStoreEvents storeEvent, IEventSubscriber subscriber){
-      Map<EEventDataKeys,Object> data = new HashMap<>();
-      data.put(EEventDataKeys.Subscriber, subscriber);
+      Map<EEventsDataKeys,Object> data = new HashMap<>();
+      data.put(EEventsDataKeys.Subscriber, subscriber);
 
       StoreEvent event = new StoreEvent(storeEvent, EStoreEventAction.Subscribe, data);
 
@@ -93,8 +93,8 @@ public class StoreCenter implements IStoresCenter{
 
     @Override
     public void unsubscribeFromEvents(EStores store ,EStoreEvents storeEvent, IEventSubscriber subscriber){
-      Map<EEventDataKeys,Object> data = new HashMap<>();
-      data.put(EEventDataKeys.Subscriber, subscriber);
+      Map<EEventsDataKeys,Object> data = new HashMap<>();
+      data.put(EEventsDataKeys.Subscriber, subscriber);
 
       StoreEvent event = new StoreEvent(storeEvent, EStoreEventAction.Unsubscribe, data);
 
@@ -103,7 +103,7 @@ public class StoreCenter implements IStoresCenter{
     }
     
     @Override
-    public StoreDispatch createStoreEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent, Map<EEventDataKeys,Object> data) {
+    public StoreDispatch createStoreEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent, Map<EEventsDataKeys,Object> data) {
       StoreEvent event = new StoreEvent(storeEvent, actionEvent,data);
       StoreDispatch action = new StoreDispatch(store, event);
 

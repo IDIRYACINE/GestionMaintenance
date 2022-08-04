@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import idir.embag.DataModels.Metadata.EEventDataKeys;
+import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.Types.Stores.DataStore.IDataDelegate;
 import idir.embag.Types.Stores.DataStore.IDataStore;
 import idir.embag.Types.Stores.Generics.IEventSubscriber;
@@ -63,12 +63,12 @@ public class DataStore implements IDataStore {
 
     @Override
     public void subscribe(StoreEvent event) {
-        subscribers.get(event.getEvent()).add((IEventSubscriber) event.getData().get(EEventDataKeys.Subscriber));   
+        subscribers.get(event.getEvent()).add((IEventSubscriber) event.getData().get(EEventsDataKeys.Subscriber));   
     }
 
     @Override
     public void unsubscribe(StoreEvent event) {
-        subscribers.get(event.getEvent()).remove((IEventSubscriber) event.getData().get(EEventDataKeys.Subscriber));   
+        subscribers.get(event.getEvent()).remove((IEventSubscriber) event.getData().get(EEventsDataKeys.Subscriber));   
     }
 
     @Override
@@ -100,7 +100,7 @@ public class DataStore implements IDataStore {
     @Override
     public void notifySubscriber(StoreEvent event) {
         try {
-            ((IEventSubscriber) event.getData().get(EEventDataKeys.Subscriber)).notifyEvent(event);
+            ((IEventSubscriber) event.getData().get(EEventsDataKeys.Subscriber)).notifyEvent(event);
         } catch (Exception e) {
             broadcast(event);
         }

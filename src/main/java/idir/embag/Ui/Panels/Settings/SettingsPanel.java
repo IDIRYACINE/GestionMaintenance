@@ -3,7 +3,7 @@ package idir.embag.Ui.Panels.Settings;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import idir.embag.Application.Settings.SettingsController;
+import idir.embag.Application.Controllers.Settings.SettingsController;
 import idir.embag.Types.Panels.Generics.INodeView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

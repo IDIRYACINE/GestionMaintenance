@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
-import idir.embag.DataModels.Metadata.EEventDataKeys;
+import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
 import javafx.fxml.FXML;
@@ -26,7 +26,7 @@ public class ConfirmationDialog extends INodeView implements Initializable , IDi
 
     private Runnable cancelTask;
 
-    private Consumer<Map<EEventDataKeys,Object>> confirmTask;
+    private Consumer<Map<EEventsDataKeys,Object>> confirmTask;
     
     private String message;
 
@@ -47,7 +47,7 @@ public class ConfirmationDialog extends INodeView implements Initializable , IDi
 
     @FXML
     private void onConfirm(){
-        Map<EEventDataKeys,Object> data = new HashMap<>();
+        Map<EEventsDataKeys,Object> data = new HashMap<>();
         confirmTask.accept(data);
         cancelTask.run();
     }
@@ -63,7 +63,7 @@ public class ConfirmationDialog extends INodeView implements Initializable , IDi
 
 
     @Override
-    public void setOnConfirm(Consumer<Map<EEventDataKeys,Object>> callback) {
+    public void setOnConfirm(Consumer<Map<EEventsDataKeys,Object>> callback) {
         confirmTask = callback;
     }
 

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import idir.embag.DataModels.Metadata.EEventDataKeys;
+import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.Types.Stores.DataConverterStore.IDataConverterDelegate;
 import idir.embag.Types.Stores.DataConverterStore.IDataConverterStore;
 import idir.embag.Types.Stores.Generics.IEventSubscriber;
@@ -40,12 +40,12 @@ public class DataConverterStore implements IDataConverterStore{
 
     @Override
     public void subscribe(StoreEvent event) {
-        subscribers.add((IEventSubscriber) event.getData().get(EEventDataKeys.Subscriber));   
+        subscribers.add((IEventSubscriber) event.getData().get(EEventsDataKeys.Subscriber));   
     }
 
     @Override
     public void unsubscribe(StoreEvent event) {
-        subscribers.remove((IEventSubscriber) event.getData().get(EEventDataKeys.Subscriber));   
+        subscribers.remove((IEventSubscriber) event.getData().get(EEventsDataKeys.Subscriber));   
     }
 
     @Override

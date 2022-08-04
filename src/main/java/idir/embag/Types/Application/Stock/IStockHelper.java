@@ -2,7 +2,7 @@ package idir.embag.Types.Application.Stock;
 
 import java.util.Map;
 
-import idir.embag.DataModels.Metadata.EEventDataKeys;
+import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
@@ -25,7 +25,7 @@ public abstract class IStockHelper {
 
     public abstract void notifySelected();
 
-    protected void dispatchEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent, Map<EEventDataKeys,Object> data) {
+    protected void dispatchEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent, Map<EEventsDataKeys,Object> data) {
         StoreEvent event = new StoreEvent(storeEvent, actionEvent,data);
         StoreDispatch action = new StoreDispatch(store, event);
         StoreCenter.getInstance().dispatch(action);
