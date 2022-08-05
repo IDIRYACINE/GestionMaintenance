@@ -68,10 +68,8 @@ public class ImportDialog extends INodeView implements Initializable,IDialogCont
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         EStoreEvents[] tables = {
-            EStoreEvents.SessionEvent,
             EStoreEvents.StockEvent,
             EStoreEvents.InventoryEvent,
-            EStoreEvents.SessionRecordsEvent,
             EStoreEvents.FamilyCodeEvent,
             EStoreEvents.WorkersEvent
         };

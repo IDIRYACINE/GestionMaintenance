@@ -4,31 +4,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
+import idir.embag.Types.Generics.EExporters;
 import idir.embag.Types.Stores.DataConverterStore.IDataConverterDelegate;
 import idir.embag.Types.Stores.DataConverterStore.IDataConverterStore;
 import idir.embag.Types.Stores.Generics.IEventSubscriber;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
-import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 
 public class DataConverterStore implements IDataConverterStore{
 
-    private Map<EStoreEvents,IDataConverterDelegate> delegates = new HashMap<>();
+    private Map<EExporters,IDataConverterDelegate> delegates = new HashMap<>();
     
     private ArrayList<IEventSubscriber> subscribers = new ArrayList<>();
 
     private Map<EStoreEventAction , Consumer<StoreEvent>> actions = new HashMap<>();
 
     public DataConverterStore(IDataConverterDelegate[] delegatesList) {
-        delegates.put(EStoreEvents.StockEvent, delegatesList[IDataConverterStore.STOCK_DELEGATE]);
-        delegates.put(EStoreEvents.InventoryEvent, delegatesList[IDataConverterStore.INVENTORY_DELEGATE]);
-        delegates.put(EStoreEvents.FamilyCodeEvent, delegatesList[IDataConverterStore.FAMILY_DELEGATE]);
-        delegates.put(EStoreEvents.SessionRecordsEvent, delegatesList[IDataConverterStore.SESSION_DELEGATE]);
-        delegates.put(EStoreEvents.WorkersEvent, delegatesList[IDataConverterStore.WORKER_DELEGATE]);
-        delegates.put(EStoreEvents.SessionEvent, delegatesList[IDataConverterStore.SESSION_DELEGATE]);
-
+        delegates.put(EExporters.Excel, delegatesList[IDataConverterStore.EXCEL_DELEGATE]);
+       
         setupActions();
     }    
 
@@ -50,14 +44,22 @@ public class DataConverterStore implements IDataConverterStore{
 
     @Override
     public void exportData(StoreEvent event) {
-        IDataConverterDelegate dataDelegate = delegates.get(event.getEvent());
-        dataDelegate.exportData(event.getData());
+        IDataConverterDelegate dataDelegate = delegates.get(EExporters.Excel);
+
+        Map<EEventsDataKeys,Object> data = event.getData();
+        data.put(EEventsDataKeys.EventKey, event.getEvent());
+
+        dataDelegate.exportData(data);
     }
 
     @Override
     public void importData(StoreEvent event) {
-        IDataConverterDelegate dataDelegate = delegates.get(event.getEvent());
-        dataDelegate.importData(event.getData());
+        IDataConverterDelegate dataDelegate = delegates.get(EExporters.Excel);
+
+        Map<EEventsDataKeys,Object> data = event.getData();
+        data.put(EEventsDataKeys.EventKey, event.getEvent());
+
+        dataDelegate.exportData(data);;
         
     }
 

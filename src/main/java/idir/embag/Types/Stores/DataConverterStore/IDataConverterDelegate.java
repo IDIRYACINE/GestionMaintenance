@@ -16,6 +16,8 @@ public interface IDataConverterDelegate {
 
     public void exportData(Map<EEventsDataKeys,Object> data);
     public void importData(Map<EEventsDataKeys,Object> data);
+    public void setup(Map<EEventsDataKeys,Object> data);
+
    
 
 }

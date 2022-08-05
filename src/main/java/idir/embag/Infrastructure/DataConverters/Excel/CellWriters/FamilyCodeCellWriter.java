@@ -28,7 +28,6 @@ public class FamilyCodeCellWriter implements IExcelCellWriter<FamilyCode> {
         style.setWrapText(true);
         
         Iterator<FamilyCode> it = data.iterator();
-
         while (it.hasNext()){
 
             FamilyCode familyCode = it.next();

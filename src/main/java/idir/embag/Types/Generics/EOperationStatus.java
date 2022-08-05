@@ -5,5 +5,5 @@ public enum EOperationStatus {
     Failed,
     NoData,
     Stop,
-    Ready,
+    Ready, HasData,
 }

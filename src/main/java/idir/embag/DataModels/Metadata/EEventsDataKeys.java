@@ -13,4 +13,5 @@ public enum EEventsDataKeys {
     ActionsKeys,
     Subscriber,
     OperationStatus,
+    EventKey,
 }

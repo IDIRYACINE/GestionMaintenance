@@ -32,7 +32,6 @@ public class Exporter implements IEventSubscriber{
     }
 
     private void exportData(Map<EEventsDataKeys, Object> data ){
-
         Map<EWrappers, Object> wrappersData = new HashMap<>();
         wrappersData.put(EWrappers.ExportWrapper, exportWrapper);
 
@@ -90,9 +89,8 @@ public class Exporter implements IEventSubscriber{
     @Override
     public void notifyEvent(StoreEvent event) {
         EOperationStatus status = (EOperationStatus)event.getData().get(EEventsDataKeys.OperationStatus);
-        
         switch(status){
-            case Ready:
+            case HasData:
                 exportData(event.getData());
                 break;
             case Completed:
@@ -104,7 +102,7 @@ public class Exporter implements IEventSubscriber{
             case NoData:
                 onNoData();
                 break;
-            default: exportData(event.getData());
+            default : exportData(event.getData());
                 break;    
         }
     }

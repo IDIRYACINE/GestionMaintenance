@@ -10,6 +10,7 @@ import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Repository.SessionRepository;
+import idir.embag.Types.Generics.EOperationStatus;
 import idir.embag.Types.Infrastructure.Database.ISessionQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
@@ -69,6 +70,12 @@ public class HistoryModel implements IDataDelegate{
         try{
             ResultSet rawData = sessionQuery.LoadSessionRecord(loadWrapper);
             Collection<SessionRecord> records = sessionRepository.resultSetToRecord(rawData);
+
+            if(records.size() == 0){
+                data.put(EEventsDataKeys.OperationStatus, EOperationStatus.NoData);
+            }else{
+                data.put(EEventsDataKeys.OperationStatus, EOperationStatus.HasData);
+            }   
 
             data.put(EEventsDataKeys.Instance, records);
             notfiyEvent(EStores.DataStore, EStoreEvents.SessionRecordsEvent, EStoreEventAction.Load, data);

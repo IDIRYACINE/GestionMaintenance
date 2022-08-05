@@ -29,7 +29,6 @@ public class InventoryCellWriter implements IExcelCellWriter<InventoryProduct> {
         Iterator<InventoryProduct> it = data.iterator();
 
         while (it.hasNext()){
-
             InventoryProduct product = it.next();
             Row row = sheet.createRow(currentRowIndex);
 

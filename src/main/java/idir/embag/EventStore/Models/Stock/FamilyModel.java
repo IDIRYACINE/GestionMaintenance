@@ -103,7 +103,7 @@ public class FamilyModel implements IDataDelegate{
             if(familyCodes.size() == 0){
                 data.put(EEventsDataKeys.OperationStatus, EOperationStatus.NoData);
             }else{
-                data.put(EEventsDataKeys.OperationStatus, EOperationStatus.Completed);
+                data.put(EEventsDataKeys.OperationStatus, EOperationStatus.HasData);
             }   
 
             data.put(EEventsDataKeys.InstanceCollection, familyCodes);

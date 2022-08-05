@@ -138,7 +138,7 @@ public class StoreCenter implements IStoresCenter{
     private void setupDataConverterStore() {
 
       IDataConverterDelegate[] delegates = new IDataConverterDelegate[DataConverterStore.DELEGATES_COUNT];
-      delegates[IDataConverterStore.FAMILY_DELEGATE] = new ExcelModel();
+      delegates[IDataConverterStore.EXCEL_DELEGATE] = new ExcelModel();
       
       stores.put(EStores.DataConverterStore, new DataConverterStore(delegates));
     }

@@ -10,6 +10,7 @@ import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.Session;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Repository.SessionRepository;
+import idir.embag.Types.Generics.EOperationStatus;
 import idir.embag.Types.Infrastructure.Database.ISessionQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
@@ -86,6 +87,12 @@ public class SessionModel  implements IDataDelegate{
         try{
             ResultSet rawData = sessionQuery.LoadSessionRecord(loadWrapper);
             Collection<Session> sessions = sessionRepository.resultSetToSession(rawData);
+
+            if(sessions.size() == 0){
+                data.put(EEventsDataKeys.OperationStatus, EOperationStatus.NoData);
+            }else{
+                data.put(EEventsDataKeys.OperationStatus, EOperationStatus.HasData);
+            }   
 
             data.put(EEventsDataKeys.InstanceCollection, sessions);
             notfiyEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.Load, data);

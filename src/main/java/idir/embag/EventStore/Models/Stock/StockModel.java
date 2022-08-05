@@ -99,6 +99,12 @@ public class StockModel implements IDataDelegate{
             ResultSet rawData = productQuery.LoadStockProduct(loadWrapper);
             Collection<IProduct> products = stockRepository.resultSetToProduct(rawData);
 
+            if(products.size() == 0){
+                data.put(EEventsDataKeys.OperationStatus, EOperationStatus.NoData);
+            }else{
+                data.put(EEventsDataKeys.OperationStatus, EOperationStatus.HasData);
+            }
+            
             data.put(EEventsDataKeys.InstanceCollection, products);
             notfiyEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Load, data);
         }
