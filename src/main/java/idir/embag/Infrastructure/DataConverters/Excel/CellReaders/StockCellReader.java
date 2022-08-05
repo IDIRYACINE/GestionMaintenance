@@ -10,17 +10,17 @@ import org.apache.poi.ss.usermodel.Workbook;
 import idir.embag.Types.Infrastructure.DataConverters.ImportWrapper;
 import idir.embag.Types.Infrastructure.DataConverters.Excel.IExcelCellReader;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
-import idir.embag.Types.Infrastructure.Database.Metadata.EFamilyCodeAttributes;
+import idir.embag.Types.Infrastructure.Database.Metadata.EStockAttributes;
 
-public class FamilyCodeCellReader implements IExcelCellReader {
+public class StockCellReader implements IExcelCellReader {
 
     Workbook workbook;
-    EFamilyCodeAttributes[] attrbs ;
+    EStockAttributes[] attrbs ;
 
     
 
-    public FamilyCodeCellReader() {
-        attrbs = EFamilyCodeAttributes.values();
+    public StockCellReader() {
+        attrbs = EStockAttributes.values();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class FamilyCodeCellReader implements IExcelCellReader {
     private AttributeWrapper[] readCells(Row row){
         AttributeWrapper[] attributes = new AttributeWrapper[attrbs.length];
 
-        int[] numericCells = {0};
+        int[] numericCells = {0,2,3,4};
         int[] stringCells = {1};
 
         for (int i = 0; i < numericCells.length; i++) {
