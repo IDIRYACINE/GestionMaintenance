@@ -3,19 +3,19 @@ package idir.embag.Infrastructure.Database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-
 import idir.embag.Types.Infrastructure.Database.IDatabase;
 import idir.embag.Types.Infrastructure.Database.IWorkerQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
-import idir.embag.Types.Infrastructure.Database.Generics.MDatabase;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
+import idir.embag.Types.Infrastructure.Database.Metadata.EIndex;
+import idir.embag.Types.Infrastructure.Database.Metadata.ETables;
+import idir.embag.Types.Infrastructure.Database.Metadata.EWorkerAttributes;
 
 public class WorkerQuery extends IWorkerQuery{
     private IDatabase database;
     
 
-    private static final String WORKERS_TABLE_NAME = MDatabase.Tables.Workers;
     
     public WorkerQuery(IDatabase database) {
         this.database = database;
@@ -25,34 +25,34 @@ public class WorkerQuery extends IWorkerQuery{
 
     @Override
     public void UnregisterWorker(int workerId) throws SQLException {
-        String whereClause = " WHERE "+MDatabase.WorkersAttributes.WorkerId + "=" + workerId;
-        String query = "DELETE FROM "+WORKERS_TABLE_NAME + whereClause;
+        String whereClause = " WHERE "+EWorkerAttributes.WorkerId + "=" + workerId;
+        String query = "DELETE FROM "+ETables.Workers + whereClause;
         
         database.DeleteQuery(query);
     }
 
     @Override
     public void RegisterWorker(Collection<AttributeWrapper> attributes ) throws SQLException {
-        String query = "INSERT INTO "+WORKERS_TABLE_NAME+ InsertWrapperToQuery(attributes);
+        String query = "INSERT INTO "+ETables.Workers+ InsertWrapperToQuery(attributes);
         database.InsertQuery(query);
         
     }
 
     @Override
     public void UpdateWorker(int workerId, Collection<AttributeWrapper> attributes ) throws SQLException {
-        String whereClause = " WHERE "+MDatabase.WorkersAttributes.WorkerId + "=" + workerId;
-        String query = "UPDATE "+WORKERS_TABLE_NAME+ UpdateWrapperToQuery(attributes)+ whereClause;
+        String whereClause = " WHERE "+EWorkerAttributes.WorkerId + "=" + workerId;
+        String query = "UPDATE "+ETables.Workers+ UpdateWrapperToQuery(attributes)+ whereClause;
         database.UpdateQuery(query);
     }
 
 
     @Override
     public void CreateWorkerTable() throws SQLException {
-        String query = "CREATE TABLE IF NOT EXISTS "+ WORKERS_TABLE_NAME +" (\n"
-           + MDatabase.WorkersAttributes.WorkerId+" INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-           + MDatabase.WorkersAttributes.Name+" TEXT,\n"
-           + MDatabase.WorkersAttributes.Email+" TEXT,\n"
-           + MDatabase.WorkersAttributes.Phone+" INTEGER)\n";
+        String query = "CREATE TABLE IF NOT EXISTS "+ ETables.Workers +" (\n"
+           + EWorkerAttributes.WorkerId+" INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+           + EWorkerAttributes.WorkerName+" TEXT,\n"
+           + EWorkerAttributes.WorkerEmail+" TEXT,\n"
+           + EWorkerAttributes.WorkerPhone+" INTEGER)\n";
            
         database.CreateQuery(query);
             
@@ -63,7 +63,7 @@ public class WorkerQuery extends IWorkerQuery{
     @Override
     public ResultSet SearchWorker(SearchWrapper parametrers) throws SQLException {
         String whereClause = " WHERE "+ SearchWrapperToWhereClause(parametrers);
-        String query = "SELECT * FROM "+WORKERS_TABLE_NAME+ whereClause;
+        String query = "SELECT * FROM "+ETables.Workers+ whereClause;
         ResultSet result = database.SelectQuery(query);
         return result;
     }
@@ -73,17 +73,17 @@ public class WorkerQuery extends IWorkerQuery{
     @Override
     public ResultSet LoadSWorkers(LoadWrapper parametrers) throws SQLException {
         String extraClause = " LIMIT "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
-        String query = "SELECT * FROM "+WORKERS_TABLE_NAME+ extraClause;
+        String query = "SELECT * FROM "+ETables.Workers+ extraClause;
         ResultSet result = database.SelectQuery(query);
         return result;
     }
 
     @Override
     public void CreateIndexes() throws SQLException {
-        String query = "CREATE INDEX " + MDatabase.WorkersIndexes.NamePhoneIndex +" ON "
-        + WORKERS_TABLE_NAME 
-        +"(" + MDatabase.WorkersAttributes.Name 
-        +"," +MDatabase.WorkersAttributes.Phone
+        String query = "CREATE INDEX " + EIndex.NamePhoneIndex +" ON "
+        + ETables.Workers 
+        +"(" + EWorkerAttributes.WorkerName 
+        +"," +EWorkerAttributes.WorkerPhone
         +")";
 
         database.CreateQuery(query);
@@ -93,7 +93,7 @@ public class WorkerQuery extends IWorkerQuery{
 
     @Override
     public void RegisterWorkerCollection(Collection<AttributeWrapper[]> collection) throws SQLException {
-        String query = "INSERT INTO "+WORKERS_TABLE_NAME+ InsertCollectionToQuery(collection);
+        String query = "INSERT INTO "+ETables.Workers+ InsertCollectionToQuery(collection);
         database.InsertQuery(query);        
     }
 

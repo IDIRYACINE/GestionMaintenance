@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import idir.embag.DataModels.Workers.Worker;
-import idir.embag.Types.Infrastructure.Database.Generics.MDatabase;
+import idir.embag.Types.Infrastructure.Database.Metadata.EWorkerAttributes;
 
 public class WorkersRepository {
     
@@ -13,10 +13,10 @@ public class WorkersRepository {
         Collection<Worker> result = new ArrayList<Worker>();
         try {
             while (source.next()) {
-                result.add(new Worker( source.getString(MDatabase.WorkersAttributes.Name),
-                                        source.getInt(MDatabase.WorkersAttributes.Phone),
-                                        source.getString(MDatabase.WorkersAttributes.Email),
-                                        source.getInt(MDatabase.WorkersAttributes.WorkerId)));
+                result.add(new Worker( source.getString(EWorkerAttributes.WorkerName.toString()),
+                                        source.getInt(EWorkerAttributes.WorkerPhone.toString()),
+                                        source.getString(EWorkerAttributes.WorkerEmail.toString()),
+                                        source.getInt(EWorkerAttributes.WorkerId.toString())));
             }
         } catch (Exception e) {
             e.printStackTrace();

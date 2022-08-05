@@ -6,7 +6,7 @@ import java.util.Collection;
 
 import idir.embag.DataModels.Others.FamilyCode;
 import idir.embag.DataModels.Products.IProduct;
-import idir.embag.Types.Infrastructure.Database.Generics.MDatabase;
+import idir.embag.Types.Infrastructure.Database.Metadata.EFamilyCodeAttributes;
 
 public class FamilyCodeRepository {
     
@@ -14,8 +14,8 @@ public class FamilyCodeRepository {
         Collection<IProduct> result = new ArrayList<IProduct>();
         try {
             while (source.next()) {
-                result.add(new FamilyCode( source.getString(MDatabase.FamilliesCodeAttributes.FamilyName),
-                    source.getInt(MDatabase.FamilliesCodeAttributes.FamilyCode)
+                result.add(new FamilyCode( source.getString(EFamilyCodeAttributes.FamilyName.toString()),
+                    source.getInt(EFamilyCodeAttributes.FamilyCode.toString())
                   ));
             }
         } catch (Exception e) {

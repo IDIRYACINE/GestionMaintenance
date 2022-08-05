@@ -6,7 +6,8 @@ import java.util.Collection;
 
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.DataModels.Products.InventoryProduct;
-import idir.embag.Types.Infrastructure.Database.Generics.MDatabase;
+import idir.embag.Types.Infrastructure.Database.Metadata.EInventoryAttributes;
+import idir.embag.Types.Infrastructure.Database.Metadata.EStockAttributes;
 
 public class InventoryRepository {
     public Collection<IProduct> resultSetToProduct(ResultSet source){
@@ -14,13 +15,13 @@ public class InventoryRepository {
         
         try {
             while (source.next()) {
-                result.add(new InventoryProduct(source.getInt(MDatabase.InventoryAttributes.ArticleId),
-                    source.getString(MDatabase.InventoryAttributes.ArticleName),
-                    source.getInt(MDatabase.InventoryAttributes.ArticleCode),
+                result.add(new InventoryProduct(source.getInt(EInventoryAttributes.ArticleId.toString()),
+                    source.getString(EStockAttributes.ArticleName.toString()),
+                    source.getInt(EInventoryAttributes.ArticleCode.toString()),
                     1,
-                    source.getDouble(MDatabase.InventoryAttributes.Price),
-                    source.getInt(MDatabase.InventoryAttributes.FamilyCode),
-                    source.getInt(MDatabase.InventoryAttributes.StockId)));
+                    source.getDouble(EStockAttributes.Price.toString()),
+                    source.getInt(EStockAttributes.FamilyCode.toString()),
+                    source.getInt(EInventoryAttributes.StockId.toString())));
                   
             }
         } catch (Exception e) {

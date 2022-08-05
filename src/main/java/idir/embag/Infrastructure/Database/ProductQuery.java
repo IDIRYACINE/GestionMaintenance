@@ -8,18 +8,16 @@ import idir.embag.Types.Infrastructure.Database.IDatabase;
 import idir.embag.Types.Infrastructure.Database.IProductQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
-import idir.embag.Types.Infrastructure.Database.Generics.MDatabase;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
-import idir.embag.Types.Infrastructure.Database.Generics.MDatabase.InventoryAttributes;
-import idir.embag.Types.Infrastructure.Database.Generics.MDatabase.StockAttributes;
+import idir.embag.Types.Infrastructure.Database.Metadata.EFamilyCodeAttributes;
+import idir.embag.Types.Infrastructure.Database.Metadata.EIndex;
+import idir.embag.Types.Infrastructure.Database.Metadata.EInventoryAttributes;
+import idir.embag.Types.Infrastructure.Database.Metadata.EStockAttributes;
+import idir.embag.Types.Infrastructure.Database.Metadata.ETables;
 
 public class ProductQuery extends IProductQuery{
     
     private IDatabase database;
-    
-    private static final String STOCK_TABLE_NAME = MDatabase.Tables.Stock;
-    private static final String INVENTORY_TABLE_NAME = MDatabase.Tables.Inventory;
-    private static final String FAMILIES_TABLE_NAME = MDatabase.Tables.FamilyCodes;
 
     public ProductQuery(IDatabase database) {
         this.database = database;
@@ -27,22 +25,22 @@ public class ProductQuery extends IProductQuery{
 
     @Override
     public void RegisterStockProduct(Collection<AttributeWrapper> attributes) throws SQLException {
-        String query = "INSERT INTO "+STOCK_TABLE_NAME+ InsertWrapperToQuery(attributes);
+        String query = "INSERT INTO "+ETables.Stock+ InsertWrapperToQuery(attributes);
         database.InsertQuery(query);
     }
 
     @Override
     public void UnregisterStockProduct(int articleId) throws SQLException {
-        String whereClause = " WHERE "+MDatabase.StockAttributes.ArticleId + "=" + articleId;
-        String query = "DELETE FROM "+STOCK_TABLE_NAME + whereClause;
+        String whereClause = " WHERE "+EStockAttributes.ArticleId + "=" + articleId;
+        String query = "DELETE FROM "+ETables.Stock + whereClause;
         
         database.DeleteQuery(query);
     }
 
     @Override
     public void UpdateStockProduct(int articleId, Collection<AttributeWrapper> attributes) throws SQLException {
-        String whereClause = " WHERE "+MDatabase.StockAttributes.ArticleId + "=" + articleId;
-        String query = "UPDATE "+STOCK_TABLE_NAME+ UpdateWrapperToQuery(attributes)+ whereClause;
+        String whereClause = " WHERE "+EStockAttributes.ArticleId + "=" + articleId;
+        String query = "UPDATE "+ETables.Stock+ UpdateWrapperToQuery(attributes)+ whereClause;
 
         database.UpdateQuery(query);
         
@@ -50,19 +48,19 @@ public class ProductQuery extends IProductQuery{
 
     @Override
     public void RegisterInventoryProduct(Collection<AttributeWrapper> attributes) throws SQLException {
-        String query = "INSERT INTO "+INVENTORY_TABLE_NAME+ InsertWrapperToQuery(attributes);
+        String query = "INSERT INTO "+ETables.Inventory+ InsertWrapperToQuery(attributes);
         database.InsertQuery(query);
         
     }
 
     @Override
     public void UnregisterInventoryProduct(int articleId,int stockId) throws SQLException {
-        String whereClause = " WHERE "+MDatabase.InventoryAttributes.ArticleId + "=" + articleId;
-        String query = "DELETE FROM "+INVENTORY_TABLE_NAME + whereClause;
+        String whereClause = " WHERE "+EInventoryAttributes.ArticleId + "=" + articleId;
+        String query = "DELETE FROM "+ETables.Inventory + whereClause;
         database.DeleteQuery(query);
 
-        whereClause = " WHERE "+MDatabase.StockAttributes.ArticleId + "=" + stockId;
-        query = "UPDATE "+STOCK_TABLE_NAME+ MDatabase.StockAttributes.Quantity +" -=1" + whereClause;
+        whereClause = " WHERE "+EStockAttributes.ArticleId + "=" + stockId;
+        query = "UPDATE "+ETables.Stock+ EStockAttributes.Quantity +" -=1" + whereClause;
 
         database.UpdateQuery(query);
 
@@ -72,8 +70,8 @@ public class ProductQuery extends IProductQuery{
     public void UpdateInventoryProduct(int articleId, Collection<AttributeWrapper> attributes)
             throws SQLException {
 
-        String whereClause = " WHERE "+MDatabase.InventoryAttributes.ArticleId + "=" + articleId;
-        String query = "UPDATE "+INVENTORY_TABLE_NAME+ UpdateWrapperToQuery(attributes) + whereClause;
+        String whereClause = " WHERE "+EInventoryAttributes.ArticleId + "=" + articleId;
+        String query = "UPDATE "+ETables.Inventory+ UpdateWrapperToQuery(attributes) + whereClause;
         
         database.UpdateQuery(query);
         
@@ -81,7 +79,7 @@ public class ProductQuery extends IProductQuery{
 
     @Override
     public void RegisterFamilyCode(Collection<AttributeWrapper> attributes) throws SQLException {
-        String query = "INSERT INTO "+FAMILIES_TABLE_NAME+ InsertWrapperToQuery(attributes);
+        String query = "INSERT INTO "+ETables.FamilyCodes+ InsertWrapperToQuery(attributes);
         database.InsertQuery(query);
         
     }
@@ -89,38 +87,38 @@ public class ProductQuery extends IProductQuery{
     @Override
     public void UpdateFamilyCode(int familyId, Collection<AttributeWrapper> attributes)
             throws SQLException {
-        String whereClause = " WHERE "+MDatabase.FamilliesCodeAttributes.FamilyCode + "=" + familyId;
-        String query = "UPDATE "+FAMILIES_TABLE_NAME+ UpdateWrapperToQuery(attributes) +whereClause;
+        String whereClause = " WHERE "+EFamilyCodeAttributes.FamilyCode + "=" + familyId;
+        String query = "UPDATE "+ETables.FamilyCodes+ UpdateWrapperToQuery(attributes) +whereClause;
         database.UpdateQuery(query);
         
     }
 
     @Override
     public void UnregisterFamilyCode(int familyId) throws SQLException {
-        String whereClause = " WHERE "+MDatabase.FamilliesCodeAttributes.FamilyCode + "=" + familyId;
-        String query = "DELETE FROM "+FAMILIES_TABLE_NAME + whereClause;
+        String whereClause = " WHERE "+EFamilyCodeAttributes.FamilyCode + "=" + familyId;
+        String query = "DELETE FROM "+ETables.FamilyCodes + whereClause;
         
         database.DeleteQuery(query);
     }
 
     @Override
     public void CreateFamiLyCodesTable() throws SQLException {
-        String query = "CREATE TABLE IF NOT EXISTS "+FAMILIES_TABLE_NAME+"("+
-                MDatabase.FamilliesCodeAttributes.FamilyCode+" INTEGER PRIMARY KEY,"+
-                MDatabase.FamilliesCodeAttributes.FamilyName+" TEXT)";
+        String query = "CREATE TABLE IF NOT EXISTS "+ETables.FamilyCodes+"("+
+                EFamilyCodeAttributes.FamilyCode+" INTEGER PRIMARY KEY,"+
+                EFamilyCodeAttributes.FamilyName+" TEXT)";
 
         database.CreateQuery(query);        
     }
 
     @Override
     public void CreateInventoryTable() throws SQLException {
-        String query = "CREATE TABLE IF NOT EXISTS "+INVENTORY_TABLE_NAME+"("
-                + MDatabase.InventoryAttributes.ArticleId +" INTEGER PRIMARY KEY,\n"
-                + MDatabase.InventoryAttributes.StockId +" INTEGER,\n"
-                + MDatabase.InventoryAttributes.ArticleCode +" INTEGER,\n"
+        String query = "CREATE TABLE IF NOT EXISTS "+ETables.Inventory+"("
+                + EInventoryAttributes.ArticleId +" INTEGER PRIMARY KEY,\n"
+                + EInventoryAttributes.StockId +" INTEGER,\n"
+                + EInventoryAttributes.ArticleCode +" INTEGER,\n"
 
-                + "FOREIGN KEY ("+ MDatabase.InventoryAttributes.StockId +")\n"
-                + "REFERENCES "+ STOCK_TABLE_NAME +"(" +MDatabase.StockAttributes.ArticleId +")\n"  
+                + "FOREIGN KEY ("+ EInventoryAttributes.StockId +")\n"
+                + "REFERENCES "+ ETables.Stock +"(" +EStockAttributes.ArticleId +")\n"  
                 + "ON DELETE CASCADE ON UPDATE NO ACTION)";
         database.CreateQuery(query);
     }
@@ -128,14 +126,14 @@ public class ProductQuery extends IProductQuery{
     @Override
     public void CreateStockTable() throws SQLException {
 
-        String query = "CREATE TABLE IF NOT EXISTS "+ STOCK_TABLE_NAME +" (\n"
-           + MDatabase.StockAttributes.ArticleId + " INTEGER PRIMARY KEY,\n"
-           + MDatabase.StockAttributes.ArticleName + " TEXT,\n"
-           + MDatabase.StockAttributes.Price + " REAL,\n"
-           + MDatabase.StockAttributes.Quantity + " INTEGER,\n"
-           + MDatabase.StockAttributes.FamilyCode + " INTEGER,\n"
-           + "FOREIGN KEY ("+ MDatabase.StockAttributes.FamilyCode +")\n"
-           + "REFERENCES "+ FAMILIES_TABLE_NAME +"(" +MDatabase.FamilliesCodeAttributes.FamilyCode +")\n"  
+        String query = "CREATE TABLE IF NOT EXISTS "+ ETables.Stock +" (\n"
+           + EStockAttributes.ArticleId + " INTEGER PRIMARY KEY,\n"
+           + EStockAttributes.ArticleName + " TEXT,\n"
+           + EStockAttributes.Price + " REAL,\n"
+           + EStockAttributes.Quantity + " INTEGER,\n"
+           + EStockAttributes.FamilyCode + " INTEGER,\n"
+           + "FOREIGN KEY ("+ EStockAttributes.FamilyCode +")\n"
+           + "REFERENCES "+ ETables.FamilyCodes +"(" +EFamilyCodeAttributes.FamilyCode +")\n"  
            + "ON DELETE CASCADE ON UPDATE NO ACTION)";
 
         database.CreateQuery(query);
@@ -145,7 +143,7 @@ public class ProductQuery extends IProductQuery{
     @Override
     public ResultSet SearchStockProduct(SearchWrapper parametrers) throws SQLException {
         String whereClause = " WHERE "+ SearchWrapperToWhereClause(parametrers);
-        String query = "SELECT * FROM "+STOCK_TABLE_NAME+ whereClause;
+        String query = "SELECT * FROM "+ETables.Stock+ whereClause;
         ResultSet result = database.SelectQuery(query);
         return result;
     }
@@ -154,19 +152,19 @@ public class ProductQuery extends IProductQuery{
     public ResultSet SearchInventoryProduct(SearchWrapper parametrers) throws SQLException {
         String whereClause = " WHERE "+ SearchWrapperToWhereClause(parametrers);
 
-        String joinClause = " INNER JOIN " +STOCK_TABLE_NAME +" ON "
-         +INVENTORY_TABLE_NAME + "."+ InventoryAttributes.StockId
-         +"=" + STOCK_TABLE_NAME + "." + StockAttributes.ArticleId ;
+        String joinClause = " INNER JOIN " +ETables.Stock +" ON "
+         +ETables.Inventory + "."+ EInventoryAttributes.StockId
+         +"=" + ETables.Stock + "." + EStockAttributes.ArticleId ;
 
          String query = "SELECT "
-         + INVENTORY_TABLE_NAME + "." + InventoryAttributes.ArticleId +" ,"
-         + INVENTORY_TABLE_NAME + "." + InventoryAttributes.ArticleCode +" ,"
-         + INVENTORY_TABLE_NAME + "." + InventoryAttributes.StockId +" ,"
-         + STOCK_TABLE_NAME + "." + StockAttributes.Price +" ,"
-         + STOCK_TABLE_NAME + "." + StockAttributes.FamilyCode +" ,"
-         + STOCK_TABLE_NAME + "." + StockAttributes.ArticleName
+         + ETables.Inventory + "." + EInventoryAttributes.ArticleId +" ,"
+         + ETables.Inventory + "." + EInventoryAttributes.ArticleCode +" ,"
+         + ETables.Inventory + "." + EInventoryAttributes.StockId +" ,"
+         + ETables.Stock + "." + EStockAttributes.Price +" ,"
+         + ETables.Stock + "." + EStockAttributes.FamilyCode +" ,"
+         + ETables.Stock + "." + EStockAttributes.ArticleName
 
-         +" FROM "+INVENTORY_TABLE_NAME +joinClause+ whereClause;
+         +" FROM "+ETables.Inventory +joinClause+ whereClause;
          
         ResultSet result = database.SelectQuery(query);
         return result;
@@ -175,7 +173,7 @@ public class ProductQuery extends IProductQuery{
     @Override
     public ResultSet SearchFamilyCode(SearchWrapper parametrers) throws SQLException {
         String whereClause = " WHERE "+ SearchWrapperToWhereClause(parametrers);
-        String query = "SELECT * FROM "+FAMILIES_TABLE_NAME+ whereClause;
+        String query = "SELECT * FROM "+ETables.FamilyCodes+ whereClause;
         ResultSet result = database.SelectQuery(query);
         return result;
     }
@@ -183,7 +181,7 @@ public class ProductQuery extends IProductQuery{
     @Override
     public ResultSet LoadFamilyCode(LoadWrapper parametrers) throws SQLException {
         String extraClause = " LIMIT "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
-        String query = "SELECT * FROM "+FAMILIES_TABLE_NAME+ extraClause;
+        String query = "SELECT * FROM "+ETables.FamilyCodes+ extraClause;
         ResultSet result = database.SelectQuery(query);
         return result;
     }
@@ -191,19 +189,19 @@ public class ProductQuery extends IProductQuery{
     @Override
     public ResultSet LoadInventoryProduct(LoadWrapper parametrers) throws SQLException {
          String extraClause = " LIMIT "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
-         String joinClause = " INNER JOIN " +STOCK_TABLE_NAME +" ON "
-         +INVENTORY_TABLE_NAME + "."+ InventoryAttributes.StockId
-         +"=" + STOCK_TABLE_NAME + "." + StockAttributes.ArticleId ;
+         String joinClause = " INNER JOIN " +ETables.Stock +" ON "
+         +ETables.Inventory + "."+ EInventoryAttributes.StockId
+         +"=" + ETables.Stock + "." + EStockAttributes.ArticleId ;
 
          String query = "SELECT "
-         + INVENTORY_TABLE_NAME + "." + InventoryAttributes.ArticleId +" ,"
-         + INVENTORY_TABLE_NAME + "." + InventoryAttributes.ArticleCode +" ,"
-         + INVENTORY_TABLE_NAME + "." + InventoryAttributes.StockId +" ,"
-         + STOCK_TABLE_NAME + "." + StockAttributes.Price +" ,"
-         + STOCK_TABLE_NAME + "." + StockAttributes.FamilyCode +" ,"
-         + STOCK_TABLE_NAME + "." + StockAttributes.ArticleName
+         + ETables.Inventory + "." + EInventoryAttributes.ArticleId +" ,"
+         + ETables.Inventory + "." + EInventoryAttributes.ArticleCode +" ,"
+         + ETables.Inventory + "." + EInventoryAttributes.StockId +" ,"
+         + ETables.Stock + "." + EStockAttributes.Price +" ,"
+         + ETables.Stock + "." + EStockAttributes.FamilyCode +" ,"
+         + ETables.Stock + "." + EStockAttributes.ArticleName
 
-         +" FROM "+INVENTORY_TABLE_NAME +joinClause+ extraClause;
+         +" FROM "+ETables.Inventory +joinClause+ extraClause;
          
          ResultSet result = database.SelectQuery(query);
          return result;
@@ -212,16 +210,16 @@ public class ProductQuery extends IProductQuery{
     @Override
     public ResultSet LoadStockProduct(LoadWrapper parametrers) throws SQLException {
          String extraClause = " LIMIT "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
-         String query = "SELECT * FROM "+STOCK_TABLE_NAME+ extraClause;
+         String query = "SELECT * FROM "+ETables.Stock+ extraClause;
          ResultSet result = database.SelectQuery(query);
          return result;
     }
 
     @Override
     public void CreateIndexes() throws SQLException {
-        String query = "CREATE INDEX " + MDatabase.InventoryIdexes.CodeBarIndex +" ON "
-        + INVENTORY_TABLE_NAME 
-        +"(" + MDatabase.InventoryAttributes.ArticleCode 
+        String query = "CREATE INDEX " + EIndex.CodeBarIndex +" ON "
+        + ETables.Inventory 
+        +"(" + EInventoryAttributes.ArticleCode 
         +")";
 
         database.CreateQuery(query);
@@ -229,21 +227,21 @@ public class ProductQuery extends IProductQuery{
 
     @Override
     public void RegisterStockCollection(Collection<AttributeWrapper[]> collection) throws SQLException {
-        String query = "INSERT INTO "+STOCK_TABLE_NAME+ InsertCollectionToQuery(collection);
+        String query = "INSERT INTO "+ETables.Stock+ InsertCollectionToQuery(collection);
         database.InsertQuery(query);
         
     }
 
     @Override
     public void RegisterInventoryCollection(Collection<AttributeWrapper[]> collection) throws SQLException {
-        String query = "INSERT INTO "+INVENTORY_TABLE_NAME+ InsertCollectionToQuery(collection);
+        String query = "INSERT INTO "+ETables.Inventory+ InsertCollectionToQuery(collection);
         database.InsertQuery(query);
         
     }
 
     @Override
     public void RegisterFamilyCodeCollection(Collection<AttributeWrapper[]> collection) throws SQLException {
-        String query = "INSERT INTO "+FAMILIES_TABLE_NAME+ InsertCollectionToQuery(collection);
+        String query = "INSERT INTO "+ETables.FamilyCodes+ InsertCollectionToQuery(collection);
         database.InsertQuery(query);
         
     }

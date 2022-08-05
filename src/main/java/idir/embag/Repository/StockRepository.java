@@ -6,7 +6,7 @@ import java.util.Collection;
 
 import idir.embag.DataModels.Products.IProduct;
 import idir.embag.DataModels.Products.StockProduct;
-import idir.embag.Types.Infrastructure.Database.Generics.MDatabase;
+import idir.embag.Types.Infrastructure.Database.Metadata.EStockAttributes;
 
 public class StockRepository {
     
@@ -15,13 +15,12 @@ public class StockRepository {
         // resultSet to IProduct
         try {
             while (source.next()) {
-                //StockProduct(int articleId, String articleName, int articleCodebar, int articleQuantity, double articlePrice,
-                //int familyCode) 
-                result.add(new StockProduct(source.getInt(MDatabase.StockAttributes.ArticleId),
-                    source.getString(MDatabase.StockAttributes.ArticleName),
-                    source.getInt(MDatabase.StockAttributes.Quantity),
-                    source.getDouble(MDatabase.StockAttributes.Price),
-                    source.getInt(MDatabase.StockAttributes.FamilyCode)));
+                
+                result.add(new StockProduct(source.getInt(EStockAttributes.ArticleId.toString()),
+                    source.getString(EStockAttributes.ArticleName.toString()),
+                    source.getInt(EStockAttributes.Quantity.toString()),
+                    source.getDouble(EStockAttributes.Price.toString()),
+                    source.getInt(EStockAttributes.FamilyCode.toString())));
             }
         } catch (Exception e) {
             e.printStackTrace();
