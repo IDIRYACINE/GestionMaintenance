@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
-
 import idir.embag.Application.Controllers.Exporter.Exporter;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.Types.Infrastructure.DataConverters.ExportWrapper;
@@ -13,6 +12,8 @@ import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
+import idir.embag.Ui.Components.DoingWorkDialog;
+import idir.embag.Ui.Constants.Messages;
 import idir.embag.Ui.Constants.Names;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXListView;
@@ -107,7 +108,7 @@ public class ExportDialog extends INodeView implements Initializable,IDialogCont
 
         controller.startExport(tableType,exportWrapper);
 
-        cancelCallback.run();
+        switchToWorkingView();
 
     }
 
@@ -116,4 +117,17 @@ public class ExportDialog extends INodeView implements Initializable,IDialogCont
         cancelCallback.run();
     }
     
+
+    private void switchToWorkingView() {
+        DoingWorkDialog doingWorkDialog = new DoingWorkDialog(Messages.pleaseWait);
+        
+        doingWorkDialog.setOnCancel(() -> {
+            controller.cancelExoprt();
+            cancelCallback.run();
+        });
+
+        doingWorkDialog.loadFxml();
+
+        root.getChildren().setAll(doingWorkDialog.getView());    
+    }
 }

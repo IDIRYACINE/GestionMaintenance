@@ -144,5 +144,9 @@ public class Exporter implements IEventSubscriber{
    public void unsubscribe(){
         StoreCenter.getInstance().unsubscribeFromEvents(EStores.DataConverterStore,null,this);
     }
+
+    public void cancelExoprt() {
+        
+    }
     
 }

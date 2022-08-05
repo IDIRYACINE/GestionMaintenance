@@ -12,6 +12,8 @@ import idir.embag.Types.Infrastructure.DataConverters.ImportWrapper;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
+import idir.embag.Ui.Components.DoingWorkDialog;
+import idir.embag.Ui.Constants.Messages;
 import idir.embag.Ui.Constants.Names;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXListView;
@@ -107,7 +109,7 @@ public class ImportDialog extends INodeView implements Initializable,IDialogCont
 
         controller.startImport(tableType,importWrapper);
 
-        cancelCallback.run();
+        switchToWorkingView();
 
     }
 
@@ -115,5 +117,17 @@ public class ImportDialog extends INodeView implements Initializable,IDialogCont
     private void cancel() {
         cancelCallback.run();
     }
+    
+    private void switchToWorkingView() {
+        DoingWorkDialog doingWorkDialog = new DoingWorkDialog(Messages.pleaseWait);
+        
+        doingWorkDialog.setOnCancel(() -> {
+            controller.cancelExoprt();
+            cancelCallback.run();
+        });
 
+        doingWorkDialog.loadFxml();
+
+        root.getChildren().setAll(doingWorkDialog.getView());    
+    }
 }

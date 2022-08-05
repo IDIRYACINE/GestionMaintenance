@@ -1,11 +1,6 @@
 package idir.embag;
 
-
-
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import idir.embag.Application.Controllers.Navigation.MainController;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Infrastructure.ServicesCenter;
@@ -20,10 +15,8 @@ import javafx.stage.Stage;
 
 @SuppressWarnings("unused")
 public class App extends Application {
-    public static ExecutorService executorService = Executors.newSingleThreadExecutor();
     public static StackPane stackPane;
-
-    private IStoresCenter storesCenter;
+    private static IStoresCenter storesCenter;
     private ServicesCenter servicesCenter;
 
     @Override
