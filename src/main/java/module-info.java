@@ -13,7 +13,7 @@ module idir.embag {
     requires org.apache.poi.ooxml ;
     requires javafx.swing;
     requires org.apache.commons.compress;
-    requires ini4j;
+    requires org.yaml.snakeyaml;
 
     opens idir.embag to javafx.fxml;
 

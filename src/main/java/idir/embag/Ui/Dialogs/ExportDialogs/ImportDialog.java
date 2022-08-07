@@ -122,7 +122,7 @@ public class ImportDialog extends INodeView implements Initializable,IDialogCont
         DoingWorkDialog doingWorkDialog = new DoingWorkDialog(Messages.pleaseWait);
         
         doingWorkDialog.setOnCancel(() -> {
-            controller.cancelExoprt();
+            controller.cancel();
             cancelCallback.run();
         });
 

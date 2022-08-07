@@ -2,6 +2,8 @@ package idir.embag.EventStore.Stores.StoreCenter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.EventStore.Models.DataConverters.ExcelModel;
 import idir.embag.EventStore.Models.History.HistoryModel;
@@ -35,8 +37,11 @@ import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 import idir.embag.Types.Stores.StoreCenter.IStoresCenter;
+import javafx.application.Platform;
 
 public class StoreCenter implements IStoresCenter{
+  
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     private static StoreCenter instance;
 
@@ -52,7 +57,7 @@ public class StoreCenter implements IStoresCenter{
 
     public static StoreCenter getInstance() {
       return instance;
-  }
+    }
 
 
     private StoreCenter(ServicesCenter servicesCenter,INavigationController navigationController) {
@@ -64,18 +69,43 @@ public class StoreCenter implements IStoresCenter{
    
     @Override
     public void dispatch(StoreDispatch action) {
+      if(action.getStore() != EStores.NavigationStore){
+        executorService.execute(new Runnable() {
+
+          @Override
+          public void run() {
+            stores.get(action.getStore()).dispatch(action.getEvent());
+          }
+
+        });
+        return;
+      }
+
      stores.get(action.getStore()).dispatch(action.getEvent());
     }
 
 
     @Override
     public void notify(StoreDispatch action) {
-      stores.get(action.getStore()).notifySubscriber(action.getEvent());  
+      Platform.runLater(new Runnable() {
+        @Override
+        public void run() {
+          stores.get(action.getStore()).notifySubscriber(action.getEvent());  
+        }
+
+      });
+
     }
 
     @Override
     public void broadcast(StoreDispatch action) {
-      stores.get(action.getStore()).broadcast(action.getEvent());  
+      Platform.runLater(new Runnable() {
+        @Override
+        public void run() {
+          stores.get(action.getStore()).broadcast(action.getEvent());  
+        }
+
+      });
     }
 
     @Override

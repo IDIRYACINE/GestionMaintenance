@@ -1,10 +1,15 @@
 package idir.embag.Application.Controllers.Exporter;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-
+import org.yaml.snakeyaml.Yaml;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
+import idir.embag.Types.Generics.EExportSessionKeys;
 import idir.embag.Types.Generics.EOperationStatus;
 import idir.embag.Types.Infrastructure.DataConverters.ExportWrapper;
 import idir.embag.Types.Infrastructure.DataConverters.ImportWrapper;
@@ -16,6 +21,7 @@ import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 
+@SuppressWarnings("unchecked")
 public class Exporter implements IEventSubscriber{
 
     private boolean isExporting = false;
@@ -26,8 +32,12 @@ public class Exporter implements IEventSubscriber{
 
     private ImportWrapper importWrapper;
 
+    private String exportHistoryFilePath = "/Data/ExportHistory.yaml";
+
+    private Map<EExportSessionKeys,Object> sessionProgress;
 
     public Exporter() {
+        loadLastSessionProgress();
         StoreCenter.getInstance().subscribeToEvents(EStores.DataConverterStore, null, this);
     }
 
@@ -118,25 +128,42 @@ public class Exporter implements IEventSubscriber{
         }
     }
 
-    private void saveExportProgress(ExportWrapper exportWrapper){
+    private void loadLastSessionProgress(){
+        try {
+            File source = new File(exportHistoryFilePath);
+            InputStream input = new FileInputStream(source);
+            Yaml yaml = new Yaml();
+            sessionProgress = (Map<EExportSessionKeys, Object>) yaml.load(input);
 
+        } catch (Exception e) {
+            sessionProgress = new HashMap<>();
+        }
     }
 
-    private void saveImportProgress(ImportWrapper importWrapper){
+    private void saveSessionProgress(){
+        try {
+            
+            Map<EExportSessionKeys, Object> data = new HashMap<>();
+            data.put(EExportSessionKeys.ExportSession, exportWrapper.getMap());
+            data.put(EExportSessionKeys.ImportSession, importWrapper.getMap());
+
+            File source = new File(exportHistoryFilePath);
+            FileWriter writer = new FileWriter(source);
+
+            Yaml yaml = new Yaml();
+            yaml.dump(data,writer);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
     private void onNoData(){
-        if(isExporting){
-            saveExportProgress(exportWrapper);
-            exportWrapper = null;
-            isExporting = false;
-        }
-
-        if(isImporting){
-            saveImportProgress(importWrapper);
-            importWrapper = null;
+        if(isExporting || isImporting){
+            saveSessionProgress();
             isImporting = false;
+            isExporting = false;
         }
     }
 
@@ -145,8 +172,19 @@ public class Exporter implements IEventSubscriber{
         StoreCenter.getInstance().unsubscribeFromEvents(EStores.DataConverterStore,null,this);
     }
 
-    public void cancelExoprt() {
-        
+    public void cancel() {
+        saveSessionProgress();
     }
+
+    public void loadSessionExportSession(){
+        Map<EExportSessionKeys,Object> rawExportWrapper = (Map<EExportSessionKeys, Object>) sessionProgress.get(EExportSessionKeys.ExportSession);
+        exportWrapper = new ExportWrapper(rawExportWrapper);
+    }
+
+    public void loadSessionImportSession(){
+        Map<EExportSessionKeys,Object> rawImportWrapper = (Map<EExportSessionKeys, Object>) sessionProgress.get(EExportSessionKeys.ImportSession);
+        importWrapper = new ImportWrapper(rawImportWrapper);
+    }
+
     
 }
