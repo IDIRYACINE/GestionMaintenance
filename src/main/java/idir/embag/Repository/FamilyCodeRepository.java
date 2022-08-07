@@ -4,14 +4,13 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import idir.embag.DataModels.Others.FamilyCode;
-import idir.embag.DataModels.Products.IProduct;
+import idir.embag.DataModels.Products.FamilyCode;
 import idir.embag.Types.Infrastructure.Database.Metadata.EFamilyCodeAttributes;
 
 public class FamilyCodeRepository {
     
-    public Collection<IProduct> resultSetToProduct(ResultSet source){
-        Collection<IProduct> result = new ArrayList<IProduct>();
+    public Collection<FamilyCode> resultSetToProduct(ResultSet source){
+        Collection<FamilyCode> result = new ArrayList<FamilyCode>();
         try {
             while (source.next()) {
                 result.add(new FamilyCode( source.getString(EFamilyCodeAttributes.FamilyName.toString()),

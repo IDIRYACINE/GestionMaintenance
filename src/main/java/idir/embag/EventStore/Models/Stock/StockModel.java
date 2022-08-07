@@ -4,10 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
-
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
-import idir.embag.DataModels.Products.IProduct;
+import idir.embag.DataModels.Products.StockProduct;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Repository.StockRepository;
 import idir.embag.Types.Generics.EOperationStatus;
@@ -48,7 +47,7 @@ public class StockModel implements IDataDelegate{
 
     @Override
     public void remove(Map<EEventsDataKeys,Object> data) {
-        IProduct product = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
+        StockProduct product = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
         
         try {
             productQuery.UnregisterStockProduct(product.getArticleId());
@@ -63,7 +62,7 @@ public class StockModel implements IDataDelegate{
     @Override
     public void update(Map<EEventsDataKeys,Object> data) {
         Collection<AttributeWrapper> wrappers = DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.AttributesCollection);
-        IProduct product = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
+        StockProduct product = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
 
         try {
             productQuery.UpdateStockProduct(product.getArticleId(),wrappers);
@@ -82,7 +81,7 @@ public class StockModel implements IDataDelegate{
             SearchWrapper searchParams =DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.SearchWrapper);
 
             ResultSet result = productQuery.SearchStockProduct(searchParams);
-            Collection<IProduct> products = stockRepository.resultSetToProduct(result);
+            Collection<StockProduct> products = stockRepository.resultSetToProduct(result);
 
             data.put(EEventsDataKeys.InstanceCollection, products);
             notfiyEvent(EStores.DataStore, EStoreEvents.StockEvent, EStoreEventAction.Search, data);
@@ -97,7 +96,7 @@ public class StockModel implements IDataDelegate{
         LoadWrapper loadWrapper = DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.LoadWrapper);
         try{
             ResultSet rawData = productQuery.LoadStockProduct(loadWrapper);
-            Collection<IProduct> products = stockRepository.resultSetToProduct(rawData);
+            Collection<StockProduct> products = stockRepository.resultSetToProduct(rawData);
 
             if(products.size() == 0){
                 data.put(EEventsDataKeys.OperationStatus, EOperationStatus.NoData);

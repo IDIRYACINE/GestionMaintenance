@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
-import idir.embag.DataModels.Products.IProduct;
+import idir.embag.DataModels.Products.FamilyCode;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Metadata.EFamilyCodeAttributes;
 import idir.embag.Types.MetaData.EWrappers;
@@ -34,10 +34,10 @@ public class FamilyCodeEditor extends INodeView implements Initializable , IDial
 
     private Consumer<Map<EEventsDataKeys,Object>> confirmTask;
 
-    private IProduct product;
+    private FamilyCode product;
 
     
-    public FamilyCodeEditor(IProduct product) {
+    public FamilyCodeEditor(FamilyCode product) {
         this.product = product;
         fxmlPath = "/views/Editors/FamilyCodeEditor.fxml";
 
@@ -58,7 +58,7 @@ public class FamilyCodeEditor extends INodeView implements Initializable , IDial
     @Override
     public void initialize(URL location, ResourceBundle resources) {
        familyCodeField.setText(String.valueOf(product.getFamilyCode()));
-       familyNameField.setText(String.valueOf(product.getArticleName()));
+       familyNameField.setText(String.valueOf(product.getFamilyName()));
         
     }
 
@@ -83,7 +83,7 @@ public class FamilyCodeEditor extends INodeView implements Initializable , IDial
     }
 
     private void setupConfirm(Map<EEventsDataKeys,Object> data){
-        product.setArticleName(familyNameField.getText());
+        product.setFamilyName(familyNameField.getText());
         product.setFamilyCode(Integer.parseInt(familyCodeField.getText()));
 
         DataBundler.bundleNestedData(data, EEventsDataKeys.WrappersKeys, EWrappers.AttributesCollection, getAttributeWrappers());

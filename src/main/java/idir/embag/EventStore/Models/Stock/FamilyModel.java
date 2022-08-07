@@ -4,10 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
-
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
-import idir.embag.DataModels.Products.IProduct;
+import idir.embag.DataModels.Products.FamilyCode;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Repository.FamilyCodeRepository;
 import idir.embag.Types.Generics.EOperationStatus;
@@ -51,7 +50,7 @@ public class FamilyModel implements IDataDelegate{
     public void remove(Map<EEventsDataKeys,Object> data) {
 
        try {
-        IProduct product = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
+        FamilyCode product = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
 
         productQuery.UnregisterFamilyCode(product.getFamilyCode());
         notfiyEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Remove, data);
@@ -64,7 +63,7 @@ public class FamilyModel implements IDataDelegate{
     @Override
     public void update(Map<EEventsDataKeys,Object> data) {
         Collection<AttributeWrapper> wrappers = DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.AttributesCollection);
-        IProduct product = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
+        FamilyCode product = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
 
 
         try {
@@ -82,7 +81,7 @@ public class FamilyModel implements IDataDelegate{
             SearchWrapper searchParams =DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.SearchWrapper);
 
             ResultSet result = productQuery.SearchFamilyCode(searchParams);
-            Collection<IProduct> familyCodes = familyCodeRepository.resultSetToProduct(result);
+            Collection<FamilyCode> familyCodes = familyCodeRepository.resultSetToProduct(result);
 
             data.put(EEventsDataKeys.InstanceCollection, familyCodes);
             notfiyEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Search, data);
@@ -98,7 +97,7 @@ public class FamilyModel implements IDataDelegate{
         LoadWrapper loadWrapper = DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.LoadWrapper);
         try{
             ResultSet rawData = productQuery.LoadFamilyCode(loadWrapper);
-            Collection<IProduct> familyCodes = familyCodeRepository.resultSetToProduct(rawData);
+            Collection<FamilyCode> familyCodes = familyCodeRepository.resultSetToProduct(rawData);
 
             if(familyCodes.size() == 0){
                 data.put(EEventsDataKeys.OperationStatus, EOperationStatus.NoData);

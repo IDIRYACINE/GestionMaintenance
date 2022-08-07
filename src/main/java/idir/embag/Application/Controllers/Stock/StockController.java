@@ -1,8 +1,8 @@
 package idir.embag.Application.Controllers.Stock;
 
 import idir.embag.DataModels.Metadata.EStockTypes;
-import idir.embag.DataModels.Products.IProduct;
 import idir.embag.Types.Application.Stock.IStockHelper;
+import javafx.scene.Node;
 
 public class StockController {
 
@@ -37,8 +37,8 @@ public class StockController {
         selectedStockHelper.add();
     }
 
-    public void remove(IProduct product){
-        selectedStockHelper.remove(product);
+    public void remove(){
+        selectedStockHelper.remove();
     }
 
     public void search(){
@@ -49,8 +49,12 @@ public class StockController {
         selectedStockHelper.refresh();
     }
 
-    public void update(IProduct product){
-        selectedStockHelper.update(product);
+    public void update(){
+        selectedStockHelper.update();
+    }
+
+    public Node getTableView() {
+        return selectedStockHelper.getView();
     }
 
 }

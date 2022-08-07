@@ -2,7 +2,7 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXComboBox?>
-<?import io.github.palexdev.materialfx.controls.MFXTableView?>
+<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -32,7 +32,7 @@
             <Insets left="20.0" />
          </padding>
       </HBox>
-      <MFXTableView fx:id="tableStock" footerVisible="false" prefHeight="624.0" prefWidth="1300.0" />
+      <MFXScrollPane fx:id="tableHolder" prefHeight="618.0" prefWidth="1300.0" />
       
 
    </children>

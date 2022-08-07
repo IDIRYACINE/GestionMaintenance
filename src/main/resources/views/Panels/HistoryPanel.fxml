@@ -2,7 +2,7 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXComboBox?>
-<?import io.github.palexdev.materialfx.controls.MFXTableView?>
+<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -20,7 +20,7 @@
             <MFXButton fx:id="btnExport" text="Exporter" />
          </children>
       </HBox>
-      <MFXTableView fx:id="tableSessionRecords" footerVisible="false" prefHeight="636.0" prefWidth="1332.0" />
+      <MFXScrollPane fx:id="tableHolder" prefHeight="602.0" prefWidth="1300.0" />
     
 
    </children>

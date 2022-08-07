@@ -1,6 +1,6 @@
 package idir.embag.Ui.Constants;
 
-public class Names {
+public abstract class Names {
 
     public static final String ArticleId = "ArticleId";
     public static final String ArticleName = "ArticleNom";

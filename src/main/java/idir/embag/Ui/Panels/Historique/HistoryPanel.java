@@ -7,11 +7,10 @@ import idir.embag.Application.Controllers.History.HistoryController;
 import idir.embag.Application.Controllers.History.SessionHelper;
 import idir.embag.Application.Controllers.History.SessionRecordHelper;
 import idir.embag.DataModels.Metadata.EHistoryTypes;
-import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.Types.Application.History.IHistoryController;
 import idir.embag.Types.Panels.Generics.INodeView;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
-import io.github.palexdev.materialfx.controls.MFXTableView;
+import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -26,7 +25,7 @@ public class HistoryPanel extends INodeView  implements Initializable {
     private MFXComboBox<EHistoryTypes> comboHistoryType;
     
     @FXML
-    private MFXTableView<SessionRecord> tableSessionRecords;
+    private MFXScrollPane tableHolder;
 
     private IHistoryController controller;
 
@@ -41,15 +40,14 @@ public class HistoryPanel extends INodeView  implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        SessionRecordHelper recordHelper = new SessionRecordHelper(tableSessionRecords);
-
-        // TODO: Session records and records history table swap
+        SessionRecordHelper recordHelper = new SessionRecordHelper();
         SessionHelper sessionHelper = new SessionHelper();
 
         controller = new HistoryController(sessionHelper,recordHelper);
-
         controller.selectHistoryHelper(EHistoryTypes.SessionRecord);
+
         comboHistoryType.getItems().addAll(EHistoryTypes.values());
+        comboHistoryType.selectLast();
     }
 
     @FXML
@@ -66,6 +64,11 @@ public class HistoryPanel extends INodeView  implements Initializable {
     private void onHistoryTypeChanged(){
         EHistoryTypes HistoryType = comboHistoryType.getSelectionModel().getSelectedItem();
         controller.selectHistoryHelper(HistoryType);
+        setTableView();
+    }
+
+    private void setTableView(){
+        tableHolder.setContent(controller.getTableView());
     }
 }
     

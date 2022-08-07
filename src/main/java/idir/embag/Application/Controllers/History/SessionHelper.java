@@ -19,11 +19,13 @@ import idir.embag.Types.Stores.Generics.StoreDispatch.StoreDispatch;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
+import idir.embag.Ui.Constants.Measures;
 import idir.embag.Ui.Constants.Names;
 import idir.embag.Ui.Dialogs.FilterDialog.FilterDialog;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
+import javafx.scene.Node;
 
 @SuppressWarnings("unchecked")
 public class SessionHelper implements  IHistoryHelper, IEventSubscriber {
@@ -31,19 +33,23 @@ public class SessionHelper implements  IHistoryHelper, IEventSubscriber {
     private MFXTableView<Session> tableSessions;
 
     public SessionHelper() {
-        //TODO : fix this
-        // this.tableSessions = tableSessions;
-        // StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.SessionEvent, this);
-        // setColumns();
+        tableSessions = new MFXTableView<>();
+        StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.SessionEvent, this);
+        setup();
     }
 
     
     public void notifyActive() {
-        setColumns();
+        setup();
         
     }
 
-    private void setColumns(){
+    private void setup(){
+        tableSessions.setMinWidth(Measures.defaultTablesWidth);
+        tableSessions.setMinHeight(Measures.defaultTablesHeight);
+        tableSessions.setFooterVisible(false);
+
+
         MFXTableColumn<Session> idColumn = new MFXTableColumn<>(Names.SessionId, true, Comparator.comparing(Session::getSessionId));
 		MFXTableColumn<Session> startDateColumn = new MFXTableColumn<>(Names.WorkerName, true, Comparator.comparing(Session::getSessionStartDate));
         MFXTableColumn<Session> endDateColumn = new MFXTableColumn<>(Names.ArticleId, true, Comparator.comparing(Session::getSessionEndDate));
@@ -56,7 +62,7 @@ public class SessionHelper implements  IHistoryHelper, IEventSubscriber {
         quantityShiftColumn.setRowCellFactory(session -> new MFXTableRowCell<>(Session::getQuantityShift));
         priceShiftColumn.setRowCellFactory(session -> new MFXTableRowCell<>(Session::getPriceShift));
         
-        tableSessions.getTableColumns().setAll(idColumn);
+        tableSessions.getTableColumns().setAll(idColumn,startDateColumn,endDateColumn,quantityShiftColumn,priceShiftColumn);
     }
 
     @Override
@@ -126,6 +132,12 @@ public class SessionHelper implements  IHistoryHelper, IEventSubscriber {
 
         return dialog;
 
+    }
+
+
+    @Override
+    public Node getView() {
+        return tableSessions;
     }
     
 }

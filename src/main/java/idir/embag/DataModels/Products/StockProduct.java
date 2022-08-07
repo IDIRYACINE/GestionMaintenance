@@ -1,11 +1,10 @@
 package idir.embag.DataModels.Products;
 
-public class StockProduct implements IProduct{
+public class StockProduct {
 
     private int articleId;
 
     private String articleName;
-
 
     private int articleQuantity;
 
@@ -24,73 +23,47 @@ public class StockProduct implements IProduct{
         this.familyCode = familyCode;
     }
 
-    @Override
-    public int getArticleCode() {
-        return 0;
-    }
-
-    @Override
+  
     public String getArticleName() {
         return articleName;
     }
 
-    @Override
     public int getFamilyCode() {
         return familyCode;
     }
 
-    @Override
     public int getQuantity() {
         return articleQuantity;
     }
 
-    @Override
     public double getPrice() {
         return articlePrice;
     }
 
-    @Override
     public int getArticleId() {
         return articleId;
     }
 
-    @Override
     public void setArticleId(int articleId) {
         this.articleId = articleId;
     }
 
-    @Override
-    public void setArticleCode(int articleCode) {
-    }
-
-    @Override
     public void setArticleName(String articleName) {
        this.articleName = articleName;
     }
 
-    @Override
     public void setFamilyCode(int familyCode) {
         this.familyCode = familyCode;
         
     }
 
-    @Override
     public void setQuantity(int quantity) {
         this.articleQuantity = quantity;
         
     }
 
-    @Override
     public void setPrice(double price) {
         this.articlePrice = price;
     }
-
-    @Override
-    public int getStockId() {
-        return 0;
-    }
-
-    @Override
-    public void setStockId(int parseInt) {}
     
 }

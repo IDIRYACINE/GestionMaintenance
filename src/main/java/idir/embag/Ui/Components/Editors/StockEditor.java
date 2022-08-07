@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
-import idir.embag.DataModels.Products.IProduct;
+import idir.embag.DataModels.Products.StockProduct;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Metadata.EStockAttributes;
 import idir.embag.Types.MetaData.EWrappers;
@@ -33,11 +33,11 @@ public class StockEditor extends INodeView implements Initializable , IDialogCon
 
     private Consumer<Map<EEventsDataKeys,Object>> confirmTask;
 
-    private IProduct product;
+    private StockProduct product;
 
     
 
-    public StockEditor(IProduct product) {
+    public StockEditor(StockProduct product) {
         this.product = product;
         fxmlPath = "/views/Editors/StockEditor.fxml";
     }

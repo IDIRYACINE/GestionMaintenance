@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+
+import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
@@ -19,30 +21,35 @@ import idir.embag.Types.Stores.Generics.StoreDispatch.StoreDispatch;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
+import idir.embag.Ui.Constants.Measures;
 import idir.embag.Ui.Constants.Names;
 import idir.embag.Ui.Dialogs.FilterDialog.FilterDialog;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
+import javafx.scene.Node;
 
 @SuppressWarnings("unchecked")
 public class SessionRecordHelper implements  IHistoryHelper, IEventSubscriber {
 
     private MFXTableView<SessionRecord> tableSessionRecords;
 
-    public SessionRecordHelper(MFXTableView<SessionRecord> tableSessionRecords) {
-        this.tableSessionRecords = tableSessionRecords;
+    public SessionRecordHelper() {
+        this.tableSessionRecords =  new MFXTableView<>();
         StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.SessionRecordsEvent, this);
-        setColumns();
+        setup();
     }
 
     
     public void notifyActive() {
-        setColumns();
-        
+        setup();
     }
 
-    private void setColumns(){
+    private void setup(){
+        tableSessionRecords.setMinWidth(Measures.defaultTablesWidth);
+        tableSessionRecords.setMinHeight(Measures.defaultTablesHeight);
+        tableSessionRecords.setFooterVisible(false);
+
         MFXTableColumn<SessionRecord> idColumn = new MFXTableColumn<>(Names.SessionRecordId, true, Comparator.comparing(SessionRecord::getRecordId));
 		MFXTableColumn<SessionRecord> workerNameColumn = new MFXTableColumn<>(Names.WorkerName, true, Comparator.comparing(SessionRecord::getworkerName));
         MFXTableColumn<SessionRecord> articleIdColumn = new MFXTableColumn<>(Names.ArticleId, true, Comparator.comparing(SessionRecord::getArticleId));
@@ -61,17 +68,19 @@ public class SessionRecordHelper implements  IHistoryHelper, IEventSubscriber {
         quantityColumn.setRowCellFactory(session -> new MFXTableRowCell<>(SessionRecord::getQuantityStock));
         quantityShiftColumn.setRowCellFactory(session -> new MFXTableRowCell<>(SessionRecord::getQuantityShift));
         
-        tableSessionRecords.getTableColumns().setAll(idColumn,dateColumn,articleIdColumn,workerNameColumn,priceColumn,priceShiftColumn,quantityColumn,quantityShiftColumn);
+        
+
+        tableSessionRecords.getTableColumns().addAll(idColumn,dateColumn,articleIdColumn,workerNameColumn,priceColumn,priceShiftColumn,quantityColumn,quantityShiftColumn);
     }
 
     @Override
     public void notifyEvent(StoreEvent event) {
         switch(event.getAction()){
-            case Add: addTableElement((SessionRecord)event.getData().get(EEventsDataKeys.Instance));
+            case Add: addTableElement(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.Instance));
                 break;
-            case Search: setTableElements((Collection<SessionRecord>)event.getData().get(EEventsDataKeys.InstanceCollection));
+            case Search: setTableElements(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.Instance));
                 break;          
-            case Load: setTableElements((Collection<SessionRecord>)event.getData().get(EEventsDataKeys.InstanceCollection));
+            case Load: setTableElements(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.InstanceCollection));
                 break;
               default:
                    break;
@@ -132,6 +141,12 @@ public class SessionRecordHelper implements  IHistoryHelper, IEventSubscriber {
 
         return dialog;
 
+    }
+
+
+    @Override
+    public Node getView() {
+        return tableSessionRecords;
     }
     
 }

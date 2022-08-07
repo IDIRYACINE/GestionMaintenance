@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
-import idir.embag.DataModels.Products.IProduct;
 import idir.embag.DataModels.Products.StockProduct;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Application.Stock.IStockHelper;
@@ -21,6 +20,7 @@ import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 import idir.embag.Ui.Components.Editors.StockEditor;
+import idir.embag.Ui.Constants.Measures;
 import idir.embag.Ui.Constants.Messages;
 import idir.embag.Ui.Constants.Names;
 import idir.embag.Ui.Dialogs.ConfirmationDialog.ConfirmationDialog;
@@ -28,20 +28,23 @@ import idir.embag.Ui.Dialogs.FilterDialog.FilterDialog;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
+import javafx.scene.Node;
 
 @SuppressWarnings("unchecked")
 public class StockHelper extends IStockHelper implements IEventSubscriber{
     
-    private MFXTableView<IProduct> tableStock;
+    private MFXTableView<StockProduct> tableStock;
 
-    public StockHelper(MFXTableView<IProduct> tableStock) {
-        this.tableStock = tableStock;
+    public StockHelper() {
+        this.tableStock = new MFXTableView<>();
         StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.StockEvent, this);
 
     }
 
     @Override
-    public void update(IProduct product) {
+    public void update() {
+        StockProduct product = tableStock.getSelectionModel().getSelectedValues().get(0);
+
         StockEditor dialogContent =  new StockEditor(product);
 
         Map<EEventsDataKeys,Object> data = new HashMap<>();
@@ -63,7 +66,9 @@ public class StockHelper extends IStockHelper implements IEventSubscriber{
     }
 
     @Override
-    public void remove(IProduct product) {
+    public void remove() {
+        StockProduct product = tableStock.getSelectionModel().getSelectedValues().get(0);
+
         ConfirmationDialog dialogContent =  new ConfirmationDialog();
 
         dialogContent.setMessage(Messages.deleteElement);
@@ -86,7 +91,7 @@ public class StockHelper extends IStockHelper implements IEventSubscriber{
 
     @Override
     public void add() {
-        IProduct product = new StockProduct(0, "",  0, 0, 0);
+        StockProduct product = new StockProduct(0, "",  0, 0, 0);
         StockEditor dialogContent =  new StockEditor(product);
 
         Map<EEventsDataKeys,Object> data = new HashMap<>();
@@ -131,65 +136,64 @@ public class StockHelper extends IStockHelper implements IEventSubscriber{
     @Override
     public void notifyEvent(StoreEvent event) {
        switch(event.getAction()){
-        case Add: addTableElement((IProduct)event.getData().get(EEventsDataKeys.Instance));
+        case Add: addTableElement((StockProduct)event.getData().get(EEventsDataKeys.Instance));
             break;
-        case Remove: removeTableElement((IProduct)event.getData().get(EEventsDataKeys.Instance));
+        case Remove: removeTableElement((StockProduct)event.getData().get(EEventsDataKeys.Instance));
             break;  
-        case Update: updateTableElement((IProduct)event.getData().get(EEventsDataKeys.Instance));
+        case Update: updateTableElement((StockProduct)event.getData().get(EEventsDataKeys.Instance));
             break;
-        case Search: setTableProducts((Collection<IProduct>)event.getData().get(EEventsDataKeys.InstanceCollection));
+        case Search: setTableProducts((Collection<StockProduct>)event.getData().get(EEventsDataKeys.InstanceCollection));
             break;          
-        case Load: setTableProducts((Collection<IProduct>)event.getData().get(EEventsDataKeys.InstanceCollection));
+        case Load: setTableProducts((Collection<StockProduct>)event.getData().get(EEventsDataKeys.InstanceCollection));
                 break;
         default:
             break;
        }
     }
 
-    private void addTableElement(IProduct product) {
+    private void addTableElement(StockProduct product) {
         tableStock.getItems().add(product);
     }
 
-    private void removeTableElement(IProduct product){
+    private void removeTableElement(StockProduct product){
         int index = tableStock.getItems().indexOf(product);
         tableStock.getItems().remove(index);
     }
 
-    private void updateTableElement(IProduct product){
+    private void updateTableElement(StockProduct product){
         int index = tableStock.getItems().indexOf(product);
         tableStock.getCell(index).updateRow();
     }
 
-    private void setTableProducts(Collection<IProduct> product){
+    private void setTableProducts(Collection<StockProduct> product){
         tableStock.getItems().setAll(product);
     }
 
-    private void setColumns(){
-       
-        MFXTableColumn<IProduct> idColumn = new MFXTableColumn<>(Names.ArticleId, true, Comparator.comparing(IProduct::getArticleId));
-		MFXTableColumn<IProduct> nameColumn = new MFXTableColumn<>(Names.ArticleName, true, Comparator.comparing(IProduct::getArticleName));
-        MFXTableColumn<IProduct> codebarColumn = new MFXTableColumn<>(Names.Codebar, true, Comparator.comparing(IProduct::getArticleCode));
-
-        MFXTableColumn<IProduct> familyColumn = new MFXTableColumn<>(Names.FamilyCode, true, Comparator.comparing(IProduct::getFamilyCode));
-        MFXTableColumn<IProduct> priceColumn = new MFXTableColumn<>(Names.Price, true, Comparator.comparing(IProduct::getPrice));
-		MFXTableColumn<IProduct> stockColumn = new MFXTableColumn<>(Names.Quantity, true, Comparator.comparing(IProduct::getQuantity));
+    private void setup(){
+        tableStock.setMinWidth(Measures.defaultTablesWidth);
+        tableStock.setMinHeight(Measures.defaultTablesHeight);
+        tableStock.setFooterVisible(false);
         
-		idColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getArticleId));
-		nameColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getArticleName));
-		stockColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getQuantity));
+        MFXTableColumn<StockProduct> idColumn = new MFXTableColumn<>(Names.ArticleId, true, Comparator.comparing(StockProduct::getArticleId));
+		MFXTableColumn<StockProduct> nameColumn = new MFXTableColumn<>(Names.ArticleName, true, Comparator.comparing(StockProduct::getArticleName));
+        MFXTableColumn<StockProduct> familyColumn = new MFXTableColumn<>(Names.FamilyCode, true, Comparator.comparing(StockProduct::getFamilyCode));
+        MFXTableColumn<StockProduct> priceColumn = new MFXTableColumn<>(Names.Price, true, Comparator.comparing(StockProduct::getPrice));
+		MFXTableColumn<StockProduct> stockColumn = new MFXTableColumn<>(Names.Quantity, true, Comparator.comparing(StockProduct::getQuantity));
+        
+		idColumn.setRowCellFactory(product -> new MFXTableRowCell<>(StockProduct::getArticleId));
+		nameColumn.setRowCellFactory(product -> new MFXTableRowCell<>(StockProduct::getArticleName));
+		stockColumn.setRowCellFactory(product -> new MFXTableRowCell<>(StockProduct::getQuantity));
 
-        codebarColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getArticleCode));
-		priceColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getPrice));
-		familyColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getFamilyCode));
+		priceColumn.setRowCellFactory(product -> new MFXTableRowCell<>(StockProduct::getPrice));
+		familyColumn.setRowCellFactory(product -> new MFXTableRowCell<>(StockProduct::getFamilyCode));
 
-        tableStock.getTableColumns().setAll(idColumn,codebarColumn,nameColumn,familyColumn,priceColumn,stockColumn);
+        tableStock.getTableColumns().setAll(idColumn,nameColumn,familyColumn,priceColumn,stockColumn);
 
     }
 
     @Override
     public void notifySelected() {
-        tableStock.getItems().clear();
-        setColumns();
+        setup();
     }
 
    
@@ -209,6 +213,11 @@ public class StockHelper extends IStockHelper implements IEventSubscriber{
         dialog.setAttributes(attributes);
         dialog.loadFxml();
         return dialog;
+    }
+
+    @Override
+    public Node getView() {
+        return tableStock;
     }
     
 }

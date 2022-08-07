@@ -4,10 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
-
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
-import idir.embag.DataModels.Products.IProduct;
+import idir.embag.DataModels.Products.InventoryProduct;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Repository.InventoryRepository;
 import idir.embag.Types.Generics.EOperationStatus;
@@ -46,7 +45,7 @@ public class InventoryModel implements IDataDelegate {
 
     public void remove(Map<EEventsDataKeys,Object> data) {
         try {
-            IProduct product = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
+            InventoryProduct product = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
 
             productQuery.UnregisterInventoryProduct(product.getArticleId(),product.getStockId());
             notfiyEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Remove, data);
@@ -57,7 +56,7 @@ public class InventoryModel implements IDataDelegate {
 
     public void update(Map<EEventsDataKeys,Object> data) {
         Collection<AttributeWrapper> wrappers = DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.AttributesCollection);
-        IProduct product = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
+        InventoryProduct product = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
 
         try {
             productQuery.UpdateInventoryProduct(product.getArticleId() ,wrappers);
@@ -73,7 +72,7 @@ public class InventoryModel implements IDataDelegate {
             SearchWrapper searchParams =DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.SearchWrapper);
 
             ResultSet result = productQuery.SearchInventoryProduct(searchParams);
-            Collection<IProduct> products = inventoryRepository.resultSetToProduct(result);
+            Collection<InventoryProduct> products = inventoryRepository.resultSetToProduct(result);
 
             data.put(EEventsDataKeys.InstanceCollection, products);
             notfiyEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Search, data);
@@ -89,7 +88,7 @@ public class InventoryModel implements IDataDelegate {
         LoadWrapper loadWrapper = DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.LoadWrapper);
         try{
             ResultSet rawData = productQuery.LoadInventoryProduct(loadWrapper);
-            Collection<IProduct> products = inventoryRepository.resultSetToProduct(rawData);
+            Collection<InventoryProduct> products = inventoryRepository.resultSetToProduct(rawData);
             
             if(products.size() == 0){
                 data.put(EEventsDataKeys.OperationStatus, EOperationStatus.NoData);

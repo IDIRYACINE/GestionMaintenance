@@ -3,6 +3,7 @@ package idir.embag.Application.Controllers.History;
 import idir.embag.DataModels.Metadata.EHistoryTypes;
 import idir.embag.Types.Application.History.IHistoryController;
 import idir.embag.Types.Application.History.IHistoryHelper;
+import javafx.scene.Node;
 
 public class HistoryController implements  IHistoryController {
 
@@ -39,6 +40,13 @@ public class HistoryController implements  IHistoryController {
                 selectedHelper = sessionHelper;
                 break;
         }
+    }
+
+
+
+    @Override
+    public Node getTableView() {
+        return selectedHelper.getView();
     }
 
    

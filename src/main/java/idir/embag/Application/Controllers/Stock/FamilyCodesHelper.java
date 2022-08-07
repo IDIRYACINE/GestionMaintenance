@@ -5,8 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
-import idir.embag.DataModels.Others.FamilyCode;
-import idir.embag.DataModels.Products.IProduct;
+import idir.embag.DataModels.Products.FamilyCode;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Application.Stock.IStockHelper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
@@ -20,6 +19,7 @@ import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 import idir.embag.Ui.Components.Editors.FamilyCodeEditor;
+import idir.embag.Ui.Constants.Measures;
 import idir.embag.Ui.Constants.Messages;
 import idir.embag.Ui.Constants.Names;
 import idir.embag.Ui.Dialogs.ConfirmationDialog.ConfirmationDialog;
@@ -27,20 +27,23 @@ import idir.embag.Ui.Dialogs.FilterDialog.FilterDialog;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
+import javafx.scene.Node;
 
 @SuppressWarnings("unchecked")
 public class FamilyCodesHelper extends IStockHelper implements IEventSubscriber{
     
-    private MFXTableView<IProduct> tableStock;
+    private MFXTableView<FamilyCode> tableFamilyCodes;
 
-    public FamilyCodesHelper(MFXTableView<IProduct> tableStock) {
-        this.tableStock = tableStock;
+    public FamilyCodesHelper() {
+        this.tableFamilyCodes = new MFXTableView<>();
         StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.FamilyCodeEvent, this);
     }
 
     @Override
-    public void update(IProduct product) {
-        FamilyCodeEditor dialogContent =  new FamilyCodeEditor(product);
+    public void update() {
+        FamilyCode familyCode = tableFamilyCodes.getSelectionModel().getSelectedValues().get(0);
+
+        FamilyCodeEditor dialogContent =  new FamilyCodeEditor(familyCode);
         
         Map<EEventsDataKeys,Object> data = new HashMap<>();
         
@@ -50,7 +53,7 @@ public class FamilyCodesHelper extends IStockHelper implements IEventSubscriber{
 
 
         dialogContent.setOnConfirm(requestData -> {
-            requestData.put(EEventsDataKeys.Instance, product);
+            requestData.put(EEventsDataKeys.Instance, familyCode);
             dispatchEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Update, requestData);
         });
 
@@ -61,7 +64,9 @@ public class FamilyCodesHelper extends IStockHelper implements IEventSubscriber{
     }
 
     @Override
-    public void remove(IProduct product) {
+    public void remove() {
+        FamilyCode familyCode = tableFamilyCodes.getSelectionModel().getSelectedValues().get(0);
+
         ConfirmationDialog dialogContent =  new ConfirmationDialog();
 
         dialogContent.setMessage(Messages.deleteElement);
@@ -74,7 +79,7 @@ public class FamilyCodesHelper extends IStockHelper implements IEventSubscriber{
 
         
         dialogContent.setOnConfirm(requestData -> {
-            requestData.put(EEventsDataKeys.Instance, product);
+            requestData.put(EEventsDataKeys.Instance, familyCode);
 
             dispatchEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Remove, requestData);
         });
@@ -86,8 +91,8 @@ public class FamilyCodesHelper extends IStockHelper implements IEventSubscriber{
 
     @Override
     public void add() {
-        IProduct product = new FamilyCode("", 0);
-        FamilyCodeEditor dialogContent =  new FamilyCodeEditor(product);
+        FamilyCode familyCode = new FamilyCode("", 0);
+        FamilyCodeEditor dialogContent =  new FamilyCodeEditor(familyCode);
 
         Map<EEventsDataKeys,Object> data = new HashMap<>();
         
@@ -97,7 +102,7 @@ public class FamilyCodesHelper extends IStockHelper implements IEventSubscriber{
 
 
         dialogContent.setOnConfirm(requestData -> {
-            requestData.put(EEventsDataKeys.Instance, product);
+            requestData.put(EEventsDataKeys.Instance, familyCode);
             dispatchEvent(EStores.DataStore, EStoreEvents.FamilyCodeEvent, EStoreEventAction.Add, requestData);
         });
 
@@ -137,15 +142,15 @@ public class FamilyCodesHelper extends IStockHelper implements IEventSubscriber{
     public void notifyEvent(StoreEvent event) {
 
         switch(event.getAction()){
-            case Add: addTableElement((IProduct)event.getData().get(EEventsDataKeys.Instance));
+            case Add: addTableElement((FamilyCode)event.getData().get(EEventsDataKeys.Instance));
                 break;
-            case Remove: removeTableElement((IProduct)event.getData().get(EEventsDataKeys.Instance));
+            case Remove: removeTableElement((FamilyCode)event.getData().get(EEventsDataKeys.Instance));
                 break;  
-            case Update: updateTableElement((IProduct)event.getData().get(EEventsDataKeys.Instance));
+            case Update: updateTableElement((FamilyCode)event.getData().get(EEventsDataKeys.Instance));
                 break;
-            case Search: setTableProducts((Collection<IProduct>)event.getData().get(EEventsDataKeys.InstanceCollection));
+            case Search: setTablefamilyCodes((Collection<FamilyCode>)event.getData().get(EEventsDataKeys.InstanceCollection));
                 break;    
-            case Load: setTableProducts((Collection<IProduct>)event.getData().get(EEventsDataKeys.InstanceCollection));
+            case Load: setTablefamilyCodes((Collection<FamilyCode>)event.getData().get(EEventsDataKeys.InstanceCollection));
                 break;              
               default:
                    break;
@@ -155,37 +160,40 @@ public class FamilyCodesHelper extends IStockHelper implements IEventSubscriber{
 
     @Override
     public void notifySelected() {
-        tableStock.getItems().clear();
-        setColumns();
+        setup();
     }
 
    
-    private void addTableElement(IProduct product) {
-        tableStock.getItems().add(product);
+    private void addTableElement(FamilyCode familyCode) {
+        tableFamilyCodes.getItems().add(familyCode);
     }
 
-    private void removeTableElement(IProduct product){
-        int index = tableStock.getItems().indexOf(product);
-        tableStock.getItems().remove(index);
+    private void removeTableElement(FamilyCode familyCode){
+        int index = tableFamilyCodes.getItems().indexOf(familyCode);
+        tableFamilyCodes.getItems().remove(index);
     }
 
-    private void updateTableElement(IProduct product){
-        int index = tableStock.getItems().indexOf(product);
-        tableStock.getCell(index).updateRow();
+    private void updateTableElement(FamilyCode familyCode){
+        int index = tableFamilyCodes.getItems().indexOf(familyCode);
+        tableFamilyCodes.getCell(index).updateRow();
     }
 
-    private void setTableProducts(Collection<IProduct> product){
-        tableStock.getItems().setAll(product);
+    private void setTablefamilyCodes(Collection<FamilyCode> familyCode){
+        tableFamilyCodes.getItems().setAll(familyCode);
     }
 
-    private void setColumns(){
-        MFXTableColumn<IProduct> idColumn = new MFXTableColumn<>(Names.FamilyCode, true, Comparator.comparing(IProduct::getFamilyCode));
-		MFXTableColumn<IProduct> nameColumn = new MFXTableColumn<>(Names.FamilyName, true, Comparator.comparing(IProduct::getArticleName));
+    private void setup(){
+        tableFamilyCodes.setMinWidth(Measures.defaultTablesWidth);
+        tableFamilyCodes.setMinHeight(Measures.defaultTablesHeight);
+        tableFamilyCodes.setFooterVisible(false);
+
+        MFXTableColumn<FamilyCode> idColumn = new MFXTableColumn<>(Names.FamilyCode, true, Comparator.comparing(FamilyCode::getFamilyCode));
+		MFXTableColumn<FamilyCode> nameColumn = new MFXTableColumn<>(Names.FamilyName, true, Comparator.comparing(FamilyCode::getFamilyName));
         
-        idColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getFamilyCode));
-        nameColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getArticleName));
+        idColumn.setRowCellFactory(familyCode -> new MFXTableRowCell<>(FamilyCode::getFamilyCode));
+        nameColumn.setRowCellFactory(familyCode -> new MFXTableRowCell<>(FamilyCode::getFamilyName));
 
-        tableStock.getTableColumns().setAll(idColumn,nameColumn);
+        tableFamilyCodes.getTableColumns().setAll(idColumn,nameColumn);
         
     }
 
@@ -202,6 +210,11 @@ public class FamilyCodesHelper extends IStockHelper implements IEventSubscriber{
 
         dialog.loadFxml();
         return dialog;
+    }
+
+    @Override
+    public Node getView() {
+        return tableFamilyCodes;
     }
 
 

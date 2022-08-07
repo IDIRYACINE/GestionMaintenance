@@ -8,7 +8,8 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import idir.embag.DataModels.Others.FamilyCode;
+
+import idir.embag.DataModels.Products.FamilyCode;
 import idir.embag.Types.Infrastructure.DataConverters.Excel.IExcelCellWriter;
 
 public class FamilyCodeCellWriter implements IExcelCellWriter<FamilyCode> {
@@ -37,7 +38,7 @@ public class FamilyCodeCellWriter implements IExcelCellWriter<FamilyCode> {
             cell.setCellValue(familyCode.getFamilyCode());
             cell.setCellStyle(style);
             cell = row.createCell(1);
-            cell.setCellValue(familyCode.getArticleName());
+            cell.setCellValue(familyCode.getFamilyName());
             cell.setCellStyle(style);
 
             currentRowIndex++;

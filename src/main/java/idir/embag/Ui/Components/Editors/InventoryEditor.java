@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
-import idir.embag.DataModels.Products.IProduct;
+import idir.embag.DataModels.Products.InventoryProduct;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Metadata.EInventoryAttributes;
 import idir.embag.Types.MetaData.EWrappers;
@@ -34,9 +34,9 @@ public class InventoryEditor extends INodeView implements Initializable , IDialo
 
     private Consumer<Map<EEventsDataKeys,Object>> confirmTask;
 
-    private IProduct product;
+    private InventoryProduct product;
 
-    public InventoryEditor(IProduct product) {
+    public InventoryEditor(InventoryProduct product) {
         this.product = product;
         fxmlPath = "/views/Editors/InventoryEditor.fxml";
 
@@ -85,7 +85,7 @@ public class InventoryEditor extends INodeView implements Initializable , IDialo
 
     private void setupConfirm(Map<EEventsDataKeys,Object> data){
         product.setArticleId(Integer.parseInt(articleIdField.getText()));
-        product.setArticleName(articleNameField.getText());
+        product.setFamilyName(articleNameField.getText());
         product.setFamilyCode(Integer.parseInt(articleFamilyField.getText()));
         product.setStockId(Integer.parseInt(stockIdField.getText()));
         product.setArticleCode(Integer.parseInt(articleCodeField.getText()));

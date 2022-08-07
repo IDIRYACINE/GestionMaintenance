@@ -2,9 +2,6 @@ package idir.embag.EventStore.Stores.StoreCenter;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.EventStore.Models.DataConverters.ExcelModel;
 import idir.embag.EventStore.Models.History.HistoryModel;
@@ -42,7 +39,6 @@ import idir.embag.Types.Stores.StoreCenter.IStoresCenter;
 public class StoreCenter implements IStoresCenter{
 
     private static StoreCenter instance;
-    private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     private Map<EStores , IStore> stores = new HashMap<>();
 
@@ -68,19 +64,7 @@ public class StoreCenter implements IStoresCenter{
    
     @Override
     public void dispatch(StoreDispatch action) {
-      if(action.getStore() != EStores.NavigationStore){
-        executorService.execute(new Runnable() {
-
-          @Override
-          public void run() {
-            stores.get(action.getStore()).dispatch(action.getEvent());
-          }
-          
-        });
-        return;
-      }
      stores.get(action.getStore()).dispatch(action.getEvent());
-        
     }
 
 

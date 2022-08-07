@@ -5,9 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
-import idir.embag.DataModels.Products.IProduct;
 import idir.embag.DataModels.Products.InventoryProduct;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Application.Stock.IStockHelper;
@@ -22,6 +20,7 @@ import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 import idir.embag.Ui.Components.Editors.InventoryEditor;
+import idir.embag.Ui.Constants.Measures;
 import idir.embag.Ui.Constants.Messages;
 import idir.embag.Ui.Constants.Names;
 import idir.embag.Ui.Dialogs.ConfirmationDialog.ConfirmationDialog;
@@ -29,19 +28,22 @@ import idir.embag.Ui.Dialogs.FilterDialog.FilterDialog;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
+import javafx.scene.Node;
 
 @SuppressWarnings("unchecked")
 public class InventoryHelper extends IStockHelper implements IEventSubscriber{
     
-    private MFXTableView<IProduct> tableStock;
+    private MFXTableView<InventoryProduct> tableInventory;
 
-    public InventoryHelper(MFXTableView<IProduct> tableStock) {
-        this.tableStock = tableStock;
+    public InventoryHelper() {
+        this.tableInventory = new MFXTableView<>();
         StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.InventoryEvent, this);
     }
 
     @Override
-    public void update(IProduct product) {
+    public void update() {
+        InventoryProduct product = tableInventory.getSelectionModel().getSelectedValues().get(0);
+
         InventoryEditor dialogContent =  new InventoryEditor(product);
 
         Map<EEventsDataKeys,Object> data = new HashMap<>();
@@ -64,7 +66,9 @@ public class InventoryHelper extends IStockHelper implements IEventSubscriber{
     }
 
     @Override
-    public void remove(IProduct product) {
+    public void remove() {
+        InventoryProduct product = tableInventory.getSelectionModel().getSelectedValues().get(0);
+
         ConfirmationDialog dialogContent =  new ConfirmationDialog();
 
         dialogContent.setMessage(Messages.deleteElement);
@@ -89,7 +93,7 @@ public class InventoryHelper extends IStockHelper implements IEventSubscriber{
 
     @Override
     public void add() {
-        IProduct product = new InventoryProduct(0, "", 0, 0, 0, 0, 0);
+        InventoryProduct product = new InventoryProduct(0, "", 0, 0, 0, 0, 0);
         InventoryEditor dialogContent =  new InventoryEditor(product);
 
         Map<EEventsDataKeys,Object> data = new HashMap<>();
@@ -137,15 +141,15 @@ public class InventoryHelper extends IStockHelper implements IEventSubscriber{
     public void notifyEvent(StoreEvent event) {
         
         switch(event.getAction()){
-            case Add: addTableElement((IProduct)event.getData().get(EEventsDataKeys.Instance));
+            case Add: addTableElement((InventoryProduct)event.getData().get(EEventsDataKeys.Instance));
                 break;
-            case Remove: removeTableElement((IProduct)event.getData().get(EEventsDataKeys.Instance));
+            case Remove: removeTableElement((InventoryProduct)event.getData().get(EEventsDataKeys.Instance));
                 break;  
-            case Update: updateTableElement((IProduct)event.getData().get(EEventsDataKeys.Instance));
+            case Update: updateTableElement((InventoryProduct)event.getData().get(EEventsDataKeys.Instance));
                 break;
-            case Search: setTableProducts((Collection<IProduct>)event.getData().get(EEventsDataKeys.InstanceCollection));
+            case Search: setTableProducts((Collection<InventoryProduct>)event.getData().get(EEventsDataKeys.InstanceCollection));
                 break;          
-            case Load: setTableProducts((Collection<IProduct>)event.getData().get(EEventsDataKeys.InstanceCollection));
+            case Load: setTableProducts((Collection<InventoryProduct>)event.getData().get(EEventsDataKeys.InstanceCollection));
                 break;
               default:
                    break;
@@ -154,46 +158,49 @@ public class InventoryHelper extends IStockHelper implements IEventSubscriber{
     }
 
 
-    private void addTableElement(IProduct product) {
-        tableStock.getItems().add(product);
+    private void addTableElement(InventoryProduct product) {
+        tableInventory.getItems().add(product);
     }
 
-    private void removeTableElement(IProduct product){
-        int index = tableStock.getItems().indexOf(product);
-        tableStock.getItems().remove(index);
+    private void removeTableElement(InventoryProduct product){
+        int index = tableInventory.getItems().indexOf(product);
+        tableInventory.getItems().remove(index);
     }
 
-    private void updateTableElement(IProduct product){
-        int index = tableStock.getItems().indexOf(product);
-        tableStock.getCell(index).updateRow();
+    private void updateTableElement(InventoryProduct product){
+        int index = tableInventory.getItems().indexOf(product);
+        tableInventory.getCell(index).updateRow();
     }
 
-    private void setTableProducts(Collection<IProduct> product){
-        tableStock.getItems().setAll(product);
+    private void setTableProducts(Collection<InventoryProduct> product){
+        tableInventory.getItems().setAll(product);
     }
 
-    private void setColumns(){
-        MFXTableColumn<IProduct> idColumn = new MFXTableColumn<>(Names.ArticleId, true, Comparator.comparing(IProduct::getArticleId));
-		MFXTableColumn<IProduct> nameColumn = new MFXTableColumn<>(Names.ArticleName, true, Comparator.comparing(IProduct::getArticleName));
-        MFXTableColumn<IProduct> codebarColumn = new MFXTableColumn<>(Names.Codebar, true, Comparator.comparing(IProduct::getArticleCode));
+    private void setup(){
+        tableInventory.setMinWidth(Measures.defaultTablesWidth);
+        tableInventory.setMinHeight(Measures.defaultTablesHeight);
+        tableInventory.setFooterVisible(false);
 
-        MFXTableColumn<IProduct> familyColumn = new MFXTableColumn<>(Names.FamilyCode, true, Comparator.comparing(IProduct::getFamilyCode));
-        MFXTableColumn<IProduct> priceColumn = new MFXTableColumn<>(Names.Price, true, Comparator.comparing(IProduct::getPrice));
+        MFXTableColumn<InventoryProduct> idColumn = new MFXTableColumn<>(Names.ArticleId, true, Comparator.comparing(InventoryProduct::getArticleId));
+		MFXTableColumn<InventoryProduct> nameColumn = new MFXTableColumn<>(Names.ArticleName, true, Comparator.comparing(InventoryProduct::getArticleName));
+        MFXTableColumn<InventoryProduct> codebarColumn = new MFXTableColumn<>(Names.Codebar, true, Comparator.comparing(InventoryProduct::getArticleCode));
 
-		idColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getArticleId));
-		nameColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getArticleName));
+        MFXTableColumn<InventoryProduct> familyColumn = new MFXTableColumn<>(Names.FamilyCode, true, Comparator.comparing(InventoryProduct::getFamilyCode));
+        MFXTableColumn<InventoryProduct> priceColumn = new MFXTableColumn<>(Names.Price, true, Comparator.comparing(InventoryProduct::getPrice));
 
-        codebarColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getArticleCode));
-		priceColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getPrice));
-		familyColumn.setRowCellFactory(product -> new MFXTableRowCell<>(IProduct::getFamilyCode));
+		idColumn.setRowCellFactory(product -> new MFXTableRowCell<>(InventoryProduct::getArticleId));
+		nameColumn.setRowCellFactory(product -> new MFXTableRowCell<>(InventoryProduct::getArticleName));
 
-        tableStock.getTableColumns().setAll(idColumn,codebarColumn,nameColumn,familyColumn,priceColumn);
+        codebarColumn.setRowCellFactory(product -> new MFXTableRowCell<>(InventoryProduct::getArticleCode));
+		priceColumn.setRowCellFactory(product -> new MFXTableRowCell<>(InventoryProduct::getPrice));
+		familyColumn.setRowCellFactory(product -> new MFXTableRowCell<>(InventoryProduct::getFamilyCode));
+
+        tableInventory.getTableColumns().setAll(idColumn,codebarColumn,nameColumn,familyColumn,priceColumn);
     }
 
     @Override
     public void notifySelected() {
-        tableStock.getItems().clear();
-        setColumns();
+        setup();
     }
 
    
@@ -216,6 +223,11 @@ public class InventoryHelper extends IStockHelper implements IEventSubscriber{
 
         return dialog;
 
+    }
+
+    @Override
+    public Node getView() {
+        return tableInventory;
     }
 
 }
