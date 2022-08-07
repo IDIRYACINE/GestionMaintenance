@@ -1,4 +1,4 @@
-package idir.embag.Ui.Components.ExportDialogs;
+package idir.embag.Ui.Dialogs.ExportDialogs;
 
 import java.io.File;
 import java.net.URL;
@@ -12,9 +12,9 @@ import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
-import idir.embag.Ui.Components.DoingWorkDialog;
 import idir.embag.Ui.Constants.Messages;
 import idir.embag.Ui.Constants.Names;
+import idir.embag.Ui.Dialogs.DoingWorkDialog;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXListView;
 import javafx.fxml.FXML;

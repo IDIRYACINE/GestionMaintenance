@@ -1,4 +1,4 @@
-package idir.embag.Ui.Components.ConfirmationDialog;
+package idir.embag.Ui.Dialogs.ConfirmationDialog;
 
 import java.net.URL;
 import java.util.HashMap;

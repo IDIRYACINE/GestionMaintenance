@@ -9,8 +9,8 @@ import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
 import idir.embag.Types.Stores.Generics.StoreDispatch.StoreDispatch;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
-import idir.embag.Ui.Components.ExportDialogs.ExportDialog;
-import idir.embag.Ui.Components.ExportDialogs.ImportDialog;
+import idir.embag.Ui.Dialogs.ExportDialogs.ExportDialog;
+import idir.embag.Ui.Dialogs.ExportDialogs.ImportDialog;
 
 public class SettingsController {
 

@@ -27,7 +27,7 @@ public class App extends Application {
        
         FXMLLoader loader = new FXMLLoader();
         loader.setController(navigationController);
-        loader.load(getClass().getResourceAsStream("/views/Main.fxml"));
+        loader.load(getClass().getResourceAsStream("/views/Panels/Main.fxml"));
         Parent root = loader.getRoot();
         Scene scene = new Scene(root);
         stage.setTitle("Embag ");

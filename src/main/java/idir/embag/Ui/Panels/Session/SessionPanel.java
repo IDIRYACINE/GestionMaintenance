@@ -23,7 +23,7 @@ public class SessionPanel extends INodeView implements Initializable {
     private SessionController controller;
 
     public SessionPanel() {
-        fxmlPath = "/views/SessionPanel.fxml";
+        fxmlPath = "/views/Panels/SessionPanel.fxml";
         
     }
 

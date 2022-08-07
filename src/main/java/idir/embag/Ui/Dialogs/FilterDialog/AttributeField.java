@@ -1,4 +1,4 @@
-package idir.embag.Ui.Components.FilterDialog;
+package idir.embag.Ui.Dialogs.FilterDialog;
 
 import java.net.URL;
 import java.util.ResourceBundle;

@@ -1,4 +1,4 @@
-package idir.embag.Ui.Components;
+package idir.embag.Ui.Dialogs;
 
 import java.net.URL;
 import java.util.Map;

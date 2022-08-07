@@ -31,7 +31,7 @@ public class HistoryPanel extends INodeView  implements Initializable {
     private IHistoryController controller;
 
     public HistoryPanel() {
-        fxmlPath = "/views/HistoryPanel.fxml";
+        fxmlPath = "/views/Panels/HistoryPanel.fxml";
     }
 
     @Override

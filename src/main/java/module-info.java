@@ -26,11 +26,11 @@ module idir.embag {
     opens idir.embag.Application.Controllers.Navigation to javafx.base,javafx.fxml;
     opens idir.embag.Infrastructure.Printer.PrinterSelection to javafx.base,javafx.fxml;
     opens idir.embag.Application.Controllers.Settings to javafx.base,javafx.fxml;
-    opens idir.embag.Ui.Components.FilterDialog to  javafx.base,javafx.fxml;
-    opens idir.embag.Ui.Components.MangerDialog to  javafx.base,javafx.fxml;
+    opens idir.embag.Ui.Dialogs.FilterDialog to  javafx.base,javafx.fxml;
+    opens idir.embag.Ui.Dialogs.MangerDialog to  javafx.base,javafx.fxml;
     opens idir.embag.Ui.Components.Editors to  javafx.base,javafx.fxml;
-    opens idir.embag.Ui.Components.ConfirmationDialog to  javafx.base,javafx.fxml;
-    opens idir.embag.Ui.Components.ExportDialogs to  javafx.base,javafx.fxml;
+    opens idir.embag.Ui.Dialogs.ConfirmationDialog to  javafx.base,javafx.fxml;
+    opens idir.embag.Ui.Dialogs.ExportDialogs to  javafx.base,javafx.fxml;
 
 
     exports idir.embag;

@@ -24,7 +24,7 @@ public class WorkersPanel extends INodeView implements Initializable{
     IWorkersController controller;
 
     public WorkersPanel() {
-        fxmlPath = "/views/WorkersPanel.fxml";
+        fxmlPath = "/views/Panels/WorkersPanel.fxml";
     }
 
     @Override

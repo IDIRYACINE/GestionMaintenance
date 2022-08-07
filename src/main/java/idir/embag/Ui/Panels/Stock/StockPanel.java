@@ -36,7 +36,7 @@ public class StockPanel extends INodeView  implements  Initializable {
     private StockController controller;
 
     public StockPanel() {
-        fxmlPath = "/views/StockPanel.fxml";
+        fxmlPath = "/views/Panels/StockPanel.fxml";
     }
 
 

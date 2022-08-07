@@ -18,7 +18,7 @@ public class SettingsPanel extends INodeView implements Initializable {
   private SettingsController controller;
 
   public SettingsPanel(){
-    fxmlPath = "/views/SettingsPanel.fxml";
+    fxmlPath = "/views/Panels/SettingsPanel.fxml";
     controller = new SettingsController();
   }
 
