@@ -14,6 +14,8 @@ module idir.embag {
     requires javafx.swing;
     requires org.apache.commons.compress;
     requires org.yaml.snakeyaml;
+    requires Java.WebSocket;
+    requires okhttp3;
 
     opens idir.embag to javafx.fxml;
 
@@ -22,6 +24,7 @@ module idir.embag {
     opens idir.embag.Ui.Panels.Workers to javafx.base,javafx.fxml;
     opens idir.embag.Ui.Panels.Settings to javafx.base,javafx.fxml;
     opens idir.embag.Ui.Panels.Stock to javafx.base,javafx.fxml;
+    opens idir.embag.Ui.Panels.Login to javafx.base,javafx.fxml;
     opens idir.embag.Ui.Components to javafxj.base,javafx.fxml;
     opens idir.embag.Application.Controllers.Navigation to javafx.base,javafx.fxml;
     opens idir.embag.Infrastructure.Printer.PrinterSelection to javafx.base,javafx.fxml;
