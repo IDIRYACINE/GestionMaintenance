@@ -6,6 +6,8 @@ import okhttp3.Call;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import idir.embag.Types.Api.EHeaders.Headers;
+
 
 public abstract class IApi {
 
@@ -13,19 +15,25 @@ public abstract class IApi {
 
     protected IApiResponseHandler responseHandler;
 
-    protected Request.Builder builder = new Request.Builder();
+    protected Request.Builder requestBuilder = new Request.Builder();
 
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
-
+    /**
+     * 
+     * @param async defaults to false
+     */
+    public abstract void setAsync(boolean async);
+    
     public abstract void execute();
 
     public void setResponseHandler(IApiResponseHandler handler){
         responseHandler = handler;
     }
 
-    public void addHeader(EHeaders key, String value) {
-        headers.add(new Pair<String,String>(key.toString(),value));
+    public void addHeader(Headers key, String value) {
+        String headerKey = EHeaders.valueOf(key);
+        headers.add(new Pair<String,String>(headerKey,value));
     }
 
     /**
@@ -34,7 +42,7 @@ public abstract class IApi {
      */
     public void addPostBody(String bodyJson){
         RequestBody requestBody =  RequestBody.create(bodyJson,JSON);
-        builder.post(requestBody);
+        requestBuilder.post(requestBody);
     }
 
     protected void addHeadersToRequest(Request.Builder builder) {

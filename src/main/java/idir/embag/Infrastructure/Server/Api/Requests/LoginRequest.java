@@ -1,20 +1,24 @@
-package idir.embag.Infrastructure.Server.Api;
+package idir.embag.Infrastructure.Server.Api.Requests;
 
 import java.io.IOException;
 import idir.embag.Types.Api.IApi;
 import idir.embag.Types.Api.IApiWrapper;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
-public class ApiRequest extends IApi {
+public class LoginRequest extends IApi {
 
     OkHttpClient client;
 
     Callback resultCallback;
 
-    public ApiRequest(IApiWrapper wrapper){
+    boolean isAsync = false;
+    HttpUrl url;
+
+    public LoginRequest(IApiWrapper wrapper){
         client = new OkHttpClient();
 
         resultCallback = new Callback() {
@@ -27,20 +31,33 @@ public class ApiRequest extends IApi {
             }
         };
 
-        builder.url(wrapper.getApiUrl());
+        url = wrapper.getApiUrl().build();
     }
 
     @Override
     public void execute() {
-        builder.build();        
-        addHeadersToRequest(builder);
+        requestBuilder.url(url);
+        addHeadersToRequest(requestBuilder);
+        requestBuilder.build();        
         
-        Call call = client.newCall(builder.build());
+        Call call = client.newCall(requestBuilder.build());
         try {
-            call.execute();
+            if(!isAsync){
+                Response response = call.execute();
+                responseHandler.handleResponse(response);
+            }
+            else{
+                call.enqueue(resultCallback);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void setAsync(boolean async) {
+       isAsync = async;
     }
 
 }

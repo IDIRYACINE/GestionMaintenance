@@ -2,11 +2,10 @@ package idir.embag.Infrastructure.Server;
 
 import java.util.Map;
 import idir.embag.Application.Utility.DataBundler;
-import idir.embag.Infrastructure.Server.Api.AsyncApiRequest;
-import idir.embag.Infrastructure.Server.Api.ApiWrappers.LoginWrapper;
+import idir.embag.Infrastructure.Server.Api.Requests.LoginRequest;
 import idir.embag.Infrastructure.Server.Api.ResponeHandlers.LoginResponse;
 import idir.embag.Infrastructure.Server.WebSocket.WebSocketImpl;
-import idir.embag.Types.Api.EHeaders;
+import idir.embag.Types.Api.EHeaders.Headers;
 import idir.embag.Types.Api.IApi;
 import idir.embag.Types.Api.IApiWrapper;
 import idir.embag.Types.Infrastructure.Server.EServerKeys;
@@ -30,12 +29,9 @@ public class Server implements IServer{
     
 
     private void login(IApiWrapper wrapper) {
-        LoginWrapper loginWrapper = (LoginWrapper) wrapper;
-        IApi loginApi = new AsyncApiRequest(wrapper);
+        IApi loginApi = new LoginRequest(wrapper);
 
-        loginApi.addHeader(EHeaders.authToken, authToken);
-        loginApi.addHeader(EHeaders.username, loginWrapper.getUsername());
-        loginApi.addHeader(EHeaders.password, loginWrapper.getPassword());
+        loginApi.addHeader(Headers.access_token, authToken);
 
         LoginResponse loginHandler = new LoginResponse();
         loginHandler.setWebsocket(webSocketClient);

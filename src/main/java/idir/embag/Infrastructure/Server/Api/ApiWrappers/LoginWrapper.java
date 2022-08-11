@@ -2,6 +2,7 @@ package idir.embag.Infrastructure.Server.Api.ApiWrappers;
 
 import idir.embag.Types.Api.EApi;
 import idir.embag.Types.Api.IApiWrapper;
+import okhttp3.HttpUrl.Builder;
 
 public class LoginWrapper extends IApiWrapper{
 
@@ -13,6 +14,7 @@ public class LoginWrapper extends IApiWrapper{
         this.password = password;
         this.username = username;
         api = EApi.loginAdmin;
+
     }
 
     public String getPassword() {
@@ -31,4 +33,13 @@ public class LoginWrapper extends IApiWrapper{
         this.username = username;
     }
 
+    @Override
+    public Builder getApiUrl() {
+        Builder urlBuilder =  super.getApiUrl();
+        urlBuilder.addQueryParameter("username", username);
+        urlBuilder.addQueryParameter("password", password);
+        return urlBuilder;
+    }
+
+    
 }

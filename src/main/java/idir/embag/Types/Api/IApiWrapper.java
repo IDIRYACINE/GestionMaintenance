@@ -1,7 +1,6 @@
 package idir.embag.Types.Api;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import okhttp3.HttpUrl;
 
 public abstract class IApiWrapper {
 
@@ -53,18 +52,18 @@ public abstract class IApiWrapper {
         this.port = port;
     }
 
-    public URL getApiUrl(){
-        String apiPath = "/"+apiVersionPath+"/"+apiVersion+"/"+api;
-        URL apiUrl = null;
-        try {
-            apiUrl = new URL(protocol,host,port,apiPath);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return apiUrl;
-    }
-
     public EApi getApi(){
         return api;
+    }
+
+    public HttpUrl.Builder getApiUrl(){
+        HttpUrl.Builder apiUrl = new HttpUrl.Builder();
+        apiUrl.scheme(protocol);
+        apiUrl.host(host);
+        apiUrl.port(port);
+        apiUrl.addPathSegment(apiVersionPath);
+        apiUrl.addPathSegment(String.valueOf(apiVersion));
+        apiUrl.addPathSegment(api.toString());
+        return apiUrl;
     }
 }

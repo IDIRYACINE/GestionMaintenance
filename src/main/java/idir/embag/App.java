@@ -51,8 +51,6 @@ public class App extends Application {
             try{
             loadSplashScreen();   
 
-            Thread.sleep(5000);
-
             INavigationController navigationController = new MainController();
             setup(navigationController);
         

@@ -9,13 +9,12 @@ module idir.embag {
     requires javafx.base;
     requires de.jensd.fx.glyphs.fontawesome;
     requires de.jensd.fx.glyphs.materialdesignicons;
-    requires org.apache.poi.poi;
     requires org.apache.poi.ooxml ;
-    requires javafx.swing;
     requires org.apache.commons.compress;
     requires org.yaml.snakeyaml;
     requires Java.WebSocket;
     requires okhttp3;
+    requires com.google.gson;
 
     opens idir.embag to javafx.fxml;
 
@@ -35,6 +34,10 @@ module idir.embag {
     opens idir.embag.Ui.Dialogs.ConfirmationDialog to  javafx.base,javafx.fxml;
     opens idir.embag.Ui.Dialogs.ExportDialogs to  javafx.base,javafx.fxml;
 
+    opens idir.embag.DataModels.ApiBodyResponses to com.google.gson;
+    opens idir.embag.DataModels.Products to com.google.gson;
+    opens idir.embag.DataModels.Session to com.google.gson;
+    opens idir.embag.DataModels.Workers to com.google.gson;
 
     exports idir.embag;
 }
