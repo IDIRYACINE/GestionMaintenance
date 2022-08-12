@@ -16,6 +16,7 @@ public class LoginRequest extends IApi {
     Callback resultCallback;
 
     boolean isAsync = false;
+    
     HttpUrl url;
 
     public LoginRequest(IApiWrapper wrapper){
