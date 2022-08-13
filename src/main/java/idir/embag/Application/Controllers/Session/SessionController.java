@@ -1,14 +1,22 @@
 package idir.embag.Application.Controllers.Session;
 
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
+import idir.embag.DataModels.Session.Session;
 import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
+import idir.embag.Infrastructure.ServicesCenter;
+import idir.embag.Infrastructure.Server.Api.ApiWrappers.FetchActiveSessionRecordsWrapper;
+import idir.embag.Infrastructure.Server.Api.ApiWrappers.OpenSessionWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
+import idir.embag.Types.Infrastructure.Server.EServerKeys;
 import idir.embag.Types.MetaData.ENavigationKeys;
 import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Stores.Generics.IEventSubscriber;
@@ -29,14 +37,19 @@ import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 public class SessionController implements IEventSubscriber {
     
     private MFXTableView<SessionRecord> tableRecord;
+
+    private Session activeSession;
     
-    public SessionController(MFXTableView<SessionRecord> tableRecord) {
-        this.tableRecord = tableRecord;
+    public SessionController() {
         StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.SessionEvent, this);
+    }
+
+    public void setup(MFXTableView<SessionRecord> tableRecord) {
+        this.tableRecord = tableRecord;
         setColumns();
     }
 
-    public void refresh() {
+    public void refreshFromLocalDb() {
         Map<EEventsDataKeys,Object> data = new HashMap<>();
         LoadWrapper loadWrapper = new LoadWrapper(100,0);
         
@@ -46,6 +59,18 @@ public class SessionController implements IEventSubscriber {
 
         dispatchEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.Load,data);        
     }
+
+    public void refreshFromServer() {
+        Map<EEventsDataKeys,Object> data = new HashMap<>();
+        LoadWrapper loadWrapper = new LoadWrapper(100,0);
+        
+        Map<EWrappers, Object> wrappersData = new HashMap<>();
+        wrappersData.put(EWrappers.LoadWrapper, loadWrapper);
+        data.put(EEventsDataKeys.WrappersKeys, wrappersData);
+
+        dispatchEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.Load,data);        
+    }
+
 
     public void manageSessionGroups() {
 
@@ -66,11 +91,14 @@ public class SessionController implements IEventSubscriber {
     @Override
     public void notifyEvent(StoreEvent event) {
        switch(event.getAction()){
+              case ApiResponse: 
+                    setActiveSession(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.ApiResponse));
+                break;
               case Add:
-                addRecord((SessionRecord) event.getData().get(EEventsDataKeys.Instance));
+                addRecord(DataBundler.retrieveValue(event.getData(),EEventsDataKeys.Instance));
                 break;
               case Refresh:
-                setRecords((Collection<SessionRecord>) event.getData().get(EEventsDataKeys.InstanceCollection));
+                setRecords(DataBundler.retrieveValue(event.getData(),EEventsDataKeys.InstanceCollection));
                 break;
               default:
                 break;
@@ -80,18 +108,30 @@ public class SessionController implements IEventSubscriber {
     public void closeSession() {
         ConfirmationDialog dialogContent = new ConfirmationDialog();
         dialogContent.setMessage(Messages.closeSession);
+        //TODO: save session records to local db
+        Map<EEventsDataKeys,Object> data = new HashMap<>();
+        Map<ENavigationKeys, Object> navigationData = new HashMap<>();
 
-        dialogContent.setOnConfirm(data -> {
-            dispatchEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.CloseSession, null);
+        dialogContent.setOnConfirm(other -> {
+            dispatchEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.CloseSession, data);
         });
 
-        Map<EEventsDataKeys,Object> data = new HashMap<>();
-
-        Map<ENavigationKeys, Object> navigationData = new HashMap<>();
+        
         navigationData.put(ENavigationKeys.DialogContent, dialogContent);
         data.put(EEventsDataKeys.NavigationKeys, navigationData);
+        data.put(EEventsDataKeys.Instance, activeSession);
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
+    }
+
+    private void setActiveSession(Session session) {
+        this.activeSession = session;
+
+        Map<EServerKeys,Object> apiData = new HashMap<>();
+        OpenSessionWrapper apiWrapper = new OpenSessionWrapper(session);
+        apiData.put(EServerKeys.ApiWrapper, apiWrapper);
+
+        ServicesCenter.getInstance().getRemoteServer().dispatchApiCall(apiData);
     }
 
     public void export() {
@@ -135,6 +175,32 @@ public class SessionController implements IEventSubscriber {
         StoreEvent event = new StoreEvent(storeEvent, actionEvent,data);
         StoreDispatch action = new StoreDispatch(store, event);
         StoreCenter.getInstance().dispatch(action);
+    }
+
+    public void openNewSession() {
+        Map<EEventsDataKeys,Object> data = new HashMap<>();
+     
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString = formatter.format(date);
+  
+        Session session = new Session(0, true, dateString, 
+            "null", 0, 0);
+
+        data.put(EEventsDataKeys.Instance, session);
+        dispatchEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.Add, data);
+
+
+    }
+
+    public void loadActiveSessionIfExists() {
+        Map<EServerKeys,Object> data = new HashMap<>();
+
+        FetchActiveSessionRecordsWrapper apiWrapper = new FetchActiveSessionRecordsWrapper(500, 0);
+        data.put(EServerKeys.ApiWrapper, apiWrapper);
+
+        ServicesCenter.getInstance().getRemoteServer().dispatchApiCall(data);
+
     }
 
 }

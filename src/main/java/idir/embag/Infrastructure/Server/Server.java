@@ -1,15 +1,18 @@
 package idir.embag.Infrastructure.Server;
 
 import java.util.Map;
+
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.Infrastructure.Server.Api.Requests.LoginRequest;
 import idir.embag.Infrastructure.Server.Api.ResponeHandlers.LoginResponse;
 import idir.embag.Infrastructure.Server.WebSocket.WebSocketImpl;
+import idir.embag.Types.Api.EHeaders;
 import idir.embag.Types.Api.EHeaders.Headers;
 import idir.embag.Types.Api.IApi;
 import idir.embag.Types.Api.IApiWrapper;
 import idir.embag.Types.Infrastructure.Server.EServerKeys;
 import idir.embag.Types.Infrastructure.Server.IServer;
+import okhttp3.HttpUrl;
 
 public class Server implements IServer{
 
@@ -33,8 +36,21 @@ public class Server implements IServer{
 
         loginApi.addHeader(Headers.access_token, authToken);
 
-        LoginResponse loginHandler = new LoginResponse();
-        loginHandler.setWebsocket(webSocketClient);
+        Runnable initSocket = new Runnable() {
+            @Override
+            public void run() {
+                HttpUrl url =  new HttpUrl.Builder()
+                    .scheme("ws")
+                    .host(serverPath)
+                    .addQueryParameter(EHeaders.valueOf(Headers.access_token), authToken)
+                    .build();
+                    
+                webSocketClient = new WebSocketImpl(url.uri());
+               
+            }
+        };
+
+        LoginResponse loginHandler = new LoginResponse(initSocket);
         loginApi.setResponseHandler(loginHandler);
 
         loginApi.execute();
@@ -51,5 +67,6 @@ public class Server implements IServer{
             break;
         }
     }
+
     
 }

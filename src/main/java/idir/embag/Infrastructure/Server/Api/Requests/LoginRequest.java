@@ -15,8 +15,6 @@ public class LoginRequest extends IApi {
 
     Callback resultCallback;
 
-    boolean isAsync = false;
-    
     HttpUrl url;
 
     public LoginRequest(IApiWrapper wrapper){
@@ -31,7 +29,6 @@ public class LoginRequest extends IApi {
                 handleFaillure(call);
             }
         };
-
         url = wrapper.getApiUrl().build();
     }
 
@@ -56,9 +53,5 @@ public class LoginRequest extends IApi {
         }
     }
 
-    @Override
-    public void setAsync(boolean async) {
-       isAsync = async;
-    }
 
 }

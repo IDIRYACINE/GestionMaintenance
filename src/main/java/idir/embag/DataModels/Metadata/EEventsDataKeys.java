@@ -14,4 +14,5 @@ public enum EEventsDataKeys {
     Subscriber,
     OperationStatus,
     EventKey,
+    ApiResponse,
 }

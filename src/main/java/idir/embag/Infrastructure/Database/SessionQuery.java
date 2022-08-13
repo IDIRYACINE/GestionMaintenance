@@ -22,8 +22,6 @@ public class SessionQuery extends ISessionQuery{
 
     private IDatabase database;
     
-    
-
     public SessionQuery(IDatabase database) {
         this.database = database;
     }
@@ -39,7 +37,7 @@ public class SessionQuery extends ISessionQuery{
     @Override
     public void UpdateSession(int sessionId, Collection<AttributeWrapper> attributes)
             throws SQLException {
-                String whereClause = " WHERE "+EStockAttributes.ArticleId + "=" + sessionId;
+                String whereClause = " WHERE "+ESessionAttributes.SessionId + "=" + sessionId;
                 String query = "UPDATE "+ETables.Sessions+ UpdateWrapperToQuery(attributes)+ whereClause;
                 database.UpdateQuery(query);
         
@@ -66,7 +64,6 @@ public class SessionQuery extends ISessionQuery{
                 String whereClause = " WHERE "+ESessionGroupAttributes.GroupId + "=" + groupId;
                 String query = "UPDATE "+ETables.SessionsGroups+ UpdateWrapperToQuery(attributes)+ whereClause;
                 database.UpdateQuery(query);
-        
     }
 
     @Override
@@ -103,6 +100,7 @@ public class SessionQuery extends ISessionQuery{
     public void CreateSessionTable() throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS "+ ETables.Sessions +" (\n"
             + ESessionAttributes.SessionId+" INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+            + ESessionAttributes.Active+" BOOLEAN,\n"
             + ESessionAttributes.StartDate+" DATE,\n"
             + ESessionAttributes.EndDate+" DATE,\n"
             + ESessionAttributes.PriceShiftValue+" REAL,\n"
@@ -315,5 +313,13 @@ public class SessionQuery extends ISessionQuery{
     @Override
     public void CreateIndexes() throws SQLException {
        
+    }
+
+
+    @Override
+    public void RegisterSessionRecordCollection(Collection<AttributeWrapper[]> collection) throws SQLException {
+        String query = "INSERT INTO "+ETables.SessionsRecords+ InsertCollectionToQuery(collection);
+        database.InsertQuery(query);
+        
     }
 }

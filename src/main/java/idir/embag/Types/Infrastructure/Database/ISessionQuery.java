@@ -36,5 +36,6 @@ public abstract class ISessionQuery extends IQuery{
     public abstract void CreateSessionGroupTable() throws SQLException;
     public abstract void CreateSessionRecordTable()  throws SQLException;
     public abstract void CreateSessionWorkersTable()  throws SQLException;
+    public abstract void RegisterSessionRecordCollection(Collection<AttributeWrapper[]> attributesCollection) throws SQLException;
    
 }

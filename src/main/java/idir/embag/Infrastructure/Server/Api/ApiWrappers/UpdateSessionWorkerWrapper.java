@@ -11,4 +11,8 @@ public class UpdateSessionWorkerWrapper extends IApiWrapper{
         this.sessionWorker = sessionWorker;
         api = EApi.updateSessionWorker;
     }
+
+    public SessionWorker getSessionWorker() {
+        return sessionWorker;
+    }
 }

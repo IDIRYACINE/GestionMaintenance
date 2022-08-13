@@ -17,13 +17,17 @@ public abstract class IApi {
 
     protected Request.Builder requestBuilder = new Request.Builder();
 
+    protected boolean isAsync = false;
+
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
     /**
      * 
      * @param async defaults to false
      */
-    public abstract void setAsync(boolean async);
+    public void setAsync(boolean async) {
+       isAsync = async;
+    }
     
     public abstract void execute();
 

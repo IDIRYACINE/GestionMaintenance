@@ -1,6 +1,8 @@
 package idir.embag.Infrastructure;
 
 import idir.embag.Infrastructure.Initialisers.DatabaseInitialiser;
+import idir.embag.Infrastructure.Server.Server;
+import idir.embag.Types.Infrastructure.Server.IServer;
 
 public class ServicesCenter {
     
@@ -17,6 +19,7 @@ public class ServicesCenter {
     
     private ServicesCenter() {
         databaseInitialiser = new DatabaseInitialiser();
+        remoteServer =  new Server("localhost:3000", "embag343adminvcs", 0);
     }
 
 
@@ -26,4 +29,10 @@ public class ServicesCenter {
         return databaseInitialiser;
     }
 
+    private IServer remoteServer;
+
+    public IServer getRemoteServer() {
+        return remoteServer;
+    }
+    
 }

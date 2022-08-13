@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
-
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.Session;
@@ -33,12 +32,12 @@ public class SessionModel  implements IDataDelegate{
         this.sessionRepository = sessionRepository;
     }
     
+    @Override
     public void add(Map<EEventsDataKeys,Object> data) {
         try {
             Collection<AttributeWrapper> wrappers = DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.AttributesCollection);
-
-          sessionQuery.RegisterSession(wrappers);
-          notfiyEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.Add, data);
+            sessionQuery.RegisterSession(wrappers);
+            notfiyEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.Add, data);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -47,7 +46,7 @@ public class SessionModel  implements IDataDelegate{
 
     @Override
     public void remove(Map<EEventsDataKeys,Object> data) {
-        
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

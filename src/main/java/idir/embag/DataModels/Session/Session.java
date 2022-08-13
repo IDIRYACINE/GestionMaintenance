@@ -6,9 +6,13 @@ public class Session {
     private String sessionEndDate;
     private double priceShift;
     private double quantityShift;
+    private boolean isActive;
     
-    public Session(int sessionId, String sessionStartDate, String sessionEndDate, double priceShift, double quantityShift) {
+    public Session(int sessionId,boolean isActive, String sessionStartDate,
+        String sessionEndDate, double priceShift, double quantityShift) {
+
         this.sessionId = sessionId;
+        this.isActive = isActive;
         this.sessionStartDate = sessionStartDate;
         this.sessionEndDate = sessionEndDate;
         this.priceShift = priceShift;
@@ -35,5 +39,8 @@ public class Session {
         return quantityShift;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
     
 }

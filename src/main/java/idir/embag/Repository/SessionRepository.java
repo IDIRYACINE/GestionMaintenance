@@ -78,6 +78,7 @@ public class SessionRepository {
             while (source.next()) {
                 result.add(new Session(
                 source.getInt(ESessionAttributes.SessionId.toString()),
+                source.getBoolean(ESessionAttributes.Active.toString()),
                 source.getString(ESessionAttributes.StartDate.toString()),
                 source.getString(ESessionAttributes.EndDate.toString()),
                 source.getDouble(ESessionAttributes.PriceShiftValue.toString()),

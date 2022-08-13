@@ -13,7 +13,8 @@ public class WebSocketImpl extends WebSocketClient{
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        
+        System.out.println("websocket connected");
+
     }
 
     @Override
@@ -24,7 +25,8 @@ public class WebSocketImpl extends WebSocketClient{
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        
+        System.out.println("closed");
+
     }
 
     @Override

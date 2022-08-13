@@ -120,7 +120,6 @@ public class InventoryModel implements IDataDelegate {
 
             notfiyEvent(EStores.DataConverterStore, EStoreEvents.InventoryEvent, EStoreEventAction.Import, data);
         } catch (SQLException e) {
-           
             e.printStackTrace();
         }
         

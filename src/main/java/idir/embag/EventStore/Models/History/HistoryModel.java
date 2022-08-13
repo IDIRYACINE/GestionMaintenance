@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
-
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.SessionRecord;
@@ -12,6 +11,7 @@ import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Repository.SessionRepository;
 import idir.embag.Types.Generics.EOperationStatus;
 import idir.embag.Types.Infrastructure.Database.ISessionQuery;
+import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 import idir.embag.Types.MetaData.EWrappers;
@@ -32,6 +32,7 @@ public class HistoryModel implements IDataDelegate{
         this.sessionRepository = sessionRepository;
     }
 
+    @Override
     public void add(Map<EEventsDataKeys,Object> data) {
         try {
           sessionQuery.RegisterSessionRecord(DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.AttributesCollection));
@@ -41,10 +42,14 @@ public class HistoryModel implements IDataDelegate{
         }
     }
 
+    @Override
     public void remove(Map<EEventsDataKeys,Object> data) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public void update(Map<EEventsDataKeys,Object> data) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -87,6 +92,17 @@ public class HistoryModel implements IDataDelegate{
     
     @Override
     public void importCollection(Map<EEventsDataKeys, Object> data) {
+        try {
+            Collection<AttributeWrapper[]> attributesCollection = DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.AttributesListCollection);
+
+            sessionQuery.RegisterSessionRecordCollection(attributesCollection);
+            data.put(EEventsDataKeys.OperationStatus, EOperationStatus.Completed);
+
+            notfiyEvent(EStores.DataConverterStore, EStoreEvents.InventoryEvent, EStoreEventAction.Import, data);
+        } catch (SQLException e) {
+           
+            e.printStackTrace();
+        }
     }
 
     private void notfiyEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent, Map<EEventsDataKeys,Object> data) {

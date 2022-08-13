@@ -20,7 +20,6 @@ public class Database implements IDatabase{
 
     @Override
     public void Connect() {
-        //TODO: Implement this method
     String AbsolutePath = new File("").getAbsolutePath();
     File directory = new File("Data");
     
