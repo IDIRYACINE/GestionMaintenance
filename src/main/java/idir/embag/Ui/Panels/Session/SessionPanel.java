@@ -27,7 +27,9 @@ public class SessionPanel extends INodeView implements Initializable,IEventSubsc
         fxmlPath = "/views/Panels/SessionPanel.fxml";
         SessionController controller = new SessionController();
         activeSessionFrame = new ActiveSessionFrame(controller);
+        activeSessionFrame.loadFxml();
         noSessionFrame = new NoSessionFrame(controller);
+        noSessionFrame.loadFxml();
     }
 
     @Override
@@ -38,6 +40,7 @@ public class SessionPanel extends INodeView implements Initializable,IEventSubsc
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        root.getChildren().set(0, noSessionFrame.getView());
     }
 
     @Override

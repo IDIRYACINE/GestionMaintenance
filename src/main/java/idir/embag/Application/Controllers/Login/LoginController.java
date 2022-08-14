@@ -8,8 +8,6 @@ import idir.embag.Types.Infrastructure.Server.EServerKeys;
 
 public class LoginController {
 
-    public LoginController() {
-    }
 
     public void login(String username, String password) {
         Map<EServerKeys,Object> data = new HashMap<>();

@@ -22,6 +22,7 @@ public class App extends Application {
     public static StackPane stackPane;
     private static IStoresCenter storesCenter;
     private ServicesCenter servicesCenter;
+    
     private Stage appStage;
     
     public App() {

@@ -25,8 +25,10 @@ public class WebSocketImpl extends WebSocketClient{
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        System.out.println("closed");
-
+        System.out.println("websocket closed" ) ;
+        System.out.println("code : " + code);
+        System.out.println("reason : " + reason);
+        System.out.println("remote : " + remote);
     }
 
     @Override

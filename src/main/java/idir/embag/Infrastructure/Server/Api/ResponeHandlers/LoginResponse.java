@@ -18,20 +18,25 @@ public class LoginResponse implements IApiResponseHandler{
 
     @Override
     public void handleResponse(Response response) {
-        if(response.code() == 200){
-            try {
-                String jsonBody = response.body().string();
+        try {
+            String jsonBody = response.body().string();
+            if(response.code() == 200){
+                
                 DLoginResponse parsedResponse = GsonSerialiser.deserialise(jsonBody, DLoginResponse.class);
                 if(parsedResponse.isAutherised){
                     initWebSocketCallback.run();
                     App.instance.loadApp();
+                    return;
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+
+            } 
+            else{
+                System.out.println("response : " + jsonBody);
             }
         }
-        else{
-
+       
+        catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

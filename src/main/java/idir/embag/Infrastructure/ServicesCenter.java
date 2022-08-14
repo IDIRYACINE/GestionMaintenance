@@ -19,7 +19,7 @@ public class ServicesCenter {
     
     private ServicesCenter() {
         databaseInitialiser = new DatabaseInitialiser();
-        remoteServer =  new Server("localhost:3000", "embag343adminvcs", 0);
+        remoteServer =  new Server("localhost",3000, "embag343adminvcs", 0);
     }
 
 

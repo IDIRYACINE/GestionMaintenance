@@ -15,6 +15,7 @@ import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Infrastructure.ServicesCenter;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.FetchActiveSessionRecordsWrapper;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.OpenSessionWrapper;
+import idir.embag.Types.Infrastructure.DataConverters.ExportWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Server.EServerKeys;
 import idir.embag.Types.MetaData.ENavigationKeys;
@@ -135,6 +136,22 @@ public class SessionController implements IEventSubscriber {
     }
 
     public void export() {
+        Map<EEventsDataKeys,Object> data = new HashMap<>();
+
+        EStoreEvents targetTable = EStoreEvents.SessionRecordsEvent;
+        LoadWrapper loadWrapper = new LoadWrapper(1000,0);
+
+        Map<EWrappers, Object> wrappersData = new HashMap<>();
+        ExportWrapper exportWrapper = new ExportWrapper(loadWrapper,targetTable);
+        wrappersData.put(EWrappers.ExportWrapper, exportWrapper);
+
+        data.put(EEventsDataKeys.Subscriber, this);
+        data.put(EEventsDataKeys.WrappersKeys, wrappersData);
+        data.put(EEventsDataKeys.InstanceCollection, tableRecord.getItems());
+
+        StoreCenter storeCenter = StoreCenter.getInstance();
+        StoreDispatch event = storeCenter.createStoreEvent(EStores.DataConverterStore, targetTable, EStoreEventAction.Export, data);
+        storeCenter.dispatch(event);
     }
 
     private void addRecord(SessionRecord record) {
