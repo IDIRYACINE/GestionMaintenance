@@ -40,7 +40,6 @@ public class WorkerOperationResponse implements IApiResponseHandler{
         Map<EEventsDataKeys,Object> data = new HashMap<>();
         data.put(EEventsDataKeys.ApiResponse, responseData);
 
-
         StoreCenter storeCenter = StoreCenter.getInstance();
         storeCenter.createStoreEvent(EStores.DataStore, EStoreEvents.SessionRecordsEvent, action, data);
     }

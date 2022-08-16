@@ -3,7 +3,7 @@ package idir.embag;
 import java.io.IOException;
 import idir.embag.Application.Controllers.Navigation.MainController;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
-import idir.embag.Infrastructure.ServicesCenter;
+import idir.embag.Infrastructure.ServicesProvider;
 import idir.embag.Types.Application.Navigation.INavigationController;
 import idir.embag.Types.Stores.StoreCenter.IStoresCenter;
 import idir.embag.Ui.Panels.Login.LoginPanel;
@@ -21,7 +21,7 @@ public class App extends Application {
 
     public static StackPane stackPane;
     private static IStoresCenter storesCenter;
-    private ServicesCenter servicesCenter;
+    private ServicesProvider servicesCenter;
     
     private Stage appStage;
     
@@ -69,7 +69,7 @@ public class App extends Application {
     }
 
     private void setup(INavigationController navigationController){
-        servicesCenter = ServicesCenter.getInstance();
+        servicesCenter = ServicesProvider.getInstance();
         storesCenter = StoreCenter.getInstance(servicesCenter,navigationController);        
         servicesCenter.getDatabaseInitialiser().createTables();
     }

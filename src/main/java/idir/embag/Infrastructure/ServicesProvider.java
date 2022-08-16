@@ -4,20 +4,20 @@ import idir.embag.Infrastructure.Initialisers.DatabaseInitialiser;
 import idir.embag.Infrastructure.Server.Server;
 import idir.embag.Types.Infrastructure.Server.IServer;
 
-public class ServicesCenter {
+public class ServicesProvider {
     
-    private static ServicesCenter instance;
+    private static ServicesProvider instance;
 
-    public static ServicesCenter getInstance(){
+    public static ServicesProvider getInstance(){
         if(instance == null){
-            instance = new ServicesCenter();
+            instance = new ServicesProvider();
         }
         return instance;
     }
 
     
     
-    private ServicesCenter() {
+    private ServicesProvider() {
         databaseInitialiser = new DatabaseInitialiser();
         remoteServer =  new Server("localhost",3000, "embag343adminvcs", 0);
     }

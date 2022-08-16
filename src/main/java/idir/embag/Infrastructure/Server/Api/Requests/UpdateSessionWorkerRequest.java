@@ -8,6 +8,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class UpdateSessionWorkerRequest extends IApi{
@@ -17,6 +18,8 @@ public class UpdateSessionWorkerRequest extends IApi{
     Callback resultCallback;
 
     HttpUrl url;
+    
+    RequestBody requestBody;
 
     public UpdateSessionWorkerRequest(IApiWrapper wrapper){
         client = new OkHttpClient();
@@ -31,11 +34,14 @@ public class UpdateSessionWorkerRequest extends IApi{
             }
         };
         url = wrapper.getApiUrl().build();
+        String jsonData = wrapper.getJsonData();
+        requestBody = RequestBody.create(jsonData, JSON);
     }
 
     @Override
     public void execute() {
         requestBuilder.url(url);
+        requestBuilder.setBody$okhttp(requestBody);
         addHeadersToRequest(requestBuilder);
         requestBuilder.build();        
         

@@ -4,5 +4,6 @@ public enum EServerKeys {
     Username,
     Password,
     ApiCall,
-    ApiWrapper
+    ApiWrapper,
+    sessionId
 }

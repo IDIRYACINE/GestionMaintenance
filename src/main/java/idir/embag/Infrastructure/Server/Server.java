@@ -5,8 +5,15 @@ import java.net.URISyntaxException;
 import java.util.Map;
 
 import idir.embag.Application.Utility.DataBundler;
+import idir.embag.Infrastructure.Server.Api.Requests.CloseSessionRequest;
 import idir.embag.Infrastructure.Server.Api.Requests.LoginRequest;
+import idir.embag.Infrastructure.Server.Api.Requests.OpenSessionRequest;
+import idir.embag.Infrastructure.Server.Api.Requests.RegisterSessionWorkerRequest;
+import idir.embag.Infrastructure.Server.Api.Requests.UnregisterSessionWorkerRequest;
+import idir.embag.Infrastructure.Server.Api.Requests.UpdateSessionWorkerRequest;
 import idir.embag.Infrastructure.Server.Api.ResponeHandlers.LoginResponse;
+import idir.embag.Infrastructure.Server.Api.ResponeHandlers.SessionResponse;
+import idir.embag.Infrastructure.Server.Api.ResponeHandlers.WorkerOperationResponse;
 import idir.embag.Infrastructure.Server.WebSocket.WebSocketImpl;
 import idir.embag.Types.Api.EHeaders.Headers;
 import idir.embag.Types.Api.IApi;
@@ -34,6 +41,29 @@ public class Server implements IServer{
     }
     
 
+    @Override
+    public void dispatchApiCall(Map<EServerKeys,Object> data) {
+        IApiWrapper apiWrapper = DataBundler.retrieveValue(data, EServerKeys.ApiWrapper);
+
+        switch(apiWrapper.getApi()){
+            case loginAdmin : login(apiWrapper);
+            break;
+            case closeSession : closeSession(apiWrapper);
+            break;
+            case openSession: openSession(apiWrapper);
+            break;
+            case registerSessionWorker: registerSessionWorker(apiWrapper);
+            break;
+            case unregisterSessionWorker: unregisterSessionWorker(apiWrapper);
+            break;
+            case updateSessionWorker: updateSessionWorker(apiWrapper);
+            break;
+
+            default : 
+            break;
+        }
+    }
+
     private void login(IApiWrapper wrapper) {
         IApi loginApi = new LoginRequest(wrapper);
 
@@ -59,17 +89,51 @@ public class Server implements IServer{
         loginApi.execute();
     }
 
-    @Override
-    public void dispatchApiCall(Map<EServerKeys,Object> data) {
-        IApiWrapper wrapper = DataBundler.retrieveValue(data, EServerKeys.ApiWrapper);
+    private void openSession(IApiWrapper apiWrapper){
+        OpenSessionRequest request = new OpenSessionRequest(apiWrapper);
+        request.addHeader(Headers.access_token, authToken);
 
-        switch(wrapper.getApi()){
-            case loginAdmin : login(wrapper);
-            break;
-            default : 
-            break;
-        }
+        SessionResponse responseHandler = new SessionResponse();
+        request.setResponseHandler(responseHandler);
+        request.execute();
     }
+
+    private void closeSession(IApiWrapper apiWrapper){
+        CloseSessionRequest request = new CloseSessionRequest(apiWrapper);
+        request.addHeader(Headers.access_token, authToken);
+
+        SessionResponse responseHandler = new SessionResponse();
+        request.setResponseHandler(responseHandler);
+        request.execute();
+    }
+
+    private void registerSessionWorker(IApiWrapper apiWrapper){
+        RegisterSessionWorkerRequest request = new RegisterSessionWorkerRequest(apiWrapper);
+        request.addHeader(Headers.access_token, authToken);
+
+        WorkerOperationResponse responseHandler = new WorkerOperationResponse();
+        request.setResponseHandler(responseHandler);
+        request.execute();
+    }
+
+    private void unregisterSessionWorker(IApiWrapper apiWrapper){
+        UnregisterSessionWorkerRequest request = new UnregisterSessionWorkerRequest(apiWrapper);
+        request.addHeader(Headers.access_token, authToken);
+
+        WorkerOperationResponse responseHandler = new WorkerOperationResponse();
+        request.setResponseHandler(responseHandler);
+        request.execute();
+    }
+
+    private void updateSessionWorker(IApiWrapper apiWrapper){
+        UpdateSessionWorkerRequest request = new UpdateSessionWorkerRequest(apiWrapper);
+        request.addHeader(Headers.access_token, authToken);
+
+        WorkerOperationResponse responseHandler = new WorkerOperationResponse();
+        request.setResponseHandler(responseHandler);
+        request.execute();
+    }
+
 
     
 }

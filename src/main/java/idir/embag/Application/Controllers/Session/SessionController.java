@@ -12,7 +12,7 @@ import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.Session;
 import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
-import idir.embag.Infrastructure.ServicesCenter;
+import idir.embag.Infrastructure.ServicesProvider;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.FetchActiveSessionRecordsWrapper;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.OpenSessionWrapper;
 import idir.embag.Types.Infrastructure.DataConverters.ExportWrapper;
@@ -98,6 +98,8 @@ public class SessionController implements IEventSubscriber {
               case Add:
                 addRecord(DataBundler.retrieveValue(event.getData(),EEventsDataKeys.Instance));
                 break;
+              case AddCollection: addRecordCollection(DataBundler.retrieveValue(event.getData(),EEventsDataKeys.InstanceCollection));
+                break;  
               case Refresh:
                 setRecords(DataBundler.retrieveValue(event.getData(),EEventsDataKeys.InstanceCollection));
                 break;
@@ -132,7 +134,7 @@ public class SessionController implements IEventSubscriber {
         OpenSessionWrapper apiWrapper = new OpenSessionWrapper(session);
         apiData.put(EServerKeys.ApiWrapper, apiWrapper);
 
-        ServicesCenter.getInstance().getRemoteServer().dispatchApiCall(apiData);
+        ServicesProvider.getInstance().getRemoteServer().dispatchApiCall(apiData);
     }
 
     public void export() {
@@ -157,6 +159,12 @@ public class SessionController implements IEventSubscriber {
     private void addRecord(SessionRecord record) {
         tableRecord.getItems().add(record);
     }
+
+
+    private void addRecordCollection(Collection<SessionRecord> records) {
+        tableRecord.getItems().addAll(records);
+    }
+
 
     private void setRecords(Collection<SessionRecord> records) {
         tableRecord.getItems().setAll(records);
@@ -216,7 +224,7 @@ public class SessionController implements IEventSubscriber {
         FetchActiveSessionRecordsWrapper apiWrapper = new FetchActiveSessionRecordsWrapper(500, 0);
         data.put(EServerKeys.ApiWrapper, apiWrapper);
 
-        ServicesCenter.getInstance().getRemoteServer().dispatchApiCall(data);
+        ServicesProvider.getInstance().getRemoteServer().dispatchApiCall(data);
 
     }
 

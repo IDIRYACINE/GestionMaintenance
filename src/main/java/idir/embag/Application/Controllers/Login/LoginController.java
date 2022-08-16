@@ -2,7 +2,7 @@ package idir.embag.Application.Controllers.Login;
 
 import java.util.HashMap;
 import java.util.Map;
-import idir.embag.Infrastructure.ServicesCenter;
+import idir.embag.Infrastructure.ServicesProvider;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.LoginWrapper;
 import idir.embag.Types.Infrastructure.Server.EServerKeys;
 
@@ -15,7 +15,7 @@ public class LoginController {
         LoginWrapper apiWrapper = new LoginWrapper(username,password);
         data.put(EServerKeys.ApiWrapper, apiWrapper);
 
-        ServicesCenter.getInstance().getRemoteServer().dispatchApiCall(data);
+        ServicesProvider.getInstance().getRemoteServer().dispatchApiCall(data);
     }
 
     

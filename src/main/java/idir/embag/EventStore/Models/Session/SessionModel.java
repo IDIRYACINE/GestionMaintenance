@@ -3,17 +3,23 @@ package idir.embag.EventStore.Models.Session;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.Session;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
+import idir.embag.Infrastructure.ServicesProvider;
+import idir.embag.Infrastructure.Server.Api.ApiWrappers.CloseSessionWrapper;
+import idir.embag.Infrastructure.Server.Api.ApiWrappers.OpenSessionWrapper;
 import idir.embag.Repository.SessionRepository;
 import idir.embag.Types.Generics.EOperationStatus;
 import idir.embag.Types.Infrastructure.Database.ISessionQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
+import idir.embag.Types.Infrastructure.Server.EServerKeys;
+import idir.embag.Types.Infrastructure.Server.IServer;
 import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Stores.DataStore.IDataDelegate;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
@@ -35,6 +41,9 @@ public class SessionModel  implements IDataDelegate{
     @Override
     public void add(Map<EEventsDataKeys,Object> data) {
         try {
+            Session session = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
+            openSessionOnServer(session);
+
             Collection<AttributeWrapper> wrappers = DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.AttributesCollection);
             sessionQuery.RegisterSession(wrappers);
             notfiyEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.Add, data);
@@ -46,6 +55,8 @@ public class SessionModel  implements IDataDelegate{
 
     @Override
     public void remove(Map<EEventsDataKeys,Object> data) {
+        Session session = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
+        closeSessionOnServer(session);
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -111,4 +122,23 @@ public class SessionModel  implements IDataDelegate{
     public void importCollection(Map<EEventsDataKeys, Object> data) {
     }
 
+    private void openSessionOnServer(Session session){
+        OpenSessionWrapper openSessionWrapper = new OpenSessionWrapper(session);
+
+        Map<EServerKeys,Object> data =  new HashMap<>();
+        DataBundler.appendData(data, EServerKeys.ApiWrapper, openSessionWrapper);
+
+        IServer server = ServicesProvider.getInstance().getRemoteServer();
+        server.dispatchApiCall(data);
+    }
+
+    private void closeSessionOnServer(Session session){
+        CloseSessionWrapper closeSessionWrapper = new CloseSessionWrapper(session.getSessionId());
+
+        Map<EServerKeys,Object> data =  new HashMap<>();
+        DataBundler.appendData(data, EServerKeys.ApiWrapper, closeSessionWrapper);
+
+        IServer server = ServicesProvider.getInstance().getRemoteServer();
+        server.dispatchApiCall(data);
+    }
 }

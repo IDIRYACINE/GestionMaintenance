@@ -46,6 +46,10 @@ public abstract class IApiWrapper {
         apiVersionPath = versionPath;
     }
 
+    public String getJsonData(){
+        throw new UnsupportedOperationException("Operation not supported");
+    }
+
     public void setHost(String protocol ,String host,int port){
         this.host = host;
         this.protocol = protocol;
