@@ -41,6 +41,7 @@ public class App extends Application {
         stage.setScene(scene);          
         stage.show();       
         appStage = stage;
+
     }
 
     public static void main(String[] args) {

@@ -40,7 +40,7 @@ public class SessionPanel extends INodeView implements Initializable,IEventSubsc
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        root.getChildren().set(0, noSessionFrame.getView());
+        root.getChildren().add(0, noSessionFrame.getView());
     }
 
     @Override

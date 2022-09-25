@@ -16,6 +16,7 @@ import idir.embag.Infrastructure.Server.Api.ResponeHandlers.SessionResponse;
 import idir.embag.Infrastructure.Server.Api.ResponeHandlers.WorkerOperationResponse;
 import idir.embag.Infrastructure.Server.WebSocket.WebSocketImpl;
 import idir.embag.Types.Api.EHeaders.Headers;
+import idir.embag.Types.Api.EHeaders;
 import idir.embag.Types.Api.IApi;
 import idir.embag.Types.Api.IApiWrapper;
 import idir.embag.Types.Infrastructure.Server.EServerKeys;
@@ -75,8 +76,10 @@ public class Server implements IServer{
                 try {
                     URI url = new URI("ws://"+serverPath+":"+port);
                     webSocketClient = new WebSocketImpl(url);
-                    webSocketClient.connect();
-                } catch (URISyntaxException e) {
+                    webSocketClient.addHeader(EHeaders.valueOf(Headers.access_token), authToken);
+                    webSocketClient.connectBlocking();
+
+                } catch (URISyntaxException | InterruptedException e) {
                     System.out.println("Invalid server path");
                     e.printStackTrace();
                 }

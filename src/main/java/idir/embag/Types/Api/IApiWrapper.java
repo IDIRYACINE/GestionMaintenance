@@ -16,7 +16,7 @@ public abstract class IApiWrapper {
 
     protected String protocol = "http";
 
-    protected int port = 3000;
+    protected int port = 3050;
     
     public void setApi(EApi api){
         this.api = api;

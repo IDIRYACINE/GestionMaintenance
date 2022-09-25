@@ -1,9 +1,12 @@
 package idir.embag.Infrastructure.Server.WebSocket;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+
+import idir.embag.App;
 import idir.embag.Application.Utility.GsonSerialiser;
 import idir.embag.DataModels.ApiBodyResponses.DSocketMessage;
 import idir.embag.DataModels.Session.SessionRecord;
@@ -24,6 +27,11 @@ public class WebSocketImpl extends WebSocketClient{
     @Override
     public void onOpen(ServerHandshake handshakedata) {
         System.out.println("websocket connected");
+        try {
+            App.instance.loadApp();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressWarnings({"unchecked"})

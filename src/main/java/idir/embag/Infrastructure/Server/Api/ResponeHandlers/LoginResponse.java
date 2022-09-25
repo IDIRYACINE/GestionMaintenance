@@ -1,7 +1,6 @@
 package idir.embag.Infrastructure.Server.Api.ResponeHandlers;
 
 import java.io.IOException;
-import idir.embag.App;
 import idir.embag.Application.Utility.GsonSerialiser;
 import idir.embag.DataModels.ApiBodyResponses.DLoginResponse;
 import idir.embag.Types.Api.IApiResponseHandler;
@@ -23,9 +22,10 @@ public class LoginResponse implements IApiResponseHandler{
             if(response.code() == 200){
                 
                 DLoginResponse parsedResponse = GsonSerialiser.deserialise(jsonBody, DLoginResponse.class);
+                System.out.println("response : " + jsonBody);
+
                 if(parsedResponse.isAutherised){
                     initWebSocketCallback.run();
-                    App.instance.loadApp();
                     return;
                 }
 
