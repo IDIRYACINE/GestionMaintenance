@@ -7,19 +7,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import idir.embag.Types.Infrastructure.Database.IConnectionParameters;
 import idir.embag.Types.Infrastructure.Database.IDatabase;
 
-public class Database implements IDatabase{
+public class SqliteDatabase implements IDatabase{
 
     private Connection connection;
     private final String DATABASE_URL;
 
-    public Database(String dATABASE_URL) {
+    public SqliteDatabase(String dATABASE_URL) {
         DATABASE_URL = dATABASE_URL;
     }
 
     @Override
-    public void Connect() {
+    public void Connect(IConnectionParameters connectionParameters) {
     String AbsolutePath = new File("").getAbsolutePath();
     File directory = new File("Data");
     

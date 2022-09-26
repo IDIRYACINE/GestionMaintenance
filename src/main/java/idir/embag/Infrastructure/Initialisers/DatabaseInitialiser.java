@@ -1,9 +1,10 @@
 package idir.embag.Infrastructure.Initialisers;
 
-import idir.embag.Infrastructure.Database.Database;
+import idir.embag.Infrastructure.Database.MysqlDatabase;
 import idir.embag.Infrastructure.Database.ProductQuery;
 import idir.embag.Infrastructure.Database.SessionQuery;
 import idir.embag.Infrastructure.Database.WorkerQuery;
+import idir.embag.Types.Infrastructure.Database.IConnectionParameters;
 import idir.embag.Types.Infrastructure.Database.IDatabase;
 import idir.embag.Types.Infrastructure.Database.IProductQuery;
 import idir.embag.Types.Infrastructure.Database.ISessionQuery;
@@ -17,11 +18,10 @@ public class DatabaseInitialiser {
     private IDatabase database;
 
     public DatabaseInitialiser() {
-        database = new Database("Data/TestDatabase.db");
+        database = new MysqlDatabase();
         productQuery = new ProductQuery(database);
         sessionQuery = new SessionQuery(database);
         workerQuery = new WorkerQuery(database);
-        database.Connect();
     }
 
     public IProductQuery getProductQuery() {
@@ -55,10 +55,7 @@ public class DatabaseInitialiser {
 
     }
 
-    public void connect(){
-        database.Connect();
+    public void connect(IConnectionParameters connectionParameters){
+        database.Connect(connectionParameters);
     }
-
-    
-
 }

@@ -17,7 +17,5 @@ public class LoginController {
 
         ServicesProvider.getInstance().getRemoteServer().dispatchApiCall(data);
     }
-
-    
     
 }

@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 
 public interface IDatabase {
-    public void Connect();
+    public void Connect(IConnectionParameters connectionParameters);
     
     public void Disconnect();
 
