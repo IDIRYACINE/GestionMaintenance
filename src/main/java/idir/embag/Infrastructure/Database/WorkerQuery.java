@@ -48,12 +48,11 @@ public class WorkerQuery extends IWorkerQuery{
 
     @Override
     public void CreateWorkerTable() throws SQLException {
-        String query = "CREATE TABLE IF NOT EXISTS "+ ETables.Workers +" (\n"
-           + EWorkerAttributes.WorkerId+" INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-           + EWorkerAttributes.WorkerName+" TEXT,\n"
-           + EWorkerAttributes.WorkerEmail+" TEXT,\n"
-           + EWorkerAttributes.WorkerPhone+" INTEGER)\n";
-           
+        String query = "CREATE TABLE IF NOT EXISTS "+ ETables.Workers +" ("
+           + EWorkerAttributes.WorkerId+" INTEGER PRIMARY KEY AUTO_INCREMENT,"
+           + EWorkerAttributes.WorkerName+" TEXT,"
+           + EWorkerAttributes.WorkerEmail+" TEXT,"
+           + EWorkerAttributes.WorkerPhone+" INTEGER)";
         database.CreateQuery(query);
             
     }

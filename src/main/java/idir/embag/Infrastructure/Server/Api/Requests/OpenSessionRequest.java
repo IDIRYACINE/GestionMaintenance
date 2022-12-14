@@ -20,6 +20,8 @@ public class OpenSessionRequest extends IApi{
 
     RequestBody requestBody;
 
+    String jsonData;
+
     public OpenSessionRequest(IApiWrapper wrapper){
         client = new OkHttpClient();
 
@@ -35,18 +37,18 @@ public class OpenSessionRequest extends IApi{
         
         url = wrapper.getApiUrl().build();
 
-        String jsonData = wrapper.getJsonData();
-        requestBody = RequestBody.create(jsonData, JSON);
+         jsonData = wrapper.getJsonData();
+        
     }
 
     @Override
     public void execute() {
         requestBuilder.url(url);
-        requestBuilder.setBody$okhttp(requestBody);
+        addPostBody(jsonData);
         addHeadersToRequest(requestBuilder);
-        requestBuilder.build();        
-        
+
         Call call = client.newCall(requestBuilder.build());
+
         try {
             if(!isAsync){
                 Response response = call.execute();

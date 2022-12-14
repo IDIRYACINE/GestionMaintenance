@@ -99,7 +99,7 @@ public class SessionQuery extends ISessionQuery{
     @Override
     public void CreateSessionTable() throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS "+ ETables.Sessions +" (\n"
-            + ESessionAttributes.SessionId+" INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+            + ESessionAttributes.SessionId+" INTEGER PRIMARY KEY AUTO_INCREMENT,\n"
             + ESessionAttributes.Active+" BOOLEAN,\n"
             + ESessionAttributes.StartDate+" DATE,\n"
             + ESessionAttributes.EndDate+" DATE,\n"
@@ -114,7 +114,7 @@ public class SessionQuery extends ISessionQuery{
     @Override
     public void CreateSessionGroupTable() throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS "+ ETables.SessionsGroups +" (\n"
-            + ESessionGroupAttributes.GroupId+" INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+            + ESessionGroupAttributes.GroupId+" INTEGER PRIMARY KEY AUTO_INCREMENT,\n"
             + ESessionGroupAttributes.SessionId+" INTEGER,\n"
             + ESessionGroupAttributes.GroupName+" TEXT,\n"
            
@@ -129,7 +129,7 @@ public class SessionQuery extends ISessionQuery{
     @Override
     public void CreateSessionRecordTable() throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS "+ ETables.SessionsRecords +" (\n"
-            + ESessionRecordAttributes.RecordId + " INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+            + ESessionRecordAttributes.RecordId + " INTEGER PRIMARY KEY AUTO_INCREMENT,\n"
             + ESessionRecordAttributes.SessionId + " INTEGER,\n"
             + ESessionRecordAttributes.WorkerId + " INTEGER,\n"
             + ESessionRecordAttributes.GroupId + " INTEGER,\n"

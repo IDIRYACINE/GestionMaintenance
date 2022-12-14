@@ -29,8 +29,8 @@ public class LoginResponse implements IApiResponseHandler {
 
                     initWebSocketCallback.run();
 
-                    IConnectionParameters connectionParameters = new MysqlConnection("embag", "idir", "idir",
-                            "localhost", 0);
+                    IConnectionParameters connectionParameters = new MysqlConnection("test", "idir", "idir",
+                            "localhost", 3306);
 
                     ServicesProvider.getInstance().getDatabaseInitialiser().connect(connectionParameters);
                     return;
