@@ -12,6 +12,7 @@ public enum EStoreEventAction {
     Unsubscribe,
     Refresh,
     Notify, 
+    OpenSession,
     CloseSession,
     Export,
     Import,

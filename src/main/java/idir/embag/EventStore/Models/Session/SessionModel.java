@@ -43,10 +43,10 @@ public class SessionModel  implements IDataDelegate{
         try {
             Session session = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
             openSessionOnServer(session);
-
+            
             Collection<AttributeWrapper> wrappers = DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.AttributesCollection);
             sessionQuery.RegisterSession(wrappers);
-            notfiyEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.Add, data);
+            notfiyEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.OpenSession, data);
 
         } catch (SQLException e) {
             e.printStackTrace();

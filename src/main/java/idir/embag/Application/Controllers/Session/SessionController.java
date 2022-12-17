@@ -1,6 +1,7 @@
 package idir.embag.Application.Controllers.Session;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
@@ -16,7 +17,9 @@ import idir.embag.Infrastructure.ServicesProvider;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.FetchActiveSessionRecordsWrapper;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.OpenSessionWrapper;
 import idir.embag.Types.Infrastructure.DataConverters.ExportWrapper;
+import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
+import idir.embag.Types.Infrastructure.Database.Metadata.ESessionAttributes;
 import idir.embag.Types.Infrastructure.Server.EServerKeys;
 import idir.embag.Types.MetaData.ENavigationKeys;
 import idir.embag.Types.MetaData.EWrappers;
@@ -103,6 +106,7 @@ public class SessionController implements IEventSubscriber {
               case Refresh:
                 setRecords(DataBundler.retrieveValue(event.getData(),EEventsDataKeys.InstanceCollection));
                 break;
+                // TODO Handle OpenSession
               default:
                 break;
        }
@@ -213,6 +217,11 @@ public class SessionController implements IEventSubscriber {
             "null", 0, 0);
 
         data.put(EEventsDataKeys.Instance, session);
+
+        Map<EWrappers, Object> wrappersData = new HashMap<>();
+        wrappersData.put(EWrappers.AttributesCollection, sessionToAttributes(session));
+        data.put(EEventsDataKeys.WrappersKeys, wrappersData);
+
         dispatchEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.Add, data);
 
 
@@ -226,6 +235,21 @@ public class SessionController implements IEventSubscriber {
 
         ServicesProvider.getInstance().getRemoteServer().dispatchApiCall(data);
 
+    }
+
+    private Collection<AttributeWrapper> sessionToAttributes(Session session) {
+        Collection<AttributeWrapper> attributes = new ArrayList<>();
+
+        attributes.add(new AttributeWrapper(ESessionAttributes.SessionId, session.getSessionId()));
+        attributes.add(new AttributeWrapper(ESessionAttributes.StartDate, session.getSessionStartDate()));
+        attributes.add(new AttributeWrapper(ESessionAttributes.PriceShiftValue, session.getPriceShift()));
+        attributes.add(new AttributeWrapper(ESessionAttributes.QuantityShiftValue, session.getQuantityShift()));
+        
+        // a weird error in mariadb, it doesn't accept boolean values
+        int active = session.isActive() ? 1 : 0;
+        attributes.add(new AttributeWrapper(ESessionAttributes.Active, active));
+
+        return attributes;
     }
 
 }
