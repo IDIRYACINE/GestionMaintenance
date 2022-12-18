@@ -6,8 +6,11 @@ import idir.embag.Application.Controllers.Session.SessionController;
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.ApiBodyResponses.DSessionResponse;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
+import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Panels.Generics.INodeView;
 import idir.embag.Types.Stores.Generics.IEventSubscriber;
+import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
+import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -30,6 +33,9 @@ public class SessionPanel extends INodeView implements Initializable,IEventSubsc
         activeSessionFrame.loadFxml();
         noSessionFrame = new NoSessionFrame(controller);
         noSessionFrame.loadFxml();
+
+        StoreCenter.getInstance().subscribeToEvents(EStores.NavigationStore, EStoreEvents.SessionEvent, this);
+
     }
 
     @Override
@@ -45,12 +51,15 @@ public class SessionPanel extends INodeView implements Initializable,IEventSubsc
 
     @Override
     public void notifyEvent(StoreEvent event) {
-        
         switch(event.getAction()){
             case ApiResponse:
                 DSessionResponse data = DataBundler.retrieveValue(event.getData(), EEventsDataKeys.ApiResponse);
                 reactToApiResponse(data);
               break;
+            case OpenSession:
+                root.getChildren().set(0, activeSessionFrame.getView());
+            break;
+  
             default:
               break;
         }

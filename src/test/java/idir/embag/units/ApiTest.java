@@ -3,6 +3,7 @@ package idir.embag.units;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +19,10 @@ class ApiTest {
 
     @Test
     void openSession() {
-        Session session = new Session(0, false,
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+        Session session = new Session(timestamp, false,
                 null, null, 0.0, 0.0);
 
         OkHttpClient client = new OkHttpClient();

@@ -77,7 +77,7 @@ public class SessionRepository {
         try {
             while (source.next()) {
                 result.add(new Session(
-                source.getInt(ESessionAttributes.SessionId.toString()),
+                source.getTimestamp(ESessionAttributes.SessionId.toString()),
                 source.getBoolean(ESessionAttributes.Active.toString()),
                 source.getString(ESessionAttributes.StartDate.toString()),
                 source.getString(ESessionAttributes.EndDate.toString()),

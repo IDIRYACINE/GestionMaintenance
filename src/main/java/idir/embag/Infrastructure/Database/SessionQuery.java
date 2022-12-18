@@ -2,6 +2,7 @@ package idir.embag.Infrastructure.Database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Collection;
 
 import idir.embag.Types.Infrastructure.Database.Metadata.EInventoryAttributes;
@@ -35,7 +36,7 @@ public class SessionQuery extends ISessionQuery{
     }
 
     @Override
-    public void UpdateSession(int sessionId, Collection<AttributeWrapper> attributes)
+    public void UpdateSession(Timestamp sessionId, Collection<AttributeWrapper> attributes)
             throws SQLException {
                 String whereClause = " WHERE "+ESessionAttributes.SessionId + "=" + sessionId;
                 String query = "UPDATE "+ETables.Sessions+ UpdateWrapperToQuery(attributes)+ whereClause;
@@ -99,7 +100,7 @@ public class SessionQuery extends ISessionQuery{
     @Override
     public void CreateSessionTable() throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS "+ ETables.Sessions +" (\n"
-            + ESessionAttributes.SessionId+" INTEGER PRIMARY KEY AUTO_INCREMENT,\n"
+            + ESessionAttributes.SessionId+" TIMESTAMP PRIMARY KEY ,\n"
             + ESessionAttributes.Active+" BOOLEAN,\n"
             + ESessionAttributes.StartDate+" DATE,\n"
             + ESessionAttributes.EndDate+" DATE,\n"
@@ -115,7 +116,7 @@ public class SessionQuery extends ISessionQuery{
     public void CreateSessionGroupTable() throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS "+ ETables.SessionsGroups +" (\n"
             + ESessionGroupAttributes.GroupId+" INTEGER PRIMARY KEY AUTO_INCREMENT,\n"
-            + ESessionGroupAttributes.SessionId+" INTEGER,\n"
+            + ESessionGroupAttributes.SessionId+" TIMESTAMP,\n"
             + ESessionGroupAttributes.GroupName+" TEXT,\n"
            
             + "FOREIGN KEY ("+ ESessionRecordAttributes.SessionId +")\n"
@@ -129,8 +130,8 @@ public class SessionQuery extends ISessionQuery{
     @Override
     public void CreateSessionRecordTable() throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS "+ ETables.SessionsRecords +" (\n"
-            + ESessionRecordAttributes.RecordId + " INTEGER PRIMARY KEY AUTO_INCREMENT,\n"
-            + ESessionRecordAttributes.SessionId + " INTEGER,\n"
+            + ESessionRecordAttributes.RecordId + " TIMESTAMP PRIMARY KEY DEFAULT CURRENT_TIMESTAMP,\n"
+            + ESessionRecordAttributes.SessionId + " TIMESTAMP,\n"
             + ESessionRecordAttributes.WorkerId + " INTEGER,\n"
             + ESessionRecordAttributes.GroupId + " INTEGER,\n"
             + ESessionRecordAttributes.InventoryId + " INTEGER,\n"

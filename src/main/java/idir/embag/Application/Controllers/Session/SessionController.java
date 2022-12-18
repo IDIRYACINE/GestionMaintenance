@@ -1,5 +1,6 @@
 package idir.embag.Application.Controllers.Session;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,7 +16,6 @@ import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Infrastructure.ServicesProvider;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.FetchActiveSessionRecordsWrapper;
-import idir.embag.Infrastructure.Server.Api.ApiWrappers.OpenSessionWrapper;
 import idir.embag.Types.Infrastructure.DataConverters.ExportWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
@@ -39,11 +39,11 @@ import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 
 @SuppressWarnings("unchecked")
 public class SessionController implements IEventSubscriber {
-    
+
     private MFXTableView<SessionRecord> tableRecord;
 
     private Session activeSession;
-    
+
     public SessionController() {
         StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.SessionEvent, this);
     }
@@ -54,76 +54,73 @@ public class SessionController implements IEventSubscriber {
     }
 
     public void refreshFromLocalDb() {
-        Map<EEventsDataKeys,Object> data = new HashMap<>();
-        LoadWrapper loadWrapper = new LoadWrapper(100,0);
-        
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
+        LoadWrapper loadWrapper = new LoadWrapper(100, 0);
+
         Map<EWrappers, Object> wrappersData = new HashMap<>();
         wrappersData.put(EWrappers.LoadWrapper, loadWrapper);
         data.put(EEventsDataKeys.WrappersKeys, wrappersData);
 
-        dispatchEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.Load,data);        
+        dispatchEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.Load, data);
     }
 
     public void refreshFromServer() {
-        Map<EEventsDataKeys,Object> data = new HashMap<>();
-        LoadWrapper loadWrapper = new LoadWrapper(100,0);
-        
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
+        LoadWrapper loadWrapper = new LoadWrapper(100, 0);
+
         Map<EWrappers, Object> wrappersData = new HashMap<>();
         wrappersData.put(EWrappers.LoadWrapper, loadWrapper);
         data.put(EEventsDataKeys.WrappersKeys, wrappersData);
 
-        dispatchEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.Load,data);        
+        dispatchEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.Load, data);
     }
-
 
     public void manageSessionGroups() {
 
         SessionWorkersDialog dialogContent = new SessionWorkersDialog();
-        
-        Map<EEventsDataKeys,Object> data = new HashMap<>();
+
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
 
         Map<ENavigationKeys, Object> navigationData = new HashMap<>();
         navigationData.put(ENavigationKeys.DialogContent, dialogContent);
         data.put(EEventsDataKeys.NavigationKeys, navigationData);
-        
+
         dialogContent.loadFxml();
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
-        
+
     }
-    
+
     @Override
     public void notifyEvent(StoreEvent event) {
-       switch(event.getAction()){
-              case ApiResponse: 
-                    setActiveSession(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.ApiResponse));
+        switch (event.getAction()) {
+            case Add:
+                addRecord(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.Instance));
                 break;
-              case Add:
-                addRecord(DataBundler.retrieveValue(event.getData(),EEventsDataKeys.Instance));
+            case AddCollection:
+                addRecordCollection(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.InstanceCollection));
                 break;
-              case AddCollection: addRecordCollection(DataBundler.retrieveValue(event.getData(),EEventsDataKeys.InstanceCollection));
-                break;  
-              case Refresh:
-                setRecords(DataBundler.retrieveValue(event.getData(),EEventsDataKeys.InstanceCollection));
+            case Refresh:
+                setRecords(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.InstanceCollection));
                 break;
-                // TODO Handle OpenSession
-              default:
+            case OpenSession:
+                setActiveSession(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.Instance));
+            default:
                 break;
-       }
+        }
     }
 
     public void closeSession() {
         ConfirmationDialog dialogContent = new ConfirmationDialog();
         dialogContent.setMessage(Messages.closeSession);
-        //TODO: save session records to local db
-        Map<EEventsDataKeys,Object> data = new HashMap<>();
+        // TODO: save session records to local db
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
         Map<ENavigationKeys, Object> navigationData = new HashMap<>();
 
         dialogContent.setOnConfirm(other -> {
             dispatchEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.CloseSession, data);
         });
 
-        
         navigationData.put(ENavigationKeys.DialogContent, dialogContent);
         data.put(EEventsDataKeys.NavigationKeys, navigationData);
         data.put(EEventsDataKeys.Instance, activeSession);
@@ -133,22 +130,23 @@ public class SessionController implements IEventSubscriber {
 
     private void setActiveSession(Session session) {
         this.activeSession = session;
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
 
-        Map<EServerKeys,Object> apiData = new HashMap<>();
-        OpenSessionWrapper apiWrapper = new OpenSessionWrapper(session);
-        apiData.put(EServerKeys.ApiWrapper, apiWrapper);
+        StoreEvent event = new StoreEvent(EStoreEvents.SessionEvent, EStoreEventAction.OpenSession, data);
+        StoreDispatch action = new StoreDispatch(EStores.NavigationStore, event);
 
-        ServicesProvider.getInstance().getRemoteServer().dispatchApiCall(apiData);
+        StoreCenter.getInstance().broadcast(action);
+
     }
 
     public void export() {
-        Map<EEventsDataKeys,Object> data = new HashMap<>();
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
 
         EStoreEvents targetTable = EStoreEvents.SessionRecordsEvent;
-        LoadWrapper loadWrapper = new LoadWrapper(1000,0);
+        LoadWrapper loadWrapper = new LoadWrapper(1000, 0);
 
         Map<EWrappers, Object> wrappersData = new HashMap<>();
-        ExportWrapper exportWrapper = new ExportWrapper(loadWrapper,targetTable);
+        ExportWrapper exportWrapper = new ExportWrapper(loadWrapper, targetTable);
         wrappersData.put(EWrappers.ExportWrapper, exportWrapper);
 
         data.put(EEventsDataKeys.Subscriber, this);
@@ -156,7 +154,8 @@ public class SessionController implements IEventSubscriber {
         data.put(EEventsDataKeys.InstanceCollection, tableRecord.getItems());
 
         StoreCenter storeCenter = StoreCenter.getInstance();
-        StoreDispatch event = storeCenter.createStoreEvent(EStores.DataConverterStore, targetTable, EStoreEventAction.Export, data);
+        StoreDispatch event = storeCenter.createStoreEvent(EStores.DataConverterStore, targetTable,
+                EStoreEventAction.Export, data);
         storeCenter.dispatch(event);
     }
 
@@ -164,26 +163,33 @@ public class SessionController implements IEventSubscriber {
         tableRecord.getItems().add(record);
     }
 
-
     private void addRecordCollection(Collection<SessionRecord> records) {
         tableRecord.getItems().addAll(records);
     }
-
 
     private void setRecords(Collection<SessionRecord> records) {
         tableRecord.getItems().setAll(records);
     }
 
-    private void setColumns(){
-        MFXTableColumn<SessionRecord> idColumn = new MFXTableColumn<>(Names.ArticleId, true, Comparator.comparing(SessionRecord::getArticleId));
-		MFXTableColumn<SessionRecord> nameColumn = new MFXTableColumn<>(Names.ArticleName, true, Comparator.comparing(SessionRecord::getArticleName));
-        MFXTableColumn<SessionRecord> priceColumn = new MFXTableColumn<>(Names.Price, true, Comparator.comparing(SessionRecord::getPrix));
-        MFXTableColumn<SessionRecord> priceShiftColumn = new MFXTableColumn<>(Names.PriceShift, true, Comparator.comparing(SessionRecord::getPriceShift));
-		MFXTableColumn<SessionRecord> workerIdColumn = new MFXTableColumn<>(Names.WorkerName, true, Comparator.comparing(SessionRecord::getworkerName));
-        MFXTableColumn<SessionRecord> groupIdColumn = new MFXTableColumn<>(Names.GroupId, true, Comparator.comparing(SessionRecord::getGroupId));
-		MFXTableColumn<SessionRecord> dateColumn = new MFXTableColumn<>(Names.Date, true, Comparator.comparing(SessionRecord::getDate));
-		MFXTableColumn<SessionRecord> inventoryQuantiyColumn = new MFXTableColumn<>(Names.Quantity, true, Comparator.comparing(SessionRecord::getQuantityInventory));
-        MFXTableColumn<SessionRecord> stockQuantiyColumn = new MFXTableColumn<>(Names.QuantityShift, true, Comparator.comparing(SessionRecord::getQuantityStock));
+    private void setColumns() {
+        MFXTableColumn<SessionRecord> idColumn = new MFXTableColumn<>(Names.ArticleId, true,
+                Comparator.comparing(SessionRecord::getArticleId));
+        MFXTableColumn<SessionRecord> nameColumn = new MFXTableColumn<>(Names.ArticleName, true,
+                Comparator.comparing(SessionRecord::getArticleName));
+        MFXTableColumn<SessionRecord> priceColumn = new MFXTableColumn<>(Names.Price, true,
+                Comparator.comparing(SessionRecord::getPrix));
+        MFXTableColumn<SessionRecord> priceShiftColumn = new MFXTableColumn<>(Names.PriceShift, true,
+                Comparator.comparing(SessionRecord::getPriceShift));
+        MFXTableColumn<SessionRecord> workerIdColumn = new MFXTableColumn<>(Names.WorkerName, true,
+                Comparator.comparing(SessionRecord::getworkerName));
+        MFXTableColumn<SessionRecord> groupIdColumn = new MFXTableColumn<>(Names.GroupId, true,
+                Comparator.comparing(SessionRecord::getGroupId));
+        MFXTableColumn<SessionRecord> dateColumn = new MFXTableColumn<>(Names.Date, true,
+                Comparator.comparing(SessionRecord::getDate));
+        MFXTableColumn<SessionRecord> inventoryQuantiyColumn = new MFXTableColumn<>(Names.Quantity, true,
+                Comparator.comparing(SessionRecord::getQuantityInventory));
+        MFXTableColumn<SessionRecord> stockQuantiyColumn = new MFXTableColumn<>(Names.QuantityShift, true,
+                Comparator.comparing(SessionRecord::getQuantityStock));
 
         idColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getRecordId));
         nameColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getArticleName));
@@ -194,28 +200,30 @@ public class SessionController implements IEventSubscriber {
         dateColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getDate));
         inventoryQuantiyColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getQuantityInventory));
         stockQuantiyColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getQuantityStock));
-        
-        tableRecord.getTableColumns().setAll(idColumn,nameColumn,groupIdColumn,workerIdColumn,dateColumn,
-                inventoryQuantiyColumn,stockQuantiyColumn,priceColumn,priceShiftColumn);
-        
+
+        tableRecord.getTableColumns().setAll(idColumn, nameColumn, groupIdColumn, workerIdColumn, dateColumn,
+                inventoryQuantiyColumn, stockQuantiyColumn, priceColumn, priceShiftColumn);
+
     }
 
-    private void dispatchEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent, Map<EEventsDataKeys,Object> data) {
-        StoreEvent event = new StoreEvent(storeEvent, actionEvent,data);
+    private void dispatchEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent,
+            Map<EEventsDataKeys, Object> data) {
+        StoreEvent event = new StoreEvent(storeEvent, actionEvent, data);
         StoreDispatch action = new StoreDispatch(store, event);
         StoreCenter.getInstance().dispatch(action);
     }
 
     public void openNewSession() {
-        Map<EEventsDataKeys,Object> data = new HashMap<>();
-     
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
+
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String dateString = formatter.format(date);
-  
-        Session session = new Session(0, true, dateString, 
-            "null", 0, 0);
 
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+        Session session = new Session(timestamp, true, dateString,
+                null, 0, 0);
         data.put(EEventsDataKeys.Instance, session);
 
         Map<EWrappers, Object> wrappersData = new HashMap<>();
@@ -224,11 +232,10 @@ public class SessionController implements IEventSubscriber {
 
         dispatchEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.Add, data);
 
-
     }
 
     public void loadActiveSessionIfExists() {
-        Map<EServerKeys,Object> data = new HashMap<>();
+        Map<EServerKeys, Object> data = new HashMap<>();
 
         FetchActiveSessionRecordsWrapper apiWrapper = new FetchActiveSessionRecordsWrapper(500, 0);
         data.put(EServerKeys.ApiWrapper, apiWrapper);
@@ -244,7 +251,7 @@ public class SessionController implements IEventSubscriber {
         attributes.add(new AttributeWrapper(ESessionAttributes.StartDate, session.getSessionStartDate()));
         attributes.add(new AttributeWrapper(ESessionAttributes.PriceShiftValue, session.getPriceShift()));
         attributes.add(new AttributeWrapper(ESessionAttributes.QuantityShiftValue, session.getQuantityShift()));
-        
+
         // a weird error in mariadb, it doesn't accept boolean values
         int active = session.isActive() ? 1 : 0;
         attributes.add(new AttributeWrapper(ESessionAttributes.Active, active));

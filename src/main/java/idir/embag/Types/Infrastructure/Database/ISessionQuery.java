@@ -2,6 +2,7 @@ package idir.embag.Types.Infrastructure.Database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Collection;
 
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
@@ -12,7 +13,7 @@ import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 public abstract class ISessionQuery extends IQuery{
     
     public abstract void RegisterSession(Collection<AttributeWrapper> attributes) throws SQLException;
-    public abstract void UpdateSession(int sessionId,Collection<AttributeWrapper> attributes) throws SQLException;
+    public abstract void UpdateSession(Timestamp sessionId,Collection<AttributeWrapper> attributes) throws SQLException;
 
     public abstract void RegisterSessionGroup(Collection<AttributeWrapper> attributes) throws SQLException;
     public abstract void UnregisterSessionGroup(int groupId) throws SQLException;

@@ -1,14 +1,16 @@
 package idir.embag.DataModels.Session;
 
+import java.sql.Timestamp;
+
 public class Session {
-    private int sessionId;
+    private Timestamp sessionId;
     private String sessionStartDate;
     private String sessionEndDate;
     private double priceShift;
     private double quantityShift;
     private boolean isActive;
     
-    public Session(int sessionId,boolean isActive, String sessionStartDate,
+    public Session(Timestamp sessionId,boolean isActive, String sessionStartDate,
         String sessionEndDate, double priceShift, double quantityShift) {
 
         this.sessionId = sessionId;
@@ -19,7 +21,7 @@ public class Session {
         this.quantityShift = quantityShift;
     }
 
-    public int getSessionId() {
+    public Timestamp getSessionId() {
         return sessionId;
     }
 

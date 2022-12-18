@@ -1,5 +1,6 @@
 package idir.embag.Infrastructure.DataConverters.Excel.CellWriters;
 
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -71,9 +72,9 @@ public class SessionCellWriter implements IExcelCellWriter<Session> {
         return cell;
     }
 
-    private Cell createAndSetCellValue(int columnIndex , Row row , int value){
+    private Cell createAndSetCellValue(int columnIndex , Row row , Timestamp value){
         Cell cell = row.createCell(columnIndex);
-        cell.setCellValue(value);
+        cell.setCellValue(value.toString());
         return cell;
     }
 

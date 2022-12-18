@@ -7,6 +7,8 @@ import idir.embag.DataModels.ApiBodyResponses.DLoginResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.sql.Timestamp;
+
 public class SerialiserTest {
 
     @Test
@@ -25,6 +27,15 @@ public class SerialiserTest {
         String expected = "{\"isAutherised\":false}";
 
         assertEquals(expected, json);
+    }
+
+    @Test
+    public void serialiseTimeStampWithGson(){
+
+        Timestamp timestamp = new Timestamp(1671377892091l);
+        String json = GsonSerialiser.serialise(timestamp); 
+        json = json.replace("\"", "");   
+        assertEquals(timestamp.toString(),json);
     }
 
 }
