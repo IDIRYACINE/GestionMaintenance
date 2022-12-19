@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
+import idir.embag.DataModels.Session.SessionGroup;
+import idir.embag.DataModels.Workers.SessionWorker;
 import idir.embag.DataModels.Workers.Worker;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Application.Workers.IWorkersController;
@@ -29,13 +31,14 @@ import idir.embag.Ui.Constants.Messages;
 import idir.embag.Ui.Constants.Names;
 import idir.embag.Ui.Dialogs.ConfirmationDialog.ConfirmationDialog;
 import idir.embag.Ui.Dialogs.FilterDialog.FilterDialog;
+import idir.embag.Ui.Dialogs.MangerDialog.AddSessionWorkerDialog;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 
 @SuppressWarnings("unchecked")
-public class WorkersController implements IWorkersController , IEventSubscriber {
-      
+public class WorkersController implements IWorkersController, IEventSubscriber {
+
     private MFXTableView<Worker> tableWorkers;
 
     public WorkersController(MFXTableView<Worker> tableWorkers) {
@@ -46,48 +49,62 @@ public class WorkersController implements IWorkersController , IEventSubscriber 
     @Override
     public void notifyActive() {
         setColumns();
-        
+
     }
 
-    private void setColumns(){
-        MFXTableColumn<Worker> idColumn = new MFXTableColumn<>(Names.WorkerId, true, Comparator.comparing(Worker::getId));
-		MFXTableColumn<Worker> nameColumn = new MFXTableColumn<>(Names.WorkerName, true, Comparator.comparing(Worker::getName));
-        MFXTableColumn<Worker> emailColumn = new MFXTableColumn<>(Names.WorkerEmail, true, Comparator.comparing(Worker::getEmail));
-        MFXTableColumn<Worker> phoneColumn = new MFXTableColumn<>(Names.WorkerPhone, true, Comparator.comparing(Worker::getPhone));
+    private void setColumns() {
+        MFXTableColumn<Worker> idColumn = new MFXTableColumn<>(Names.WorkerId, true,
+                Comparator.comparing(Worker::getId));
+        MFXTableColumn<Worker> nameColumn = new MFXTableColumn<>(Names.WorkerName, true,
+                Comparator.comparing(Worker::getName));
+        MFXTableColumn<Worker> emailColumn = new MFXTableColumn<>(Names.WorkerEmail, true,
+                Comparator.comparing(Worker::getEmail));
+        MFXTableColumn<Worker> phoneColumn = new MFXTableColumn<>(Names.WorkerPhone, true,
+                Comparator.comparing(Worker::getPhone));
 
         idColumn.setRowCellFactory(worker -> new MFXTableRowCell<>(Worker::getId));
         nameColumn.setRowCellFactory(worker -> new MFXTableRowCell<>(Worker::getName));
         emailColumn.setRowCellFactory(worker -> new MFXTableRowCell<>(Worker::getEmail));
         phoneColumn.setRowCellFactory(worker -> new MFXTableRowCell<>(Worker::getPhone));
 
-        tableWorkers.getTableColumns().setAll(idColumn,nameColumn,emailColumn,phoneColumn);
+        tableWorkers.getTableColumns().setAll(idColumn, nameColumn, emailColumn, phoneColumn);
     }
 
     @Override
     public void notifyEvent(StoreEvent event) {
-        switch(event.getAction()){
-            case Add: addTableElement((Worker)event.getData().get(EEventsDataKeys.Instance));
+        switch (event.getAction()) {
+            case Add:
+                addTableElement((Worker) event.getData().get(EEventsDataKeys.Instance));
                 break;
-            case Remove: removeTableElement((Worker)event.getData().get(EEventsDataKeys.Instance));
-                break;  
-            case Update: updateTableElement((Worker)event.getData().get(EEventsDataKeys.Instance));
+            case Remove:
+                removeTableElement((Worker) event.getData().get(EEventsDataKeys.Instance));
                 break;
-            case Search: setTableElements((Collection<Worker>)event.getData().get(EEventsDataKeys.InstanceCollection));
-                break;          
-            case Load: setTableElements((Collection<Worker>)event.getData().get(EEventsDataKeys.InstanceCollection));
+            case Update:
+                updateTableElement((Worker) event.getData().get(EEventsDataKeys.Instance));
                 break;
-              default:
-                   break;
-           }
-        
+            case Search:
+                setTableElements((Collection<Worker>) event.getData().get(EEventsDataKeys.InstanceCollection));
+                break;
+            case Load:
+                if (event.getEvent() == EStoreEvents.SessionGroupEvent) {
+                    addSessionWorkerDialog((Worker) event.getData().get(EEventsDataKeys.Instance),
+                            (Collection<SessionGroup>) event.getData().get(EEventsDataKeys.InstanceCollection));
+                } else {
+                    setTableElements((Collection<Worker>) event.getData().get(EEventsDataKeys.InstanceCollection));
+                }
+                break;
+            default:
+                break;
+        }
+
     }
 
     @Override
     public void add() {
         Worker worker = new Worker("", 0, "", 0);
-        WorkerEditor dialogContent =  new WorkerEditor(worker);
+        WorkerEditor dialogContent = new WorkerEditor(worker);
 
-        Map<EEventsDataKeys,Object> data = new HashMap<>();
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
         Map<ENavigationKeys, Object> navigationData = new HashMap<>();
         navigationData.put(ENavigationKeys.DialogContent, dialogContent);
         data.put(EEventsDataKeys.NavigationKeys, navigationData);
@@ -104,21 +121,21 @@ public class WorkersController implements IWorkersController , IEventSubscriber 
 
     @Override
     public void refresh() {
-        Map<EEventsDataKeys,Object> data = new HashMap<>();
-        LoadWrapper loadWrapper = new LoadWrapper(100,0);
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
+        LoadWrapper loadWrapper = new LoadWrapper(100, 0);
 
-        Map<EWrappers,Object> wrappersData = new HashMap<>();
+        Map<EWrappers, Object> wrappersData = new HashMap<>();
         wrappersData.put(EWrappers.LoadWrapper, loadWrapper);
         data.put(EEventsDataKeys.WrappersKeys, wrappersData);
 
-        dispatchEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Load,data);        
+        dispatchEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Load, data);
     }
 
     @Override
     public void update(Worker worker) {
-        WorkerEditor dialogContent =  new WorkerEditor(worker);
+        WorkerEditor dialogContent = new WorkerEditor(worker);
 
-        Map<EEventsDataKeys,Object> data = new HashMap<>();
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
         Map<ENavigationKeys, Object> navigationData = new HashMap<>();
         navigationData.put(ENavigationKeys.DialogContent, dialogContent);
         data.put(EEventsDataKeys.NavigationKeys, navigationData);
@@ -131,15 +148,15 @@ public class WorkersController implements IWorkersController , IEventSubscriber 
         dialogContent.loadFxml();
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
-        
+
     }
 
     @Override
     public void archive(Worker worker) {
-        ConfirmationDialog dialogContent =  new ConfirmationDialog();
+        ConfirmationDialog dialogContent = new ConfirmationDialog();
 
         dialogContent.setMessage(Messages.deleteElement);
-        Map<EEventsDataKeys,Object> data = new HashMap<>();
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
         Map<ENavigationKeys, Object> navigationData = new HashMap<>();
         navigationData.put(ENavigationKeys.DialogContent, dialogContent);
         data.put(EEventsDataKeys.NavigationKeys, navigationData);
@@ -152,63 +169,85 @@ public class WorkersController implements IWorkersController , IEventSubscriber 
 
         dialogContent.loadFxml();
 
-
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
     }
 
     @Override
     public void addWorkerToSession(Worker worker) {
-        ConfirmationDialog dialogContent =  new ConfirmationDialog();
+        loadGroups(worker);
+    }
 
-        dialogContent.setMessage(Messages.addWorkerToSession);
+    private void addSessionWorkerDialog(Worker worker, Collection<SessionGroup> groups) {
+        AddSessionWorkerDialog dialogContent = new AddSessionWorkerDialog(worker, groups);
 
-        Map<EEventsDataKeys,Object> data = new HashMap<>();
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
         Map<ENavigationKeys, Object> navigationData = new HashMap<>();
+
         navigationData.put(ENavigationKeys.DialogContent, dialogContent);
         data.put(EEventsDataKeys.NavigationKeys, navigationData);
-        
-        Collection<AttributeWrapper> attributes = workerToAttributes(worker);
 
         dialogContent.setOnConfirm(requestData -> {
-            requestData.put(EEventsDataKeys.Instance, worker);
 
-            Map<EWrappers,Object> wrappersData = new HashMap<>();
+            Map<EWrappers, Object> wrappersData = new HashMap<>();
+
+            SessionWorker sessionWorker = (SessionWorker) requestData.get(EEventsDataKeys.Instance);
+
+            Collection<AttributeWrapper> attributes = sessionWorkerToAttributes(sessionWorker);
+
+
             wrappersData.put(EWrappers.AttributesCollection, attributes);
 
             requestData.put(EEventsDataKeys.WrappersKeys, wrappersData);
 
             dispatchEvent(EStores.DataStore, EStoreEvents.SessionWorkerEvent, EStoreEventAction.Add, requestData);
+        
         });
 
         dialogContent.loadFxml();
 
-
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
- 
+
     }
 
-    private Collection<AttributeWrapper> workerToAttributes(Worker worker) {
+    private void loadGroups(Worker worker) {
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
+
+        data.put(EEventsDataKeys.Subscriber, this);
+        data.put(EEventsDataKeys.Instance, worker);
+
+        LoadWrapper loadWrapper = new LoadWrapper(100, 0);
+
+        Map<EWrappers, Object> wrappersData = new HashMap<>();
+        wrappersData.put(EWrappers.LoadWrapper, loadWrapper);
+        data.put(EEventsDataKeys.WrappersKeys, wrappersData);
+
+        dispatchEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Load, data);
+
+    }
+
+    private Collection<AttributeWrapper> sessionWorkerToAttributes(SessionWorker worker) {
         Collection<AttributeWrapper> result = new ArrayList<>();
-        result.add(new AttributeWrapper(EWorkerAttributes.WorkerId, worker.getId()));
-        result.add(new AttributeWrapper(ESessionWorkerAttributes.GroupId, "null"));
-        result.add(new AttributeWrapper(ESessionWorkerAttributes.Password, String.valueOf((worker.getPhone()))));
+
+        result.add(new AttributeWrapper(EWorkerAttributes.WorkerId, worker.getWorkerId()));
+        result.add(new AttributeWrapper(ESessionWorkerAttributes.GroupId, worker.getGroupId()));
+        result.add(new AttributeWrapper(ESessionWorkerAttributes.Password, String.valueOf((worker.getPassword()))));
 
         return result;
     }
 
     @Override
     public void searchWorkers() {
-        IDialogContent dialogContent =  buildSearchDialog();
-       
-        Map<EEventsDataKeys,Object> data = new HashMap<>();
-        
+        IDialogContent dialogContent = buildSearchDialog();
+
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
+
         Map<ENavigationKeys, Object> navigationData = new HashMap<>();
         navigationData.put(ENavigationKeys.DialogContent, dialogContent);
         data.put(EEventsDataKeys.NavigationKeys, navigationData);
 
-        dialogContent.setOnConfirm(new Consumer<Map<EEventsDataKeys,Object>> (){
+        dialogContent.setOnConfirm(new Consumer<Map<EEventsDataKeys, Object>>() {
             @Override
-            public void accept(Map<EEventsDataKeys,Object> data) {
+            public void accept(Map<EEventsDataKeys, Object> data) {
                 dispatchEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Search, data);
             }
         });
@@ -221,31 +260,32 @@ public class WorkersController implements IWorkersController , IEventSubscriber 
         tableWorkers.getItems().add(worker);
     }
 
-    private void removeTableElement(Worker worker){
+    private void removeTableElement(Worker worker) {
         int index = tableWorkers.getItems().indexOf(worker);
         tableWorkers.getItems().remove(index);
     }
 
-    private void updateTableElement(Worker worker){
+    private void updateTableElement(Worker worker) {
         int index = tableWorkers.getItems().indexOf(worker);
         tableWorkers.getCell(index).updateRow();
     }
 
-    private void setTableElements(Collection<Worker> workers){
+    private void setTableElements(Collection<Worker> workers) {
         tableWorkers.getItems().setAll(workers);
     }
 
-    protected void dispatchEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent, Map<EEventsDataKeys,Object> data) {
-        StoreEvent event = new StoreEvent(storeEvent, actionEvent,data);
+    protected void dispatchEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent,
+            Map<EEventsDataKeys, Object> data) {
+        StoreEvent event = new StoreEvent(storeEvent, actionEvent, data);
         StoreDispatch action = new StoreDispatch(store, event);
         StoreCenter.getInstance().dispatch(action);
     }
-    
-    private IDialogContent buildSearchDialog(){
+
+    private IDialogContent buildSearchDialog() {
         FilterDialog dialog = new FilterDialog();
 
-        EWorkerAttributes[] attributes = {EWorkerAttributes.WorkerEmail, 
-            EWorkerAttributes.WorkerName, EWorkerAttributes.WorkerPhone};
+        EWorkerAttributes[] attributes = { EWorkerAttributes.WorkerEmail,
+                EWorkerAttributes.WorkerName, EWorkerAttributes.WorkerPhone };
 
         dialog.setAttributes(attributes);
 

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<VBox fx:id="root" alignment="CENTER" prefHeight="249.0" prefWidth="298.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="BOTTOM_CENTER" prefWidth="298.0" spacing="20.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Username" wrappingWidth="63.244998931884766" />
+            <TextField fx:id="usernameField" />
+         </children>
+      </HBox>
+      <HBox alignment="BOTTOM_CENTER" prefWidth="298.0" spacing="20.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Password" wrappingWidth="63.244998931884766" />
+            <TextField fx:id="passwordField" />
+         </children>
+      </HBox>
+      <HBox alignment="BASELINE_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="40.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Group" />
+            <MFXComboBox fx:id="groupComboBox" minWidth="160.0" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+         <children>
+            <MFXButton onAction="#onCancel" text="Anuuler" />
+            <MFXButton onAction="#onConfirm" text="Confirmer" />
+         </children>
+         <VBox.margin>
+            <Insets left="80.0" />
+         </VBox.margin>
+      </HBox>
+   </children>
+   <padding>
+      <Insets top="20.0" />
+   </padding>
+</VBox>

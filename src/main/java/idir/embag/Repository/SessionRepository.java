@@ -46,7 +46,7 @@ public class SessionRepository {
                 result.add(new SessionGroup(
                 source.getInt(ESessionGroupAttributes.GroupId.toString()),
                 source.getString(ESessionGroupAttributes.GroupName.toString()),
-                source.getInt(ESessionGroupAttributes.SessionId.toString())));
+                source.getTimestamp(ESessionGroupAttributes.SessionId.toString())));
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -42,7 +42,8 @@ public class SessionController implements IEventSubscriber {
 
     private MFXTableView<SessionRecord> tableRecord;
 
-    private Session activeSession;
+    //TODO : fix this too messy
+    public static  Session activeSession;
 
     public SessionController() {
         StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.SessionEvent, this);
@@ -129,7 +130,7 @@ public class SessionController implements IEventSubscriber {
     }
 
     private void setActiveSession(Session session) {
-        this.activeSession = session;
+        activeSession = session;
         Map<EEventsDataKeys, Object> data = new HashMap<>();
 
         StoreEvent event = new StoreEvent(EStoreEvents.SessionEvent, EStoreEventAction.OpenSession, data);

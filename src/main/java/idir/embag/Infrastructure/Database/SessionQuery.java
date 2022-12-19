@@ -71,6 +71,7 @@ public class SessionQuery extends ISessionQuery{
     public void RegsiterSessionWorker( Collection<AttributeWrapper> attributes)
             throws SQLException {
                 String query = "INSERT INTO "+ETables.SessionWorkers+ InsertWrapperToQuery(attributes);
+                System.out.println(query);
                 database.UpdateQuery(query);
     }
 
@@ -296,7 +297,11 @@ public class SessionQuery extends ISessionQuery{
 
             +" INNER JOIN " +ETables.SessionsGroups +" ON "
             +ETables.SessionsRecords + "."+ ESessionRecordAttributes.GroupId
-            +"=" + ETables.SessionsGroups + "." + ESessionGroupAttributes.GroupId ;
+            +"=" + ETables.SessionsGroups + "." + ESessionGroupAttributes.GroupId 
+            
+            +" INNER JOIN " +ETables.SessionWorkers +" ON "
+            +ETables.SessionsRecords + "."+ ESessionRecordAttributes.WorkerId
+            +"=" + ETables.SessionWorkers + "." + ESessionWorkerAttributes.WorkerId ;
 
         String query = "SELECT "
             + ETables.Workers + "." + EWorkerAttributes.WorkerId+" ,"
@@ -304,9 +309,10 @@ public class SessionQuery extends ISessionQuery{
             + ETables.Workers + "." + EWorkerAttributes.WorkerPhone+" ,"
             + ETables.SessionWorkers + "." + ESessionWorkerAttributes.Password+" ,"
             + ETables.SessionsGroups + "." + ESessionGroupAttributes.GroupId +" ,"
-            + ETables.SessionsGroups + "." + ESessionGroupAttributes.GroupName +" ,"
-            +" FROM "+ETables.SessionsRecords +joinClause+ extraClause;
-
+            + ETables.SessionsGroups + "." + ESessionGroupAttributes.GroupName +" "
+            +" FROM "+ETables.SessionsRecords 
+            +joinClause+ extraClause;
+            
         ResultSet result = database.SelectQuery(query);
         return result;
     }

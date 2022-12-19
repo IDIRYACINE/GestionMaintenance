@@ -1,5 +1,6 @@
 package idir.embag.Application.Controllers.Session;
 
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -34,7 +35,10 @@ public class SessionGroupHelper implements IEventSubscriber{
     }
 
     public void add() {
-        SessionGroup sessionGroup = new SessionGroup(0,"",0);
+
+        Timestamp sessionId = SessionController.activeSession.getSessionId();
+
+        SessionGroup sessionGroup = new SessionGroup(0,"",sessionId);
 
         SessionGroupEditor dialogContent = new SessionGroupEditor(sessionGroup);
 
