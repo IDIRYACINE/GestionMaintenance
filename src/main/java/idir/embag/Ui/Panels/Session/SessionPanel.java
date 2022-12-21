@@ -29,8 +29,10 @@ public class SessionPanel extends INodeView implements Initializable,IEventSubsc
     public SessionPanel() {
         fxmlPath = "/views/Panels/SessionPanel.fxml";
         SessionController controller = new SessionController();
+
         activeSessionFrame = new ActiveSessionFrame(controller);
         activeSessionFrame.loadFxml();
+
         noSessionFrame = new NoSessionFrame(controller);
         noSessionFrame.loadFxml();
 
@@ -51,6 +53,7 @@ public class SessionPanel extends INodeView implements Initializable,IEventSubsc
 
     @Override
     public void notifyEvent(StoreEvent event) {
+
         switch(event.getAction()){
             case ApiResponse:
                 DSessionResponse data = DataBundler.retrieveValue(event.getData(), EEventsDataKeys.ApiResponse);
@@ -67,7 +70,7 @@ public class SessionPanel extends INodeView implements Initializable,IEventSubsc
     }
 
     private void reactToApiResponse(DSessionResponse response){
-        if(response.sessionId != -1){
+        if(response.sessionId != null){
             root.getChildren().set(0, activeSessionFrame.getView());
             return;
         }

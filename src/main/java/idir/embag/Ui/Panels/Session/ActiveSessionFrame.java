@@ -25,6 +25,8 @@ public class ActiveSessionFrame extends INodeView implements Initializable {
     public ActiveSessionFrame(SessionController controller) {
         fxmlPath = "/views/Panels/ActiveSessionPanel.fxml";
         this.controller = controller;
+
+
     }
 
     @Override
@@ -35,7 +37,7 @@ public class ActiveSessionFrame extends INodeView implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-      
+      controller.setup(tableSession);
     }
 
     @FXML
@@ -45,7 +47,7 @@ public class ActiveSessionFrame extends INodeView implements Initializable {
 
     @FXML
     private void refresh(){
-        controller.refreshFromLocalDb();
+        controller.refreshFromServer();
     }
 
     @FXML

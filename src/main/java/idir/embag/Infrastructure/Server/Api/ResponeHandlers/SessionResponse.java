@@ -2,15 +2,17 @@ package idir.embag.Infrastructure.Server.Api.ResponeHandlers;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import idir.embag.Application.Utility.GsonSerialiser;
 import idir.embag.DataModels.ApiBodyResponses.DSessionResponse;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
-import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
+import idir.embag.Infrastructure.ServicesProvider;
+import idir.embag.Infrastructure.Server.Api.ApiWrappers.FetchActiveSessionRecordsWrapper;
 import idir.embag.Types.Api.IApiResponseHandler;
+import idir.embag.Types.Infrastructure.Server.EServerKeys;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
+import idir.embag.Types.Stores.Generics.StoreDispatch.StoreDispatch;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 import okhttp3.Response;
@@ -21,16 +23,18 @@ public class SessionResponse implements IApiResponseHandler{
     public void handleResponse(Response response) {
         if(response.code() == 200){
             try {
+
                 String jsonBody = response.body().string();
+
                 DSessionResponse parsedResponse = GsonSerialiser.deserialise(jsonBody, DSessionResponse.class);
-                
-                if(parsedResponse.sessionId != -1){
+
+                if(parsedResponse.sessionId != null){
+                    dispatchNavigateToActiveSession(parsedResponse);
                     dispatchActiveSessionExists(parsedResponse);
+                    dispatchLoadingRecords();
+
                 }
 
-                if(parsedResponse.records != null && parsedResponse.records.size() > 0){
-                    dispatchLoadingRecords(parsedResponse.records);
-                }
                     
                 }
             catch (IOException e) {
@@ -40,20 +44,39 @@ public class SessionResponse implements IApiResponseHandler{
         }
         
         private void dispatchActiveSessionExists(DSessionResponse responseData){
+            StoreCenter storeCenter = StoreCenter.getInstance();
+
             Map<EEventsDataKeys,Object> data = new HashMap<>();
             data.put(EEventsDataKeys.ApiResponse, responseData);
 
-            StoreCenter storeCenter = StoreCenter.getInstance();
-            storeCenter.createStoreEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.Load, data);
+            StoreDispatch event = storeCenter.createStoreEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.Load, data);
+            storeCenter.notify(event);
+
+
         }
 
-        private void dispatchLoadingRecords(List<SessionRecord> records){
-            Map<EEventsDataKeys,Object> data = new HashMap<>();
-            data.put(EEventsDataKeys.InstanceCollection, records);
-
+        private void dispatchNavigateToActiveSession(DSessionResponse responseData){
             StoreCenter storeCenter = StoreCenter.getInstance();
-            storeCenter.createStoreEvent(EStores.DataStore, EStoreEvents.SessionRecordsEvent, EStoreEventAction.AddCollection, data);
 
+            Map<EEventsDataKeys,Object> data = new HashMap<>();
+            data.put(EEventsDataKeys.ApiResponse, responseData);
+
+            StoreDispatch event = storeCenter.createStoreEvent(EStores.NavigationStore, EStoreEvents.SessionEvent, EStoreEventAction.OpenSession, data);
+            storeCenter.notify(event);
+
+
+        }
+
+        private void dispatchLoadingRecords(){
+            int maxRetrivedRecord = 50;
+            int recordOffset = 0;
+
+            Map<EServerKeys, Object> data = new HashMap<>();
+
+            FetchActiveSessionRecordsWrapper apiWrapper = new FetchActiveSessionRecordsWrapper(maxRetrivedRecord,recordOffset);
+            data.put(EServerKeys.ApiWrapper, apiWrapper);
+    
+            ServicesProvider.getInstance().getRemoteServer().dispatchApiCall(data);
         }
 
     }

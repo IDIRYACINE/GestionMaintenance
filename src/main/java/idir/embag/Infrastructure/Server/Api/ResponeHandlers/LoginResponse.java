@@ -33,6 +33,7 @@ public class LoginResponse implements IApiResponseHandler {
                             "localhost", 3306);
 
                     ServicesProvider.getInstance().getDatabaseInitialiser().connect(connectionParameters);
+                                        
                     return;
                 }
 
@@ -45,5 +46,6 @@ public class LoginResponse implements IApiResponseHandler {
             e.printStackTrace();
         }
     }
+
 
 }

@@ -7,5 +7,7 @@ public enum EApi {
     registerSessionWorker,
     unregisterSessionWorker,
     fetchActiveSession,
-    fetchAllSessions, updateSessionWorker, fetchActiveSessionRecords,
+    fetchAllSessions, 
+    updateSessionWorker,
+    fetchActiveSessionRecords,
 }

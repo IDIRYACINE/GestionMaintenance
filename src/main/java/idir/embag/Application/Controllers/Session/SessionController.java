@@ -16,6 +16,7 @@ import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Infrastructure.ServicesProvider;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.FetchActiveSessionRecordsWrapper;
+import idir.embag.Infrastructure.Server.Api.ApiWrappers.FetchActiveSessionWrapper;
 import idir.embag.Types.Infrastructure.DataConverters.ExportWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
@@ -42,8 +43,8 @@ public class SessionController implements IEventSubscriber {
 
     private MFXTableView<SessionRecord> tableRecord;
 
-    //TODO : fix this too messy
-    public static  Session activeSession;
+    // TODO : fix this too messy
+    public static Session activeSession;
 
     public SessionController() {
         StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.SessionEvent, this);
@@ -66,14 +67,16 @@ public class SessionController implements IEventSubscriber {
     }
 
     public void refreshFromServer() {
-        Map<EEventsDataKeys, Object> data = new HashMap<>();
-        LoadWrapper loadWrapper = new LoadWrapper(100, 0);
+        int maxRetrivedRecord = 50;
+        int recordOffset = 0;
 
-        Map<EWrappers, Object> wrappersData = new HashMap<>();
-        wrappersData.put(EWrappers.LoadWrapper, loadWrapper);
-        data.put(EEventsDataKeys.WrappersKeys, wrappersData);
+        Map<EServerKeys, Object> data = new HashMap<>();
 
-        dispatchEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.Load, data);
+        FetchActiveSessionRecordsWrapper apiWrapper = new FetchActiveSessionRecordsWrapper(maxRetrivedRecord,
+                recordOffset);
+        data.put(EServerKeys.ApiWrapper, apiWrapper);
+
+        ServicesProvider.getInstance().getRemoteServer().dispatchApiCall(data);
     }
 
     public void manageSessionGroups() {
@@ -106,6 +109,7 @@ public class SessionController implements IEventSubscriber {
                 break;
             case OpenSession:
                 setActiveSession(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.Instance));
+
             default:
                 break;
         }
@@ -238,7 +242,7 @@ public class SessionController implements IEventSubscriber {
     public void loadActiveSessionIfExists() {
         Map<EServerKeys, Object> data = new HashMap<>();
 
-        FetchActiveSessionRecordsWrapper apiWrapper = new FetchActiveSessionRecordsWrapper(500, 0);
+        FetchActiveSessionWrapper apiWrapper = new FetchActiveSessionWrapper();
         data.put(EServerKeys.ApiWrapper, apiWrapper);
 
         ServicesProvider.getInstance().getRemoteServer().dispatchApiCall(data);

@@ -6,12 +6,15 @@ import java.util.Map;
 
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.Infrastructure.Server.Api.Requests.CloseSessionRequest;
+import idir.embag.Infrastructure.Server.Api.Requests.FetchActiveSessionRecordsRequest;
+import idir.embag.Infrastructure.Server.Api.Requests.FetchActiveSessionRequest;
 import idir.embag.Infrastructure.Server.Api.Requests.LoginRequest;
 import idir.embag.Infrastructure.Server.Api.Requests.OpenSessionRequest;
 import idir.embag.Infrastructure.Server.Api.Requests.RegisterSessionWorkerRequest;
 import idir.embag.Infrastructure.Server.Api.Requests.UnregisterSessionWorkerRequest;
 import idir.embag.Infrastructure.Server.Api.Requests.UpdateSessionWorkerRequest;
 import idir.embag.Infrastructure.Server.Api.ResponeHandlers.LoginResponse;
+import idir.embag.Infrastructure.Server.Api.ResponeHandlers.RecordsResponse;
 import idir.embag.Infrastructure.Server.Api.ResponeHandlers.SessionResponse;
 import idir.embag.Infrastructure.Server.Api.ResponeHandlers.WorkerOperationResponse;
 import idir.embag.Infrastructure.Server.WebSocket.WebSocketImpl;
@@ -57,7 +60,12 @@ public class Server implements IServer{
             break;
             case unregisterSessionWorker: unregisterSessionWorker(apiWrapper);
             break;
+            case fetchActiveSession : fetchActiveSession(apiWrapper);
+            break; 
             case updateSessionWorker: updateSessionWorker(apiWrapper);
+            break;
+
+            case fetchActiveSessionRecords : fetchRecords(apiWrapper);
             break;
 
             default : 
@@ -138,5 +146,22 @@ public class Server implements IServer{
     }
 
 
+    private void fetchActiveSession(IApiWrapper apiWrapper){
+       
+        FetchActiveSessionRequest request = new FetchActiveSessionRequest(apiWrapper);
+        request.addHeader(Headers.access_token, authToken);
+
+        SessionResponse responseHandler = new SessionResponse();
+        request.setResponseHandler(responseHandler);
+        request.execute();
+    }
     
+    private void fetchRecords(IApiWrapper apiWrapper){
+        FetchActiveSessionRecordsRequest request = new FetchActiveSessionRecordsRequest(apiWrapper);
+        request.addHeader(Headers.access_token, authToken);
+
+        RecordsResponse responseHandler = new RecordsResponse();
+        request.setResponseHandler(responseHandler);
+        request.execute();
+    }
 }

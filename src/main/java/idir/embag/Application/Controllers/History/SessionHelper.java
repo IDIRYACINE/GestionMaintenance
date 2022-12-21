@@ -67,6 +67,7 @@ public class SessionHelper implements  IHistoryHelper, IEventSubscriber {
 
     @Override
     public void notifyEvent(StoreEvent event) {
+
         switch(event.getAction()){
             case Add: addTableElement((Session)event.getData().get(EEventsDataKeys.Instance));
                 break;
@@ -110,8 +111,9 @@ public class SessionHelper implements  IHistoryHelper, IEventSubscriber {
         tableSessions.getItems().add(Session);
     }
 
-    private void setTableElements(Collection<Session> Sessions){
-        tableSessions.getItems().setAll(Sessions);
+    private void setTableElements(Collection<Session> sessions){
+        if(sessions != null)
+            tableSessions.getItems().setAll(sessions);
     }
 
     protected void dispatchEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent, Map<EEventsDataKeys,Object> data) {
