@@ -36,7 +36,7 @@ public class SessionGroupHelper implements IEventSubscriber{
 
     public void add() {
 
-        Timestamp sessionId = SessionController.activeSession.getSessionId();
+        Timestamp sessionId = SessionController.sessionId;
 
         SessionGroup sessionGroup = new SessionGroup(0,"",sessionId);
 

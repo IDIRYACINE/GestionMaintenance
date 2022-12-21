@@ -17,8 +17,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 
-public class SessionPanel extends INodeView implements Initializable,IEventSubscriber {
-    
+public class SessionPanel extends INodeView implements Initializable, IEventSubscriber {
+
     @FXML
     private VBox root;
 
@@ -45,7 +45,6 @@ public class SessionPanel extends INodeView implements Initializable,IEventSubsc
         return root;
     }
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         root.getChildren().add(0, noSessionFrame.getView());
@@ -54,27 +53,30 @@ public class SessionPanel extends INodeView implements Initializable,IEventSubsc
     @Override
     public void notifyEvent(StoreEvent event) {
 
-        switch(event.getAction()){
+        switch (event.getAction()) {
             case ApiResponse:
                 DSessionResponse data = DataBundler.retrieveValue(event.getData(), EEventsDataKeys.ApiResponse);
                 reactToApiResponse(data);
-              break;
+                break;
             case OpenSession:
                 root.getChildren().set(0, activeSessionFrame.getView());
-            break;
-  
+                break;
+
+            case CloseSession:
+                root.getChildren().set(0, noSessionFrame.getView());
+                break;
             default:
-              break;
+                break;
         }
-        
+
     }
 
-    private void reactToApiResponse(DSessionResponse response){
-        if(response.sessionId != null){
+    private void reactToApiResponse(DSessionResponse response) {
+        if (response.sessionId != null) {
             root.getChildren().set(0, activeSessionFrame.getView());
             return;
         }
         root.getChildren().set(0, noSessionFrame.getView());
     }
-    
+
 }

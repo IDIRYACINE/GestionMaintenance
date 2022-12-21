@@ -47,7 +47,7 @@ public class SessionResponse implements IApiResponseHandler{
             StoreCenter storeCenter = StoreCenter.getInstance();
 
             Map<EEventsDataKeys,Object> data = new HashMap<>();
-            data.put(EEventsDataKeys.ApiResponse, responseData);
+            data.put(EEventsDataKeys.Instance, responseData.sessionId);
 
             StoreDispatch event = storeCenter.createStoreEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.Load, data);
             storeCenter.notify(event);

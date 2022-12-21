@@ -25,6 +25,9 @@ public abstract class ISessionQuery extends IQuery{
 
     public abstract void RegisterSessionRecord(Collection<AttributeWrapper> attributes) throws SQLException;
 
+
+    public abstract void CloseActiveSession(Timestamp id) throws SQLException;
+
     public abstract ResultSet SearchSessionRecord(SearchWrapper parametrers) throws SQLException;
     public abstract ResultSet SearchSessionWorker(SearchWrapper parametrers) throws SQLException;
     public abstract ResultSet SearchSessionGroup(SearchWrapper parametrers) throws SQLException;

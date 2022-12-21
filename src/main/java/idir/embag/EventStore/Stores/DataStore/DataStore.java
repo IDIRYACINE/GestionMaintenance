@@ -90,6 +90,7 @@ public class DataStore implements IDataStore {
             subscriber.notifyEvent(event);
         }
     }
+
     
     @Override
     public void importCollection(StoreEvent event) {
@@ -124,6 +125,7 @@ public class DataStore implements IDataStore {
         actions.put(EStoreEventAction.Broadcast, this::broadcast);
         actions.put(EStoreEventAction.Import, this::importCollection);
 
+        actions.put(EStoreEventAction.CloseSession, this::remove);
     }
     
 }

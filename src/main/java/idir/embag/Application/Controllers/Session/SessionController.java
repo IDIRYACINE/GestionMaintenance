@@ -43,8 +43,7 @@ public class SessionController implements IEventSubscriber {
 
     private MFXTableView<SessionRecord> tableRecord;
 
-    // TODO : fix this too messy
-    public static Session activeSession;
+    public static Timestamp sessionId;
 
     public SessionController() {
         StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.SessionEvent, this);
@@ -97,6 +96,7 @@ public class SessionController implements IEventSubscriber {
 
     @Override
     public void notifyEvent(StoreEvent event) {
+
         switch (event.getAction()) {
             case Add:
                 addRecord(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.Instance));
@@ -109,7 +109,10 @@ public class SessionController implements IEventSubscriber {
                 break;
             case OpenSession:
                 setActiveSession(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.Instance));
-
+                break;
+            case Load:
+                setActiveSession(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.Instance));
+                break;
             default:
                 break;
         }
@@ -118,23 +121,30 @@ public class SessionController implements IEventSubscriber {
     public void closeSession() {
         ConfirmationDialog dialogContent = new ConfirmationDialog();
         dialogContent.setMessage(Messages.closeSession);
+
         // TODO: save session records to local db
         Map<EEventsDataKeys, Object> data = new HashMap<>();
         Map<ENavigationKeys, Object> navigationData = new HashMap<>();
 
-        dialogContent.setOnConfirm(other -> {
-            dispatchEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.CloseSession, data);
-        });
-
         navigationData.put(ENavigationKeys.DialogContent, dialogContent);
         data.put(EEventsDataKeys.NavigationKeys, navigationData);
-        data.put(EEventsDataKeys.Instance, activeSession);
+
+        data.put(EEventsDataKeys.Instance, sessionId);
+
+        dialogContent.setOnConfirm(other -> {
+            dispatchEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.CloseSession, data);
+
+            sendNotifyEvent(EStores.NavigationStore, EStoreEvents.SessionEvent, EStoreEventAction.CloseSession, data);
+        });
+
+        dialogContent.loadFxml();
 
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
     }
 
-    private void setActiveSession(Session session) {
-        activeSession = session;
+    private void setActiveSession(Timestamp activeId) {
+        sessionId = activeId;
+
         Map<EEventsDataKeys, Object> data = new HashMap<>();
 
         StoreEvent event = new StoreEvent(EStoreEvents.SessionEvent, EStoreEventAction.OpenSession, data);
@@ -216,6 +226,13 @@ public class SessionController implements IEventSubscriber {
         StoreEvent event = new StoreEvent(storeEvent, actionEvent, data);
         StoreDispatch action = new StoreDispatch(store, event);
         StoreCenter.getInstance().dispatch(action);
+    }
+
+    private void sendNotifyEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent,
+            Map<EEventsDataKeys, Object> data) {
+        StoreEvent event = new StoreEvent(storeEvent, actionEvent, data);
+        StoreDispatch action = new StoreDispatch(store, event);
+        StoreCenter.getInstance().notify(action);
     }
 
     public void openNewSession() {

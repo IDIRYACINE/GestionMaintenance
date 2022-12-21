@@ -2,6 +2,7 @@ package idir.embag.EventStore.Models.Session;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,9 +56,17 @@ public class SessionModel  implements IDataDelegate{
 
     @Override
     public void remove(Map<EEventsDataKeys,Object> data) {
-        Session session = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
-        closeSessionOnServer(session);
-        throw new UnsupportedOperationException("Not supported yet.");
+        Timestamp sessionId = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
+        closeSessionOnServer(sessionId);
+        
+        
+        try {
+            sessionQuery.CloseActiveSession(sessionId);
+            notfiyEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.CloseSession, data);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -132,8 +141,8 @@ public class SessionModel  implements IDataDelegate{
         server.dispatchApiCall(data);
     }
 
-    private void closeSessionOnServer(Session session){
-        CloseSessionWrapper closeSessionWrapper = new CloseSessionWrapper(session.getSessionId());
+    private void closeSessionOnServer(Timestamp sessionId){
+        CloseSessionWrapper closeSessionWrapper = new CloseSessionWrapper(sessionId);
 
         Map<EServerKeys,Object> data =  new HashMap<>();
         DataBundler.appendData(data, EServerKeys.ApiWrapper, closeSessionWrapper);
