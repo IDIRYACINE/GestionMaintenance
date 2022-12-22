@@ -65,8 +65,7 @@ public abstract class IApiWrapper {
         apiUrl.scheme(protocol);
         apiUrl.host(host);
         apiUrl.port(port);
-        apiUrl.addPathSegment(apiVersionPath);
-        apiUrl.addPathSegment(String.valueOf(apiVersion));
+        apiUrl.addPathSegment(apiVersionPath + String.valueOf(apiVersion));
         apiUrl.addPathSegment(api.toString());
         return apiUrl;
     }

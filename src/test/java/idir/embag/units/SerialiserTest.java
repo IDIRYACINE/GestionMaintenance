@@ -1,13 +1,13 @@
 package idir.embag.units;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.sql.Timestamp;
+
 import org.junit.jupiter.api.Test;
 
 import idir.embag.Application.Utility.GsonSerialiser;
 import idir.embag.DataModels.ApiBodyResponses.DLoginResponse;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.sql.Timestamp;
 
 public class SerialiserTest {
 
@@ -31,6 +31,7 @@ public class SerialiserTest {
 
     @Test
     public void serialiseTimeStampWithGson(){
+       
 
         Timestamp timestamp = new Timestamp(1671377892091l);
         String json = GsonSerialiser.serialise(timestamp); 

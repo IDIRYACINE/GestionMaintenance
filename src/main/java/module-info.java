@@ -34,10 +34,15 @@ module idir.embag {
     opens idir.embag.Ui.Dialogs.ConfirmationDialog to  javafx.base,javafx.fxml;
     opens idir.embag.Ui.Dialogs.ExportDialogs to  javafx.base,javafx.fxml;
 
+    //TODO: New
+    opens idir.embag.Ui.Dialogs to javafx.fxml;
+
     opens idir.embag.DataModels.ApiBodyResponses to com.google.gson;
     opens idir.embag.DataModels.Products to com.google.gson;
     opens idir.embag.DataModels.Session to com.google.gson;
     opens idir.embag.DataModels.Workers to com.google.gson;
+    opens idir.embag.DataModels.SocketApisData to  com.google.gson;
+
 
     exports idir.embag;
 }

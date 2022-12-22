@@ -208,7 +208,7 @@ public class SessionQuery extends ISessionQuery {
                 + ETables.Workers + "." + EWorkerAttributes.WorkerPhone + " ,"
                 + ETables.SessionWorkers + "." + ESessionWorkerAttributes.Password + " ,"
                 + ETables.SessionsGroups + "." + ESessionGroupAttributes.GroupId + " ,"
-                + ETables.SessionsGroups + "." + ESessionGroupAttributes.GroupName + " ,"
+                + ETables.SessionsGroups + "." + ESessionGroupAttributes.GroupName 
                 + " FROM " + ETables.SessionsRecords + joinClause + whereClause;
 
         ResultSet result = database.SelectQuery(query);
@@ -237,7 +237,7 @@ public class SessionQuery extends ISessionQuery {
                 + ETables.SessionsRecords + "." + ESessionRecordAttributes.StockPrice + " ,"
                 + ETables.SessionsRecords + "." + ESessionRecordAttributes.SessionId + " ,"
                 + ETables.Workers + "." + EWorkerAttributes.WorkerName + " ,"
-                + ETables.Stock + "." + EStockAttributes.ArticleName + " ,"
+                + ETables.Stock + "." + EStockAttributes.ArticleName 
                 + " FROM " + ETables.SessionsRecords + joinClause + whereClause;
 
         ResultSet result = database.SelectQuery(query);
@@ -265,7 +265,7 @@ public class SessionQuery extends ISessionQuery {
                 + ETables.SessionsRecords + "." + ESessionRecordAttributes.StockPrice + " ,"
                 + ETables.SessionsRecords + "." + ESessionRecordAttributes.SessionId + " ,"
                 + ETables.Workers + "." + EWorkerAttributes.WorkerName + " ,"
-                + ETables.Stock + "." + EStockAttributes.ArticleName + " ,"
+                + ETables.Stock + "." + EStockAttributes.ArticleName 
                 + " FROM " + ETables.SessionsRecords + joinClause + extraClause;
         System.out.println(query);
         ResultSet result = database.SelectQuery(query);
