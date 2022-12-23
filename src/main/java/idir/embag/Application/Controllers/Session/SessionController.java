@@ -47,6 +47,7 @@ public class SessionController implements IEventSubscriber {
 
     public SessionController() {
         StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.SessionEvent, this);
+        StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.SessionRecordsEvent, this);
     }
 
     public void setup(MFXTableView<SessionRecord> tableRecord) {
@@ -96,7 +97,6 @@ public class SessionController implements IEventSubscriber {
 
     @Override
     public void notifyEvent(StoreEvent event) {
-
         switch (event.getAction()) {
             case Add:
                 addRecord(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.Instance));

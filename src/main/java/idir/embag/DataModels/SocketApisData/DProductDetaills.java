@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import idir.embag.DataModels.Products.InventoryProduct;
 
 public class DProductDetaills {
+    public final String event = "onProductDetails";
     public int barcode;
     public String itemName;
     public String locationName;

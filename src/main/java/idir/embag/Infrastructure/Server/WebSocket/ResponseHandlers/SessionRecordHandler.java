@@ -29,34 +29,34 @@ public class SessionRecordHandler {
 
     public DProductDetaills handleRecord(DSubmitRecord requestData) {
 
-        // InventoryProduct product = getInventoryProduct(requestData.barcode);
-        // DProductDetaills productDetails =
-        // DProductDetaills.fromInventoryProduct(product, requestData.requestTimestamp);
-
-        // // TODO fix this
-        // SessionRecord sessionRecord = new SessionRecord(
-        // product.getArticleId(),
-        // product.getArticleName(),
-        // requestData.scannedDate.toString(),
-        // String.valueOf(product.getPrice()),
-        // "0.0",
-        // "0.0",
-        // "0.0",
-        // "0.0",
-        // requestData.groupId,
-        // requestData.workerName);
+        InventoryProduct product = getInventoryProduct(requestData.barcode);
+        DProductDetaills productDetails =
+        DProductDetaills.fromInventoryProduct(product, requestData.requestTimestamp);
 
         SessionRecord sessionRecord = new SessionRecord(
-                33,
-                "name",
-                requestData.scannedDate.toString(),
-                "450",
-                "0.0",
-                "0.0",
-                "0.0",
-                "0.0",
-                "45",
-                "idir");
+        product.getArticleId(),
+        product.getArticleName(),
+        requestData.scannedDate.toString(),
+        String.valueOf(product.getPrice()),
+        "0.0",
+        "0.0",
+        "0.0",
+        "0.0",
+        requestData.groupId,
+        requestData.workerName);
+
+        // for testing
+        // SessionRecord sessionRecord = new SessionRecord(
+        //         33,
+        //         "name",
+        //         requestData.scannedDate.toString(),
+        //         "450",
+        //         "0.0",
+        //         "0.0",
+        //         "0.0",
+        //         "0.0",
+        //         "45",
+        //         "idir");
 
         SessionRecord[] values = { sessionRecord };
         EEventsDataKeys[] keys = { EEventsDataKeys.Instance };
@@ -67,8 +67,11 @@ public class SessionRecordHandler {
                 EStoreEvents.SessionRecordsEvent, EStoreEventAction.Add, data);
 
         storeCenter.notify(action);
+        
+        // for testing
+        // new DProductDetaills(0,"name","location",22,requestData.scannedDate);
 
-        return new DProductDetaills(44,"name","location",22,requestData.scannedDate);
+        return productDetails;
     }
 
     @SuppressWarnings({ "unchecked" })

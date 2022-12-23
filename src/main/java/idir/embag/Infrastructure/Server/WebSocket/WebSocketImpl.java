@@ -37,12 +37,12 @@ public class WebSocketImpl extends WebSocketClient {
     @Override
     public void onMessage(String message) {
         DSocketMessage sMessage = GsonSerialiser.deserialise(message, DSocketMessage.class);
-
         switch (sMessage.type) {
             case recordEvent:
                 DSubmitRecord data = GsonSerialiser.deserialise(sMessage.data, DSubmitRecord.class);
                 DProductDetaills products = recordHandler.handleRecord(data);
-                send(GsonSerialiser.serialise(products));
+                String response = GsonSerialiser.serialise(products);
+                send(response);
                 break;
 
             case recordCollectionEvent:
