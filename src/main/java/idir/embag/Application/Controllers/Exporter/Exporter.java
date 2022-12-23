@@ -32,7 +32,7 @@ public class Exporter implements IEventSubscriber{
 
     private ImportWrapper importWrapper;
 
-    private String exportHistoryFilePath = "/Data/ExportHistory.yaml";
+    private String exportHistoryFilePath = new File("").getAbsolutePath() +"/Data/ExportHistory.yaml";
 
     private Map<EExportSessionKeys,Object> sessionProgress;
 
@@ -144,10 +144,16 @@ public class Exporter implements IEventSubscriber{
         try {
             
             Map<EExportSessionKeys, Object> data = new HashMap<>();
-            data.put(EExportSessionKeys.ExportSession, exportWrapper.getMap());
-            data.put(EExportSessionKeys.ImportSession, importWrapper.getMap());
+            if(exportWrapper != null)
+                data.put(EExportSessionKeys.ExportSession, exportWrapper.getMap());
+            if(importWrapper != null)
+                data.put(EExportSessionKeys.ImportSession, importWrapper.getMap());
 
             File source = new File(exportHistoryFilePath);
+
+            if(!source.exists())
+                source.createNewFile();
+
             FileWriter writer = new FileWriter(source);
 
             Yaml yaml = new Yaml();

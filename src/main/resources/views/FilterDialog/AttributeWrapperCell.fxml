@@ -16,6 +16,6 @@
     
    <children>
       <Label fx:id="attributeLabel" prefWidth="100.0" text="Label" />
-      <MFXTextField fx:id="attributeField" maxHeight="100.0" minWidth="200.0" />
+      <MFXTextField fx:id="attributeField" minHeight="25.0" maxHeight="50.0" minWidth="200.0" />
    </children>
 </HBox>

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
@@ -136,7 +137,14 @@ public class SessionRecordHelper implements  IHistoryHelper, IEventSubscriber {
             ESessionRecordAttributes.RecordDate};
 
         dialog.setAttributes(attributes);
-
+        
+        dialog.setOnConfirm(new Consumer<Map<EEventsDataKeys,Object>> (){
+            @Override
+            public void accept(Map<EEventsDataKeys,Object> data) {
+                dispatchEvent(EStores.DataStore, EStoreEvents.SessionRecordsEvent, EStoreEventAction.Search, data);
+            }
+        });
+        
         dialog.loadFxml();
 
         return dialog;

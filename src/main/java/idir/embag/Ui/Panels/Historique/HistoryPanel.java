@@ -56,7 +56,13 @@ public class HistoryPanel extends INodeView  implements Initializable {
     }
 
     @FXML
+    private void export(){
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @FXML
     private void search(){
+        System.out.println("search");
         controller.search();
     }
 

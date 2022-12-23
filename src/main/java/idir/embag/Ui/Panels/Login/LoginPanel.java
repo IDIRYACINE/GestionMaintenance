@@ -8,6 +8,7 @@ import idir.embag.Types.Panels.Generics.INodeView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -17,7 +18,10 @@ public class LoginPanel  extends INodeView  implements Initializable {
     private VBox root;
 
     @FXML
-    private TextField usernameField,passwordField;
+    private TextField usernameField;
+    
+    @FXML
+    private PasswordField passwordField;
 
     LoginController controller;
 

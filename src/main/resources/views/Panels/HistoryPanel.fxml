@@ -15,9 +15,9 @@
          </padding>
          <children>
             <MFXComboBox fx:id="comboHistoryType" onAction="#onHistoryTypeChanged" />
-            <MFXButton fx:id="btnSearch" text="Rechercher" />
-            <MFXButton fx:id="btnRefresh" text="Refresher" />
-            <MFXButton fx:id="btnExport" text="Exporter" />
+            <MFXButton fx:id="btnSearch" onAction="#search" text="Rechercher" />
+            <MFXButton fx:id="btnRefresh" onAction="#refresh" text="Refresher" />
+            <MFXButton fx:id="btnExport" onAction="#export" text="Exporter" />
          </children>
       </HBox>
       <MFXScrollPane fx:id="tableHolder" prefHeight="602.0" prefWidth="1300.0" />

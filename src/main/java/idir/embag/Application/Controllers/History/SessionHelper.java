@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
+
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.Session;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
@@ -95,6 +97,7 @@ public class SessionHelper implements  IHistoryHelper, IEventSubscriber {
 
     @Override
     public void search() {
+        
         IDialogContent dialogContent =  buildSearchDialog();
         
         Map<EEventsDataKeys,Object> data = new HashMap<>();
@@ -129,6 +132,13 @@ public class SessionHelper implements  IHistoryHelper, IEventSubscriber {
             ESessionAttributes.StartDate};
 
         dialog.setAttributes(attributes);
+        
+        dialog.setOnConfirm(new Consumer<Map<EEventsDataKeys,Object>> (){
+            @Override
+            public void accept(Map<EEventsDataKeys,Object> data) {
+                dispatchEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.Search, data);
+            }
+        });
 
         dialog.loadFxml();
 
