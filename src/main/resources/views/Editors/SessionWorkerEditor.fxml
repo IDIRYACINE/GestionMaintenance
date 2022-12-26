@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
@@ -24,9 +25,9 @@
          <content>
             <HBox alignment="CENTER_RIGHT" prefHeight="431.0" prefWidth="686.0">
                <children>
-                  <VBox alignment="CENTER_RIGHT" prefHeight="431.0" prefWidth="248.0" spacing="35.0">
+                  <VBox alignment="CENTER_RIGHT" prefHeight="431.0" prefWidth="248.0" spacing="30.0">
                      <children>
-                        <Label text="Worker Password">
+                        <Label text="Password">
                            <font>
                               <Font size="25.0" />
                            </font>
@@ -34,19 +35,39 @@
                               <Insets />
                            </VBox.margin>
                         </Label>
+                        <Label text="Username">
+                           <font>
+                              <Font size="25.0" />
+                           </font>
+                        </Label>
+                        <Label text="Group">
+                           <font>
+                              <Font size="25.0" />
+                           </font>
+                        </Label>
                         
                      </children>
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
                   </VBox>
-                  <VBox alignment="CENTER_LEFT" prefHeight="431.0" prefWidth="442.0" spacing="20.0">
+                  <VBox alignment="CENTER_LEFT" prefHeight="431.0" prefWidth="442.0" spacing="40.0">
                      <children>
-                        <TextField fx:id="workerPasswordField">
+                        <TextField fx:id="passwordField">
                            <VBox.margin>
                               <Insets left="20.0" right="20.0" />
                            </VBox.margin>
                         </TextField>
+                        <TextField fx:id="usernameField">
+                           <VBox.margin>
+                              <Insets left="20.0" right="20.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <MFXComboBox fx:id="groupComboBox">
+                           <VBox.margin>
+                              <Insets left="20.0" />
+                           </VBox.margin>
+                        </MFXComboBox>
                      </children>
                   </VBox>
                </children>

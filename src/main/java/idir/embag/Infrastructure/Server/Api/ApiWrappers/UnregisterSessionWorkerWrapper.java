@@ -12,6 +12,8 @@ public class UnregisterSessionWorkerWrapper extends IApiWrapper{
     public UnregisterSessionWorkerWrapper(SessionWorker sessionWorker) {
         this.sessionWorker = sessionWorker;
         api = EApi.unregisterSessionWorker;
+
+        
     }
 
     public SessionWorker getSessionWorker() {

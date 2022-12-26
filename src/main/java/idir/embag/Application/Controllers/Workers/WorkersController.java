@@ -230,6 +230,7 @@ public class WorkersController implements IWorkersController, IEventSubscriber {
 
         result.add(new AttributeWrapper(EWorkerAttributes.WorkerId, worker.getWorkerId()));
         result.add(new AttributeWrapper(ESessionWorkerAttributes.GroupId, worker.getGroupId()));
+        result.add(new AttributeWrapper(ESessionWorkerAttributes.Username, worker.getUsername()));
         result.add(new AttributeWrapper(ESessionWorkerAttributes.Password, String.valueOf((worker.getPassword()))));
 
         return result;

@@ -61,6 +61,7 @@ public class SessionRepository {
                 result.add(new SessionWorker(
                 source.getInt(ESessionWorkerAttributes.WorkerId.toString()),
                 source.getString(EWorkerAttributes.WorkerName.toString()),
+                source.getString(ESessionWorkerAttributes.Username.toString()),
                 source.getString(ESessionWorkerAttributes.Password.toString()),
                 source.getString(ESessionGroupAttributes.GroupName.toString()),
                 source.getInt(ESessionGroupAttributes.GroupId.toString())

@@ -10,6 +10,8 @@ public abstract class IApiWrapper {
 
     protected boolean enableApiVersion = true;
 
+    protected String apiBasePath = "api";
+
     protected String apiVersionPath = "v";
 
     protected String host = "localhost";
@@ -65,6 +67,7 @@ public abstract class IApiWrapper {
         apiUrl.scheme(protocol);
         apiUrl.host(host);
         apiUrl.port(port);
+        apiUrl.addPathSegment(apiBasePath);
         apiUrl.addPathSegment(apiVersionPath + String.valueOf(apiVersion));
         apiUrl.addPathSegment(api.toString());
         return apiUrl;

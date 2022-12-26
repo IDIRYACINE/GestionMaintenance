@@ -72,7 +72,7 @@ public class AddSessionWorkerDialog extends INodeView implements Initializable, 
         groupComboBox.setConverter(new StringConverter<SessionGroup>() {
             @Override
             public String toString(SessionGroup object) {
-                if(object == null){
+                if (object == null) {
                     return "";
                 }
                 return object.getName();
@@ -96,7 +96,6 @@ public class AddSessionWorkerDialog extends INodeView implements Initializable, 
 
         SessionWorker sessionWorker = createSessionWorker();
 
-        
         Map<EEventsDataKeys, Object> data = new HashMap<>();
 
         data.put(EEventsDataKeys.Instance, sessionWorker);
@@ -104,7 +103,7 @@ public class AddSessionWorkerDialog extends INodeView implements Initializable, 
         confirmTask.accept(data);
 
         cancelTask.run();
-        
+
     }
 
     private SessionWorker createSessionWorker() {
@@ -113,12 +112,10 @@ public class AddSessionWorkerDialog extends INodeView implements Initializable, 
 
         SessionGroup group = groupComboBox.getSelectedItem();
 
+        SessionWorker sessionWorker = new SessionWorker(worker.getId(), worker.getName(), username, password,
+                group.getName(), group.getId());
 
-        SessionWorker sessionWorker = new SessionWorker(worker.getId(),
-                username, password, group.getName(), group.getId());
-    
         return sessionWorker;
     }
-
 
 }

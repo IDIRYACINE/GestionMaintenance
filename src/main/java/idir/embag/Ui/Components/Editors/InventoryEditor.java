@@ -89,7 +89,6 @@ public class InventoryEditor extends INodeView implements Initializable , IDialo
         product.setFamilyCode(Integer.parseInt(articleFamilyField.getText()));
         product.setStockId(Integer.parseInt(stockIdField.getText()));
 
-        System.out.println(product.getArticleCode());
 
         DataBundler.bundleNestedData(data, EEventsDataKeys.WrappersKeys, EWrappers.AttributesCollection, getAttributeWrappers());
         data.put(EEventsDataKeys.Instance, product);

@@ -72,7 +72,6 @@ public class SessionQuery extends ISessionQuery {
     public void RegsiterSessionWorker(Collection<AttributeWrapper> attributes)
             throws SQLException {
         String query = "INSERT INTO " + ETables.SessionWorkers + InsertWrapperToQuery(attributes);
-        System.out.println(query);
         database.UpdateQuery(query);
     }
 
@@ -168,6 +167,7 @@ public class SessionQuery extends ISessionQuery {
                 + ESessionWorkerAttributes.WorkerId + " INTEGER PRIMARY KEY ,\n"
                 + ESessionWorkerAttributes.GroupId + " INTEGER,\n"
                 + ESessionWorkerAttributes.Password + " TEXT,\n"
+                + ESessionWorkerAttributes.Username + " TEXT,\n"
 
                 + "FOREIGN KEY (" + ESessionRecordAttributes.WorkerId + ")\n"
                 + "REFERENCES " + ETables.Workers + "(" + EWorkerAttributes.WorkerId + ")\n"
@@ -267,7 +267,6 @@ public class SessionQuery extends ISessionQuery {
                 + ETables.Workers + "." + EWorkerAttributes.WorkerName + " ,"
                 + ETables.Stock + "." + EStockAttributes.ArticleName 
                 + " FROM " + ETables.SessionsRecords + joinClause + extraClause;
-        System.out.println(query);
         ResultSet result = database.SelectQuery(query);
         return result;
     }
@@ -284,26 +283,23 @@ public class SessionQuery extends ISessionQuery {
     public ResultSet LoadSessionWorkers(LoadWrapper parametrers) throws SQLException {
         String extraClause = " LIMIT " + parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
 
-        String joinClause = " INNER JOIN " + ETables.Workers + " ON "
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.WorkerId
-                + "=" + ETables.Workers + "." + EWorkerAttributes.WorkerId
-
-                + " INNER JOIN " + ETables.SessionsGroups + " ON "
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.GroupId
+        String joinClause = " INNER JOIN " + ETables.SessionsGroups + " ON "
+                + ETables.SessionWorkers + "." + ESessionWorkerAttributes.GroupId
                 + "=" + ETables.SessionsGroups + "." + ESessionGroupAttributes.GroupId
 
-                + " INNER JOIN " + ETables.SessionWorkers + " ON "
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.WorkerId
-                + "=" + ETables.SessionWorkers + "." + ESessionWorkerAttributes.WorkerId;
+                + " INNER JOIN " + ETables.Workers + " ON "
+                + ETables.SessionWorkers + "." + ESessionWorkerAttributes.WorkerId
+                + "=" + ETables.Workers + "." + EWorkerAttributes.WorkerId;
 
         String query = "SELECT "
                 + ETables.Workers + "." + EWorkerAttributes.WorkerId + " ,"
                 + ETables.Workers + "." + EWorkerAttributes.WorkerName + " ,"
                 + ETables.Workers + "." + EWorkerAttributes.WorkerPhone + " ,"
                 + ETables.SessionWorkers + "." + ESessionWorkerAttributes.Password + " ,"
+                + ETables.SessionWorkers + "." + ESessionWorkerAttributes.Username + " ,"
                 + ETables.SessionsGroups + "." + ESessionGroupAttributes.GroupId + " ,"
                 + ETables.SessionsGroups + "." + ESessionGroupAttributes.GroupName + " "
-                + " FROM " + ETables.SessionsRecords
+                + " FROM " + ETables.SessionWorkers
                 + joinClause + extraClause;
 
         ResultSet result = database.SelectQuery(query);

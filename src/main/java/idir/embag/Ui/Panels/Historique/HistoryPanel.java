@@ -62,7 +62,6 @@ public class HistoryPanel extends INodeView  implements Initializable {
 
     @FXML
     private void search(){
-        System.out.println("search");
         controller.search();
     }
 

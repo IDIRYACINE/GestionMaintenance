@@ -20,6 +20,8 @@ public class RegisterSessionWorkerRequest extends IApi{
     
     RequestBody requestBody;
 
+    String jsonData;
+
     public RegisterSessionWorkerRequest(IApiWrapper wrapper){
         client = new OkHttpClient();
 
@@ -34,14 +36,13 @@ public class RegisterSessionWorkerRequest extends IApi{
         };
         url = wrapper.getApiUrl().build();
         
-        String jsonData = wrapper.getJsonData();
-        requestBody = RequestBody.create(jsonData, JSON);
+        jsonData = wrapper.getJsonData();
     }
 
     @Override
     public void execute() {
         requestBuilder.url(url);
-        requestBuilder.setBody$okhttp(requestBody);
+        addPostBody(jsonData);
         addHeadersToRequest(requestBuilder);
         requestBuilder.build();        
         

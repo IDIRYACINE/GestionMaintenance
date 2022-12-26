@@ -69,6 +69,8 @@ public class WorkersPanel extends INodeView implements Initializable{
 
     @FXML
     private void addWorkerToSession(){
+        if(tableWorkers.getSelectionModel().getSelectedValues().isEmpty()) return;
+
         Worker worker = tableWorkers.getSelectionModel().getSelectedValues().get(0);
         controller.addWorkerToSession(worker);
     }

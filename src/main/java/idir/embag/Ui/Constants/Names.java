@@ -26,6 +26,8 @@ public abstract class Names {
     public static final String Password = "Password";
     public static final String ImportFileTitle = "Import File";
     public static final String ExportFileTitle = "Export File";
+    public static final String Username = "Username";
+
 
 
 

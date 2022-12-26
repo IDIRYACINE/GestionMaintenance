@@ -2,19 +2,21 @@ package idir.embag.DataModels.Workers;
 
 public class SessionWorker {
     private int workerId;
-    private int Id;
+    private int id;
     private String workerName;
     private String password;
     private String groupName;
     private int groupId;
+    private String username;
 
 
-    public SessionWorker(int workerId, String workerName, String password,String groupName,int groupId) {
+    public SessionWorker(int workerId, String workerName, String username,String password,String groupName,int groupId) {
         this.workerId = workerId;
         this.workerName = workerName;
         this.password = password;
         this.groupName = groupName;
         this.groupId = groupId;
+        this.username = username;
     }
 
     public int getWorkerId() {
@@ -38,11 +40,19 @@ public class SessionWorker {
     }
 
     public Object getId() {
-        return Id;
+        return id;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
     
 }

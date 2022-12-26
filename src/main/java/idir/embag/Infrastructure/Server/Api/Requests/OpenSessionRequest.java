@@ -37,7 +37,7 @@ public class OpenSessionRequest extends IApi{
         
         url = wrapper.getApiUrl().build();
 
-         jsonData = wrapper.getJsonData();
+        jsonData = wrapper.getJsonData();
         
     }
 

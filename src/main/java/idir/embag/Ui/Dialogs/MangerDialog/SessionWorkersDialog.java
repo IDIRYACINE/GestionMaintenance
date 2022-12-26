@@ -29,6 +29,7 @@ public class SessionWorkersDialog extends INodeView implements Initializable,IDi
     @FXML
     private MFXTableView<SessionGroup> tableSessionGroups;
 
+
     private SessionWorkersHelper workersController;
 
     private SessionGroupHelper groupsController;
@@ -46,8 +47,9 @@ public class SessionWorkersDialog extends INodeView implements Initializable,IDi
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-      workersController.notifyActive(tableSessionWorkers);
-      groupsController.notifyActive(tableSessionGroups);
+        groupsController.notifyActive(tableSessionGroups);
+        workersController.notifyActive(tableSessionWorkers,tableSessionGroups);
+    
     }
 
     @FXML
