@@ -12,8 +12,11 @@ public interface IDataStore extends IStore{
     public static final int SESSION_DELEGATE = 5;
     public static final int SESSION_WORKER_DELEGATE = 6;
     public static final int SESSION_GROUP_DELEGATE = 7;
+    public static final int DESIGNATION_DELEGATE = 8;
+    public static final int PERMISSION_DELEGATE = 9;
+    public static final int USER_DELEGATE = 10;
 
-    public static final int DELEGATES_COUNT = 8;
+    public static final int DELEGATES_COUNT = 11;
 
     public void add(StoreEvent event);
     public void remove(StoreEvent event);

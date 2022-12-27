@@ -72,7 +72,7 @@ public abstract class IQuery {
         while (iterator.hasNext()) {
             AttributeWrapper attr = iterator.next();
             if(i<lastElementIndex){    
-            result += attr.getAttributeName() + "= '" +  attr.getValue() + "'AND";
+            result += attr.getAttributeName() + "= '" +  attr.getValue() + "'AND ";
             }
             else{
                 result += attr.getAttributeName() + "= '" + attr.getValue()+ "'" ;

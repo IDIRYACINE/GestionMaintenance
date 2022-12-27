@@ -14,4 +14,6 @@ public enum EStoreEvents {
     SubscribtionEvent,
     NotificationEvent,
     SessionRecordsEvent,
+    DesignationEvent,
+    UsersEvent, PermissionsEvent,
 }

@@ -11,4 +11,7 @@ public enum ETables {
     CodeBars ,
     SessionWorkers,
     ActiveSession ,
+    Designations,
+    Users,
+    DesignationsPermissions
 }

@@ -31,6 +31,11 @@ public class DataStore implements IDataStore {
        dataDelegates.put(EStoreEvents.SessionWorkerEvent, delegates[IDataStore.SESSION_WORKER_DELEGATE]);
        dataDelegates.put(EStoreEvents.SessionGroupEvent, delegates[IDataStore.SESSION_GROUP_DELEGATE]);
        dataDelegates.put(EStoreEvents.SessionEvent, delegates[IDataStore.SESSION_DELEGATE]);
+        
+       dataDelegates.put(EStoreEvents.UsersEvent, delegates[IDataStore.USER_DELEGATE]);
+       dataDelegates.put(EStoreEvents.DesignationEvent, delegates[IDataStore.DESIGNATION_DELEGATE]);
+       dataDelegates.put(EStoreEvents.PermissionsEvent, delegates[IDataStore.PERMISSION_DELEGATE]);
+
 
        setupSubscribers();
        setupActions();
