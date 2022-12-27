@@ -48,7 +48,7 @@ public class DesignationsQuery extends IDesignationsQuery {
     public void CreateDesignationsTable() throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS " + ETables.Designations + " (\n"
                 + EDesignationAttributes.DesignationId + " INTEGER PRIMARY  KEY ,\n"
-                + EDesignationAttributes.DesignationName + " TEXT\n";
+                + EDesignationAttributes.DesignationName + " TEXT)\n";
 
         database.CreateQuery(query);
     }
@@ -57,9 +57,10 @@ public class DesignationsQuery extends IDesignationsQuery {
     public void CreatePermissionsTable() throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS " + ETables.DesignationsPermissions + " (\n"
                 + EUsersAttributes.UserId + " INTEGER  ,\n"
-                + EDesignationAttributes.DesignationId + " INTEGER \n"
+                + EDesignationAttributes.DesignationId + " INTEGER ,\n"
                 + " PRIMARY KEY (" + EUsersAttributes.UserId + ","
-                + EDesignationAttributes.DesignationId + "),\n";
+                + EDesignationAttributes.DesignationId + ")\n"
+                + ")";
 
         database.CreateQuery(query);
     }

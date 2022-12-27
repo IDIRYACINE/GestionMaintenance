@@ -59,7 +59,7 @@ public class DataConverterStore implements IDataConverterStore{
         Map<EEventsDataKeys,Object> data = event.getData();
         data.put(EEventsDataKeys.EventKey, event.getEvent());
 
-        dataDelegate.exportData(data);;
+        dataDelegate.importData(data);;
         
     }
 

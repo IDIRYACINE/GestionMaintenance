@@ -1,8 +1,8 @@
 package idir.embag.Infrastructure.DataConverters.Excel.CellReaders;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -28,29 +28,28 @@ public class SessionRecordsCellReader implements IExcelCellReader {
 
         int rowIndex = importWrapper.getStartRow();
 
-        while (rowIndex <= importWrapper.getEndRow()) 
-        {
+        while (rowIndex <= importWrapper.getEndRow()) {
             Row row = sheet.getRow(rowIndex);
             data.add(readCells(row));
 
             rowIndex++;
-            
+
         }
-        
+
         return data;
-        
+
     }
 
     @Override
     public void setup(Workbook workbook) {
         this.workbook = workbook;
     }
-    
-    private AttributeWrapper[] readCells(Row row){
+
+    private AttributeWrapper[] readCells(Row row) {
         AttributeWrapper[] attributes = new AttributeWrapper[attrbs.length];
 
-        int[] numericCells = {0,1,2,3,4,6,7,8,9};
-        int[] stringCells = {5};
+        int[] numericCells = { 0, 1, 2, 3, 4, 6, 7, 8, 9 };
+        int[] stringCells = { 5 };
 
         for (int i = 0; i < numericCells.length; i++) {
             attributes[i] = new AttributeWrapper(attrbs[i], row.getCell(numericCells[i]).getNumericCellValue());
@@ -62,5 +61,5 @@ public class SessionRecordsCellReader implements IExcelCellReader {
 
         return attributes;
     }
-}
 
+}

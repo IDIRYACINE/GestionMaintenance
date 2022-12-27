@@ -114,12 +114,10 @@ public class ProductQuery extends IProductQuery{
     public void CreateInventoryTable() throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS "+ETables.Inventory+"("
                 + EInventoryAttributes.ArticleId +" INTEGER PRIMARY KEY,\n"
-                + EInventoryAttributes.StockId +" INTEGER,\n"
+                + EInventoryAttributes.ArticleName +" TEXT,\n"
                 + EInventoryAttributes.ArticleCode +" INTEGER,\n"
+                + EInventoryAttributes.FamilyCode +" INTEGER)\n";
 
-                + "FOREIGN KEY ("+ EInventoryAttributes.StockId +")\n"
-                + "REFERENCES "+ ETables.Stock +"(" +EStockAttributes.ArticleId +")\n"  
-                + "ON DELETE CASCADE ON UPDATE NO ACTION)";
         database.CreateQuery(query);
     }
 
@@ -152,19 +150,7 @@ public class ProductQuery extends IProductQuery{
     public ResultSet SearchInventoryProduct(SearchWrapper parametrers) throws SQLException {
         String whereClause = " WHERE "+ SearchWrapperToWhereClause(parametrers);
 
-        String joinClause = " INNER JOIN " +ETables.Stock +" ON "
-         +ETables.Inventory + "."+ EInventoryAttributes.StockId
-         +"=" + ETables.Stock + "." + EStockAttributes.ArticleId ;
-
-         String query = "SELECT "
-         + ETables.Inventory + "." + EInventoryAttributes.ArticleId +" ,"
-         + ETables.Inventory + "." + EInventoryAttributes.ArticleCode +" ,"
-         + ETables.Inventory + "." + EInventoryAttributes.StockId +" ,"
-         + ETables.Stock + "." + EStockAttributes.Price +" ,"
-         + ETables.Stock + "." + EStockAttributes.FamilyCode +" ,"
-         + ETables.Stock + "." + EStockAttributes.ArticleName
-
-         +" FROM "+ETables.Inventory +joinClause+ whereClause;
+         String query = "SELECT * FROM "+ETables.Inventory + whereClause;
          
         ResultSet result = database.SelectQuery(query);
         return result;
@@ -189,19 +175,8 @@ public class ProductQuery extends IProductQuery{
     @Override
     public ResultSet LoadInventoryProduct(LoadWrapper parametrers) throws SQLException {
          String extraClause = " LIMIT "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
-         String joinClause = " INNER JOIN " +ETables.Stock +" ON "
-         +ETables.Inventory + "."+ EInventoryAttributes.StockId
-         +"=" + ETables.Stock + "." + EStockAttributes.ArticleId ;
-
-         String query = "SELECT "
-         + ETables.Inventory + "." + EInventoryAttributes.ArticleId +" ,"
-         + ETables.Inventory + "." + EInventoryAttributes.ArticleCode +" ,"
-         + ETables.Inventory + "." + EInventoryAttributes.StockId +" ,"
-         + ETables.Stock + "." + EStockAttributes.Price +" ,"
-         + ETables.Stock + "." + EStockAttributes.FamilyCode +" ,"
-         + ETables.Stock + "." + EStockAttributes.ArticleName
-
-         +" FROM "+ETables.Inventory +joinClause+ extraClause;
+        
+         String query = "SELECT * FROM "+ETables.Inventory + extraClause;
          
          ResultSet result = database.SelectQuery(query);
          return result;

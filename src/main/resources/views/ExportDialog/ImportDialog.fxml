@@ -19,13 +19,13 @@
                   <VBox>
                      <children>
                         <Label text="Start Row" />
-                        <MFXTextField fx:id="fieldRowStart" />
+                        <MFXTextField fx:id="rowStartField" />
                      </children>
                   </VBox>
                   <VBox>
                      <children>
                         <Label text="Start Column" />
-                        <MFXTextField fx:id="fieldColStart" />
+                        <MFXTextField fx:id="colStartField" />
                      </children>
                   </VBox>
                </children>
@@ -35,13 +35,13 @@
                   <VBox>
                      <children>
                         <Label text="End Row" />
-                        <MFXTextField fx:id="fieldRowEnd" />
+                        <MFXTextField fx:id="rowEndField" />
                      </children>
                   </VBox>
                   <VBox>
                      <children>
                         <Label text="End Column" />
-                        <MFXTextField fx:id="fieldColEnd" />
+                        <MFXTextField fx:id="colEndField" />
                      </children>
                   </VBox>
                </children>

@@ -8,6 +8,7 @@ import java.util.Collection;
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import idir.embag.Types.Infrastructure.DataConverters.ExportWrapper;
@@ -54,8 +55,9 @@ public class Excel implements IDataConverter {
         try
         {
             FileInputStream file = new FileInputStream(new File(importWrapper.getInputFile()));
-            XSSFWorkbook workbook = new XSSFWorkbook(file);
             
+            Workbook workbook = WorkbookFactory.create(file);
+                        
             cellReader.setup(workbook);
             data = cellReader.readData(importWrapper);
 

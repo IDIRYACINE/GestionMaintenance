@@ -26,7 +26,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
-public class ImportDialog extends INodeView implements Initializable,IDialogContent{
+public class ImportDialog extends INodeView implements Initializable, IDialogContent {
 
     @FXML
     private VBox root;
@@ -41,7 +41,7 @@ public class ImportDialog extends INodeView implements Initializable,IDialogCont
     private MFXComboBox<EStoreEvents> tableComboBox;
 
     @FXML
-    private MFXTextField rowStartField,rowEndField,colStartField,colEndField;
+    private MFXTextField rowStartField, rowEndField, colStartField, colEndField;
 
     private File file;
 
@@ -49,8 +49,7 @@ public class ImportDialog extends INodeView implements Initializable,IDialogCont
 
     private Runnable cancelCallback;
 
-    @FXML
-    private MFXTextField fieldRowStart, fieldRowEnd, fieldColStart, fieldColEnd;
+  
 
     public ImportDialog() {
         fxmlPath = "/views/ExportDialog/ImportDialog.fxml";
@@ -59,7 +58,7 @@ public class ImportDialog extends INodeView implements Initializable,IDialogCont
 
     @Override
     public void setOnConfirm(Consumer<Map<EEventsDataKeys, Object>> callback) {
-        
+
     }
 
     @Override
@@ -70,10 +69,10 @@ public class ImportDialog extends INodeView implements Initializable,IDialogCont
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         EStoreEvents[] tables = {
-            EStoreEvents.StockEvent,
-            EStoreEvents.InventoryEvent,
-            EStoreEvents.FamilyCodeEvent,
-            EStoreEvents.WorkersEvent
+                EStoreEvents.StockEvent,
+                EStoreEvents.InventoryEvent,
+                EStoreEvents.FamilyCodeEvent,
+                EStoreEvents.WorkersEvent
         };
 
         tableComboBox.getItems().setAll(tables);
@@ -83,7 +82,7 @@ public class ImportDialog extends INodeView implements Initializable,IDialogCont
     public Node getView() {
         return root;
     }
-    
+
     @FXML
     private void selectFile() {
         FileChooser fileChooser = new FileChooser();
@@ -95,19 +94,23 @@ public class ImportDialog extends INodeView implements Initializable,IDialogCont
 
     @FXML
     private void selectTable() {
-        
+
     }
 
     @FXML
     private void importData() {
         EStoreEvents tableType = tableComboBox.getSelectionModel().getSelectedItem();
 
-        ImportWrapper importWrapper = new ImportWrapper(100,tableType);
+        ImportWrapper importWrapper = new ImportWrapper(100, tableType);
 
-        importWrapper.setSheetBounds(1,2,0,2);
+        importWrapper.setSheetBounds(Integer.parseInt(rowStartField.getText()),
+                Integer.parseInt(rowEndField.getText()),
+                Integer.parseInt(colStartField.getText()),
+                Integer.parseInt(colEndField.getText()));
+
         importWrapper.setInputFile(file.getAbsolutePath());
 
-        controller.startImport(tableType,importWrapper);
+        controller.startImport(tableType, importWrapper);
 
         switchToWorkingView();
 
@@ -117,10 +120,10 @@ public class ImportDialog extends INodeView implements Initializable,IDialogCont
     private void cancel() {
         cancelCallback.run();
     }
-    
+
     private void switchToWorkingView() {
         DoingWorkDialog doingWorkDialog = new DoingWorkDialog(Messages.pleaseWait);
-        
+
         doingWorkDialog.setOnCancel(() -> {
             controller.cancel();
             cancelCallback.run();
@@ -128,6 +131,6 @@ public class ImportDialog extends INodeView implements Initializable,IDialogCont
 
         doingWorkDialog.loadFxml();
 
-        root.getChildren().setAll(doingWorkDialog.getView());    
+        root.getChildren().setAll(doingWorkDialog.getView());
     }
 }

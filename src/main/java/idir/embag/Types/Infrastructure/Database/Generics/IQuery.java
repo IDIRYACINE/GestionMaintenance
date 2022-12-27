@@ -133,10 +133,10 @@ public abstract class IQuery {
         int lastElementIndex = length - 1;
 
         for (int i = 0 ;i<lastElementIndex;i++){
-            result += "'"+ attrs[i].getAttributeName() + "',";
+            result +=  attrs[i].getAttributeName() + ",";
 
         }
-        result += "'"+ attrs[lastElementIndex].getAttributeName() + "')";
+        result += attrs[lastElementIndex].getAttributeName() + ")";
 
         return result;
     }

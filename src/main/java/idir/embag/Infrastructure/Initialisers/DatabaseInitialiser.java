@@ -15,7 +15,7 @@ import idir.embag.Types.Infrastructure.Database.IUsersQuery;
 import idir.embag.Types.Infrastructure.Database.IWorkerQuery;
 
 public class DatabaseInitialiser {
-    
+
     private IProductQuery productQuery;
     private ISessionQuery sessionQuery;
     private IWorkerQuery workerQuery;
@@ -35,9 +35,11 @@ public class DatabaseInitialiser {
     public IProductQuery getProductQuery() {
         return productQuery;
     }
+
     public ISessionQuery getSessionQuery() {
         return sessionQuery;
     }
+
     public IWorkerQuery getWorkerQuery() {
         return workerQuery;
     }
@@ -50,32 +52,31 @@ public class DatabaseInitialiser {
         return designationsQuery;
     }
 
-    public void createTables(){
-        try{
-        productQuery.CreateFamiLyCodesTable();
-        productQuery.CreateStockTable();
-        productQuery.CreateInventoryTable();
+    public void createTables() {
+        try {
+            productQuery.CreateFamiLyCodesTable();
+            productQuery.CreateStockTable();
+            productQuery.CreateInventoryTable();
 
-        workerQuery.CreateWorkerTable();
+            workerQuery.CreateWorkerTable();
 
-        sessionQuery.CreateSessionTable();
-        sessionQuery.CreateSessionGroupTable();
-        sessionQuery.CreateSessionWorkersTable();
-        sessionQuery.CreateSessionRecordTable();
-        
-        designationsQuery.CreateDesignationsTable();
-        designationsQuery.CreatePermissionsTable();
+            sessionQuery.CreateSessionTable();
+            sessionQuery.CreateSessionGroupTable();
+            sessionQuery.CreateSessionWorkersTable();
+            sessionQuery.CreateSessionRecordTable();
 
-        usersQuery.CreateUsersTable();
+            designationsQuery.CreateDesignationsTable();
+            designationsQuery.CreatePermissionsTable();
 
-        }
-        catch(Exception e){
-            
+            usersQuery.CreateUsersTable();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
 
-    public void connect(IConnectionParameters connectionParameters){
+    public void connect(IConnectionParameters connectionParameters) {
         database.Connect(connectionParameters);
     }
 }

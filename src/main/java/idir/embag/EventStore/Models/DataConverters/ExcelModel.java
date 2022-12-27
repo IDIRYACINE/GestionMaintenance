@@ -9,7 +9,7 @@ import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Infrastructure.DataConverters.Excel.Excel;
 import idir.embag.Infrastructure.DataConverters.Excel.CellReaders.FamilyCodeCellReader;
-import idir.embag.Infrastructure.DataConverters.Excel.CellReaders.InventoryCellReader;
+import idir.embag.Infrastructure.DataConverters.Excel.CellReaders.InventoryCellReaderV2;
 import idir.embag.Infrastructure.DataConverters.Excel.CellReaders.StockCellReader;
 import idir.embag.Infrastructure.DataConverters.Excel.CellReaders.WorkerCellReader;
 import idir.embag.Infrastructure.DataConverters.Excel.CellWriters.FamilyCodeCellWriter;
@@ -93,7 +93,7 @@ public class ExcelModel implements IDataConverterDelegate , IEventSubscriber{
     private void setupReadDelegates(){
         readDelegates.put(EStoreEvents.FamilyCodeEvent, new FamilyCodeCellReader());
         readDelegates.put(EStoreEvents.StockEvent, new StockCellReader());
-        readDelegates.put(EStoreEvents.InventoryEvent, new InventoryCellReader());
+        readDelegates.put(EStoreEvents.InventoryEvent, new InventoryCellReaderV2());
         readDelegates.put(EStoreEvents.WorkersEvent, new WorkerCellReader());
        
     }

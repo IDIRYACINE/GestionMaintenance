@@ -59,8 +59,6 @@ public class App extends Application {
             try {
                 loadSplashScreen();
 
-                servicesCenter.getDatabaseInitialiser().createTables();
-
                 FXMLLoader loader = new FXMLLoader();
                 loader.setController(navigationController);
                 loader.load(getClass().getResourceAsStream("/views/Panels/Main.fxml"));
@@ -84,6 +82,7 @@ public class App extends Application {
                 "localhost", 3306);
 
         ServicesProvider.getInstance().getDatabaseInitialiser().connect(connectionParameters);
+        ServicesProvider.getInstance().getDatabaseInitialiser().createTables();
 
     }
 

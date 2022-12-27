@@ -86,7 +86,7 @@ public class UsersModel implements IDataDelegate {
             SearchWrapper wrappers = DataBundler.retrieveNestedValue(data, EEventsDataKeys.WrappersKeys,
                     EWrappers.SearchWrapper);
             ResultSet resultSet = usersQuery.SearchUsers(wrappers);
-
+           
             Collection<User> users = usersRepository.resultSetToUsers(resultSet);
             data.put(EEventsDataKeys.InstanceCollection, users);
 

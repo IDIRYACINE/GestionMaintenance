@@ -2,7 +2,6 @@ package idir.embag.Infrastructure.Database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -98,34 +97,32 @@ public class UsersQuery extends IUsersQuery {
 
     @Override
     public void CreateUsersTable() throws SQLException {
-        String query = "CREATE TABLE IF NOT EXISTS " + ETables.SessionWorkers + " (\n"
-                + EUsersAttributes.UserId + " INTEGER PRIMARY AUTO_INCREMENT KEY ,\n"
+        String query = "CREATE TABLE IF NOT EXISTS " + ETables.Users + " (\n"
+                + EUsersAttributes.UserId + " INTEGER PRIMARY KEY AUTO_INCREMENT ,\n"
                 + EUsersAttributes.UserName + " TEXT,\n"
                 + EUsersAttributes.Password + " TEXT,\n"
-                + EUsersAttributes.Admin + " Boolean Default False \n";
+                + EUsersAttributes.Admin + " Boolean Default False )\n";
 
         database.CreateQuery(query);
 
-        RegisterDefaultAdminUser();
 
     }
 
 
-    private void RegisterDefaultAdminUser(){
-        Collection<AttributeWrapper> attributes = new ArrayList<AttributeWrapper>();
-        attributes.add(new AttributeWrapper(EUsersAttributes.UserName, "admin"));
-        attributes.add(new AttributeWrapper(EUsersAttributes.Password, "admin"));
-        attributes.add(new AttributeWrapper(EUsersAttributes.Admin, true));
+    // private void RegisterDefaultAdminUser(){
+    //     Collection<AttributeWrapper> attributes = new ArrayList<AttributeWrapper>();
+    //     attributes.add(new AttributeWrapper(EUsersAttributes.UserName, "admin"));
+    //     attributes.add(new AttributeWrapper(EUsersAttributes.Password, "admin"));
+    //     attributes.add(new AttributeWrapper(EUsersAttributes.Admin, 1));
 
-        RegisterUser(attributes);
+    //     RegisterUser(attributes);
 
-    }
+    // }
 
     @Override
     public ResultSet SearchUsers(SearchWrapper parameters) throws SQLException {
         String whereClause = " WHERE " + SearchWrapperToWhereClause(parameters);
         String query = "SELECT * FROM " + ETables.Users + whereClause;
-
         ResultSet result = database.SelectQuery(query);
         return result;
     }
