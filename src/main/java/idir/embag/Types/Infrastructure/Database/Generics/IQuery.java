@@ -1,8 +1,13 @@
 package idir.embag.Types.Infrastructure.Database.Generics;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+
+import idir.embag.DataModels.Users.Designation;
+import idir.embag.DataModels.Users.User;
+import idir.embag.Types.Infrastructure.Database.Metadata.EInventoryAttributes;
 
 public abstract class IQuery {
     
@@ -139,6 +144,25 @@ public abstract class IQuery {
         result += attrs[lastElementIndex].getAttributeName() + ")";
 
         return result;
+    }
+
+    protected String addDesignationRestriction(User user){
+        if(user.isAdmin())
+            return "";
+            // + EInventoryAttributes.DesignationId +  " )"
+        String query = "( ";
+
+        ArrayList<Designation> designations = user.getDesignations();
+
+        for (int index = 0; index < designations.size(); index++) {
+            query += "(" +EInventoryAttributes.DesignationId +" = " + designations.get(index).getDesignationId();
+            if(index != designations.size() - 1)
+                query += " ) OR ";
+        }
+
+        query += ") )";
+
+        return query;
     }
 
     public abstract void CreateIndexes() throws SQLException;

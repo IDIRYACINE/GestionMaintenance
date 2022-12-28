@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import idir.embag.Application.State.AppState;
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Users.User;
@@ -51,6 +52,8 @@ public class LoginController implements IEventSubscriber{
         Collection<User> users =  DataBundler.retrieveValue(event.getData(), EEventsDataKeys.InstanceCollection);
         
         if(users.size() > 0){
+            User user = users.iterator().next();
+            AppState.getInstance().setCurrentUser(user);
             loginToRemoteServer();
         }
     }

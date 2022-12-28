@@ -11,6 +11,7 @@ import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.Ui.Dialogs.ExportDialogs.ExportDialog;
 import idir.embag.Ui.Dialogs.ExportDialogs.ImportDialog;
+import idir.embag.Ui.Dialogs.UsersDialog.UsersManagerDialog;
 
 public class SettingsController {
 
@@ -34,6 +35,23 @@ public class SettingsController {
 
     public void exportData() {
         ExportDialog dialogContent = new ExportDialog();
+        Map<EEventsDataKeys,Object> data = new HashMap<>();
+        
+        Map<ENavigationKeys, Object> navigationData = new HashMap<>();
+        navigationData.put(ENavigationKeys.DialogContent, dialogContent);
+        data.put(EEventsDataKeys.NavigationKeys, navigationData);
+
+
+        StoreCenter storeCenter = StoreCenter.getInstance();
+        StoreDispatch event = storeCenter.createStoreEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
+        
+        dialogContent.loadFxml();
+
+        storeCenter.dispatch(event);
+    }
+
+    public void manageUsers() {
+        UsersManagerDialog dialogContent = new UsersManagerDialog();
         Map<EEventsDataKeys,Object> data = new HashMap<>();
         
         Map<ENavigationKeys, Object> navigationData = new HashMap<>();

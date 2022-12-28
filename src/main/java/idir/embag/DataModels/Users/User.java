@@ -29,6 +29,22 @@ public class User {
         return password;
     }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
+    public void setDesignations(ArrayList<Designation> designations) {
+        this.designations = designations;
+    }
+
     public ArrayList<Designation> getDesignations() {
         return designations;
     }

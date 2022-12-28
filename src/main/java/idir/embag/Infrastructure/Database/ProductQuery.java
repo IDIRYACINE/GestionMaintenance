@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
+import idir.embag.Application.State.AppState;
 import idir.embag.Types.Infrastructure.Database.IDatabase;
 import idir.embag.Types.Infrastructure.Database.IProductQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
@@ -141,6 +142,7 @@ public class ProductQuery extends IProductQuery{
     @Override
     public ResultSet SearchStockProduct(SearchWrapper parametrers) throws SQLException {
         String whereClause = " WHERE "+ SearchWrapperToWhereClause(parametrers);
+
         String query = "SELECT * FROM "+ETables.Stock+ whereClause;
         ResultSet result = database.SelectQuery(query);
         return result;
@@ -148,7 +150,8 @@ public class ProductQuery extends IProductQuery{
 
     @Override
     public ResultSet SearchInventoryProduct(SearchWrapper parametrers) throws SQLException {
-        String whereClause = " WHERE "+ SearchWrapperToWhereClause(parametrers);
+        String addDesignationRestrictions = addDesignationRestriction(AppState.getInstance().getCurrentUser());
+        String whereClause = " WHERE "+  SearchWrapperToWhereClause(parametrers) +" And " +addDesignationRestrictions ;
 
          String query = "SELECT * FROM "+ETables.Inventory + whereClause;
          
@@ -174,9 +177,10 @@ public class ProductQuery extends IProductQuery{
 
     @Override
     public ResultSet LoadInventoryProduct(LoadWrapper parametrers) throws SQLException {
-         String extraClause = " LIMIT "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
-        
-         String query = "SELECT * FROM "+ETables.Inventory + extraClause;
+        //  String extraClause = " LIMIT "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
+         String addDesignationRestrictions = addDesignationRestriction(AppState.getInstance().getCurrentUser());
+
+         String query = "SELECT * FROM "+ETables.Inventory + " Where " + addDesignationRestrictions ;
          
          ResultSet result = database.SelectQuery(query);
          return result;

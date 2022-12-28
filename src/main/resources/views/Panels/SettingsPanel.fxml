@@ -10,11 +10,11 @@
 
 <Pane fx:id="root" prefHeight="814.0" prefWidth="1130.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox layoutX="127.0" layoutY="178.0">
+      <HBox layoutX="243.0" layoutY="170.0" spacing="50.0">
          <children>
             <VBox prefHeight="470.0" prefWidth="292.0" spacing="50.0">
                <children>
-                  <Pane fx:id="exportDataPane" onMouseClicked="#exportData">
+                  <Pane fx:id="exportDataPane" onMouseClicked="#exportData" style="-fx-background-color: white;">
                      <children>
                         <FontAwesomeIconView layoutX="7.0" layoutY="52.0" size="50" wrappingWidth="63.0" />
                         <VBox alignment="TOP_CENTER" layoutX="81.0">
@@ -35,7 +35,7 @@
                         </VBox>
                      </children>
                   </Pane>
-                  <Pane fx:id="ImportDataPane" onMouseClicked="#importData">
+                  <Pane fx:id="ImportDataPane" onMouseClicked="#importData" style="-fx-background-color: white;">
                      <children>
                         <FontAwesomeIconView layoutX="7.0" layoutY="52.0" size="50" wrappingWidth="63.0" />
                         <VBox alignment="TOP_CENTER" layoutX="81.0">
@@ -57,6 +57,31 @@
                      </children>
                   </Pane>
                   
+               </children>
+            </VBox>
+            <VBox prefHeight="470.0" prefWidth="292.0" spacing="50.0">
+               <children>
+                  <Pane fx:id="manageUsersPane" onMouseClicked="#manageUsers" style="-fx-background-color: white;">
+                     <children>
+                        <FontAwesomeIconView layoutX="7.0" layoutY="52.0" size="50" wrappingWidth="63.0" />
+                        <VBox alignment="TOP_CENTER" layoutX="81.0">
+                           <children>
+                              <Label prefHeight="35.0" prefWidth="213.0" text="Users">
+                                 <font>
+                                    <Font name="System Bold" size="22.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="35.0" prefWidth="213.0" text="Manage App Users" />
+                           </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </Pane>
                </children>
             </VBox>
          </children>

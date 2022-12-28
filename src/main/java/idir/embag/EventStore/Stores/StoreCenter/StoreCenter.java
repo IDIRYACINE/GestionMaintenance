@@ -44,148 +44,160 @@ import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 import idir.embag.Types.Stores.StoreCenter.IStoresCenter;
 import javafx.application.Platform;
 
-public class StoreCenter implements IStoresCenter{
-  
-    private ExecutorService executorService = Executors.newSingleThreadExecutor();
+public class StoreCenter implements IStoresCenter {
 
-    private static StoreCenter instance;
+  private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    private Map<EStores , IStore> stores = new HashMap<>();
+  private static StoreCenter instance;
 
-    public static StoreCenter getInstance(ServicesProvider servicesCenter,INavigationController navigationController) {
-        if (instance == null) {
-            instance = new StoreCenter(servicesCenter,navigationController);
-        }
-        return instance;
+  private Map<EStores, IStore> stores = new HashMap<>();
+
+  public static StoreCenter getInstance(ServicesProvider servicesCenter, INavigationController navigationController) {
+    if (instance == null) {
+      instance = new StoreCenter(servicesCenter, navigationController);
     }
-
-
-    public static StoreCenter getInstance() {
-      return instance;
-    }
-
-
-    private StoreCenter(ServicesProvider servicesCenter,INavigationController navigationController) {
-        setupDataStore(servicesCenter.getDatabaseInitialiser());
-        setupDataConverterStore();
-        stores.put(EStores.NavigationStore, new NavigationStore(navigationController));
-    }
-  
-   
-    @Override
-    public void dispatch(StoreDispatch action) {
-      if(action.getStore() != EStores.NavigationStore){
-        executorService.execute(new Runnable() {
-
-          @Override
-          public void run() {
-            stores.get(action.getStore()).dispatch(action.getEvent());
-          }
-
-        });
-        return;
-      }
-
-     stores.get(action.getStore()).dispatch(action.getEvent());
-    }
-
-
-    @Override
-    public void notify(StoreDispatch action) {
-      Platform.runLater(new Runnable() {
-        @Override
-        public void run() {
-          stores.get(action.getStore()).notifySubscriber(action.getEvent());  
-        }
-
-      });
-
-    }
-
-    @Override
-    public void broadcast(StoreDispatch action) {
-      Platform.runLater(new Runnable() {
-        @Override
-        public void run() {
-          stores.get(action.getStore()).broadcast(action.getEvent());  
-        }
-
-      });
-    }
-
-    @Override
-    public void subscribeToEvents(EStores store ,EStoreEvents storeEvent, IEventSubscriber subscriber){
-      Map<EEventsDataKeys,Object> data = new HashMap<>();
-      data.put(EEventsDataKeys.Subscriber, subscriber);
-
-      StoreEvent event = new StoreEvent(storeEvent, EStoreEventAction.Subscribe, data);
-
-      StoreDispatch action = new StoreDispatch(store,event);
-      dispatch(action);
-    }
-
-    @Override
-    public void unsubscribeFromEvents(EStores store ,EStoreEvents storeEvent, IEventSubscriber subscriber){
-      Map<EEventsDataKeys,Object> data = new HashMap<>();
-      data.put(EEventsDataKeys.Subscriber, subscriber);
-
-      StoreEvent event = new StoreEvent(storeEvent, EStoreEventAction.Unsubscribe, data);
-
-      StoreDispatch action = new StoreDispatch(store,event);
-      dispatch(action);
-    }
-    
-    @Override
-    public StoreDispatch createStoreEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent, Map<EEventsDataKeys,Object> data) {
-      StoreEvent event = new StoreEvent(storeEvent, actionEvent,data);
-      StoreDispatch action = new StoreDispatch(store, event);
-
-      return action;
+    return instance;
   }
 
-    private void setupDataStore(DatabaseInitialiser databaseInitialiser){
-      StockModel stockModel = new StockModel(databaseInitialiser.getProductQuery(), new StockRepository());
-      InventoryModel inventoryModel = new InventoryModel(databaseInitialiser.getProductQuery(),new InventoryRepository());
-      FamilyModel familyModel = new FamilyModel(databaseInitialiser.getProductQuery(),new FamilyCodeRepository());
-      WorkersModel workersModel = new WorkersModel(databaseInitialiser.getWorkerQuery(),new WorkersRepository());
-      UsersModel usersModel = new UsersModel(databaseInitialiser.getUsersQuery(),new  UsersRepository());
+  public static StoreCenter getInstance() {
+    return instance;
+  }
 
-    
+  private StoreCenter(ServicesProvider servicesCenter, INavigationController navigationController) {
+    setupDataStore(servicesCenter.getDatabaseInitialiser());
+    setupDataConverterStore();
+    stores.put(EStores.NavigationStore, new NavigationStore(navigationController));
+  }
 
-      SessionRepository sessionRepository = new SessionRepository();
-      SessionModel sessionModel = new SessionModel(databaseInitialiser.getSessionQuery(),sessionRepository);
-      SessionWorkersModel sessionWorkersModel = new SessionWorkersModel(databaseInitialiser.getSessionQuery(),sessionRepository);
-      SessionGroupModel sessionGroupModel = new SessionGroupModel(databaseInitialiser.getSessionQuery(),sessionRepository);
-      HistoryModel historyModel = new HistoryModel(databaseInitialiser.getSessionQuery(),sessionRepository);
+  @Override
+  public void dispatch(StoreDispatch action) {
+    if (action.getStore() != EStores.NavigationStore) {
+      executorService.execute(new Runnable() {
 
-      DesignationsRepository designationsRepository = new DesignationsRepository();
-      DesignationModel designationModel = new DesignationModel(databaseInitialiser.getDesignationsQuery(),designationsRepository);
-      PermissionsModel permissionsModel = new PermissionsModel(databaseInitialiser.getDesignationsQuery(),databaseInitialiser.getUsersQuery(),designationsRepository);
+        @Override
+        public void run() {
+          stores.get(action.getStore()).dispatch(action.getEvent());
+        }
 
-
-
-      IDataDelegate[] delegates = new IDataDelegate[IDataStore.DELEGATES_COUNT];
-      delegates[IDataStore.STOCK_DELEGATE] = stockModel;
-      delegates[IDataStore.INVENTORY_DELEGATE] = inventoryModel;
-      delegates[IDataStore.HISTORY_DELEGATE] = historyModel;
-      delegates[IDataStore.FAMILY_DELEGATE] = familyModel;
-      delegates[IDataStore.WORKER_DELEGATE] = workersModel;
-      delegates[IDataStore.SESSION_DELEGATE] = sessionModel;
-      delegates[IDataStore.SESSION_WORKER_DELEGATE] = sessionWorkersModel;
-      delegates[IDataStore.SESSION_GROUP_DELEGATE] = sessionGroupModel;
-      delegates[IDataStore.DESIGNATION_DELEGATE] = designationModel;
-      delegates[IDataStore.PERMISSION_DELEGATE] = permissionsModel;
-      delegates[IDataStore.USER_DELEGATE] = usersModel;
-
-      stores.put(EStores.DataStore, new DataStore(delegates));
+      });
+      return;
     }
 
-    private void setupDataConverterStore() {
+    stores.get(action.getStore()).dispatch(action.getEvent());
+  }
 
-      IDataConverterDelegate[] delegates = new IDataConverterDelegate[DataConverterStore.DELEGATES_COUNT];
-      delegates[IDataConverterStore.EXCEL_DELEGATE] = new ExcelModel();
-      
-      stores.put(EStores.DataConverterStore, new DataConverterStore(delegates));
-    }
+  @Override
+  public void notify(StoreDispatch action) {
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        stores.get(action.getStore()).notifySubscriber(action.getEvent());
+      }
+
+    });
+
+  }
+
+  @Override
+  public void broadcast(StoreDispatch action) {
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        stores.get(action.getStore()).broadcast(action.getEvent());
+      }
+
+    });
+  }
+
+  @Override
+  public void subscribeToEvents(EStores store, EStoreEvents storeEvent, IEventSubscriber subscriber) {
+    Map<EEventsDataKeys, Object> data = new HashMap<>();
+    data.put(EEventsDataKeys.Subscriber, subscriber);
+
+    StoreEvent event = new StoreEvent(storeEvent, EStoreEventAction.Subscribe, data);
+
+    StoreDispatch action = new StoreDispatch(store, event);
+    dispatch(action);
+  }
+
+  @Override
+  public void unsubscribeFromEvents(EStores store, EStoreEvents storeEvent, IEventSubscriber subscriber) {
+    Map<EEventsDataKeys, Object> data = new HashMap<>();
+    data.put(EEventsDataKeys.Subscriber, subscriber);
+
+    StoreEvent event = new StoreEvent(storeEvent, EStoreEventAction.Unsubscribe, data);
+
+    StoreDispatch action = new StoreDispatch(store, event);
+    dispatch(action);
+  }
+
+  @Override
+  public StoreDispatch createStoreEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent,
+      Map<EEventsDataKeys, Object> data) {
+    StoreEvent event = new StoreEvent(storeEvent, actionEvent, data);
+    StoreDispatch action = new StoreDispatch(store, event);
+
+    return action;
+  }
+
+  public void dispatchEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent,
+      Map<EEventsDataKeys, Object> data) {
+    StoreEvent event = new StoreEvent(storeEvent, actionEvent, data);
+    StoreDispatch action = new StoreDispatch(store, event);
+    StoreCenter.getInstance().dispatch(action);
+  }
+
+  public void sendNotifyEvent(EStores store, EStoreEvents storeEvent, EStoreEventAction actionEvent,
+      Map<EEventsDataKeys, Object> data) {
+    StoreEvent event = new StoreEvent(storeEvent, actionEvent, data);
+    StoreDispatch action = new StoreDispatch(store, event);
+    StoreCenter.getInstance().notify(action);
+  }
+
+  private void setupDataStore(DatabaseInitialiser databaseInitialiser) {
+    StockModel stockModel = new StockModel(databaseInitialiser.getProductQuery(), new StockRepository());
+    InventoryModel inventoryModel = new InventoryModel(databaseInitialiser.getProductQuery(),
+        new InventoryRepository());
+    FamilyModel familyModel = new FamilyModel(databaseInitialiser.getProductQuery(), new FamilyCodeRepository());
+    WorkersModel workersModel = new WorkersModel(databaseInitialiser.getWorkerQuery(), new WorkersRepository());
+    UsersModel usersModel = new UsersModel(databaseInitialiser.getUsersQuery(), new UsersRepository());
+
+    SessionRepository sessionRepository = new SessionRepository();
+    SessionModel sessionModel = new SessionModel(databaseInitialiser.getSessionQuery(), sessionRepository);
+    SessionWorkersModel sessionWorkersModel = new SessionWorkersModel(databaseInitialiser.getSessionQuery(),
+        sessionRepository);
+    SessionGroupModel sessionGroupModel = new SessionGroupModel(databaseInitialiser.getSessionQuery(),
+        sessionRepository);
+    HistoryModel historyModel = new HistoryModel(databaseInitialiser.getSessionQuery(), sessionRepository);
+
+    DesignationsRepository designationsRepository = new DesignationsRepository();
+    DesignationModel designationModel = new DesignationModel(databaseInitialiser.getDesignationsQuery(),
+        designationsRepository);
+    PermissionsModel permissionsModel = new PermissionsModel(databaseInitialiser.getDesignationsQuery(),
+        databaseInitialiser.getUsersQuery(), designationsRepository);
+
+    IDataDelegate[] delegates = new IDataDelegate[IDataStore.DELEGATES_COUNT];
+    delegates[IDataStore.STOCK_DELEGATE] = stockModel;
+    delegates[IDataStore.INVENTORY_DELEGATE] = inventoryModel;
+    delegates[IDataStore.HISTORY_DELEGATE] = historyModel;
+    delegates[IDataStore.FAMILY_DELEGATE] = familyModel;
+    delegates[IDataStore.WORKER_DELEGATE] = workersModel;
+    delegates[IDataStore.SESSION_DELEGATE] = sessionModel;
+    delegates[IDataStore.SESSION_WORKER_DELEGATE] = sessionWorkersModel;
+    delegates[IDataStore.SESSION_GROUP_DELEGATE] = sessionGroupModel;
+    delegates[IDataStore.DESIGNATION_DELEGATE] = designationModel;
+    delegates[IDataStore.PERMISSION_DELEGATE] = permissionsModel;
+    delegates[IDataStore.USER_DELEGATE] = usersModel;
+
+    stores.put(EStores.DataStore, new DataStore(delegates));
+  }
+
+  private void setupDataConverterStore() {
+
+    IDataConverterDelegate[] delegates = new IDataConverterDelegate[DataConverterStore.DELEGATES_COUNT];
+    delegates[IDataConverterStore.EXCEL_DELEGATE] = new ExcelModel();
+
+    stores.put(EStores.DataConverterStore, new DataConverterStore(delegates));
+  }
 
 }
