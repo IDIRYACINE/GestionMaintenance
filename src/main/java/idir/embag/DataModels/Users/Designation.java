@@ -13,6 +13,14 @@ public class Designation {
         return designationId;
     }
 
+    public void setDesignationId(int designationId) {
+        this.designationId = designationId;
+    }
+
+    public void setDesignationName(String designationName) {
+        this.designationName = designationName;
+    }
+
     public String getDesignationName() {
         return designationName;
     }

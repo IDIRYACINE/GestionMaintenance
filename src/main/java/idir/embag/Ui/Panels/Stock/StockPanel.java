@@ -2,6 +2,8 @@ package idir.embag.Ui.Panels.Stock;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import idir.embag.Application.Controllers.Stock.DesignationHelper;
 import idir.embag.Application.Controllers.Stock.FamilyCodesHelper;
 import idir.embag.Application.Controllers.Stock.InventoryHelper;
 import idir.embag.Application.Controllers.Stock.StockController;
@@ -17,14 +19,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 
-public class StockPanel extends INodeView  implements  Initializable {
+public class StockPanel extends INodeView implements Initializable {
 
     @FXML
     private VBox root;
 
     @FXML
-    private MFXButton btnAdd, btnEdit, btnDelete, btnRefresh,btnSearch;
-    
+    private MFXButton btnAdd, btnEdit, btnDelete, btnRefresh, btnSearch;
+
     @FXML
     private MFXScrollPane tableHolder;
 
@@ -37,16 +39,16 @@ public class StockPanel extends INodeView  implements  Initializable {
         fxmlPath = "/views/Panels/StockPanel.fxml";
     }
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         IStockHelper stockHelper = new StockHelper();
         IStockHelper inventoryHelper = new InventoryHelper();
         IStockHelper familyCodesHelper = new FamilyCodesHelper();
+        IStockHelper designationsHelper = new DesignationHelper();
 
-        controller = new StockController(stockHelper, inventoryHelper, familyCodesHelper);
-        
+        controller = new StockController(stockHelper, inventoryHelper, familyCodesHelper, designationsHelper);
+
         controller.selectStockHelper(EStockTypes.Stock);
         comboStockType.getItems().addAll(EStockTypes.values());
         comboStockType.selectFirst();
@@ -58,40 +60,39 @@ public class StockPanel extends INodeView  implements  Initializable {
     }
 
     @FXML
-    private void onAdd(){
+    private void onAdd() {
         controller.add();
     }
 
-
     @FXML
-    private void onEdit(){
+    private void onEdit() {
         controller.update();
     }
 
     @FXML
-    private void onDelete(){
+    private void onDelete() {
         controller.remove();
     }
 
     @FXML
-    private void onRefresh(){
+    private void onRefresh() {
         controller.refresh();
     }
 
     @FXML
-    private void onSearch(){
+    private void onSearch() {
         controller.search();
     }
 
     @FXML
-    private void onStockTypeChanged(){
+    private void onStockTypeChanged() {
         EStockTypes stockType = comboStockType.getSelectionModel().getSelectedItem();
         controller.selectStockHelper(stockType);
         setTable();
 
     }
 
-    private void setTable(){
+    private void setTable() {
         tableHolder.setContent(controller.getTableView());
     }
 }
