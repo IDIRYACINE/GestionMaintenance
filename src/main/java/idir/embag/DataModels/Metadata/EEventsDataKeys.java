@@ -15,4 +15,5 @@ public enum EEventsDataKeys {
     OperationStatus,
     EventKey,
     ApiResponse,
+    RequestData
 }

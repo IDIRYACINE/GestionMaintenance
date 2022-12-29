@@ -7,8 +7,11 @@ import java.util.Map;
 
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
+import idir.embag.DataModels.Users.Designation;
 import idir.embag.DataModels.Users.User;
+import idir.embag.EventStore.Models.Users.RequestsData.LoadRequest;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
+import idir.embag.Repository.DesignationsRepository;
 import idir.embag.Repository.UsersRepository;
 import idir.embag.Types.Infrastructure.Database.IUsersQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
@@ -26,10 +29,12 @@ public class UsersModel implements IDataDelegate {
 
     private IUsersQuery usersQuery;
     private UsersRepository usersRepository;
+    private DesignationsRepository designationRepository;
 
-    public UsersModel(IUsersQuery usersQuery,  UsersRepository usersRepository) {
+    public UsersModel(IUsersQuery usersQuery, UsersRepository usersRepository,DesignationsRepository designationsRepository) {
         this.usersQuery = usersQuery;
         this.usersRepository = usersRepository;
+        this.designationRepository = designationsRepository;
     }
 
     @Override
@@ -86,7 +91,7 @@ public class UsersModel implements IDataDelegate {
             SearchWrapper wrappers = DataBundler.retrieveNestedValue(data, EEventsDataKeys.WrappersKeys,
                     EWrappers.SearchWrapper);
             ResultSet resultSet = usersQuery.SearchUsers(wrappers);
-           
+
             Collection<User> users = usersRepository.resultSetToUsers(resultSet);
             data.put(EEventsDataKeys.InstanceCollection, users);
 
@@ -100,17 +105,36 @@ public class UsersModel implements IDataDelegate {
     @Override
     public void load(Map<EEventsDataKeys, Object> data) {
         try {
-            LoadWrapper wrappers = DataBundler.retrieveNestedValue(data, EEventsDataKeys.WrappersKeys,
-                    EWrappers.LoadWrapper);
+            LoadRequest loadRequest = DataBundler.retrieveValue(data, EEventsDataKeys.Instance);
 
-            ResultSet usersSet = usersQuery.LoadUsers(wrappers);
+            if (loadRequest.isLoadUsers()) {
+                LoadWrapper wrappers = DataBundler.retrieveNestedValue(data, EEventsDataKeys.WrappersKeys,
+                        EWrappers.LoadWrapper);
 
-          
-            Collection<User> users = usersRepository.resultSetToUsers(usersSet);
+                ResultSet usersSet = usersQuery.LoadUsers(wrappers);
 
-            data.put(EEventsDataKeys.InstanceCollection, users);
+                Collection<User> users = usersRepository.resultSetToUsers(usersSet);
 
-            notfiyEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Load, data);
+                data.put(EEventsDataKeys.InstanceCollection, users);
+
+                notfiyEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Load, data);
+
+            }
+
+            else if (loadRequest.isLoadUserUngrantedDesignations()) {
+                
+                ResultSet designationsResultSet = usersQuery.LoadUserUngrantedPermissions(
+                    loadRequest.getUser().getDesignationsIds()
+                );
+
+                Collection<Designation> designations = designationRepository.resultSetToDesignation(designationsResultSet);
+
+                data.put(EEventsDataKeys.InstanceCollection, designations);
+
+                notfiyEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Load, data);
+
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
 

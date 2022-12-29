@@ -22,7 +22,7 @@ import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 
 @SuppressWarnings("unchecked")
-public class Exporter implements IEventSubscriber{
+public class Exporter implements IEventSubscriber {
 
     private boolean isExporting = false;
 
@@ -32,16 +32,17 @@ public class Exporter implements IEventSubscriber{
 
     private ImportWrapper importWrapper;
 
-    private String exportHistoryFilePath = new File("").getAbsolutePath() +"/Data/ExportHistory.yaml";
+    private String exportHistoryFilePath = new File("").getAbsolutePath() + "/Data/ExportHistory.yaml";
 
-    private Map<EExportSessionKeys,Object> sessionProgress;
+    private Map<EExportSessionKeys, Object> sessionProgress;
+
+    private Runnable doneCallback;
 
     public Exporter() {
         loadLastSessionProgress();
-        StoreCenter.getInstance().subscribeToEvents(EStores.DataConverterStore, null, this);
     }
 
-    private void exportData(Map<EEventsDataKeys, Object> data ){
+    private void exportData(Map<EEventsDataKeys, Object> data) {
         Map<EWrappers, Object> wrappersData = new HashMap<>();
         wrappersData.put(EWrappers.ExportWrapper, exportWrapper);
 
@@ -49,13 +50,13 @@ public class Exporter implements IEventSubscriber{
         data.put(EEventsDataKeys.WrappersKeys, wrappersData);
 
         StoreCenter storeCenter = StoreCenter.getInstance();
-        StoreDispatch event = storeCenter.createStoreEvent(EStores.DataConverterStore, exportWrapper.getTargetTable(), EStoreEventAction.Export, data);
+        StoreDispatch event = storeCenter.createStoreEvent(EStores.DataConverterStore, exportWrapper.getTargetTable(),
+                EStoreEventAction.Export, data);
         storeCenter.dispatch(event);
 
-        isExporting = true;
     }
 
-    private void importData(){
+    private void importData() {
         Map<EEventsDataKeys, Object> data = new HashMap<EEventsDataKeys, Object>();
         data.put(EEventsDataKeys.Subscriber, this);
 
@@ -66,11 +67,12 @@ public class Exporter implements IEventSubscriber{
         data.put(EEventsDataKeys.WrappersKeys, wrappersData);
 
         StoreCenter storeCenter = StoreCenter.getInstance();
-        StoreDispatch event = storeCenter.createStoreEvent(EStores.DataConverterStore, importWrapper.getTargetTable(), EStoreEventAction.Import, data);
+        StoreDispatch event = storeCenter.createStoreEvent(EStores.DataConverterStore, importWrapper.getTargetTable(),
+                EStoreEventAction.Import, data);
         storeCenter.dispatch(event);
     }
 
-    private void exportDataFromDatabase(EStoreEvents exportedTable){
+    private void exportDataFromDatabase(EStoreEvents exportedTable) {
         Map<EEventsDataKeys, Object> data = new HashMap<EEventsDataKeys, Object>();
         data.put(EEventsDataKeys.Subscriber, this);
 
@@ -81,54 +83,68 @@ public class Exporter implements IEventSubscriber{
         data.put(EEventsDataKeys.WrappersKeys, wrappersData);
 
         StoreCenter storeCenter = StoreCenter.getInstance();
-        StoreDispatch event = storeCenter.createStoreEvent(EStores.DataStore, exportedTable, EStoreEventAction.Load, data);
+        StoreDispatch event = storeCenter.createStoreEvent(EStores.DataStore, exportedTable, EStoreEventAction.Load,
+                data);
         storeCenter.dispatch(event);
 
     }
 
-    public void startExport(EStoreEvents exportedTable,ExportWrapper exportWrapper){
+    public void startExport(EStoreEvents exportedTable, ExportWrapper exportWrapper) {
         this.exportWrapper = exportWrapper;
+        isExporting = true;
+        isImporting = false;
         exportDataFromDatabase(exportedTable);
     }
 
-    public void startImport(EStoreEvents importedTable,ImportWrapper importWrapper){
+    public void startImport(EStoreEvents importedTable, ImportWrapper importWrapper) {
         this.importWrapper = importWrapper;
+        isImporting = true;
+        isExporting = false;
         importData();
     }
 
     @Override
     public void notifyEvent(StoreEvent event) {
-        EOperationStatus status = (EOperationStatus)event.getData().get(EEventsDataKeys.OperationStatus);
-        switch(status){
+        EOperationStatus status = (EOperationStatus) event.getData().get(EEventsDataKeys.OperationStatus);
+        switch (status) {
             case HasData:
-                exportData(event.getData());
+                startExportOrImport(event.getData());
                 break;
             case Completed:
-                nextDataSet();
+                onNoData();
                 break;
             case Stop:
                 onNoData();
-                break;    
+                break;
             case NoData:
                 onNoData();
                 break;
-            default : exportData(event.getData());
-                break;    
+            default:
+                exportData(event.getData());
+                break;
         }
     }
-    
-    private void nextDataSet(){
-        if(isExporting){
-            exportWrapper.nextRowPatch();
-            startExport(exportWrapper.getTargetTable(), exportWrapper);
-        }
-        else if(isImporting){
-            importWrapper.nextRowPatch();
+
+    // private void nextDataSet(){
+    // if(isExporting){
+    // exportWrapper.nextRowPatch();
+    // startExport(exportWrapper.getTargetTable(), exportWrapper);
+    // }
+    // else if(isImporting){
+    // importWrapper.nextRowPatch();
+    // importData();
+    // }
+    // }
+
+    private void startExportOrImport(Map<EEventsDataKeys, Object> data) {
+        if (isExporting) {
+            exportData(data);
+        } else if (isImporting) {
             importData();
         }
     }
 
-    private void loadLastSessionProgress(){
+    private void loadLastSessionProgress() {
         try {
             File source = new File(exportHistoryFilePath);
             InputStream input = new FileInputStream(source);
@@ -140,57 +156,63 @@ public class Exporter implements IEventSubscriber{
         }
     }
 
-    private void saveSessionProgress(){
+    private void saveSessionProgress() {
         try {
-            
+
             Map<EExportSessionKeys, Object> data = new HashMap<>();
-            if(exportWrapper != null)
+            if (exportWrapper != null)
                 data.put(EExportSessionKeys.ExportSession, exportWrapper.getMap());
-            if(importWrapper != null)
+            if (importWrapper != null)
                 data.put(EExportSessionKeys.ImportSession, importWrapper.getMap());
 
             File source = new File(exportHistoryFilePath);
 
-            if(!source.exists())
+            if (!source.exists())
                 source.createNewFile();
 
             FileWriter writer = new FileWriter(source);
 
             Yaml yaml = new Yaml();
-            yaml.dump(data,writer);
-            
+            yaml.dump(data, writer);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    private void onNoData(){
-        if(isExporting || isImporting){
+    private void onNoData() {
+        if (isExporting || isImporting) {
             saveSessionProgress();
             isImporting = false;
             isExporting = false;
         }
+        doneCallback.run();
     }
 
-
-   public void unsubscribe(){
-        StoreCenter.getInstance().unsubscribeFromEvents(EStores.DataConverterStore,null,this);
+    public void unsubscribe() {
+        StoreCenter.getInstance().unsubscribeFromEvents(EStores.DataConverterStore, null, this);
     }
 
     public void cancel() {
         saveSessionProgress();
     }
 
-    public void loadSessionExportSession(){
-        Map<EExportSessionKeys,Object> rawExportWrapper = (Map<EExportSessionKeys, Object>) sessionProgress.get(EExportSessionKeys.ExportSession);
+    public void loadSessionExportSession() {
+        Map<EExportSessionKeys, Object> rawExportWrapper = (Map<EExportSessionKeys, Object>) sessionProgress
+                .get(EExportSessionKeys.ExportSession);
         exportWrapper = new ExportWrapper(rawExportWrapper);
     }
 
-    public void loadSessionImportSession(){
-        Map<EExportSessionKeys,Object> rawImportWrapper = (Map<EExportSessionKeys, Object>) sessionProgress.get(EExportSessionKeys.ImportSession);
+    public void loadSessionImportSession() {
+        Map<EExportSessionKeys, Object> rawImportWrapper = (Map<EExportSessionKeys, Object>) sessionProgress
+                .get(EExportSessionKeys.ImportSession);
         importWrapper = new ImportWrapper(rawImportWrapper);
     }
 
-    
+    public void setDoneCallback(Runnable callback) {
+        doneCallback = callback;
+
+    }
+
 }

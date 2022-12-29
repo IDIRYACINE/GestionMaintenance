@@ -64,6 +64,7 @@ public class ImportDialog extends INodeView implements Initializable, IDialogCon
     @Override
     public void setOnCancel(Runnable callback) {
         cancelCallback = callback;
+        controller.setDoneCallback(callback);
     }
 
     @Override
@@ -101,7 +102,7 @@ public class ImportDialog extends INodeView implements Initializable, IDialogCon
     private void importData() {
         EStoreEvents tableType = tableComboBox.getSelectionModel().getSelectedItem();
 
-        ImportWrapper importWrapper = new ImportWrapper(100, tableType);
+        ImportWrapper importWrapper = new ImportWrapper(5000, tableType);
 
         importWrapper.setSheetBounds(Integer.parseInt(rowStartField.getText()),
                 Integer.parseInt(rowEndField.getText()),

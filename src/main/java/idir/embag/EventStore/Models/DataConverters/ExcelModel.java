@@ -18,6 +18,7 @@ import idir.embag.Infrastructure.DataConverters.Excel.CellWriters.SessionCellWri
 import idir.embag.Infrastructure.DataConverters.Excel.CellWriters.SessionRecordsWriter;
 import idir.embag.Infrastructure.DataConverters.Excel.CellWriters.StockCellWriter;
 import idir.embag.Infrastructure.DataConverters.Excel.CellWriters.WorkerCellWriter;
+import idir.embag.Types.Generics.EOperationStatus;
 import idir.embag.Types.Infrastructure.DataConverters.ExportWrapper;
 import idir.embag.Types.Infrastructure.DataConverters.IDataConverter;
 import idir.embag.Types.Infrastructure.DataConverters.Excel.IExcelCellReader;
@@ -57,6 +58,10 @@ public class ExcelModel implements IDataConverterDelegate , IEventSubscriber{
         excelConverter.setupExport(exportWrapper);
         excelConverter.exportData(cellWriter, DataBundler.retrieveValue(data,EEventsDataKeys.InstanceCollection));
 
+        data.put(EEventsDataKeys.OperationStatus, EOperationStatus.Completed);
+        StoreCenter storeCenter = StoreCenter.getInstance();
+        StoreDispatch action = storeCenter.createStoreEvent(EStores.DataStore, eventKey, EStoreEventAction.Export, data);
+        storeCenter.notify(action);
     }
 
     @Override

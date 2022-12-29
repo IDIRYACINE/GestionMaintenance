@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Iterator;
-
 import idir.embag.DataModels.Users.DesignationPermission;
 import idir.embag.Types.Infrastructure.Database.IDatabase;
 import idir.embag.Types.Infrastructure.Database.IUsersQuery;
@@ -12,6 +11,7 @@ import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 import idir.embag.Types.Infrastructure.Database.Metadata.EDesignationAttributes;
+import idir.embag.Types.Infrastructure.Database.Metadata.EDesignationsPermissions;
 import idir.embag.Types.Infrastructure.Database.Metadata.ETables;
 import idir.embag.Types.Infrastructure.Database.Metadata.EUsersAttributes;
 
@@ -54,6 +54,12 @@ public class UsersQuery extends IUsersQuery {
 
         database.DeleteQuery(query);
 
+        whereClause = " WHERE " + EUsersAttributes.UserId + "=" + userId;
+        query = "DELETE FROM " + ETables.DesignationsPermissions + whereClause;
+
+        database.DeleteQuery(query);
+
+
     }
 
     @Override
@@ -68,16 +74,16 @@ public class UsersQuery extends IUsersQuery {
         Iterator<DesignationPermission> iterator = attributes.iterator();
         DesignationPermission permission = iterator.next();
 
-        String whereClause = " WHERE " + EUsersAttributes.UserId + "=" + permission.getUserId() 
-        + " AND (" + EDesignationAttributes.DesignationId + "=" + permission.getDesignationId() ;
-        
-        while(iterator.hasNext()){
+        String whereClause = " WHERE " + EUsersAttributes.UserId + "=" + permission.getUserId()
+                + " AND (" + EDesignationAttributes.DesignationId + "=" + permission.getDesignationId();
+
+        while (iterator.hasNext()) {
             permission = iterator.next();
             whereClause += " OR " + EDesignationAttributes.DesignationId + "=" + permission.getDesignationId();
         }
 
         whereClause += ")";
-        
+
         String query = "DELETE FROM " + ETables.DesignationsPermissions + whereClause;
 
         database.DeleteQuery(query);
@@ -86,7 +92,7 @@ public class UsersQuery extends IUsersQuery {
 
     @Override
     public ResultSet Login(String userName, String password) throws SQLException {
-        String whereClause = " WHERE " + EUsersAttributes.UserName + "=" 
+        String whereClause = " WHERE " + EUsersAttributes.UserName + "="
                 + userName + " AND " + EUsersAttributes.Password + "=" + password;
 
         String query = "SELECT * FROM " + ETables.Users + whereClause;
@@ -105,17 +111,15 @@ public class UsersQuery extends IUsersQuery {
 
         database.CreateQuery(query);
 
-
     }
 
-
     // private void RegisterDefaultAdminUser(){
-    //     Collection<AttributeWrapper> attributes = new ArrayList<AttributeWrapper>();
-    //     attributes.add(new AttributeWrapper(EUsersAttributes.UserName, "admin"));
-    //     attributes.add(new AttributeWrapper(EUsersAttributes.Password, "admin"));
-    //     attributes.add(new AttributeWrapper(EUsersAttributes.Admin, 1));
+    // Collection<AttributeWrapper> attributes = new ArrayList<AttributeWrapper>();
+    // attributes.add(new AttributeWrapper(EUsersAttributes.UserName, "admin"));
+    // attributes.add(new AttributeWrapper(EUsersAttributes.Password, "admin"));
+    // attributes.add(new AttributeWrapper(EUsersAttributes.Admin, 1));
 
-    //     RegisterUser(attributes);
+    // RegisterUser(attributes);
 
     // }
 
@@ -124,6 +128,43 @@ public class UsersQuery extends IUsersQuery {
         String whereClause = " WHERE " + SearchWrapperToWhereClause(parameters);
         String query = "SELECT * FROM " + ETables.Users + whereClause;
         ResultSet result = database.SelectQuery(query);
+        return result;
+    }
+
+    @Override
+    public ResultSet LoadUserUngrantedPermissions(Collection<Integer> grantedPermissions) throws SQLException {
+        String whereClause = " WHERE " + EDesignationAttributes.DesignationId + " NOT IN (";
+
+        Iterator<Integer> iterator = grantedPermissions.iterator();
+        while (iterator.hasNext()) {
+            whereClause += iterator.next();
+            if (iterator.hasNext())
+                whereClause += ",";
+        }
+
+        whereClause += ")";
+
+        String query = "SELECT * FROM " + ETables.Designations;
+
+        if (grantedPermissions.size() > 0)
+            query += whereClause;
+
+        ResultSet result = database.SelectQuery(query);
+
+        return result;
+    }
+
+    @Override
+    public ResultSet LoadUserPermissions(int userId) throws SQLException {
+
+        String whereClause = " WHERE EXISTS ("
+                + "SELECT * FROM " + ETables.DesignationsPermissions + " WHERE"
+                + EDesignationsPermissions.UserId + "=" + userId + ")";
+
+        String query = "SELECT * FROM " + ETables.Designations + whereClause;
+
+        ResultSet result = database.SelectQuery(query);
+
         return result;
     }
 

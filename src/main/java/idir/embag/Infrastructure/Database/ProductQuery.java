@@ -151,9 +151,13 @@ public class ProductQuery extends IProductQuery{
     @Override
     public ResultSet SearchInventoryProduct(SearchWrapper parametrers) throws SQLException {
         String addDesignationRestrictions = addDesignationRestriction(AppState.getInstance().getCurrentUser());
-        String whereClause = " WHERE "+  SearchWrapperToWhereClause(parametrers) +" And " +addDesignationRestrictions ;
+        String whereClause = " WHERE "+  SearchWrapperToWhereClause(parametrers) ;
 
-         String query = "SELECT * FROM "+ETables.Inventory + whereClause;
+        if(!addDesignationRestrictions.equals("")){
+            whereClause += " And " + addDesignationRestrictions;
+        }
+
+        String query = "SELECT * FROM "+ETables.Inventory  + whereClause;
          
         ResultSet result = database.SelectQuery(query);
         return result;
@@ -177,11 +181,13 @@ public class ProductQuery extends IProductQuery{
 
     @Override
     public ResultSet LoadInventoryProduct(LoadWrapper parametrers) throws SQLException {
-        //  String extraClause = " LIMIT "+ parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
          String addDesignationRestrictions = addDesignationRestriction(AppState.getInstance().getCurrentUser());
-
-         String query = "SELECT * FROM "+ETables.Inventory + " Where " + addDesignationRestrictions ;
+         String query = "SELECT * FROM "+ETables.Inventory ;
          
+         if(!addDesignationRestrictions.equals("")){
+                query += " WHERE " + addDesignationRestrictions ;
+         }
+
          ResultSet result = database.SelectQuery(query);
          return result;
     }

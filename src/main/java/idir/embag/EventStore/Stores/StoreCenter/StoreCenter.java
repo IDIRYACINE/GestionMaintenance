@@ -160,7 +160,6 @@ public class StoreCenter implements IStoresCenter {
         new InventoryRepository());
     FamilyModel familyModel = new FamilyModel(databaseInitialiser.getProductQuery(), new FamilyCodeRepository());
     WorkersModel workersModel = new WorkersModel(databaseInitialiser.getWorkerQuery(), new WorkersRepository());
-    UsersModel usersModel = new UsersModel(databaseInitialiser.getUsersQuery(), new UsersRepository());
 
     SessionRepository sessionRepository = new SessionRepository();
     SessionModel sessionModel = new SessionModel(databaseInitialiser.getSessionQuery(), sessionRepository);
@@ -175,6 +174,8 @@ public class StoreCenter implements IStoresCenter {
         designationsRepository);
     PermissionsModel permissionsModel = new PermissionsModel(databaseInitialiser.getDesignationsQuery(),
         databaseInitialiser.getUsersQuery(), designationsRepository);
+    UsersModel usersModel = new UsersModel(databaseInitialiser.getUsersQuery(), new UsersRepository(),
+        designationsRepository);
 
     IDataDelegate[] delegates = new IDataDelegate[IDataStore.DELEGATES_COUNT];
     delegates[IDataStore.STOCK_DELEGATE] = stockModel;

@@ -21,7 +21,10 @@ public abstract class IUsersQuery extends IQuery{
 
     public abstract void GrantDesignationSupervisior(Collection<AttributeWrapper> attributes) throws SQLException;
     public abstract void RevokeDesignationSupervisior(Collection<DesignationPermission> atributes) throws SQLException;
-    
+
+    public abstract ResultSet LoadUserPermissions(int userId) throws SQLException;
+    public abstract ResultSet LoadUserUngrantedPermissions(Collection<Integer> grantedPermissions) throws SQLException;
+
     public abstract ResultSet Login(String userName, String password) throws SQLException;
 
     public abstract void CreateUsersTable() throws SQLException;

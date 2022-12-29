@@ -59,6 +59,8 @@ public class ExportDialog extends INodeView implements Initializable,IDialogCont
     @Override
     public void setOnCancel(Runnable callback) {
         cancelCallback = callback;
+        controller.setDoneCallback(callback);
+
     }
 
     @Override
@@ -130,4 +132,6 @@ public class ExportDialog extends INodeView implements Initializable,IDialogCont
 
         root.getChildren().setAll(doingWorkDialog.getView());    
     }
+
+
 }
