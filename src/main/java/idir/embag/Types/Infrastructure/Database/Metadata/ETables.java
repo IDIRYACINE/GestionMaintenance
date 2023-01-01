@@ -13,5 +13,6 @@ public enum ETables {
     ActiveSession ,
     Designations,
     Users,
-    DesignationsPermissions
+    DesignationsPermissions,
+    GroupsPermissions
 }

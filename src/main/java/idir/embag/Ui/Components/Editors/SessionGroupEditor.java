@@ -1,5 +1,6 @@
 package idir.embag.Ui.Components.Editors;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,19 +8,25 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
-
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.SessionGroup;
+import idir.embag.DataModels.Users.Designation;
+import idir.embag.EventStore.Models.Permissions.RequestsData.UpdateGroup;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
+import idir.embag.Types.Infrastructure.Database.Metadata.EDesignationsPermissions;
 import idir.embag.Types.Infrastructure.Database.Metadata.ESessionGroupAttributes;
 import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
+import idir.embag.Ui.Dialogs.UsersDialog.Components.AttributeSelector;
+import io.github.palexdev.materialfx.controls.MFXListView;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 
 public class SessionGroupEditor extends INodeView implements Initializable , IDialogContent {
 
@@ -35,11 +42,28 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
     private Consumer<Map<EEventsDataKeys,Object>> confirmTask;
 
     private SessionGroup group;
+    @FXML
+    private MFXListView<HBox> permissionsListView;
 
-    public SessionGroupEditor(SessionGroup group) {
+    // use this to keep track of the permissions that ungranted from the granted ones , important to cancel changes
+    private ArrayList<HBox> revokedPermissions;
+
+    // use this to keep track of the permissions that were already granted to group
+    private ArrayList<HBox> grantedOnLoadPermissions;
+
+    private ArrayList<HBox> newlyGrantedPermissions;
+
+    private ArrayList<Designation> ungrantedDesignations;
+    
+    public SessionGroupEditor(SessionGroup group, ArrayList<Designation> designations) {
         this.group = group;
         fxmlPath = "/views/Editors/SessionGroupEditor.fxml";
 
+        revokedPermissions = new ArrayList<>();
+        grantedOnLoadPermissions = new ArrayList<>();
+        newlyGrantedPermissions = new ArrayList<>();
+
+        ungrantedDesignations = designations;
     }
 
     @Override
@@ -56,6 +80,16 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         groupNameField.setText(group.getName());
+
+        ArrayList<HBox> alreadyGranted = createSelectorNodes(group.getDesignations());
+        
+        newlyGrantedPermissions.addAll(alreadyGranted);
+        grantedOnLoadPermissions.addAll(alreadyGranted);
+
+        ArrayList<HBox> allPermissions = createSelectorNodes(ungrantedDesignations);
+        allPermissions.addAll(alreadyGranted);
+
+        permissionsListView.getItems().setAll(allPermissions);
     }
 
     @Override
@@ -83,7 +117,45 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
 
         
         DataBundler.bundleNestedData(data, EEventsDataKeys.WrappersKeys, EWrappers.AttributesCollection, getAttributeWrappers());
+        
+        Collection<AttributeWrapper> fields = new ArrayList<>();
+
+        String groupName = groupNameField.getText();
+        if(!groupName.equals(group.getName())){
+            fields.add(new AttributeWrapper(ESessionGroupAttributes.GroupName, groupName));
+            group.setName(groupName);
+        }
+
+
+        
         data.put(EEventsDataKeys.Instance, group);
+
+        Collection<AttributeWrapper> grantedP = new ArrayList<>();
+
+        newlyGrantedPermissions.forEach( node -> {
+            Designation designation = (Designation) node.getUserData();
+            
+            grantedP.add(new AttributeWrapper(EDesignationsPermissions.DesignationId, designation));
+
+            if(!group.getDesignations().contains(designation)){
+                group.getDesignations().add(designation);
+            }
+        });
+        
+        Collection<AttributeWrapper> ungrantedP = new ArrayList<>();
+        revokedPermissions.forEach(node ->{
+            Designation designation = (Designation) node.getUserData();
+
+            ungrantedP.add(new AttributeWrapper(EDesignationsPermissions.DesignationId, designation));
+
+            if(group.getDesignations().contains(designation)){
+                group.getDesignations().remove(designation);
+            }
+        });
+
+        UpdateGroup updateUser = new UpdateGroup(fields, grantedP, ungrantedP );
+
+        data.put(EEventsDataKeys.RequestData, updateUser);
     }
 
     private Collection<AttributeWrapper> getAttributeWrappers(){
@@ -93,6 +165,48 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
         attributes.add(new AttributeWrapper(ESessionGroupAttributes.SessionId,String.valueOf(group.getSessionId())));
 
         return attributes;
+    }
+
+
+
+    private ArrayList<HBox> createSelectorNodes(ArrayList<Designation> designations){
+        FXMLLoader loader;     
+        AttributeSelector controller ;
+        
+        ArrayList<HBox> attributeSelectorNodes = new ArrayList<>();
+
+        for(int i = 0 ; i < designations.size();i++){
+            try {
+                loader = new FXMLLoader(getClass().getResource("/views/FilterDialog/AttributeSelectorCell.fxml"));
+                controller = new AttributeSelector(designations.get(i));
+                controller.setOnSelect(this::selectAtrribute);
+                controller.setOnDeselect(this::deselectAttribute);
+                loader.setController(controller);
+                HBox node = loader.load();
+                node.setUserData(designations.get(i));
+                attributeSelectorNodes.add(node);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return attributeSelectorNodes;
+        
+    }
+
+
+    private void selectAtrribute(HBox node){
+        if(revokedPermissions.contains(node)){
+            revokedPermissions.remove(node);
+        }
+        newlyGrantedPermissions.add(node);
+    }
+
+    private void deselectAttribute(HBox node){
+        if(grantedOnLoadPermissions.contains(node)){
+            revokedPermissions.add(node);
+        }
+        newlyGrantedPermissions.remove(node);        
     }
 
     

@@ -74,7 +74,7 @@ public class UsersQuery extends IUsersQuery {
         Iterator<DesignationPermission> iterator = attributes.iterator();
         DesignationPermission permission = iterator.next();
 
-        String whereClause = " WHERE " + EUsersAttributes.UserId + "=" + permission.getUserId()
+        String whereClause = " WHERE " + EUsersAttributes.UserId + "=" + permission.getId()
                 + " AND (" + EDesignationAttributes.DesignationId + "=" + permission.getDesignationId();
 
         while (iterator.hasNext()) {

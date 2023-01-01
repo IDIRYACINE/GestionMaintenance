@@ -7,6 +7,7 @@ import java.util.Collection;
 import idir.embag.DataModels.Session.Session;
 import idir.embag.DataModels.Session.SessionGroup;
 import idir.embag.DataModels.Session.SessionRecord;
+import idir.embag.DataModels.Users.Designation;
 import idir.embag.DataModels.Workers.SessionWorker;
 import idir.embag.Types.Infrastructure.Database.Metadata.ESessionAttributes;
 import idir.embag.Types.Infrastructure.Database.Metadata.ESessionGroupAttributes;
@@ -17,21 +18,21 @@ import idir.embag.Types.Infrastructure.Database.Metadata.EWorkerAttributes;
 
 public class SessionRepository {
 
-    public Collection<SessionRecord> resultSetToRecord(ResultSet source){
+    public Collection<SessionRecord> resultSetToRecord(ResultSet source) {
         Collection<SessionRecord> result = new ArrayList<SessionRecord>();
         try {
             while (source.next()) {
                 result.add(new SessionRecord(
-                    source.getInt(ESessionRecordAttributes.InventoryId.toString()),
-                    source.getString(EStockAttributes.ArticleName.toString()),
-                    source.getString(ESessionRecordAttributes.RecordDate.toString()),
-                    source.getString(ESessionRecordAttributes.StockPrice.toString()),
-                    source.getString(ESessionRecordAttributes.StockQuantity.toString()),
-                    source.getString(ESessionRecordAttributes.RecordQuantity.toString()),
-                    source.getString(ESessionRecordAttributes.QuantityShift.toString()),
-                    source.getString(ESessionRecordAttributes.PriceShift.toString()),
-                    source.getString(ESessionRecordAttributes.RecordId.toString()), 
-                    source.getString(EWorkerAttributes.WorkerName.toString())));
+                        source.getInt(ESessionRecordAttributes.InventoryId.toString()),
+                        source.getString(EStockAttributes.ArticleName.toString()),
+                        source.getString(ESessionRecordAttributes.RecordDate.toString()),
+                        source.getString(ESessionRecordAttributes.StockPrice.toString()),
+                        source.getString(ESessionRecordAttributes.StockQuantity.toString()),
+                        source.getString(ESessionRecordAttributes.RecordQuantity.toString()),
+                        source.getString(ESessionRecordAttributes.QuantityShift.toString()),
+                        source.getString(ESessionRecordAttributes.PriceShift.toString()),
+                        source.getString(ESessionRecordAttributes.RecordId.toString()),
+                        source.getString(EWorkerAttributes.WorkerName.toString())));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -44,9 +45,10 @@ public class SessionRepository {
         try {
             while (source.next()) {
                 result.add(new SessionGroup(
-                source.getInt(ESessionGroupAttributes.GroupId.toString()),
-                source.getString(ESessionGroupAttributes.GroupName.toString()),
-                source.getTimestamp(ESessionGroupAttributes.SessionId.toString())));
+                        source.getInt(ESessionGroupAttributes.GroupId.toString()),
+                        source.getString(ESessionGroupAttributes.GroupName.toString()),
+                        source.getTimestamp(ESessionGroupAttributes.SessionId.toString()),
+                        new ArrayList<Designation>()));//TODO fix this
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -59,13 +61,12 @@ public class SessionRepository {
         try {
             while (source.next()) {
                 result.add(new SessionWorker(
-                source.getInt(ESessionWorkerAttributes.WorkerId.toString()),
-                source.getString(EWorkerAttributes.WorkerName.toString()),
-                source.getString(ESessionWorkerAttributes.Username.toString()),
-                source.getString(ESessionWorkerAttributes.Password.toString()),
-                source.getString(ESessionGroupAttributes.GroupName.toString()),
-                source.getInt(ESessionGroupAttributes.GroupId.toString())
-                ));
+                        source.getInt(ESessionWorkerAttributes.WorkerId.toString()),
+                        source.getString(EWorkerAttributes.WorkerName.toString()),
+                        source.getString(ESessionWorkerAttributes.Username.toString()),
+                        source.getString(ESessionWorkerAttributes.Password.toString()),
+                        source.getString(ESessionGroupAttributes.GroupName.toString()),
+                        source.getInt(ESessionGroupAttributes.GroupId.toString())));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,12 +79,12 @@ public class SessionRepository {
         try {
             while (source.next()) {
                 result.add(new Session(
-                source.getTimestamp(ESessionAttributes.SessionId.toString()),
-                source.getBoolean(ESessionAttributes.Active.toString()),
-                source.getString(ESessionAttributes.StartDate.toString()),
-                source.getString(ESessionAttributes.EndDate.toString()),
-                source.getDouble(ESessionAttributes.PriceShiftValue.toString()),
-                source.getDouble(ESessionAttributes.QuantityShiftValue.toString())));
+                        source.getTimestamp(ESessionAttributes.SessionId.toString()),
+                        source.getBoolean(ESessionAttributes.Active.toString()),
+                        source.getString(ESessionAttributes.StartDate.toString()),
+                        source.getString(ESessionAttributes.EndDate.toString()),
+                        source.getDouble(ESessionAttributes.PriceShiftValue.toString()),
+                        source.getDouble(ESessionAttributes.QuantityShiftValue.toString())));
             }
         } catch (Exception e) {
             e.printStackTrace();

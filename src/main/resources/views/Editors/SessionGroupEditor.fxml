@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXListView?>
 <?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane fx:id="root" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
@@ -22,31 +23,23 @@
    <center>
       <MFXScrollPane prefHeight="433.0" prefWidth="688.0" BorderPane.alignment="CENTER_LEFT">
          <content>
-            <HBox alignment="CENTER_RIGHT" prefHeight="431.0" prefWidth="686.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="431.0" prefWidth="686.0">
                <children>
-                  <VBox alignment="CENTER_RIGHT" prefHeight="431.0" prefWidth="248.0" spacing="35.0">
+                  <HBox alignment="CENTER" prefWidth="379.0" spacing="20.0">
                      <children>
                         <Label text="Group Name">
                            <font>
                               <Font size="25.0" />
                            </font>
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
                         </Label>
-                        
+                        <TextField fx:id="groupNameField" />
                      </children>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </VBox>
-                  <VBox alignment="CENTER_LEFT" prefHeight="431.0" prefWidth="442.0" spacing="20.0">
+                  </HBox>
+                  <Line endX="-93.12132263183594" endY="202.00286865234375" startX="-95.41421508789062" startY="618.5858154296875" />
+                  <VBox alignment="CENTER" prefHeight="334.0" prefWidth="281.0" spacing="10.0">
                      <children>
-                        <TextField fx:id="groupNameField">
-                           <VBox.margin>
-                              <Insets left="20.0" right="20.0" />
-                           </VBox.margin>
-                        </TextField>
+                        <Label text="Permissions" />
+                        <MFXListView fx:id="permissionsListView" prefHeight="296.0" prefWidth="264.0" />
                      </children>
                   </VBox>
                </children>
