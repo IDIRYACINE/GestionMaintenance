@@ -2,9 +2,11 @@ package idir.embag;
 
 import java.io.IOException;
 import idir.embag.Application.Controllers.Navigation.MainController;
+import idir.embag.Application.Utility.AppStateLoader;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Infrastructure.ServicesProvider;
 import idir.embag.Infrastructure.Database.MysqlConnection;
+import idir.embag.Infrastructure.Initialisers.DatabaseInitialiser;
 import idir.embag.Types.Application.Navigation.INavigationController;
 import idir.embag.Types.Infrastructure.Database.IConnectionParameters;
 import idir.embag.Types.Stores.StoreCenter.IStoresCenter;
@@ -94,6 +96,10 @@ public class App extends Application {
         Scene scene = new Scene(root);
         appStage.setScene(scene);
 
+        AppStateLoader.loadAppState();
+
+
     }
+  
 
 }

@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+
+import idir.embag.Application.State.AppState;
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.SessionGroup;
@@ -53,8 +55,10 @@ public class SessionGroupHelper implements IEventSubscriber {
 
         else if (request.isLoadAllDesignations()) {
             Timestamp sessionId = SessionController.sessionId;
+            AppState appState = AppState.getInstance();
 
-            SessionGroup group = new SessionGroup(0, null, sessionId, null);
+            SessionGroup group = new SessionGroup(appState.getSessionGroupCurrId(), null, sessionId, null);
+            
             ArrayList<Designation> designations = DataBundler.retrieveValue(event.getData(),
                     EEventsDataKeys.InstanceCollection);
             addSessionGroupDialog(group, designations);
@@ -89,6 +93,7 @@ public class SessionGroupHelper implements IEventSubscriber {
         dialogContent.setOnConfirm(requestData -> {
             requestData.put(EEventsDataKeys.Instance, group);
             dispatchEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Add, requestData);
+            AppState.getInstance().nextSessionGroupCurrId();
         });
 
         dialogContent.loadFxml();

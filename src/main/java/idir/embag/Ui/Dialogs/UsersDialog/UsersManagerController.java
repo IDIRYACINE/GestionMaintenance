@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+
+import idir.embag.Application.State.AppState;
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Users.Designation;
@@ -85,7 +87,7 @@ public class UsersManagerController implements IEventSubscriber {
         }
 
         else if(request.isLoadAllDesignations()){
-            User user = new User(0, null, null, false, null);
+            User user = new User(AppState.getInstance().getWorkerCurrId(), null, null, false, null);
             ArrayList<Designation> designations = DataBundler.retrieveValue(event.getData(), EEventsDataKeys.InstanceCollection);
             addUserDialog(user,  designations);
         }
@@ -179,6 +181,7 @@ public class UsersManagerController implements IEventSubscriber {
 
         dialogContent.setOnConfirm(other -> {
             other.put(EEventsDataKeys.Instance, user);
+            AppState.getInstance().nextWorkerCurrId();
             storeCenter.dispatchEvent(EStores.DataStore, EStoreEvents.UsersEvent, EStoreEventAction.Add, other);
 
         });

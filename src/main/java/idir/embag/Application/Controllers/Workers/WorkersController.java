@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import idir.embag.Application.State.AppState;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.SessionGroup;
 import idir.embag.DataModels.Workers.SessionWorker;
@@ -101,7 +102,7 @@ public class WorkersController implements IWorkersController, IEventSubscriber {
 
     @Override
     public void add() {
-        Worker worker = new Worker("", 0, "", 0);
+        Worker worker = new Worker("", 0, "", AppState.getInstance().getWorkerCurrId());
         WorkerEditor dialogContent = new WorkerEditor(worker);
 
         Map<EEventsDataKeys, Object> data = new HashMap<>();
@@ -111,6 +112,7 @@ public class WorkersController implements IWorkersController, IEventSubscriber {
 
         dialogContent.setOnConfirm(requestData -> {
             requestData.put(EEventsDataKeys.Instance, worker);
+            AppState.getInstance().nextWorkerCurrId();
             dispatchEvent(EStores.DataStore, EStoreEvents.WorkersEvent, EStoreEventAction.Add, requestData);
         });
 

@@ -1,5 +1,8 @@
 package idir.embag.Infrastructure.Initialisers;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import idir.embag.Infrastructure.Database.DesignationsQuery;
 import idir.embag.Infrastructure.Database.GroupPermissionsQuery;
 import idir.embag.Infrastructure.Database.MysqlDatabase;
@@ -88,5 +91,9 @@ public class DatabaseInitialiser {
 
     public void connect(IConnectionParameters connectionParameters) {
         database.Connect(connectionParameters);
+    }
+
+    public ResultSet executeQuery(String query) throws SQLException {
+        return database.SelectQuery(query);
     }
 }
