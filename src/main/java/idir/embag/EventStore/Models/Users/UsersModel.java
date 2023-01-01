@@ -2,6 +2,7 @@ package idir.embag.EventStore.Models.Users;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
@@ -10,11 +11,11 @@ import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Users.Designation;
 import idir.embag.DataModels.Users.User;
 import idir.embag.EventStore.Models.Users.RequestsData.LoadRequest;
+import idir.embag.EventStore.Models.Users.RequestsData.UpdateUser;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Repository.DesignationsRepository;
 import idir.embag.Repository.UsersRepository;
 import idir.embag.Types.Infrastructure.Database.IUsersQuery;
-import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 import idir.embag.Types.MetaData.EWrappers;
@@ -31,7 +32,8 @@ public class UsersModel implements IDataDelegate {
     private UsersRepository usersRepository;
     private DesignationsRepository designationRepository;
 
-    public UsersModel(IUsersQuery usersQuery, UsersRepository usersRepository,DesignationsRepository designationsRepository) {
+    public UsersModel(IUsersQuery usersQuery, UsersRepository usersRepository,
+            DesignationsRepository designationsRepository) {
         this.usersQuery = usersQuery;
         this.usersRepository = usersRepository;
         this.designationRepository = designationsRepository;
@@ -40,11 +42,13 @@ public class UsersModel implements IDataDelegate {
     @Override
     public void add(Map<EEventsDataKeys, Object> data) {
         try {
-            Collection<AttributeWrapper> wrappers = DataBundler.retrieveNestedValue(data, EEventsDataKeys.WrappersKeys,
-                    EWrappers.AttributesCollection);
+            UpdateUser userData = DataBundler.retrieveValue(data, EEventsDataKeys.RequestData);
 
-            usersQuery.RegisterUser(wrappers);
-            notfiyEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Add, data);
+            usersQuery.RegisterUser(userData.getFields());
+
+            usersQuery.GrantDesignationSupervisior(userData.getGrantedPermissions());
+
+            notfiyEvent(EStores.DataStore, EStoreEvents.UsersEvent, EStoreEventAction.Add, data);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -62,7 +66,7 @@ public class UsersModel implements IDataDelegate {
             User user = DataBundler.retrieveValue(data, EEventsDataKeys.Instance);
 
             usersQuery.UnregisterUser(user.getUserId());
-            notfiyEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Remove, data);
+            notfiyEvent(EStores.DataStore, EStoreEvents.UsersEvent, EStoreEventAction.Remove, data);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -73,12 +77,19 @@ public class UsersModel implements IDataDelegate {
     public void update(Map<EEventsDataKeys, Object> data) {
         try {
             User user = DataBundler.retrieveValue(data, EEventsDataKeys.Instance);
-            Collection<AttributeWrapper> wrappers = DataBundler.retrieveNestedValue(data, EEventsDataKeys.WrappersKeys,
-                    EWrappers.AttributesCollection);
 
-            usersQuery.UpdateUser(user.getUserId(), wrappers);
+            UpdateUser userData = DataBundler.retrieveValue(data, EEventsDataKeys.RequestData);
 
-            notfiyEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Update, data);
+            if (!userData.getFields().isEmpty())
+                usersQuery.UpdateUser(user.getUserId(), userData.getFields());
+
+            if (!userData.getGrantedPermissions().isEmpty())
+                usersQuery.GrantDesignationSupervisior(userData.getGrantedPermissions());
+
+            if (!userData.getUnGrantedPermissions().isEmpty())
+                usersQuery.RevokeDesignationSupervisior(userData.getUnGrantedPermissions());
+
+            notfiyEvent(EStores.DataStore, EStoreEvents.DesignationPermissionEvent, EStoreEventAction.Update, data);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -93,6 +104,16 @@ public class UsersModel implements IDataDelegate {
             ResultSet resultSet = usersQuery.SearchUsers(wrappers);
 
             Collection<User> users = usersRepository.resultSetToUsers(resultSet);
+
+            ResultSet designationsResultSet;
+            ArrayList<Designation> designations;
+
+            for (User user : users) {
+                designationsResultSet = usersQuery.LoadUserPermissions(user.getUserId());
+                designations = designationRepository.resultSetToDesignation(designationsResultSet);
+                user.setDesignations(designations);
+            }
+
             data.put(EEventsDataKeys.InstanceCollection, users);
 
             notfiyEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Search, data);
@@ -115,23 +136,32 @@ public class UsersModel implements IDataDelegate {
 
                 Collection<User> users = usersRepository.resultSetToUsers(usersSet);
 
+                ResultSet designationsResultSet;
+                ArrayList<Designation> designations;
+
+                for (User user : users) {
+                    designationsResultSet = usersQuery.LoadUserPermissions(user.getUserId());
+                    designations = designationRepository.resultSetToDesignation(designationsResultSet);
+                    user.setDesignations(designations);
+                }
+
                 data.put(EEventsDataKeys.InstanceCollection, users);
 
-                notfiyEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Load, data);
+                notfiyEvent(EStores.DataStore, EStoreEvents.DesignationPermissionEvent, EStoreEventAction.Load, data);
 
             }
 
             else if (loadRequest.isLoadUserUngrantedDesignations()) {
-                
-                ResultSet designationsResultSet = usersQuery.LoadUserUngrantedPermissions(
-                    loadRequest.getUser().getDesignationsIds()
-                );
 
-                Collection<Designation> designations = designationRepository.resultSetToDesignation(designationsResultSet);
+                ResultSet designationsResultSet = usersQuery.LoadUserUngrantedPermissions(
+                        loadRequest.getUser().getDesignationsIds());
+
+                Collection<Designation> designations = designationRepository
+                        .resultSetToDesignation(designationsResultSet);
 
                 data.put(EEventsDataKeys.InstanceCollection, designations);
 
-                notfiyEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Load, data);
+                notfiyEvent(EStores.DataStore, EStoreEvents.DesignationPermissionEvent, EStoreEventAction.Load, data);
 
             }
 

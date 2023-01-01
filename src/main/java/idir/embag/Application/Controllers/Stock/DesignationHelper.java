@@ -142,7 +142,7 @@ public class DesignationHelper extends IStockHelper implements IEventSubscriber{
    
     @Override
     public void notifyEvent(StoreEvent event) {
-
+        
         switch(event.getAction()){
             case Add: addTableElement((Designation)event.getData().get(EEventsDataKeys.Instance));
                 break;

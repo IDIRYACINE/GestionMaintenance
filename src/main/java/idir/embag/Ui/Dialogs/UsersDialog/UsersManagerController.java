@@ -178,7 +178,8 @@ public class UsersManagerController implements IEventSubscriber {
         data.put(EEventsDataKeys.Subscriber, this);
 
         dialogContent.setOnConfirm(other -> {
-            storeCenter.dispatchEvent(EStores.DataStore, EStoreEvents.UsersEvent, EStoreEventAction.Add, data);
+            other.put(EEventsDataKeys.Instance, user);
+            storeCenter.dispatchEvent(EStores.DataStore, EStoreEvents.UsersEvent, EStoreEventAction.Add, other);
 
         });
 
@@ -204,7 +205,9 @@ public class UsersManagerController implements IEventSubscriber {
         data.put(EEventsDataKeys.Subscriber, this);
 
         dialogContent.setOnConfirm(other -> {
-            storeCenter.dispatchEvent(EStores.DataStore, EStoreEvents.UsersEvent, EStoreEventAction.Update, data);
+            other.put(EEventsDataKeys.Instance, user);
+
+            storeCenter.dispatchEvent(EStores.DataStore, EStoreEvents.UsersEvent, EStoreEventAction.Update, other);
 
         });
 
@@ -230,7 +233,7 @@ public class UsersManagerController implements IEventSubscriber {
         data.put(EEventsDataKeys.Subscriber, this);
 
         dialogContent.setOnConfirm(other -> {
-            storeCenter.dispatchEvent(EStores.DataStore, EStoreEvents.UsersEvent, EStoreEventAction.Remove, data);
+            storeCenter.dispatchEvent(EStores.DataStore, EStoreEvents.UsersEvent, EStoreEventAction.Remove, other);
 
         });
 

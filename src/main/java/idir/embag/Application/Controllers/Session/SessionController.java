@@ -21,6 +21,7 @@ import idir.embag.Types.Infrastructure.DataConverters.ExportWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Metadata.ESessionAttributes;
+import idir.embag.Types.Infrastructure.Database.Metadata.ESessionRecordAttributes;
 import idir.embag.Types.Infrastructure.Server.EServerKeys;
 import idir.embag.Types.MetaData.ENavigationKeys;
 import idir.embag.Types.MetaData.EWrappers;
@@ -122,7 +123,6 @@ public class SessionController implements IEventSubscriber {
         ConfirmationDialog dialogContent = new ConfirmationDialog();
         dialogContent.setMessage(Messages.closeSession);
 
-        // TODO: save session records to local db
         Map<EEventsDataKeys, Object> data = new HashMap<>();
         Map<ENavigationKeys, Object> navigationData = new HashMap<>();
 
@@ -176,6 +176,17 @@ public class SessionController implements IEventSubscriber {
 
     private void addRecord(SessionRecord record) {
         tableRecord.getItems().add(record);
+
+        Map<EWrappers, Object> wrappers = new HashMap<>();
+
+        wrappers.put(EWrappers.AttributesCollection, sessionRecordToAttributes(record));
+
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
+
+        data.put(EEventsDataKeys.Instance, record);
+        data.put(EEventsDataKeys.WrappersKeys, wrappers);
+        dispatchEvent(EStores.DataStore, EStoreEvents.SessionRecordsEvent, EStoreEventAction.Add, data);
+
     }
 
     private void addRecordCollection(Collection<SessionRecord> records) {
@@ -277,6 +288,19 @@ public class SessionController implements IEventSubscriber {
         // a weird error in mariadb, it doesn't accept boolean values
         int active = session.isActive() ? 1 : 0;
         attributes.add(new AttributeWrapper(ESessionAttributes.Active, active));
+
+        return attributes;
+    }
+
+    private Collection<AttributeWrapper> sessionRecordToAttributes(SessionRecord record) {
+        Collection<AttributeWrapper> attributes = new ArrayList<>();
+
+        attributes.add(new AttributeWrapper(ESessionRecordAttributes.RecordId, record.getRecordId()));
+        attributes.add(new AttributeWrapper(ESessionRecordAttributes.SessionId, sessionId));
+        attributes.add(new AttributeWrapper(ESessionRecordAttributes.InventoryId, record.getArticleId()));
+        attributes.add(new AttributeWrapper(ESessionRecordAttributes.RecordQuantity, record.getQuantityInventory()));
+        attributes.add(new AttributeWrapper(ESessionRecordAttributes.QuantityShift, record.getQuantityStock()));
+        attributes.add(new AttributeWrapper(ESessionRecordAttributes.WorkerId, record.getworkerName()));
 
         return attributes;
     }

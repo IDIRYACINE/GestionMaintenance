@@ -12,8 +12,8 @@ import javafx.scene.layout.HBox;
 
 public class AttributeSelector  implements Initializable{
 
-    
-    HBox attributeWrapperNode;
+    @FXML
+    HBox root;
 
     @FXML
     private Label attrbLabel;
@@ -24,6 +24,8 @@ public class AttributeSelector  implements Initializable{
     private Designation attribute;
 
     private Consumer<HBox> onSelect,onDeselect;
+
+    private boolean isSelectedInitially = false;
 
     public AttributeSelector(Designation attributes) {
         this.attribute = attributes;
@@ -39,6 +41,8 @@ public class AttributeSelector  implements Initializable{
         attrbCheckBox.setOnAction(event -> {
             handleCheckBoxToggling();
         });
+
+        attrbCheckBox.setSelected(isSelectedInitially);
         
     }
 
@@ -52,12 +56,18 @@ public class AttributeSelector  implements Initializable{
 
     private void handleCheckBoxToggling() {
         if (attrbCheckBox.isSelected()) {
-            onSelect.accept(attributeWrapperNode);
+            onSelect.accept(root);
 
         } else {
-            onDeselect.accept(attributeWrapperNode);
+            onDeselect.accept(root);
         }
     }
+
+    public void setSelectedInitially(boolean isSelectedInitially) {
+        this.isSelectedInitially = isSelectedInitially;
+    }
+
+    
     
     
 }

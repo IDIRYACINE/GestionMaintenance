@@ -23,8 +23,8 @@ public class UsersQuery extends IUsersQuery {
     }
 
     @Override
-    public void RegisterUser(Collection<AttributeWrapper> attributes) {
-        String query = "INSERT INTO " + ETables.Users + InsertWrapperToQuery(attributes);
+    public void RegisterUser(Collection<AttributeWrapper> fields) {
+        String query = "INSERT INTO " + ETables.Users + InsertWrapperToQuery(fields);
         database.InsertQuery(query);
     }
 
@@ -32,6 +32,8 @@ public class UsersQuery extends IUsersQuery {
     public void UpdateUser(int userId, Collection<AttributeWrapper> attributes) {
         String whereClause = " WHERE " + EUsersAttributes.UserId + "=" + userId;
         String query = "UPDATE " + ETables.Users + UpdateWrapperToQuery(attributes) + whereClause;
+        
+
         database.UpdateQuery(query);
     }
 
@@ -63,10 +65,21 @@ public class UsersQuery extends IUsersQuery {
     }
 
     @Override
-    public void GrantDesignationSupervisior(Collection<AttributeWrapper> attributes) throws SQLException {
-        String query = "INSERT INTO " + ETables.Designations + InsertWrapperToQuery(attributes);
-        database.InsertQuery(query);
+    public void GrantDesignationSupervisior(Collection<DesignationPermission> attributes) throws SQLException {
+        Iterator<DesignationPermission> iterator = attributes.iterator();
+        DesignationPermission permission = iterator.next();
 
+        String query = "INSERT INTO " + ETables.DesignationsPermissions  + " (" + EDesignationsPermissions.UserId + ","
+                + EDesignationsPermissions.DesignationId + ") VALUES (" + permission.getId() + ","
+                + permission.getDesignationId();
+
+        while (iterator.hasNext()) {
+            permission = iterator.next();
+            query += ",(" + permission.getId() + "," + permission.getDesignationId() + ")";
+        }
+        
+        query += ")";        
+        database.InsertQuery(query);
     }
 
     @Override
@@ -158,11 +171,10 @@ public class UsersQuery extends IUsersQuery {
     public ResultSet LoadUserPermissions(int userId) throws SQLException {
 
         String whereClause = " WHERE EXISTS ("
-                + "SELECT * FROM " + ETables.DesignationsPermissions + " WHERE"
+                + "SELECT * FROM " + ETables.DesignationsPermissions + " WHERE "
                 + EDesignationsPermissions.UserId + "=" + userId + ")";
 
         String query = "SELECT * FROM " + ETables.Designations + whereClause;
-
         ResultSet result = database.SelectQuery(query);
 
         return result;

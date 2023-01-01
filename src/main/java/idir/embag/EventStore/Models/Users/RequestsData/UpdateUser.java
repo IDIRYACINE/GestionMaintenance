@@ -2,15 +2,16 @@ package idir.embag.EventStore.Models.Users.RequestsData;
 
 import java.util.Collection;
 
+import idir.embag.DataModels.Users.DesignationPermission;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 
 public class UpdateUser {
     private Collection<AttributeWrapper> fields;
-    private Collection<AttributeWrapper> grantedPermissions;
-    private Collection<AttributeWrapper> unGrantedPermissions;
+    private Collection<DesignationPermission> grantedPermissions;
+    private Collection<DesignationPermission> unGrantedPermissions;
 
-    public UpdateUser(Collection<AttributeWrapper> fields, Collection<AttributeWrapper> grantedPermissions,
-            Collection<AttributeWrapper> unGrantedPermissions) {
+    public UpdateUser(Collection<AttributeWrapper> fields, Collection<DesignationPermission> grantedPermissions,
+            Collection<DesignationPermission> unGrantedPermissions) {
         this.fields = fields;
         this.grantedPermissions = grantedPermissions;
         this.unGrantedPermissions = unGrantedPermissions;
@@ -20,12 +21,16 @@ public class UpdateUser {
         return fields;
     }
 
-    public Collection<AttributeWrapper> getGrantedPermissions() {
+    public Collection<DesignationPermission> getGrantedPermissions() {
         return grantedPermissions;
     }
 
-    public Collection<AttributeWrapper> getUnGrantedPermissions() {
+    public Collection<DesignationPermission> getUnGrantedPermissions() {
         return unGrantedPermissions;
+    }
+
+    public Object getUserId() {
+        return null;
     }
     
 }

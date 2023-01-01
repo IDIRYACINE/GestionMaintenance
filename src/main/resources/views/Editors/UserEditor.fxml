@@ -25,12 +25,12 @@
                   <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                      <children>
                         <Label prefHeight="48.0" prefWidth="60.0" text="Password" />
-                        <MFXTextField fx:id="passowrdField" prefHeight="51.0" prefWidth="188.0" />
+                        <MFXTextField fx:id="passwordField" prefHeight="51.0" prefWidth="188.0" />
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <MFXCheckbox fx:id="isAdminCheckBox" />
+                        <MFXCheckbox fx:id="isAdminCheckbox" />
                         <Label text="IsAdmin" />
                      </children>
                   </HBox>

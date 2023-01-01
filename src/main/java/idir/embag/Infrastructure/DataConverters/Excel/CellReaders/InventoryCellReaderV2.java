@@ -21,10 +21,11 @@ public class InventoryCellReaderV2 implements IExcelCellReader {
     private static final int ARTICLE_NAME = 1;
     private static final int ARTICLE_CODE = 2;
     private static final int FAMILY_CODE = 3;
+    private static final int DESIGNATION_ID = 4;
 
     private static final int ARTICLE_ID_COL = 1;
     private static final int ARTICLE_NAME_COL = 2;
-    // private static final int ARTICLE_CODE_COL = 1;
+    private static final int ARTICLE_DESIGNATION_COL = 7;
     // private static final int FAMILY_CODE_COL = -1;
 
     public InventoryCellReaderV2() {
@@ -34,6 +35,8 @@ public class InventoryCellReaderV2 implements IExcelCellReader {
                 EInventoryAttributes.ArticleName,
                 EInventoryAttributes.ArticleCode,
                 EInventoryAttributes.FamilyCode,
+                EInventoryAttributes.DesignationId,
+
         };
 
     }
@@ -47,24 +50,23 @@ public class InventoryCellReaderV2 implements IExcelCellReader {
         int rowIndex = importWrapper.getStartRow();
 
         AttributeWrapper[] parsedAttributes;
-        
+
         while (rowIndex <= importWrapper.getEndRow()) {
-        Row row = sheet.getRow(rowIndex);
+            Row row = sheet.getRow(rowIndex);
 
-        parsedAttributes = readCells(row);
+            parsedAttributes = readCells(row);
 
-        if (parsedAttributes == null) {
-            System.out.println("Row " + rowIndex + " is null");
-        rowIndex++;
-        continue;
+            if (parsedAttributes == null) {
+                System.out.println("Row " + rowIndex + " is null");
+                rowIndex++;
+                continue;
+            }
+
+            data.add(parsedAttributes);
+
+            rowIndex++;
+
         }
-
-        data.add(parsedAttributes);
-
-        rowIndex++;
-
-        }
-
 
         return data;
 
@@ -85,7 +87,10 @@ public class InventoryCellReaderV2 implements IExcelCellReader {
 
             String articleName = row.getCell(ARTICLE_NAME_COL).getStringCellValue();
 
-            if (articleName == null ) {
+            int designationId = GsonSerialiser.deserialise(row.getCell(ARTICLE_DESIGNATION_COL).getStringCellValue(),
+                    Integer.class);
+
+            if (articleName == null) {
                 return null;
             }
 
@@ -93,15 +98,15 @@ public class InventoryCellReaderV2 implements IExcelCellReader {
                 return null;
             }
 
-
             String sArticleCode = String.valueOf(articleId).substring(0, 4);
             int familyCode = Integer.parseInt(sArticleCode);
 
             attributes[ARTICLE_ID] = new AttributeWrapper(attrbs[ARTICLE_ID], articleId);
             attributes[ARTICLE_CODE] = new AttributeWrapper(attrbs[ARTICLE_CODE], articleId);
             attributes[ARTICLE_NAME] = new AttributeWrapper(attrbs[ARTICLE_NAME], articleName);
-
             attributes[FAMILY_CODE] = new AttributeWrapper(attrbs[FAMILY_CODE], familyCode);
+            attributes[DESIGNATION_ID] = new AttributeWrapper(attrbs[DESIGNATION_ID], designationId);
+
         } catch (Exception e) {
             return null;
         }

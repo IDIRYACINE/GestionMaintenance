@@ -203,6 +203,9 @@ public class SessionGroupHelper implements IEventSubscriber {
         wrappersData.put(EWrappers.LoadWrapper, loadWrapper);
         data.put(EEventsDataKeys.WrappersKeys, wrappersData);
 
+        data.put(EEventsDataKeys.Subscriber, this);
+        data.put(EEventsDataKeys.Instance, LoadRequest.loadGroups());
+
         dispatchEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Load, data);
     }
 

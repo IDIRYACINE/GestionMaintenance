@@ -99,32 +99,15 @@ public class GroupPermissionsModel implements IDataDelegate {
         try {
             LoadRequest loadRequest = DataBundler.retrieveValue(data, EEventsDataKeys.Instance);
 
-            if (loadRequest.isLoadGroups()) {
-               
+            ResultSet designationsResultSet = groupPermissionsQuery.LoadGroupUngrantedPermissions(
+                    loadRequest.getGroup().getDesignationsIds());
 
-                ResultSet permissionsSet = groupPermissionsQuery.LoadGroupPermissions(loadRequest.getGroup().getId());
+            Collection<Designation> designations = designationsRepository
+                    .resultSetToDesignation(designationsResultSet);
 
-                Collection<Designation> designations = designationsRepository.resultSetToDesignation(permissionsSet);
+            data.put(EEventsDataKeys.InstanceCollection, designations);
 
-                data.put(EEventsDataKeys.InstanceCollection, designations);
-
-                notfiyEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Load, data);
-
-            }
-
-            else if (loadRequest.isLoadGroupUngrantedDesignations()) {
-
-                ResultSet designationsResultSet = groupPermissionsQuery.LoadGroupUngrantedPermissions(
-                        loadRequest.getGroup().getDesignationsIds());
-
-                Collection<Designation> designations = designationsRepository
-                        .resultSetToDesignation(designationsResultSet);
-
-                data.put(EEventsDataKeys.InstanceCollection, designations);
-
-                notfiyEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Load, data);
-
-            }
+            notfiyEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Load, data);
 
         } catch (SQLException e) {
             e.printStackTrace();

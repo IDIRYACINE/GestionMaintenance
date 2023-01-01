@@ -59,7 +59,7 @@ public class InventoryEditor extends INodeView implements Initializable , IDialo
         articleIdField.setText(String.valueOf(product.getArticleId()));
         articleNameField.setText(product.getArticleName());
         articleFamilyField.setText(String.valueOf(product.getFamilyCode()));
-        stockIdField.setText(String.valueOf(product.getStockId()));
+        stockIdField.setText(String.valueOf(product.getDesignationId()));
         articleCodeField.setText(String.valueOf(product.getArticleCode()));
     }
 
@@ -87,7 +87,7 @@ public class InventoryEditor extends INodeView implements Initializable , IDialo
         product.setArticleId(Integer.parseInt(articleIdField.getText()));
         product.setFamilyName(articleNameField.getText());
         product.setFamilyCode(Integer.parseInt(articleFamilyField.getText()));
-        product.setStockId(Integer.parseInt(stockIdField.getText()));
+        product.setDesignationId(Integer.parseInt(stockIdField.getText()));
 
 
         DataBundler.bundleNestedData(data, EEventsDataKeys.WrappersKeys, EWrappers.AttributesCollection, getAttributeWrappers());

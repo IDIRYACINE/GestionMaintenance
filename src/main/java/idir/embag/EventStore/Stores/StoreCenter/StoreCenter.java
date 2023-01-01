@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.EventStore.Models.DataConverters.ExcelModel;
 import idir.embag.EventStore.Models.History.HistoryModel;
+import idir.embag.EventStore.Models.Permissions.GroupPermissionsModel;
 import idir.embag.EventStore.Models.Session.SessionGroupModel;
 import idir.embag.EventStore.Models.Session.SessionModel;
 import idir.embag.EventStore.Models.Session.SessionWorkersModel;
@@ -155,6 +156,7 @@ public class StoreCenter implements IStoresCenter {
   }
 
   private void setupDataStore(DatabaseInitialiser databaseInitialiser) {
+
     StockModel stockModel = new StockModel(databaseInitialiser.getProductQuery(), new StockRepository());
     InventoryModel inventoryModel = new InventoryModel(databaseInitialiser.getProductQuery(),
         new InventoryRepository());
@@ -162,20 +164,29 @@ public class StoreCenter implements IStoresCenter {
     WorkersModel workersModel = new WorkersModel(databaseInitialiser.getWorkerQuery(), new WorkersRepository());
 
     SessionRepository sessionRepository = new SessionRepository();
+
     SessionModel sessionModel = new SessionModel(databaseInitialiser.getSessionQuery(), sessionRepository);
+
     SessionWorkersModel sessionWorkersModel = new SessionWorkersModel(databaseInitialiser.getSessionQuery(),
         sessionRepository);
+
     SessionGroupModel sessionGroupModel = new SessionGroupModel(databaseInitialiser.getSessionQuery(),
         sessionRepository);
     HistoryModel historyModel = new HistoryModel(databaseInitialiser.getSessionQuery(), sessionRepository);
 
     DesignationsRepository designationsRepository = new DesignationsRepository();
+
     DesignationModel designationModel = new DesignationModel(databaseInitialiser.getDesignationsQuery(),
         designationsRepository);
+
     PermissionsModel permissionsModel = new PermissionsModel(databaseInitialiser.getDesignationsQuery(),
         databaseInitialiser.getUsersQuery(), designationsRepository);
+
     UsersModel usersModel = new UsersModel(databaseInitialiser.getUsersQuery(), new UsersRepository(),
         designationsRepository);
+
+    GroupPermissionsModel groupPermissionsModel = new GroupPermissionsModel(databaseInitialiser.getDesignationsQuery(),
+        databaseInitialiser.getGroupPermissionsQuery(), designationsRepository);
 
     IDataDelegate[] delegates = new IDataDelegate[IDataStore.DELEGATES_COUNT];
     delegates[IDataStore.STOCK_DELEGATE] = stockModel;
@@ -189,6 +200,7 @@ public class StoreCenter implements IStoresCenter {
     delegates[IDataStore.DESIGNATION_DELEGATE] = designationModel;
     delegates[IDataStore.PERMISSION_DELEGATE] = permissionsModel;
     delegates[IDataStore.USER_DELEGATE] = usersModel;
+    delegates[IDataStore.GROUP_PERMISSION_DELEGATE] = groupPermissionsModel;
 
     stores.put(EStores.DataStore, new DataStore(delegates));
   }

@@ -117,6 +117,7 @@ public class ProductQuery extends IProductQuery{
                 + EInventoryAttributes.ArticleId +" INTEGER PRIMARY KEY,\n"
                 + EInventoryAttributes.ArticleName +" TEXT,\n"
                 + EInventoryAttributes.ArticleCode +" INTEGER,\n"
+                + EInventoryAttributes.DesignationId +" INTEGER,\n"
                 + EInventoryAttributes.FamilyCode +" INTEGER)\n";
 
         database.CreateQuery(query);
@@ -130,11 +131,8 @@ public class ProductQuery extends IProductQuery{
            + EStockAttributes.ArticleName + " TEXT,\n"
            + EStockAttributes.Price + " REAL,\n"
            + EStockAttributes.Quantity + " INTEGER,\n"
-           + EStockAttributes.FamilyCode + " INTEGER,\n"
-           + "FOREIGN KEY ("+ EStockAttributes.FamilyCode +")\n"
-           + "REFERENCES "+ ETables.FamilyCodes +"(" +EFamilyCodeAttributes.FamilyCode +")\n"  
-           + "ON DELETE CASCADE ON UPDATE NO ACTION)";
-
+           + EStockAttributes.FamilyCode + " INTEGER)\n";
+           
         database.CreateQuery(query);
         
     }
@@ -181,15 +179,15 @@ public class ProductQuery extends IProductQuery{
 
     @Override
     public ResultSet LoadInventoryProduct(LoadWrapper parametrers) throws SQLException {
-         String addDesignationRestrictions = addDesignationRestriction(AppState.getInstance().getCurrentUser());
-         String query = "SELECT * FROM "+ETables.Inventory ;
+        String addDesignationRestrictions = addDesignationRestriction(AppState.getInstance().getCurrentUser());
+        String query = "SELECT * FROM "+ETables.Inventory ;
          
          if(!addDesignationRestrictions.equals("")){
-                query += " WHERE " + addDesignationRestrictions ;
-         }
-
-         ResultSet result = database.SelectQuery(query);
-         return result;
+            query += " WHERE " + addDesignationRestrictions ;
+        }
+        
+        ResultSet result = database.SelectQuery(query);
+        return result;
     }
 
     @Override

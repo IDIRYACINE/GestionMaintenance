@@ -45,7 +45,6 @@ public class UsersManagerDialog  extends INodeView implements Initializable, IDi
     @Override
     public void setOnCancel(Runnable callback) {
         cancelTask = callback;
-        
     }
 
     @Override

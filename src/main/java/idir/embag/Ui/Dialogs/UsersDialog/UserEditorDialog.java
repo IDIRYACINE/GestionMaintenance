@@ -9,12 +9,13 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Users.Designation;
+import idir.embag.DataModels.Users.DesignationPermission;
 import idir.embag.DataModels.Users.User;
 import idir.embag.EventStore.Models.Users.RequestsData.UpdateUser;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
-import idir.embag.Types.Infrastructure.Database.Metadata.EDesignationsPermissions;
 import idir.embag.Types.Infrastructure.Database.Metadata.EUsersAttributes;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
@@ -52,7 +53,8 @@ public class UserEditorDialog extends INodeView implements Initializable, IDialo
     @FXML
     private MFXListView<HBox> permissionsListView;
 
-    // use this to keep track of the permissions that ungranted from the granted ones , important to cancel changes
+    // use this to keep track of the permissions that ungranted from the granted
+    // ones , important to cancel changes
     private ArrayList<HBox> revokedPermissions;
 
     // use this to keep track of the permissions that were already granted to user
@@ -60,20 +62,19 @@ public class UserEditorDialog extends INodeView implements Initializable, IDialo
 
     private ArrayList<HBox> newlyGrantedPermissions;
 
-    private ArrayList<Designation> ungrantedDesignations;
+    private ArrayList<Designation> unGrantedDesignations;
 
-    public UserEditorDialog(User user, ArrayList<Designation> designations) {
+    public UserEditorDialog(User user, ArrayList<Designation> unGrantedDesignations) {
         fxmlPath = "/views/Editors/UserEditor.fxml";
         this.user = user;
         
+
         revokedPermissions = new ArrayList<>();
         grantedOnLoadPermissions = new ArrayList<>();
         newlyGrantedPermissions = new ArrayList<>();
 
-        ungrantedDesignations = designations;
+        this.unGrantedDesignations = unGrantedDesignations;
 
-
-        
     }
 
     @Override
@@ -97,18 +98,15 @@ public class UserEditorDialog extends INodeView implements Initializable, IDialo
         usernameField.setText(user.getUserName());
         passwordField.setText(user.getPassword());
         isAdminCheckbox.setSelected(user.isAdmin());
-    
-        
-        ArrayList<HBox> alreadyGranted = createSelectorNodes(user.getDesignations());
-        
-        newlyGrantedPermissions.addAll(alreadyGranted);
+
+        ArrayList<HBox> alreadyGranted = createSelectorNodes(user.getDesignations(),true);
+
         grantedOnLoadPermissions.addAll(alreadyGranted);
 
-        ArrayList<HBox> allPermissions = createSelectorNodes(ungrantedDesignations);
+        ArrayList<HBox> allPermissions = createSelectorNodes(unGrantedDesignations,false);
         allPermissions.addAll(alreadyGranted);
 
         permissionsListView.getItems().setAll(allPermissions);
-
 
     }
 
@@ -121,80 +119,80 @@ public class UserEditorDialog extends INodeView implements Initializable, IDialo
     @FXML
     private void Confirm() {
         Map<EEventsDataKeys, Object> data = new HashMap<>();
-        
+
         setupConfirmation(data);
-        
 
         confirmTask.accept(data);
+        
+        cancelTask.run();
+
     }
 
-
-
-
-    private void setupConfirmation(Map<EEventsDataKeys, Object> data){
+    private void setupConfirmation(Map<EEventsDataKeys, Object> data) {
 
         Collection<AttributeWrapper> fields = new ArrayList<>();
 
         String username = usernameField.getText();
-        if(!username.equals(user.getUserName())){
+        if (!username.equals(user.getUserName())) {
             fields.add(new AttributeWrapper(EUsersAttributes.UserName, username));
             user.setUserName(username);
         }
 
         String password = passwordField.getText();
-        if(!password.equals(user.getPassword())){
+        if (!password.equals(user.getPassword())) {
             fields.add(new AttributeWrapper(EUsersAttributes.Password, password));
             user.setPassword(fxmlPath);
         }
 
         boolean isAdmin = isAdminCheckbox.isSelected();
-        if(isAdmin != user.isAdmin()){
+        if (isAdmin != user.isAdmin()) {
             fields.add(new AttributeWrapper(EUsersAttributes.Admin, isAdmin));
             user.setAdmin(isAdmin);
         }
 
-        Collection<AttributeWrapper> grantedP = new ArrayList<>();
+        Collection<DesignationPermission> grantedP = new ArrayList<>();
 
-        newlyGrantedPermissions.forEach( node -> {
+        newlyGrantedPermissions.forEach(node -> {
+
             Designation designation = (Designation) node.getUserData();
-            
-            grantedP.add(new AttributeWrapper(EDesignationsPermissions.DesignationId, designation));
 
-            if(!user.getDesignations().contains(designation)){
+            grantedP.add(new DesignationPermission(user.getUserId(), designation.getDesignationId()));
+
+            if (!user.getDesignations().contains(designation)) {
                 user.getDesignations().add(designation);
             }
         });
-        
-        Collection<AttributeWrapper> ungrantedP = new ArrayList<>();
-        revokedPermissions.forEach(node ->{
+
+        Collection<DesignationPermission> ungrantedP = new ArrayList<>();
+        revokedPermissions.forEach(node -> {
             Designation designation = (Designation) node.getUserData();
 
-            ungrantedP.add(new AttributeWrapper(EDesignationsPermissions.DesignationId, designation));
+            ungrantedP.add(new DesignationPermission(user.getUserId(), designation.getDesignationId()));
 
-            if(user.getDesignations().contains(designation)){
+            if (user.getDesignations().contains(designation)) {
                 user.getDesignations().remove(designation);
             }
         });
 
-        UpdateUser updateUser = new UpdateUser(fields, grantedP, ungrantedP );
+        UpdateUser updateUser = new UpdateUser(fields, grantedP, ungrantedP);
 
-        data.put(EEventsDataKeys.RequestData, updateUser);
+        DataBundler.appendData(data, EEventsDataKeys.RequestData, updateUser);
 
     }
 
+    private ArrayList<HBox> createSelectorNodes(ArrayList<Designation> designations, boolean selected) {
+        FXMLLoader loader;
+        AttributeSelector controller;
 
-    private ArrayList<HBox> createSelectorNodes(ArrayList<Designation> designations){
-        FXMLLoader loader;     
-        AttributeSelector controller ;
-        
         ArrayList<HBox> attributeSelectorNodes = new ArrayList<>();
 
-        for(int i = 0 ; i < designations.size();i++){
+        for (int i = 0; i < designations.size(); i++) {
             try {
                 loader = new FXMLLoader(getClass().getResource("/views/FilterDialog/AttributeSelectorCell.fxml"));
                 controller = new AttributeSelector(designations.get(i));
                 controller.setOnSelect(this::selectAtrribute);
                 controller.setOnDeselect(this::deselectAttribute);
+                controller.setSelectedInitially(selected);
                 loader.setController(controller);
                 HBox node = loader.load();
                 node.setUserData(designations.get(i));
@@ -205,27 +203,21 @@ public class UserEditorDialog extends INodeView implements Initializable, IDialo
         }
 
         return attributeSelectorNodes;
-        
+
     }
 
-
-    private void selectAtrribute(HBox node){
-        if(revokedPermissions.contains(node)){
+    private void selectAtrribute(HBox node) {
+        if (revokedPermissions.contains(node)) {
             revokedPermissions.remove(node);
         }
         newlyGrantedPermissions.add(node);
     }
 
-    private void deselectAttribute(HBox node){
-        if(grantedOnLoadPermissions.contains(node)){
+    private void deselectAttribute(HBox node) {
+        if (grantedOnLoadPermissions.contains(node)) {
             revokedPermissions.add(node);
         }
-        newlyGrantedPermissions.remove(node);        
+        newlyGrantedPermissions.remove(node);
     }
 
-
-
-
 }
-
-

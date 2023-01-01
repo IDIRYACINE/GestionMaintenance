@@ -25,6 +25,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 public class NavigationSidebar extends INodeView  implements Initializable{
     
@@ -111,7 +112,7 @@ public class NavigationSidebar extends INodeView  implements Initializable{
       setPassiveStyle(activePanelIndex);
 
       labels[index].setStyle("-fx-text-fill:#3683dc;");
-      icons[index].setStyle("-fx-fill:#3683dc;");
+      icons[index].setFill(Color.valueOf("#3683dc"));
       boxes[index].setStyle("-fx-background-color: #eaf4fe;");
 
       activePanelIndex = index;
@@ -120,7 +121,7 @@ public class NavigationSidebar extends INodeView  implements Initializable{
 
     private void setPassiveStyle(int index){
       labels[index].setStyle("-fx-text-fill:#818893;");
-      icons[index].setStyle("-fx-fill:#818893;");
+      icons[index].setFill(Color.valueOf("#818893"));
       boxes[index].setStyle("-fx-background-color: ffffff");
     }
 

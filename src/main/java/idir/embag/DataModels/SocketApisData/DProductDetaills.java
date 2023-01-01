@@ -25,13 +25,12 @@ public class DProductDetaills {
     }
 
     public static DProductDetaills fromInventoryProduct(InventoryProduct product, Timestamp requestTimestamp){
-        // TODO Update database to include location name and id
 
         DProductDetaills details = new DProductDetaills();
         details.barcode = product.getArticleCode();
         details.itemName = product.getArticleName();
         details.locationName = "Location Name";
-        details.locationId = 22;
+        details.locationId = product.getDesignationId();
         details.requestTimestamp = requestTimestamp;
 
         return details;

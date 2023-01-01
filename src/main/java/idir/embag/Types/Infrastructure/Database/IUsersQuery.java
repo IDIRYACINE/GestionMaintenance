@@ -12,14 +12,14 @@ import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 
 public abstract class IUsersQuery extends IQuery{
 
-    public abstract void RegisterUser(Collection<AttributeWrapper> attributes) throws SQLException;
+    public abstract void RegisterUser(Collection<AttributeWrapper> fields) throws SQLException;
     public abstract void UnregisterUser(int userId) throws SQLException;
     public abstract void UpdateUser(int userId,Collection<AttributeWrapper> attributes) throws SQLException;
    
     public abstract ResultSet LoadUsers(LoadWrapper parametrers) throws SQLException;
     public abstract ResultSet SearchUsers(SearchWrapper parameters) throws SQLException;
 
-    public abstract void GrantDesignationSupervisior(Collection<AttributeWrapper> attributes) throws SQLException;
+    public abstract void GrantDesignationSupervisior(Collection<DesignationPermission> attributes) throws SQLException;
     public abstract void RevokeDesignationSupervisior(Collection<DesignationPermission> atributes) throws SQLException;
 
     public abstract ResultSet LoadUserPermissions(int userId) throws SQLException;

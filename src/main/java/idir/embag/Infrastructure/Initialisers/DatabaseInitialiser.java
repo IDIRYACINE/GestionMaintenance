@@ -1,6 +1,7 @@
 package idir.embag.Infrastructure.Initialisers;
 
 import idir.embag.Infrastructure.Database.DesignationsQuery;
+import idir.embag.Infrastructure.Database.GroupPermissionsQuery;
 import idir.embag.Infrastructure.Database.MysqlDatabase;
 import idir.embag.Infrastructure.Database.ProductQuery;
 import idir.embag.Infrastructure.Database.SessionQuery;
@@ -9,6 +10,7 @@ import idir.embag.Infrastructure.Database.WorkerQuery;
 import idir.embag.Types.Infrastructure.Database.IConnectionParameters;
 import idir.embag.Types.Infrastructure.Database.IDatabase;
 import idir.embag.Types.Infrastructure.Database.IDesignationsQuery;
+import idir.embag.Types.Infrastructure.Database.IGroupPermissionsQuery;
 import idir.embag.Types.Infrastructure.Database.IProductQuery;
 import idir.embag.Types.Infrastructure.Database.ISessionQuery;
 import idir.embag.Types.Infrastructure.Database.IUsersQuery;
@@ -22,6 +24,7 @@ public class DatabaseInitialiser {
     private IDatabase database;
     private IUsersQuery usersQuery;
     private IDesignationsQuery designationsQuery;
+    private IGroupPermissionsQuery groupPermissionsQuery;
 
     public DatabaseInitialiser() {
         database = new MysqlDatabase();
@@ -30,6 +33,7 @@ public class DatabaseInitialiser {
         workerQuery = new WorkerQuery(database);
         usersQuery = new UsersQuery(database);
         designationsQuery = new DesignationsQuery(database);
+        groupPermissionsQuery = new GroupPermissionsQuery(database);
     }
 
     public IProductQuery getProductQuery() {
@@ -52,6 +56,10 @@ public class DatabaseInitialiser {
         return designationsQuery;
     }
 
+    public IGroupPermissionsQuery getGroupPermissionsQuery() {
+        return groupPermissionsQuery;
+    }
+
     public void createTables() {
         try {
             productQuery.CreateFamiLyCodesTable();
@@ -69,6 +77,8 @@ public class DatabaseInitialiser {
             designationsQuery.CreatePermissionsTable();
 
             usersQuery.CreateUsersTable();
+
+            groupPermissionsQuery.CreateGroupPermissionsTable();
 
         } catch (Exception e) {
             e.printStackTrace();

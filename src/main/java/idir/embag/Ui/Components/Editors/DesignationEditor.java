@@ -12,7 +12,7 @@ import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Users.Designation;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
-import idir.embag.Types.Infrastructure.Database.Metadata.EFamilyCodeAttributes;
+import idir.embag.Types.Infrastructure.Database.Metadata.EDesignationAttributes;
 import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
@@ -93,8 +93,8 @@ public class DesignationEditor extends INodeView implements Initializable , IDia
     private Collection<AttributeWrapper> getAttributeWrappers(){
         Collection<AttributeWrapper> attributes = new ArrayList<AttributeWrapper>();
 
-        attributes.add(new AttributeWrapper(EFamilyCodeAttributes.FamilyName,nameField.getText()));
-        attributes.add(new AttributeWrapper(EFamilyCodeAttributes.FamilyCode,idField.getText()));
+        attributes.add(new AttributeWrapper(EDesignationAttributes.DesignationName,nameField.getText()));
+        attributes.add(new AttributeWrapper(EDesignationAttributes.DesignationId,idField.getText()));
 
 
         return attributes;

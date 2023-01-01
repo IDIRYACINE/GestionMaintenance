@@ -33,7 +33,7 @@ public class InventoryCellWriter implements IExcelCellWriter<InventoryProduct> {
             Row row = sheet.createRow(currentRowIndex);
 
             createAndSetCellValue(0, row, product.getArticleId());
-            createAndSetCellValue(1, row, product.getStockId());
+            createAndSetCellValue(1, row, product.getDesignationId());
             createAndSetCellValue(2, row, product.getFamilyCode());
             createAndSetCellValue(3, row, product.getArticleName());
             createAndSetCellValue(4, row, product.getArticleCode());

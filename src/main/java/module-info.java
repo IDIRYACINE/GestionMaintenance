@@ -37,7 +37,7 @@ module idir.embag {
 
 
     opens idir.embag.Ui.Dialogs to javafx.fxml;
-
+    opens idir.embag.Ui.Dialogs.UsersDialog.Components to javafx.fxml;
     opens idir.embag.DataModels.ApiBodyResponses to com.google.gson;
     opens idir.embag.DataModels.Products to com.google.gson;
     opens idir.embag.DataModels.Session to com.google.gson;

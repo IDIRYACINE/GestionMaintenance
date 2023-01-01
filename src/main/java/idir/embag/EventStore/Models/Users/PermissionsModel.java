@@ -13,7 +13,6 @@ import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Repository.DesignationsRepository;
 import idir.embag.Types.Infrastructure.Database.IDesignationsQuery;
 import idir.embag.Types.Infrastructure.Database.IUsersQuery;
-import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Stores.DataStore.IDataDelegate;
@@ -38,7 +37,7 @@ public class PermissionsModel implements IDataDelegate {
     @Override
     public void add(Map<EEventsDataKeys, Object> data) {
         try {
-            Collection<AttributeWrapper> wrappers = DataBundler.retrieveNestedValue(data, EEventsDataKeys.WrappersKeys,
+            Collection<DesignationPermission> wrappers = DataBundler.retrieveNestedValue(data, EEventsDataKeys.WrappersKeys,
                     EWrappers.AttributesCollection);
 
                     usersQuery.GrantDesignationSupervisior(wrappers);

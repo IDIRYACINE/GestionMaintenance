@@ -2,14 +2,13 @@ package idir.embag.Repository;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import idir.embag.DataModels.Users.Designation;
 import idir.embag.Types.Infrastructure.Database.Metadata.EDesignationAttributes;
 
 public class DesignationsRepository {
 
-    public Collection<Designation> resultSetToDesignation(ResultSet designationsSource) {
+    public ArrayList<Designation> resultSetToDesignation(ResultSet designationsSource) {
         ArrayList<Designation> result = new ArrayList<Designation>();
 
         try {

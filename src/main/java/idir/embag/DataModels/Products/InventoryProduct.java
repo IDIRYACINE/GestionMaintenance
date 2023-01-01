@@ -11,21 +11,21 @@ public class InventoryProduct {
     private int articleQuantity;
 
     private double articlePrice;
-    
+
     private int familyCode;
 
-    private int stockId;
+    private int designationId;
 
-
-    public InventoryProduct(int articleId, String articleName, int articleCodebar, int articleQuantity, double articlePrice,
-            int familyCode,int stockId) {
+    public InventoryProduct(int articleId, String articleName, int articleCodebar, int articleQuantity,
+            double articlePrice,
+            int familyCode, int stockId) {
         this.articleId = articleId;
         this.articleName = articleName;
         this.articleCodebar = articleCodebar;
         this.articleQuantity = articleQuantity;
         this.articlePrice = articlePrice;
         this.familyCode = familyCode;
-        this.stockId = stockId;
+        this.designationId = stockId;
     }
 
     public int getArticleCode() {
@@ -52,23 +52,22 @@ public class InventoryProduct {
         return articleId;
     }
 
-
     public void setArticleId(int articleId) {
         this.articleId = articleId;
     }
 
     public void setArticleCode(int articleCode) {
         this.articleCodebar = articleCode;
-        
+
     }
 
     public void setFamilyName(String articleName) {
-       this.articleName = articleName;
+        this.articleName = articleName;
     }
 
     public void setFamilyCode(int familyCode) {
         this.familyCode = familyCode;
-        
+
     }
 
     public void setQuantity(int quantity) {
@@ -79,13 +78,12 @@ public class InventoryProduct {
         this.articlePrice = price;
     }
 
-    public int getStockId() {
-        return stockId;
+    public int getDesignationId() {
+        return designationId;
     }
 
-    public void setStockId(int id) {
-        stockId = id;        
+    public void setDesignationId(int id) {
+        designationId = id;
     }
-    
-    
+
 }
