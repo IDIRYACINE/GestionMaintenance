@@ -109,7 +109,8 @@ public class SessionController implements IEventSubscriber {
                 setRecords(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.InstanceCollection));
                 break;
             case OpenSession:
-                setActiveSession(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.Instance));
+                Session session = DataBundler.retrieveValue(event.getData(), EEventsDataKeys.Instance);
+                setActiveSession(session.getSessionId());
                 break;
             case Load:
                 setActiveSession(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.Instance));

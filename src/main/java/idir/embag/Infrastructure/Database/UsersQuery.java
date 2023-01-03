@@ -170,13 +170,13 @@ public class UsersQuery extends IUsersQuery {
     @Override
     public ResultSet LoadUserPermissions(int userId) throws SQLException {
 
-        String whereClause = " WHERE EXISTS ("
-                + "SELECT * FROM " + ETables.DesignationsPermissions + " WHERE "
+        String whereClause = " WHERE "+ EDesignationsPermissions.DesignationId+" IN ("
+                + "SELECT "+EDesignationsPermissions.DesignationId+" FROM " + ETables.DesignationsPermissions + " WHERE "
                 + EDesignationsPermissions.UserId + "=" + userId + ")";
 
         String query = "SELECT * FROM " + ETables.Designations + whereClause;
         ResultSet result = database.SelectQuery(query);
-
+        
         return result;
     }
 

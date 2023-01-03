@@ -18,14 +18,14 @@ public class InventoryProduct {
 
     public InventoryProduct(int articleId, String articleName, int articleCodebar, int articleQuantity,
             double articlePrice,
-            int familyCode, int stockId) {
+            int familyCode, int designationId) {
         this.articleId = articleId;
         this.articleName = articleName;
         this.articleCodebar = articleCodebar;
         this.articleQuantity = articleQuantity;
         this.articlePrice = articlePrice;
         this.familyCode = familyCode;
-        this.designationId = stockId;
+        this.designationId = designationId;
     }
 
     public int getArticleCode() {

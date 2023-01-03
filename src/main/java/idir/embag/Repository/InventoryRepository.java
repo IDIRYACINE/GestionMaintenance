@@ -19,7 +19,7 @@ public class InventoryRepository {
                     1,
                     0,
                     source.getInt(EStockAttributes.FamilyCode.toString()),
-                    0));
+                    source.getInt(EInventoryAttributes.DesignationId.toString())));
                   
             }
         } catch (Exception e) {

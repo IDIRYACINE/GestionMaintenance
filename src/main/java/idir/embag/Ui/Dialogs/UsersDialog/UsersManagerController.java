@@ -34,6 +34,10 @@ public class UsersManagerController implements IEventSubscriber {
 
     private MFXTableView<User> usersTable;
 
+    UsersManagerController() {
+        StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.UsersEvent, this);
+    }
+
     public void notifyActive(MFXTableView<User> usersTable) {
         this.usersTable = usersTable;
         setupTable();
@@ -59,7 +63,7 @@ public class UsersManagerController implements IEventSubscriber {
     public void notifyEvent(StoreEvent event) {
         switch (event.getAction()) {
             case Load:
-                handleLoad(event);
+                setElements( DataBundler.retrieveValue(event.getData(), EEventsDataKeys.InstanceCollection));
                 break;
             case Add:
                 addElement(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.Instance));
@@ -74,25 +78,7 @@ public class UsersManagerController implements IEventSubscriber {
 
     }
 
-    private void handleLoad(StoreEvent event) {
-        LoadRequest request = DataBundler.retrieveValue(event.getData(), EEventsDataKeys.Instance);
 
-        if(request.isLoadUsers()){
-            setElements(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.InstanceCollection));
-        }
-
-        else if(request.isLoadUserUngrantedDesignations()){
-            ArrayList<Designation> designations = DataBundler.retrieveValue(event.getData(), EEventsDataKeys.InstanceCollection);
-            updateUserDialog(request.getUser(), designations);
-        }
-
-        else if(request.isLoadAllDesignations()){
-            User user = new User(AppState.getInstance().getWorkerCurrId(), null, null, false, null);
-            ArrayList<Designation> designations = DataBundler.retrieveValue(event.getData(), EEventsDataKeys.InstanceCollection);
-            addUserDialog(user,  designations);
-        }
-
-    }
 
     private void addElement(User user) {
         usersTable.getItems().add(user);
@@ -126,20 +112,9 @@ public class UsersManagerController implements IEventSubscriber {
     }
 
     public void addUser() {
-        
-        Map<EEventsDataKeys, Object> data = new HashMap<>();
-        StoreCenter storeCenter = StoreCenter.getInstance();
-
-        Map<EWrappers, Object> wrappersData = new HashMap<>();
-        LoadWrapper loadWrapper = new LoadWrapper(1000, 0);
-        wrappersData.put(EWrappers.LoadWrapper, loadWrapper);
-
-
-        data.put(EEventsDataKeys.WrappersKeys, wrappersData);
-        data.put(EEventsDataKeys.Subscriber, this);
-        data.put(EEventsDataKeys.Instance, LoadRequest.loadAllDesignations());
-        storeCenter.dispatchEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Load, data);
-
+        // by default this is available for only admins . they have all designations preloaded
+        User user = new User(AppState.getInstance().getWorkerCurrId() + 1, "", null, false, null);
+        addUserDialog(user,  user.getDesignations());
     }
 
     public void updateUser() {
@@ -147,13 +122,17 @@ public class UsersManagerController implements IEventSubscriber {
 
        
         if (user != null) {
-            Map<EEventsDataKeys, Object> data = new HashMap<>();
-            StoreCenter storeCenter = StoreCenter.getInstance();
-            
-            data.put(EEventsDataKeys.Subscriber, this);
-            data.put(EEventsDataKeys.Instance, LoadRequest.loadUserUngrantedDesignationsRequest(user));
-            storeCenter.dispatchEvent(EStores.DataStore, EStoreEvents.UsersEvent, EStoreEventAction.Load, data);
-    
+            ArrayList<Designation> adminDesignations = user.getDesignations();
+            ArrayList<Designation> userDesignations = new ArrayList<>();
+            ArrayList<Designation> ungrantedDesignations = new ArrayList<>();
+
+            for (Designation designation : adminDesignations) {
+                if (!userDesignations.contains(designation)) {
+                    ungrantedDesignations.add(designation);
+                }
+            }
+
+            updateUserDialog(user, ungrantedDesignations);
         }
     }
 
@@ -182,6 +161,8 @@ public class UsersManagerController implements IEventSubscriber {
         dialogContent.setOnConfirm(other -> {
             other.put(EEventsDataKeys.Instance, user);
             AppState.getInstance().nextWorkerCurrId();
+
+
             storeCenter.dispatchEvent(EStores.DataStore, EStoreEvents.UsersEvent, EStoreEventAction.Add, other);
 
         });

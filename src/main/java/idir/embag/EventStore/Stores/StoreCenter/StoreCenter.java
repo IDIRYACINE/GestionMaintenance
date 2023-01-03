@@ -183,7 +183,7 @@ public class StoreCenter implements IStoresCenter {
         databaseInitialiser.getUsersQuery(), designationsRepository);
 
     UsersModel usersModel = new UsersModel(databaseInitialiser.getUsersQuery(), new UsersRepository(),
-        designationsRepository);
+        designationsRepository, databaseInitialiser.getDesignationsQuery());
 
     GroupPermissionsModel groupPermissionsModel = new GroupPermissionsModel(databaseInitialiser.getDesignationsQuery(),
         databaseInitialiser.getGroupPermissionsQuery(), designationsRepository);

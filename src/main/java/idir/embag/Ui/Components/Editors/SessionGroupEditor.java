@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+
+import idir.embag.Application.State.AppState;
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.SessionGroup;
@@ -56,7 +58,7 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
 
     private ArrayList<Designation> ungrantedDesignations;
     
-    public SessionGroupEditor(SessionGroup group, ArrayList<Designation> designations) {
+    public SessionGroupEditor(SessionGroup group, ArrayList<Designation> unGranteddesignations) {
         this.group = group;
         fxmlPath = "/views/Editors/SessionGroupEditor.fxml";
 
@@ -64,7 +66,7 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
         grantedOnLoadPermissions = new ArrayList<>();
         newlyGrantedPermissions = new ArrayList<>();
 
-        ungrantedDesignations = designations;
+        ungrantedDesignations = unGranteddesignations;
     }
 
     @Override
@@ -127,6 +129,11 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
             group.setName(groupName);
         }
 
+        if(group.getName().equals("")){
+            fields.add(new AttributeWrapper(ESessionGroupAttributes.GroupSupervisorId, AppState.getInstance().getCurrentUser().getUserId()));
+        }
+
+        fields.add(new AttributeWrapper(ESessionGroupAttributes.GroupName, groupNameField.getText()));
 
         
         data.put(EEventsDataKeys.Instance, group);

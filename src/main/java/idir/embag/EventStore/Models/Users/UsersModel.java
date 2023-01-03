@@ -15,6 +15,7 @@ import idir.embag.EventStore.Models.Users.RequestsData.UpdateUser;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Repository.DesignationsRepository;
 import idir.embag.Repository.UsersRepository;
+import idir.embag.Types.Infrastructure.Database.IDesignationsQuery;
 import idir.embag.Types.Infrastructure.Database.IUsersQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
@@ -31,12 +32,14 @@ public class UsersModel implements IDataDelegate {
     private IUsersQuery usersQuery;
     private UsersRepository usersRepository;
     private DesignationsRepository designationRepository;
+    private IDesignationsQuery designationsQuery;
 
     public UsersModel(IUsersQuery usersQuery, UsersRepository usersRepository,
-            DesignationsRepository designationsRepository) {
+            DesignationsRepository designationsRepository, IDesignationsQuery designationsQuery) {
         this.usersQuery = usersQuery;
         this.usersRepository = usersRepository;
         this.designationRepository = designationsRepository;
+        this.designationsQuery = designationsQuery;
     }
 
     @Override
@@ -105,13 +108,8 @@ public class UsersModel implements IDataDelegate {
 
             Collection<User> users = usersRepository.resultSetToUsers(resultSet);
 
-            ResultSet designationsResultSet;
-            ArrayList<Designation> designations;
-
             for (User user : users) {
-                designationsResultSet = usersQuery.LoadUserPermissions(user.getUserId());
-                designations = designationRepository.resultSetToDesignation(designationsResultSet);
-                user.setDesignations(designations);
+                fetchAndSetUserDesignations(user);
             }
 
             data.put(EEventsDataKeys.InstanceCollection, users);
@@ -120,6 +118,29 @@ public class UsersModel implements IDataDelegate {
         } catch (SQLException e) {
             e.printStackTrace();
 
+        }
+    }
+
+    private void fetchAndSetUserDesignations(User user) {
+
+        ResultSet designationsResultSet;
+        ArrayList<Designation> designations;
+        try {
+            if (user.isAdmin()) {
+                LoadWrapper loadWrapper = new LoadWrapper(1000, 0);
+                designationsResultSet = designationsQuery.LoadDesignations(loadWrapper);
+                designations = designationRepository.resultSetToDesignation(designationsResultSet);
+                user.setDesignations(designations);
+
+                return;
+            }
+
+            designationsResultSet = usersQuery.LoadUserPermissions(user.getUserId());
+            designations = designationRepository.resultSetToDesignation(designationsResultSet);
+            user.setDesignations(designations);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -136,13 +157,9 @@ public class UsersModel implements IDataDelegate {
 
                 Collection<User> users = usersRepository.resultSetToUsers(usersSet);
 
-                ResultSet designationsResultSet;
-                ArrayList<Designation> designations;
-
                 for (User user : users) {
-                    designationsResultSet = usersQuery.LoadUserPermissions(user.getUserId());
-                    designations = designationRepository.resultSetToDesignation(designationsResultSet);
-                    user.setDesignations(designations);
+                    fetchAndSetUserDesignations(user);
+
                 }
 
                 data.put(EEventsDataKeys.InstanceCollection, users);

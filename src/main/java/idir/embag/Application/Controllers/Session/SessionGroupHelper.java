@@ -1,6 +1,5 @@
 package idir.embag.Application.Controllers.Session;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -12,9 +11,13 @@ import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.SessionGroup;
 import idir.embag.DataModels.Users.Designation;
+import idir.embag.DataModels.Users.User;
 import idir.embag.EventStore.Models.Permissions.RequestsData.LoadRequest;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
+import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
+import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
+import idir.embag.Types.Infrastructure.Database.Metadata.ESessionGroupAttributes;
 import idir.embag.Types.MetaData.ENavigationKeys;
 import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Stores.Generics.IEventSubscriber;
@@ -47,42 +50,22 @@ public class SessionGroupHelper implements IEventSubscriber {
             setElements(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.InstanceCollection));
         }
 
-        else if (request.isLoadGroupUngrantedDesignations()) {
-            ArrayList<Designation> designations = DataBundler.retrieveValue(event.getData(),
-                    EEventsDataKeys.InstanceCollection);
-            updateSessionGroupDialog(request.getGroup(), designations);
-        }
-
-        else if (request.isLoadAllDesignations()) {
-            Timestamp sessionId = SessionController.sessionId;
-            AppState appState = AppState.getInstance();
-
-            SessionGroup group = new SessionGroup(appState.getSessionGroupCurrId(), "", sessionId, new ArrayList<Designation>());
-            
-            ArrayList<Designation> designations = DataBundler.retrieveValue(event.getData(),
-                    EEventsDataKeys.InstanceCollection);
-            addSessionGroupDialog(group, designations);
-        }
-
     }
 
     public void add() {
-        Map<EEventsDataKeys, Object> data = new HashMap<>();
-        StoreCenter storeCenter = StoreCenter.getInstance();
+        AppState appState = AppState.getInstance();
+        User user = appState.getCurrentUser();
 
-        Map<EWrappers, Object> wrappersData = new HashMap<>();
-        LoadWrapper loadWrapper = new LoadWrapper(1000, 0);
-        wrappersData.put(EWrappers.LoadWrapper, loadWrapper);
+        SessionGroup group = new SessionGroup(appState.getSessionGroupCurrId(), "", SessionController.sessionId,
+                new ArrayList<Designation>());
 
-        data.put(EEventsDataKeys.WrappersKeys, wrappersData);
-        data.put(EEventsDataKeys.Subscriber, this);
-        data.put(EEventsDataKeys.Instance, LoadRequest.loadAllDesignations());
-        storeCenter.dispatchEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Load, data);
+        addSessionGroupDialog(group, user.getDesignations());
+
     }
 
-    private void addSessionGroupDialog(SessionGroup group, ArrayList<Designation> designations) {
+    private void addSessionGroupDialog(SessionGroup group, ArrayList<Designation> ungratedDesignations) {
 
-        SessionGroupEditor dialogContent = new SessionGroupEditor(group, designations);
+        SessionGroupEditor dialogContent = new SessionGroupEditor(group, ungratedDesignations);
 
         Map<EEventsDataKeys, Object> data = new HashMap<>();
 
@@ -92,6 +75,7 @@ public class SessionGroupHelper implements IEventSubscriber {
 
         dialogContent.setOnConfirm(requestData -> {
             requestData.put(EEventsDataKeys.Instance, group);
+
             dispatchEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Add, requestData);
             dispatchEvent(EStores.DataStore, EStoreEvents.GroupPermissionsEvent, EStoreEventAction.Add, requestData);
 
@@ -108,19 +92,23 @@ public class SessionGroupHelper implements IEventSubscriber {
         SessionGroup group = tableSessionGroups.getSelectionModel().getSelectedValues().get(0);
 
         if (group != null) {
-            Map<EEventsDataKeys, Object> data = new HashMap<>();
-            StoreCenter storeCenter = StoreCenter.getInstance();
+            ArrayList<Designation> userDesignations = AppState.getInstance().getCurrentUser().getDesignations();
+            ArrayList<Designation> unGrantedGroupDesignations = new ArrayList<>();
+            ArrayList<Designation> groupDesignations = group.getDesignations();
 
-            data.put(EEventsDataKeys.Subscriber, this);
-            data.put(EEventsDataKeys.Instance, LoadRequest.loadGroupUngrantedDesignationsRequest(group));
-            storeCenter.dispatchEvent(EStores.DataStore, EStoreEvents.GroupPermissionsEvent, EStoreEventAction.Load, data);
+            userDesignations.forEach(designation -> {
+                if (!groupDesignations.contains(designation))
+                    unGrantedGroupDesignations.add(designation);
+            });
+
+            updateSessionGroupDialog(group, unGrantedGroupDesignations);
 
         }
     }
 
-    private void updateSessionGroupDialog(SessionGroup group, ArrayList<Designation> designations) {
+    private void updateSessionGroupDialog(SessionGroup group, ArrayList<Designation> ungrantedDesignations) {
 
-        SessionGroupEditor dialogContent = new SessionGroupEditor(group, designations);
+        SessionGroupEditor dialogContent = new SessionGroupEditor(group, ungrantedDesignations);
 
         Map<EEventsDataKeys, Object> data = new HashMap<>();
 
@@ -208,17 +196,42 @@ public class SessionGroupHelper implements IEventSubscriber {
 
     private void refresh() {
         Map<EEventsDataKeys, Object> data = new HashMap<>();
-        LoadWrapper loadWrapper = new LoadWrapper(100, 0);
-
         Map<EWrappers, Object> wrappersData = new HashMap<>();
-        wrappersData.put(EWrappers.LoadWrapper, loadWrapper);
-        data.put(EEventsDataKeys.WrappersKeys, wrappersData);
 
         data.put(EEventsDataKeys.Subscriber, this);
-        data.put(EEventsDataKeys.Instance, LoadRequest.loadGroups());
 
-        dispatchEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Load, data);
-    }
+        User user = AppState.getInstance().getCurrentUser();
+
+        if (user.isAdmin()) {
+
+    
+            LoadWrapper loadWrapper = new LoadWrapper(1000,0);
+
+            wrappersData.put(EWrappers.LoadWrapper, loadWrapper);
+
+            data.put(EEventsDataKeys.WrappersKeys, wrappersData);
+
+
+            data.put(EEventsDataKeys.Instance, LoadRequest.loadGroups());
+    
+            dispatchEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Load, data);
+  
+        }
+
+        else {
+                
+            ArrayList<AttributeWrapper> attributes = new ArrayList<>();
+            attributes.add(new AttributeWrapper(ESessionGroupAttributes.GroupSupervisorId, user.getUserId()));
+            SearchWrapper searchParams = new SearchWrapper(attributes);
+
+            wrappersData.put(EWrappers.SearchWrapper, searchParams);
+
+            data.put(EEventsDataKeys.WrappersKeys, wrappersData);
+    
+            dispatchEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Search, data);
+  
+        }
+  }
 
     private void setColumns() {
         MFXTableColumn<SessionGroup> idColumn = new MFXTableColumn<>(Names.GroupId, true,

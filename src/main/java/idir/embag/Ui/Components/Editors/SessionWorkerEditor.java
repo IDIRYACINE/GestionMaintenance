@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import idir.embag.Application.State.AppState;
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.SessionGroup;
@@ -24,27 +25,26 @@ import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
 
-public class SessionWorkerEditor extends INodeView implements Initializable , IDialogContent {
+public class SessionWorkerEditor extends INodeView implements Initializable, IDialogContent {
 
-    
     @FXML
     private Node root;
 
     @FXML
-    private TextField usernameField,passwordField;
+    private TextField usernameField, passwordField;
 
     @FXML
     private MFXComboBox<SessionGroup> groupComboBox;
 
     private Runnable cancelTask;
 
-    private Consumer<Map<EEventsDataKeys,Object>> confirmTask;
+    private Consumer<Map<EEventsDataKeys, Object>> confirmTask;
 
     private SessionWorker worker;
 
     private Collection<SessionGroup> groups;
 
-    public SessionWorkerEditor(SessionWorker worker,Collection<SessionGroup> groups) {
+    public SessionWorkerEditor(SessionWorker worker, Collection<SessionGroup> groups) {
         this.worker = worker;
         fxmlPath = "/views/Editors/SessionWorkerEditor.fxml";
         this.groups = groups;
@@ -60,8 +60,6 @@ public class SessionWorkerEditor extends INodeView implements Initializable , ID
     public void setOnCancel(Runnable callback) {
         this.cancelTask = callback;
     }
-
-   
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -93,52 +91,54 @@ public class SessionWorkerEditor extends INodeView implements Initializable , ID
     }
 
     @FXML
-    private void onConfirm(){
-        
-        Map<EEventsDataKeys,Object> data = new HashMap<>();
+    private void onConfirm() {
+
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
         setupConfirm(data);
 
         confirmTask.accept(data);
         cancelTask.run();
     }
-    
+
     @FXML
-    private void onCancel(){
+    private void onCancel() {
         cancelTask.run();
     }
 
-    private void setupConfirm(Map<EEventsDataKeys,Object> data){
+    private void setupConfirm(Map<EEventsDataKeys, Object> data) {
         worker.setPassword(passwordField.getText());
 
-        DataBundler.bundleNestedData(data, EEventsDataKeys.WrappersKeys, EWrappers.AttributesCollection, getAttributeWrappers());
+        DataBundler.bundleNestedData(data, EEventsDataKeys.WrappersKeys, EWrappers.AttributesCollection,
+                getAttributeWrappers());
         data.put(EEventsDataKeys.Instance, worker);
     }
 
-    private Collection<AttributeWrapper> getAttributeWrappers(){
+    private Collection<AttributeWrapper> getAttributeWrappers() {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-
         Collection<AttributeWrapper> attributes = new ArrayList<AttributeWrapper>();
 
-        if(!username.equals(worker.getUsername()))
-            attributes.add(new AttributeWrapper(ESessionWorkerAttributes.Username,worker.getUsername()));
-        
-        if(!password.equals(worker.getPassword()))
-            attributes.add(new AttributeWrapper(ESessionWorkerAttributes.Password,worker.getPassword()));
-      
+        if (username.equals(""))
+            attributes.add(new AttributeWrapper(ESessionWorkerAttributes.SupervisorId,
+                    AppState.getInstance().getCurrentUser().getUserId()));
+
+        if (!username.equals(worker.getUsername()))
+            attributes.add(new AttributeWrapper(ESessionWorkerAttributes.Username, worker.getUsername()));
+
+        if (!password.equals(worker.getPassword()))
+            attributes.add(new AttributeWrapper(ESessionWorkerAttributes.Password, worker.getPassword()));
+
         return attributes;
     }
 
-
-    private void setCurrentWorkerGroupAsSelected(){
+    private void setCurrentWorkerGroupAsSelected() {
         for (SessionGroup group : groups) {
-            if(group.getId() == worker.getGroupId()){
+            if (group.getId() == worker.getGroupId()) {
                 groupComboBox.getSelectionModel().selectItem(group);
                 break;
             }
         }
     }
-    
-}
 
+}

@@ -21,18 +21,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 
-public class WorkerEditor extends INodeView implements Initializable , IDialogContent {
+public class WorkerEditor extends INodeView implements Initializable, IDialogContent {
 
-    
     @FXML
     private Node root;
 
     @FXML
-    private TextField workerNameField,workerPhoneField,workerEmailField;
+    private TextField workerNameField, workerPhoneField, workerEmailField;
 
     private Runnable cancelTask;
 
-    private Consumer<Map<EEventsDataKeys,Object>> confirmTask;
+    private Consumer<Map<EEventsDataKeys, Object>> confirmTask;
 
     private Worker worker;
 
@@ -52,7 +51,6 @@ public class WorkerEditor extends INodeView implements Initializable , IDialogCo
         this.cancelTask = callback;
     }
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         workerEmailField.setText(worker.getEmail());
@@ -66,38 +64,50 @@ public class WorkerEditor extends INodeView implements Initializable , IDialogCo
     }
 
     @FXML
-    private void onConfirm(){
-        
-        Map<EEventsDataKeys,Object> data = new HashMap<>();
+    private void onConfirm() {
+
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
         setupConfirm(data);
 
         confirmTask.accept(data);
         cancelTask.run();
     }
-    
+
     @FXML
-    private void onCancel(){
+    private void onCancel() {
         cancelTask.run();
     }
 
-    private void setupConfirm(Map<EEventsDataKeys,Object> data){
-        worker.setEmail(workerEmailField.getText());
-        worker.setName(workerNameField.getText());
-        worker.setPhone(Integer.parseInt(workerPhoneField.getText()));
+    private void setupConfirm(Map<EEventsDataKeys, Object> data) {
 
-        DataBundler.bundleNestedData(data, EEventsDataKeys.WrappersKeys, EWrappers.AttributesCollection, getAttributeWrappers());
+        DataBundler.bundleNestedData(data, EEventsDataKeys.WrappersKeys, EWrappers.AttributesCollection,
+                getAttributeWrappers());
         data.put(EEventsDataKeys.Instance, worker);
     }
 
-    private Collection<AttributeWrapper> getAttributeWrappers(){
+    private Collection<AttributeWrapper> getAttributeWrappers() {
         Collection<AttributeWrapper> attributes = new ArrayList<AttributeWrapper>();
+
+        String email = workerEmailField.getText();
+        if (!email.equals(worker.getEmail())) {
+            attributes.add(new AttributeWrapper(EWorkerAttributes.WorkerEmail, email));
+            worker.setEmail(email);
+        }
         
-        attributes.add(new AttributeWrapper(EWorkerAttributes.WorkerName,workerNameField.getText()));
-        attributes.add(new AttributeWrapper(EWorkerAttributes.WorkerEmail,workerEmailField.getText()));
-        attributes.add(new AttributeWrapper(EWorkerAttributes.WorkerPhone,workerPhoneField.getText()));
+        String name = workerNameField.getText();
+        if (!name.equals(worker.getName())) {
+            attributes.add(new AttributeWrapper(EWorkerAttributes.WorkerName, name));
+            worker.setName(name);
+        }
+
+        int phone = Integer.parseInt(workerPhoneField.getText());
+        if (phone != worker.getPhone()) {
+            worker.setPhone(phone);
+            attributes.add(new AttributeWrapper(EWorkerAttributes.WorkerPhone, workerPhoneField.getText()));
+
+        }
 
         return attributes;
     }
 
-    
 }

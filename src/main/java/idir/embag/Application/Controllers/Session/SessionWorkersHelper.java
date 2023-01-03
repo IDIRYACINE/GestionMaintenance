@@ -1,14 +1,21 @@
 package idir.embag.Application.Controllers.Session;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+
+import idir.embag.Application.State.AppState;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.SessionGroup;
+import idir.embag.DataModels.Users.User;
 import idir.embag.DataModels.Workers.SessionWorker;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
+import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
+import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
+import idir.embag.Types.Infrastructure.Database.Metadata.ESessionWorkerAttributes;
 import idir.embag.Types.MetaData.ENavigationKeys;
 import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Stores.Generics.IEventSubscriber;
@@ -33,28 +40,6 @@ public class SessionWorkersHelper implements IEventSubscriber {
 
     public SessionWorkersHelper() {
         StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.SessionWorkerEvent, this);
-    }
-
-    public void add() {
-
-        // SessionWorker worker = new SessionWorker(0, "", "", "", "", 0);
-
-        // SessionWorkerEditor dialogContent = new SessionWorkerEditor(worker);
-
-        // Map<EEventsDataKeys, Object> data = new HashMap<>();
-
-        // Map<ENavigationKeys, Object> navigationData = new HashMap<>();
-        // navigationData.put(ENavigationKeys.DialogContent, dialogContent);
-        // data.put(EEventsDataKeys.NavigationKeys, navigationData);
-
-        // dialogContent.setOnConfirm(response -> {
-        //     response.put(EEventsDataKeys.Instance, worker);
-        //     dispatchEvent(EStores.DataStore, EStoreEvents.SessionWorkerEvent, EStoreEventAction.Add, response);
-        // });
-
-        // dialogContent.loadFxml();
-
-        // dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
     }
 
     public void update(SessionWorker worker) {
@@ -176,14 +161,37 @@ public class SessionWorkersHelper implements IEventSubscriber {
 
     private void refresh() {
         Map<EEventsDataKeys, Object> data = new HashMap<>();
-        LoadWrapper loadWrapper = new LoadWrapper(100, 0);
-
         Map<EWrappers, Object> wrappersData = new HashMap<>();
-        wrappersData.put(EWrappers.LoadWrapper, loadWrapper);
-        data.put(EEventsDataKeys.WrappersKeys, wrappersData);
 
-        dispatchEvent(EStores.DataStore, EStoreEvents.SessionWorkerEvent, EStoreEventAction.Load, data);
+        data.put(EEventsDataKeys.Subscriber, this);
 
+        User user = AppState.getInstance().getCurrentUser();
+
+        if (user.isAdmin()) {
+            LoadWrapper loadWrapper = new LoadWrapper(1000, 0);
+    
+            wrappersData.put(EWrappers.LoadWrapper, loadWrapper);
+            data.put(EEventsDataKeys.WrappersKeys, wrappersData);
+    
+            dispatchEvent(EStores.DataStore, EStoreEvents.SessionWorkerEvent, EStoreEventAction.Load, data);
+    
+        }
+
+        else {
+                
+            ArrayList<AttributeWrapper> attributes = new ArrayList<>();
+            attributes.add(new AttributeWrapper(ESessionWorkerAttributes.SupervisorId, user.getUserId()));
+            SearchWrapper searchParams = new SearchWrapper(attributes);
+
+            wrappersData.put(EWrappers.SearchWrapper, searchParams);
+
+            data.put(EEventsDataKeys.WrappersKeys, wrappersData);
+    
+            dispatchEvent(EStores.DataStore, EStoreEvents.SessionWorkerEvent, EStoreEventAction.Search, data);
+  
+        }
+
+      
     }
 
 }

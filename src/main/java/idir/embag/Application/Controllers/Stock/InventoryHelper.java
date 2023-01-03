@@ -186,16 +186,16 @@ public class InventoryHelper extends IStockHelper implements IEventSubscriber{
         MFXTableColumn<InventoryProduct> codebarColumn = new MFXTableColumn<>(Names.Codebar, true, Comparator.comparing(InventoryProduct::getArticleCode));
 
         MFXTableColumn<InventoryProduct> familyColumn = new MFXTableColumn<>(Names.FamilyCode, true, Comparator.comparing(InventoryProduct::getFamilyCode));
-        MFXTableColumn<InventoryProduct> priceColumn = new MFXTableColumn<>(Names.Price, true, Comparator.comparing(InventoryProduct::getPrice));
+        MFXTableColumn<InventoryProduct> designationColumn = new MFXTableColumn<>(Names.DesignationId, true, Comparator.comparing(InventoryProduct::getDesignationId));
 
 		idColumn.setRowCellFactory(product -> new MFXTableRowCell<>(InventoryProduct::getArticleId));
 		nameColumn.setRowCellFactory(product -> new MFXTableRowCell<>(InventoryProduct::getArticleName));
 
         codebarColumn.setRowCellFactory(product -> new MFXTableRowCell<>(InventoryProduct::getArticleCode));
-		priceColumn.setRowCellFactory(product -> new MFXTableRowCell<>(InventoryProduct::getPrice));
+		designationColumn.setRowCellFactory(product -> new MFXTableRowCell<>(InventoryProduct::getDesignationId));
 		familyColumn.setRowCellFactory(product -> new MFXTableRowCell<>(InventoryProduct::getFamilyCode));
 
-        tableInventory.getTableColumns().setAll(idColumn,codebarColumn,nameColumn,familyColumn,priceColumn);
+        tableInventory.getTableColumns().setAll(idColumn,codebarColumn,nameColumn,familyColumn,designationColumn);
     }
 
     @Override

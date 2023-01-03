@@ -148,8 +148,6 @@ public abstract class IQuery {
 
     protected String addDesignationRestriction(User user){
         if(user.isAdmin()) return "";
-        
-        System.out.println(user.getDesignations());
 
         if(user.getDesignations().size() == 0) return "";
 

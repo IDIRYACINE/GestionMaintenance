@@ -118,6 +118,7 @@ public class SessionQuery extends ISessionQuery {
                 + ESessionGroupAttributes.GroupId + " INTEGER PRIMARY KEY AUTO_INCREMENT,\n"
                 + ESessionGroupAttributes.SessionId + " TIMESTAMP,\n"
                 + ESessionGroupAttributes.GroupName + " TEXT,\n"
+                + ESessionGroupAttributes.GroupSupervisorId + " INTEGER,\n"
 
                 + "FOREIGN KEY (" + ESessionRecordAttributes.SessionId + ")\n"
                 + "REFERENCES " + ETables.Sessions + "(" + ESessionAttributes.SessionId + ")\n"
@@ -168,6 +169,7 @@ public class SessionQuery extends ISessionQuery {
                 + ESessionWorkerAttributes.GroupId + " INTEGER,\n"
                 + ESessionWorkerAttributes.Password + " TEXT,\n"
                 + ESessionWorkerAttributes.Username + " TEXT,\n"
+                + ESessionWorkerAttributes.SupervisorId + " INTEGER,\n"
 
                 + "FOREIGN KEY (" + ESessionRecordAttributes.WorkerId + ")\n"
                 + "REFERENCES " + ETables.Workers + "(" + EWorkerAttributes.WorkerId + ")\n"
@@ -195,11 +197,11 @@ public class SessionQuery extends ISessionQuery {
         String whereClause = " WHERE " + SearchWrapperToWhereClause(parametrers);
 
         String joinClause = " INNER JOIN " + ETables.Workers + " ON "
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.WorkerId
+                + ETables.SessionWorkers + "." + ESessionRecordAttributes.WorkerId
                 + "=" + ETables.Workers + "." + EWorkerAttributes.WorkerId
 
                 + " INNER JOIN " + ETables.SessionsGroups + " ON "
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.GroupId
+                + ETables.SessionWorkers + "." + ESessionWorkerAttributes.GroupId
                 + "=" + ETables.SessionsGroups + "." + ESessionGroupAttributes.GroupId;
 
         String query = "SELECT "
@@ -209,7 +211,7 @@ public class SessionQuery extends ISessionQuery {
                 + ETables.SessionWorkers + "." + ESessionWorkerAttributes.Password + " ,"
                 + ETables.SessionsGroups + "." + ESessionGroupAttributes.GroupId + " ,"
                 + ETables.SessionsGroups + "." + ESessionGroupAttributes.GroupName 
-                + " FROM " + ETables.SessionsRecords + joinClause + whereClause;
+                + " FROM " + ETables.SessionWorkers + joinClause + whereClause;
 
         ResultSet result = database.SelectQuery(query);
         return result;
