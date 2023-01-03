@@ -68,7 +68,7 @@ public class SessionController implements IEventSubscriber {
     }
 
     public void refreshFromServer() {
-        int maxRetrivedRecord = 50;
+        int maxRetrivedRecord = 1000;
         int recordOffset = 0;
 
         Map<EServerKeys, Object> data = new HashMap<>();

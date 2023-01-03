@@ -49,5 +49,9 @@ public class SessionGroup {
         return ids;
     }
 
+    public void setDesignations(ArrayList<Designation> designations) {
+        this.designations = designations;
+    }
+
 
 }

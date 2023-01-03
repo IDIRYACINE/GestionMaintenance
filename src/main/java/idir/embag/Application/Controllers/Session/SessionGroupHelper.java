@@ -57,7 +57,7 @@ public class SessionGroupHelper implements IEventSubscriber {
             Timestamp sessionId = SessionController.sessionId;
             AppState appState = AppState.getInstance();
 
-            SessionGroup group = new SessionGroup(appState.getSessionGroupCurrId(), null, sessionId, null);
+            SessionGroup group = new SessionGroup(appState.getSessionGroupCurrId(), "", sessionId, new ArrayList<Designation>());
             
             ArrayList<Designation> designations = DataBundler.retrieveValue(event.getData(),
                     EEventsDataKeys.InstanceCollection);
@@ -93,6 +93,8 @@ public class SessionGroupHelper implements IEventSubscriber {
         dialogContent.setOnConfirm(requestData -> {
             requestData.put(EEventsDataKeys.Instance, group);
             dispatchEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Add, requestData);
+            dispatchEvent(EStores.DataStore, EStoreEvents.GroupPermissionsEvent, EStoreEventAction.Add, requestData);
+
             AppState.getInstance().nextSessionGroupCurrId();
         });
 
@@ -111,7 +113,7 @@ public class SessionGroupHelper implements IEventSubscriber {
 
             data.put(EEventsDataKeys.Subscriber, this);
             data.put(EEventsDataKeys.Instance, LoadRequest.loadGroupUngrantedDesignationsRequest(group));
-            storeCenter.dispatchEvent(EStores.DataStore, EStoreEvents.UsersEvent, EStoreEventAction.Load, data);
+            storeCenter.dispatchEvent(EStores.DataStore, EStoreEvents.GroupPermissionsEvent, EStoreEventAction.Load, data);
 
         }
     }
@@ -129,6 +131,8 @@ public class SessionGroupHelper implements IEventSubscriber {
         dialogContent.setOnConfirm(requestData -> {
             requestData.put(EEventsDataKeys.Instance, group);
             dispatchEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Update, requestData);
+            dispatchEvent(EStores.DataStore, EStoreEvents.GroupPermissionsEvent, EStoreEventAction.Update, requestData);
+
         });
 
         dialogContent.loadFxml();
@@ -150,6 +154,8 @@ public class SessionGroupHelper implements IEventSubscriber {
         dialogContent.setOnConfirm(requestData -> {
             requestData.put(EEventsDataKeys.Instance, sessionGroup);
             dispatchEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Remove, requestData);
+            dispatchEvent(EStores.DataStore, EStoreEvents.GroupPermissionsEvent, EStoreEventAction.Remove, requestData);
+
         });
 
         dialogContent.loadFxml();

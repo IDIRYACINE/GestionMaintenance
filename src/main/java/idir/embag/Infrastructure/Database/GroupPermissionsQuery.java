@@ -8,7 +8,6 @@ import java.util.Iterator;
 import idir.embag.DataModels.Users.DesignationPermission;
 import idir.embag.Types.Infrastructure.Database.IDatabase;
 import idir.embag.Types.Infrastructure.Database.IGroupPermissionsQuery;
-import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.IQuery;
 import idir.embag.Types.Infrastructure.Database.Metadata.EDesignationAttributes;
 import idir.embag.Types.Infrastructure.Database.Metadata.EGroupsPermissionsAttributes;
@@ -59,8 +58,21 @@ public class GroupPermissionsQuery extends IQuery implements IGroupPermissionsQu
     }
 
     @Override
-    public void GrantGroupPermission(Collection<AttributeWrapper> attributes) throws SQLException {
-        String query = "INSERT INTO " + ETables.GroupsPermissions + InsertWrapperToQuery(attributes);
+    public void GrantGroupPermission(Collection<DesignationPermission> attributes) throws SQLException {
+        Iterator<DesignationPermission> iterator = attributes.iterator();
+        DesignationPermission permission = iterator.next();
+
+        String query = "INSERT INTO " + ETables.GroupsPermissions  + " (" + EGroupsPermissionsAttributes.GroupId + ","
+                + EGroupsPermissionsAttributes.PermissionId + ") VALUES (" + permission.getId() + ","
+                + permission.getDesignationId();
+
+        while (iterator.hasNext()) {
+            permission = iterator.next();
+            query += ",(" + permission.getId() + "," + permission.getDesignationId() + ")";
+        }
+        
+        query += ")";     
+        
         database.InsertQuery(query);
 
     }

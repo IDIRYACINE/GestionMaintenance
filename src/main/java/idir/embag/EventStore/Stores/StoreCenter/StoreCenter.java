@@ -170,11 +170,11 @@ public class StoreCenter implements IStoresCenter {
     SessionWorkersModel sessionWorkersModel = new SessionWorkersModel(databaseInitialiser.getSessionQuery(),
         sessionRepository);
 
-    SessionGroupModel sessionGroupModel = new SessionGroupModel(databaseInitialiser.getSessionQuery(),
-        sessionRepository);
-    HistoryModel historyModel = new HistoryModel(databaseInitialiser.getSessionQuery(), sessionRepository);
-
     DesignationsRepository designationsRepository = new DesignationsRepository();
+
+    SessionGroupModel sessionGroupModel = new SessionGroupModel(databaseInitialiser.getSessionQuery(),
+        sessionRepository, databaseInitialiser.getGroupPermissionsQuery(), designationsRepository);
+    HistoryModel historyModel = new HistoryModel(databaseInitialiser.getSessionQuery(), sessionRepository);
 
     DesignationModel designationModel = new DesignationModel(databaseInitialiser.getDesignationsQuery(),
         designationsRepository);

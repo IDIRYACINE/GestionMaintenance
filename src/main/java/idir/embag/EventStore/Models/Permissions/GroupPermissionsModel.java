@@ -9,11 +9,11 @@ import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Users.Designation;
 import idir.embag.DataModels.Users.DesignationPermission;
 import idir.embag.EventStore.Models.Permissions.RequestsData.LoadRequest;
+import idir.embag.EventStore.Models.Permissions.RequestsData.UpdateGroup;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Repository.DesignationsRepository;
 import idir.embag.Types.Infrastructure.Database.IDesignationsQuery;
 import idir.embag.Types.Infrastructure.Database.IGroupPermissionsQuery;
-import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Stores.DataStore.IDataDelegate;
@@ -39,10 +39,12 @@ public class GroupPermissionsModel implements IDataDelegate {
     @Override
     public void add(Map<EEventsDataKeys, Object> data) {
         try {
-            Collection<AttributeWrapper> wrappers = DataBundler.retrieveNestedValue(data, EEventsDataKeys.WrappersKeys,
-                    EWrappers.AttributesCollection);
 
-            groupPermissionsQuery.GrantGroupPermission(wrappers);
+            UpdateGroup request = DataBundler.retrieveValue(data, EEventsDataKeys.RequestData);
+            Collection<DesignationPermission> granted = request.getGrantedPermissions();
+
+            if (granted.size() > 0)
+                groupPermissionsQuery.GrantGroupPermission(granted);
 
             notfiyEvent(EStores.DataStore, EStoreEvents.GroupPermissionsEvent, EStoreEventAction.Add, data);
         } catch (SQLException e) {
@@ -59,11 +61,11 @@ public class GroupPermissionsModel implements IDataDelegate {
     @Override
     public void remove(Map<EEventsDataKeys, Object> data) {
         try {
+            UpdateGroup request = DataBundler.retrieveValue(data, EEventsDataKeys.RequestData);
 
-            Collection<DesignationPermission> designation = DataBundler.retrieveValue(data,
-                    EEventsDataKeys.InstanceCollection);
-
-            groupPermissionsQuery.RevokeGroupPermission(designation);
+            Collection<DesignationPermission> ungranted = request.getUnGrantedPermissions();
+            if (ungranted.size() > 0)
+                groupPermissionsQuery.RevokeGroupPermission(ungranted);
 
             notfiyEvent(EStores.DataStore, EStoreEvents.GroupPermissionsEvent, EStoreEventAction.Remove, data);
         } catch (SQLException e) {
@@ -74,7 +76,17 @@ public class GroupPermissionsModel implements IDataDelegate {
 
     @Override
     public void update(Map<EEventsDataKeys, Object> data) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+        UpdateGroup request = DataBundler.retrieveValue(data, EEventsDataKeys.RequestData);
+
+        Collection<DesignationPermission> ungranted = request.getUnGrantedPermissions();
+        if (ungranted.size() > 0)
+            remove(data);
+
+        Collection<DesignationPermission> granted = request.getGrantedPermissions();
+        if (granted.size() > 0)
+            add(data);
+
     }
 
     @Override

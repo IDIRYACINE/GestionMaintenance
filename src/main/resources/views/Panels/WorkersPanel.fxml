@@ -20,7 +20,7 @@
             <MFXButton fx:id="btnRefresh" onAction="#refresh" text="Refresher" />
          </children>
       </HBox>
-      <MFXTableView fx:id="tableWorkers" footerVisible="false" prefHeight="636.0" prefWidth="1332.0" />
+      <MFXTableView fx:id="tableWorkers" footerVisible="false" prefHeight="500.0" prefWidth="1000.0" />
     
 
    </children>

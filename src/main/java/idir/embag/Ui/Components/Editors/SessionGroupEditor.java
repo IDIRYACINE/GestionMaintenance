@@ -12,9 +12,9 @@ import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.SessionGroup;
 import idir.embag.DataModels.Users.Designation;
+import idir.embag.DataModels.Users.DesignationPermission;
 import idir.embag.EventStore.Models.Permissions.RequestsData.UpdateGroup;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
-import idir.embag.Types.Infrastructure.Database.Metadata.EDesignationsPermissions;
 import idir.embag.Types.Infrastructure.Database.Metadata.ESessionGroupAttributes;
 import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Panels.Components.IDialogContent;
@@ -42,6 +42,7 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
     private Consumer<Map<EEventsDataKeys,Object>> confirmTask;
 
     private SessionGroup group;
+
     @FXML
     private MFXListView<HBox> permissionsListView;
 
@@ -81,12 +82,12 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
     public void initialize(URL location, ResourceBundle resources) {
         groupNameField.setText(group.getName());
 
-        ArrayList<HBox> alreadyGranted = createSelectorNodes(group.getDesignations());
+        ArrayList<HBox> alreadyGranted = createSelectorNodes(group.getDesignations(),true);
         
         newlyGrantedPermissions.addAll(alreadyGranted);
         grantedOnLoadPermissions.addAll(alreadyGranted);
 
-        ArrayList<HBox> allPermissions = createSelectorNodes(ungrantedDesignations);
+        ArrayList<HBox> allPermissions = createSelectorNodes(ungrantedDesignations,false);
         allPermissions.addAll(alreadyGranted);
 
         permissionsListView.getItems().setAll(allPermissions);
@@ -130,32 +131,32 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
         
         data.put(EEventsDataKeys.Instance, group);
 
-        Collection<AttributeWrapper> grantedP = new ArrayList<>();
+        Collection<DesignationPermission> grantedP = new ArrayList<>();
 
         newlyGrantedPermissions.forEach( node -> {
             Designation designation = (Designation) node.getUserData();
             
-            grantedP.add(new AttributeWrapper(EDesignationsPermissions.DesignationId, designation));
+            grantedP.add(new DesignationPermission(group.getId(), designation.getDesignationId()));
 
             if(!group.getDesignations().contains(designation)){
                 group.getDesignations().add(designation);
             }
         });
         
-        Collection<AttributeWrapper> ungrantedP = new ArrayList<>();
+        Collection<DesignationPermission> ungrantedP = new ArrayList<>();
         revokedPermissions.forEach(node ->{
             Designation designation = (Designation) node.getUserData();
 
-            ungrantedP.add(new AttributeWrapper(EDesignationsPermissions.DesignationId, designation));
+            ungrantedP.add(new DesignationPermission(group.getId(), designation.getDesignationId()));
 
             if(group.getDesignations().contains(designation)){
                 group.getDesignations().remove(designation);
             }
         });
 
-        UpdateGroup updateUser = new UpdateGroup(fields, grantedP, ungrantedP );
+        UpdateGroup updateGroup = new UpdateGroup(fields, grantedP, ungrantedP );
 
-        data.put(EEventsDataKeys.RequestData, updateUser);
+        data.put(EEventsDataKeys.RequestData, updateGroup);
     }
 
     private Collection<AttributeWrapper> getAttributeWrappers(){
@@ -169,7 +170,7 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
 
 
 
-    private ArrayList<HBox> createSelectorNodes(ArrayList<Designation> designations){
+    private ArrayList<HBox> createSelectorNodes(ArrayList<Designation> designations,boolean selected){
         FXMLLoader loader;     
         AttributeSelector controller ;
         
@@ -181,6 +182,7 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
                 controller = new AttributeSelector(designations.get(i));
                 controller.setOnSelect(this::selectAtrribute);
                 controller.setOnDeselect(this::deselectAttribute);
+                controller.setSelectedInitially(selected);
                 loader.setController(controller);
                 HBox node = loader.load();
                 node.setUserData(designations.get(i));
