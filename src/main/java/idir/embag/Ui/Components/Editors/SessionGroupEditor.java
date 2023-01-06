@@ -10,7 +10,6 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import idir.embag.Application.State.AppState;
-import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.SessionGroup;
 import idir.embag.DataModels.Users.Designation;
@@ -18,7 +17,6 @@ import idir.embag.DataModels.Users.DesignationPermission;
 import idir.embag.EventStore.Models.Permissions.RequestsData.UpdateGroup;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Metadata.ESessionGroupAttributes;
-import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
 import idir.embag.Ui.Dialogs.UsersDialog.Components.AttributeSelector;
@@ -116,12 +114,14 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
     }
 
     private void setupConfirm(Map<EEventsDataKeys,Object> data){
-        group.setName(groupNameField.getText());
-
         
-        DataBundler.bundleNestedData(data, EEventsDataKeys.WrappersKeys, EWrappers.AttributesCollection, getAttributeWrappers());
         
         Collection<AttributeWrapper> fields = new ArrayList<>();
+        
+        if(group.getSupervisorId() == -1){
+            fields.add(new AttributeWrapper(ESessionGroupAttributes.GroupSupervisorId, AppState.getInstance().getCurrentUser().getUserId()));
+            group.setSupervisorId(AppState.getInstance().getCurrentUser().getUserId());
+        }
 
         String groupName = groupNameField.getText();
         if(!groupName.equals(group.getName())){
@@ -129,13 +129,8 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
             group.setName(groupName);
         }
 
-        if(group.getName().equals("")){
-            fields.add(new AttributeWrapper(ESessionGroupAttributes.GroupSupervisorId, AppState.getInstance().getCurrentUser().getUserId()));
-        }
+        fields.add(new AttributeWrapper(ESessionGroupAttributes.SessionId,String.valueOf(group.getSessionId())));
 
-        fields.add(new AttributeWrapper(ESessionGroupAttributes.GroupName, groupNameField.getText()));
-
-        
         data.put(EEventsDataKeys.Instance, group);
 
         Collection<DesignationPermission> grantedP = new ArrayList<>();
@@ -164,15 +159,6 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
         UpdateGroup updateGroup = new UpdateGroup(fields, grantedP, ungrantedP );
 
         data.put(EEventsDataKeys.RequestData, updateGroup);
-    }
-
-    private Collection<AttributeWrapper> getAttributeWrappers(){
-        Collection<AttributeWrapper> attributes = new ArrayList<AttributeWrapper>();
-        
-        attributes.add(new AttributeWrapper(ESessionGroupAttributes.GroupName,groupNameField.getText()));
-        attributes.add(new AttributeWrapper(ESessionGroupAttributes.SessionId,String.valueOf(group.getSessionId())));
-
-        return attributes;
     }
 
 

@@ -48,7 +48,9 @@ public class SessionRepository {
                         source.getInt(ESessionGroupAttributes.GroupId.toString()),
                         source.getString(ESessionGroupAttributes.GroupName.toString()),
                         source.getTimestamp(ESessionGroupAttributes.SessionId.toString()),
-                        new ArrayList<Designation>()));
+                        new ArrayList<Designation>(),
+                        source.getInt(ESessionGroupAttributes.GroupSupervisorId.toString())
+                        ));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,7 +68,9 @@ public class SessionRepository {
                         source.getString(ESessionWorkerAttributes.Username.toString()),
                         source.getString(ESessionWorkerAttributes.Password.toString()),
                         source.getString(ESessionGroupAttributes.GroupName.toString()),
-                        source.getInt(ESessionGroupAttributes.GroupId.toString())));
+                        source.getInt(ESessionGroupAttributes.GroupId.toString()),
+                        source.getInt(ESessionWorkerAttributes.SupervisorId.toString())
+                        ));
             }
         } catch (Exception e) {
             e.printStackTrace();

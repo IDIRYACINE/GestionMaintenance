@@ -10,7 +10,6 @@ public class DesignationsRepository {
 
     public ArrayList<Designation> resultSetToDesignation(ResultSet designationsSource) {
         ArrayList<Designation> result = new ArrayList<Designation>();
-
         try {
 
             while (designationsSource.next()) {
@@ -25,4 +24,7 @@ public class DesignationsRepository {
         }
         return result;
     }
+
+
+    
 }

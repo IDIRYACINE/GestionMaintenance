@@ -119,9 +119,12 @@ public class SessionWorkerEditor extends INodeView implements Initializable, IDi
 
         Collection<AttributeWrapper> attributes = new ArrayList<AttributeWrapper>();
 
-        if (username.equals(""))
+        if (worker.getSupervisorId() == -1){
+            int supervisorId = AppState.getInstance().getCurrentUser().getUserId();
             attributes.add(new AttributeWrapper(ESessionWorkerAttributes.SupervisorId,
-                    AppState.getInstance().getCurrentUser().getUserId()));
+                    supervisorId));
+            worker.setSupervisorId(supervisorId);        
+        }
 
         if (!username.equals(worker.getUsername()))
             attributes.add(new AttributeWrapper(ESessionWorkerAttributes.Username, worker.getUsername()));

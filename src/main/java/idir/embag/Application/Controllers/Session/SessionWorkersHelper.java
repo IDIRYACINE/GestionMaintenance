@@ -97,6 +97,9 @@ public class SessionWorkersHelper implements IEventSubscriber {
             case Update:
                 updateElement((SessionWorker) event.getData().get(EEventsDataKeys.Instance));
                 break;
+            case Search:
+            setElements((Collection<SessionWorker>) event.getData().get(EEventsDataKeys.InstanceCollection));
+            break;    
             case Load:
                 setElements((Collection<SessionWorker>) event.getData().get(EEventsDataKeys.InstanceCollection));
                 break;

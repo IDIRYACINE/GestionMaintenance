@@ -28,6 +28,7 @@ import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 
+@SuppressWarnings("unused")
 public class SessionWorkersModel implements IDataDelegate {
 
     ISessionQuery sessionQuery;
@@ -40,8 +41,8 @@ public class SessionWorkersModel implements IDataDelegate {
 
     public void add(Map<EEventsDataKeys,Object> data) {
         try {
-            SessionWorker worker = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
-            registerSessionWorkerOnServer(worker);
+            // SessionWorker worker = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
+            // registerSessionWorkerOnServer(worker);
 
             Collection<AttributeWrapper> wrappers = DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.AttributesCollection);
             sessionQuery.RegsiterSessionWorker(wrappers);
@@ -56,7 +57,7 @@ public class SessionWorkersModel implements IDataDelegate {
 
        try {
         SessionWorker worker = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
-        unregisterSessionWorkerOnServer(worker);
+        // unregisterSessionWorkerOnServer(worker);
 
         sessionQuery.UnregisterGroupWorker(worker.getWorkerId());
         notfiyEvent(EStores.DataStore, EStoreEvents.SessionWorkerEvent, EStoreEventAction.Remove, data);

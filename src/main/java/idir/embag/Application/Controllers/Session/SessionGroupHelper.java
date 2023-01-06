@@ -57,7 +57,7 @@ public class SessionGroupHelper implements IEventSubscriber {
         User user = appState.getCurrentUser();
 
         SessionGroup group = new SessionGroup(appState.getSessionGroupCurrId(), "", SessionController.sessionId,
-                new ArrayList<Designation>());
+                new ArrayList<Designation>(),-1);
 
         addSessionGroupDialog(group, user.getDesignations());
 
@@ -163,6 +163,9 @@ public class SessionGroupHelper implements IEventSubscriber {
             case Update:
                 updateElement((SessionGroup) event.getData().get(EEventsDataKeys.Instance));
                 break;
+            case Search:
+                setElements(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.InstanceCollection));
+                break;    
             case Load:
                 handleLoadEvent(event);
                 break;

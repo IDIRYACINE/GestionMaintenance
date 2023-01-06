@@ -28,8 +28,10 @@ public class GroupPermissionsQuery extends IQuery implements IGroupPermissionsQu
 
     @Override
     public ResultSet LoadGroupPermissions(int groupId) throws SQLException {
-        String query = "SELECT * FROM " + ETables.GroupsPermissions + " WHERE "
-                + EGroupsPermissionsAttributes.GroupId + " = " + groupId;
+        String query = "SELECT * FROM " + ETables.Designations + " WHERE "
+                + EDesignationAttributes.DesignationId + " IN (" 
+                + "SELECT " + EGroupsPermissionsAttributes.PermissionId + " FROM " + ETables.GroupsPermissions 
+                + " WHERE " + EGroupsPermissionsAttributes.GroupId + "=" + groupId + ")" ;
 
         return database.SelectQuery(query);        
     }

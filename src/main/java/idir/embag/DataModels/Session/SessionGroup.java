@@ -11,13 +11,15 @@ public class SessionGroup {
     private String name;
     private Timestamp sessionId;
     private ArrayList<Designation> designations ;
+    private int supervisorId;
 
 
-    public SessionGroup(int id, String name, Timestamp sessionId, ArrayList<Designation> designations) {
+    public SessionGroup(int id, String name, Timestamp sessionId, ArrayList<Designation> designations,int supervisorId) {
         this.id = id;
         this.name = name;
         this.sessionId = sessionId;
         this.designations = designations;
+        this.supervisorId = supervisorId;
     }
 
     public int getId() {
@@ -42,6 +44,14 @@ public class SessionGroup {
     }
 
 
+
+    public int getSupervisorId() {
+        return supervisorId;
+    }
+
+    public void setSupervisorId(int supervisorId) {
+        this.supervisorId = supervisorId;
+    }
 
     public Collection<Integer> getDesignationsIds() {
         Collection<Integer> ids = new ArrayList<>();

@@ -209,6 +209,8 @@ public class SessionQuery extends ISessionQuery {
                 + ETables.Workers + "." + EWorkerAttributes.WorkerName + " ,"
                 + ETables.Workers + "." + EWorkerAttributes.WorkerPhone + " ,"
                 + ETables.SessionWorkers + "." + ESessionWorkerAttributes.Password + " ,"
+                + ETables.SessionWorkers + "." + ESessionWorkerAttributes.SupervisorId + " ,"
+                + ETables.SessionWorkers + "." + ESessionWorkerAttributes.Username + " ,"
                 + ETables.SessionsGroups + "." + ESessionGroupAttributes.GroupId + " ,"
                 + ETables.SessionsGroups + "." + ESessionGroupAttributes.GroupName 
                 + " FROM " + ETables.SessionWorkers + joinClause + whereClause;

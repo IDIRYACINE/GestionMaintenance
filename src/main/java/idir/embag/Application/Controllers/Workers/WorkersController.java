@@ -16,6 +16,8 @@ import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Application.Workers.IWorkersController;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
+import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
+import idir.embag.Types.Infrastructure.Database.Metadata.ESessionGroupAttributes;
 import idir.embag.Types.Infrastructure.Database.Metadata.ESessionWorkerAttributes;
 import idir.embag.Types.Infrastructure.Database.Metadata.EWorkerAttributes;
 import idir.embag.Types.MetaData.ENavigationKeys;
@@ -84,7 +86,12 @@ public class WorkersController implements IWorkersController, IEventSubscriber {
                 updateTableElement((Worker) event.getData().get(EEventsDataKeys.Instance));
                 break;
             case Search:
-                setTableElements((Collection<Worker>) event.getData().get(EEventsDataKeys.InstanceCollection));
+                if (event.getEvent() == EStoreEvents.SessionGroupEvent) {
+                    addSessionWorkerDialog((Worker) event.getData().get(EEventsDataKeys.Instance),
+                            (Collection<SessionGroup>) event.getData().get(EEventsDataKeys.InstanceCollection));
+                } else {
+                    setTableElements((Collection<Worker>) event.getData().get(EEventsDataKeys.InstanceCollection));
+                }
                 break;
             case Load:
                 if (event.getEvent() == EStoreEvents.SessionGroupEvent) {
@@ -196,13 +203,12 @@ public class WorkersController implements IWorkersController, IEventSubscriber {
 
             Collection<AttributeWrapper> attributes = sessionWorkerToAttributes(sessionWorker);
 
-
             wrappersData.put(EWrappers.AttributesCollection, attributes);
 
             requestData.put(EEventsDataKeys.WrappersKeys, wrappersData);
 
             dispatchEvent(EStores.DataStore, EStoreEvents.SessionWorkerEvent, EStoreEventAction.Add, requestData);
-        
+
         });
 
         dialogContent.loadFxml();
@@ -217,24 +223,30 @@ public class WorkersController implements IWorkersController, IEventSubscriber {
         data.put(EEventsDataKeys.Subscriber, this);
         data.put(EEventsDataKeys.Instance, worker);
 
-        LoadWrapper loadWrapper = new LoadWrapper(100, 0);
+        int supervisorId = AppState.getInstance().getCurrentUser().getUserId();
+
+        ArrayList<AttributeWrapper> params = new ArrayList<>();
+        params.add(new AttributeWrapper(ESessionGroupAttributes.GroupSupervisorId, supervisorId));
+        SearchWrapper searchWrapper = new SearchWrapper(params);
 
         Map<EWrappers, Object> wrappersData = new HashMap<>();
-        wrappersData.put(EWrappers.LoadWrapper, loadWrapper);
+        wrappersData.put(EWrappers.SearchWrapper, searchWrapper);
         data.put(EEventsDataKeys.WrappersKeys, wrappersData);
 
-        dispatchEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Load, data);
+        dispatchEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Search, data);
 
     }
 
     private Collection<AttributeWrapper> sessionWorkerToAttributes(SessionWorker worker) {
-        Collection<AttributeWrapper> result = new ArrayList<>();
+        int supervisorId = AppState.getInstance().getCurrentUser().getUserId();
 
+        Collection<AttributeWrapper> result = new ArrayList<>();
         result.add(new AttributeWrapper(EWorkerAttributes.WorkerId, worker.getWorkerId()));
         result.add(new AttributeWrapper(ESessionWorkerAttributes.GroupId, worker.getGroupId()));
         result.add(new AttributeWrapper(ESessionWorkerAttributes.Username, worker.getUsername()));
         result.add(new AttributeWrapper(ESessionWorkerAttributes.Password, String.valueOf((worker.getPassword()))));
-
+        result.add(new AttributeWrapper(ESessionWorkerAttributes.SupervisorId, supervisorId));
+        
         return result;
     }
 

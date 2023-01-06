@@ -113,7 +113,7 @@ public class AddSessionWorkerDialog extends INodeView implements Initializable, 
         SessionGroup group = groupComboBox.getSelectedItem();
 
         SessionWorker sessionWorker = new SessionWorker(worker.getId(), worker.getName(), username, password,
-                group.getName(), group.getId());
+                group.getName(), group.getId(),-1);
 
         return sessionWorker;
     }

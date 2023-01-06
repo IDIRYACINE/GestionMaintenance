@@ -4,5 +4,6 @@ public enum ESessionWorkerAttributes {
     WorkerId,
     GroupId,
     Password,
-    Username, SupervisorId
+    Username,
+    SupervisorId
 }

@@ -10,12 +10,12 @@ import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.SessionGroup;
 import idir.embag.DataModels.Users.Designation;
+import idir.embag.EventStore.Models.Permissions.RequestsData.UpdateGroup;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Repository.DesignationsRepository;
 import idir.embag.Repository.SessionRepository;
 import idir.embag.Types.Infrastructure.Database.IGroupPermissionsQuery;
 import idir.embag.Types.Infrastructure.Database.ISessionQuery;
-import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 import idir.embag.Types.MetaData.EWrappers;
@@ -44,8 +44,9 @@ public class SessionGroupModel implements IDataDelegate {
 
     public void add(Map<EEventsDataKeys, Object> data) {
         try {
-            sessionQuery.RegisterSessionGroup(DataBundler.retrieveNestedValue(data, EEventsDataKeys.WrappersKeys,
-                    EWrappers.AttributesCollection));
+            UpdateGroup request = DataBundler.retrieveValue(data, EEventsDataKeys.RequestData);
+            sessionQuery.RegisterSessionGroup(
+                    request.getFields());
             notfiyEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Add, data);
 
         } catch (SQLException e) {
@@ -68,12 +69,13 @@ public class SessionGroupModel implements IDataDelegate {
 
     @Override
     public void update(Map<EEventsDataKeys, Object> data) {
-        Collection<AttributeWrapper> wrappers = DataBundler.retrieveNestedValue(data, EEventsDataKeys.WrappersKeys,
-                EWrappers.AttributesCollection);
+        UpdateGroup request = DataBundler.retrieveValue(data, EEventsDataKeys.RequestData);
+       
+                
         SessionGroup group = DataBundler.retrieveValue(data, EEventsDataKeys.Instance);
 
         try {
-            sessionQuery.UpdateSessionGroup(group.getId(), wrappers);
+            sessionQuery.UpdateSessionGroup(group.getId(), request.getFields());
             notfiyEvent(EStores.DataStore, EStoreEvents.SessionGroupEvent, EStoreEventAction.Update, data);
         } catch (SQLException e) {
             e.printStackTrace();
