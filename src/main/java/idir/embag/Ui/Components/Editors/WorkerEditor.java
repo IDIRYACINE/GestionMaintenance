@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import idir.embag.Application.Utility.DataBundler;
+import idir.embag.Application.Utility.Validator.Validators;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Workers.Worker;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
@@ -16,9 +17,13 @@ import idir.embag.Types.Infrastructure.Database.Metadata.EWorkerAttributes;
 import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
+import idir.embag.Ui.Components.TextFieldSkins.CustomFieldSkin;
+import idir.embag.Ui.Components.TextFieldSkins.SkinErrorTester;
+import idir.embag.Ui.Constants.Messages;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 public class WorkerEditor extends INodeView implements Initializable, IDialogContent {
@@ -28,6 +33,9 @@ public class WorkerEditor extends INodeView implements Initializable, IDialogCon
 
     @FXML
     private TextField workerNameField, workerPhoneField, workerEmailField;
+
+    @FXML
+    private Label workerNameErrorLabel, workerPhoneErrorLabel, workerEmailErrorLabel;
 
     private Runnable cancelTask;
 
@@ -53,9 +61,38 @@ public class WorkerEditor extends INodeView implements Initializable, IDialogCon
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        initialiseWorkerEditor();
+
+        setupTextFieldsValidation();
+    }
+
+    private void initialiseWorkerEditor() {
         workerEmailField.setText(worker.getEmail());
         workerNameField.setText(worker.getName());
         workerPhoneField.setText(String.valueOf(worker.getPhone()));
+    }
+
+    private void setupTextFieldsValidation() {
+        SkinErrorTester emptyFieldTester = new SkinErrorTester(Messages.errorRequiredField, Validators::emptyField);
+        SkinErrorTester invalidName = new SkinErrorTester(Messages.errorInvalidName, Validators::isName);
+        SkinErrorTester invalidNumberTester = new SkinErrorTester(Messages.errorInvalidNumber, Validators::isNumber);
+        SkinErrorTester invalidPhoneTester = new SkinErrorTester(Messages.errorInvalidPhone, Validators::isPhoneNumber);
+
+
+        CustomFieldSkin nameSkin = new CustomFieldSkin(workerNameField, workerNameErrorLabel);
+        nameSkin.addErrorTester(emptyFieldTester);
+        nameSkin.addErrorTester(invalidName);
+        workerNameField.setSkin(nameSkin);
+
+        CustomFieldSkin phoneSkin = new CustomFieldSkin(workerPhoneField, workerPhoneErrorLabel);
+        phoneSkin.addErrorTester(emptyFieldTester);
+        phoneSkin.addErrorTester(invalidNumberTester);
+        workerPhoneField.setSkin(phoneSkin);
+
+        CustomFieldSkin emailSkin = new CustomFieldSkin(workerEmailField, workerEmailErrorLabel);
+        emailSkin.addErrorTester(emptyFieldTester);
+        emailSkin.addErrorTester(invalidPhoneTester);
+        workerEmailField.setSkin(emailSkin);
     }
 
     @Override

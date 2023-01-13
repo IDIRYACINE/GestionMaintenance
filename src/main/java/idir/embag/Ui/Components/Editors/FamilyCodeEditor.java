@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import idir.embag.Application.Utility.DataBundler;
+import idir.embag.Application.Utility.Validator.Validators;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Products.FamilyCode;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
@@ -16,9 +17,13 @@ import idir.embag.Types.Infrastructure.Database.Metadata.EFamilyCodeAttributes;
 import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
+import idir.embag.Ui.Components.TextFieldSkins.CustomFieldSkin;
+import idir.embag.Ui.Components.TextFieldSkins.SkinErrorTester;
+import idir.embag.Ui.Constants.Messages;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 public class FamilyCodeEditor extends INodeView implements Initializable , IDialogContent {
@@ -29,6 +34,12 @@ public class FamilyCodeEditor extends INodeView implements Initializable , IDial
 
     @FXML
     private TextField familyNameField,familyCodeField;
+
+
+    @FXML
+    private Label familyNameErrorLabel, familyCodeErrorLabel;
+
+    private CustomFieldSkin familyNameSkin, familyCodeSkin;
 
     private Runnable cancelTask;
 
@@ -57,9 +68,31 @@ public class FamilyCodeEditor extends INodeView implements Initializable , IDial
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-       familyCodeField.setText(String.valueOf(product.getFamilyCode()));
-       familyNameField.setText(String.valueOf(product.getFamilyName()));
+       initialiseEditor();
+
+       setupTextFieldsValidation();
         
+    }
+
+    private void initialiseEditor() {
+        familyCodeField.setText(String.valueOf(product.getFamilyCode()));
+           familyNameField.setText(String.valueOf(product.getFamilyName()));
+    }
+
+    private void setupTextFieldsValidation() {
+        SkinErrorTester emptyFieldTester = new SkinErrorTester(Messages.errorRequiredField, Validators::emptyField);
+           SkinErrorTester invalidName = new SkinErrorTester(Messages.errorInvalidName, Validators::isName);
+           SkinErrorTester invalidNumberTester = new SkinErrorTester(Messages.errorInvalidNumber, Validators::isNumber);
+
+           familyNameSkin = new CustomFieldSkin(familyNameField, familyNameErrorLabel);
+           familyNameSkin.addErrorTester(emptyFieldTester);
+           familyNameSkin.addErrorTester(invalidName);
+           familyNameField.setSkin(familyNameSkin);
+
+           familyCodeSkin = new CustomFieldSkin(familyCodeField, familyCodeErrorLabel);
+           familyCodeSkin.addErrorTester(emptyFieldTester);
+           familyCodeSkin.addErrorTester(invalidNumberTester);
+           familyCodeField.setSkin(familyCodeSkin);
     }
 
     @Override

@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import idir.embag.Application.Utility.DataBundler;
+import idir.embag.Application.Utility.Validator.Validators;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Products.InventoryProduct;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
@@ -16,9 +17,13 @@ import idir.embag.Types.Infrastructure.Database.Metadata.EInventoryAttributes;
 import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
+import idir.embag.Ui.Components.TextFieldSkins.CustomFieldSkin;
+import idir.embag.Ui.Components.TextFieldSkins.SkinErrorTester;
+import idir.embag.Ui.Constants.Messages;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 public class InventoryEditor extends INodeView implements Initializable , IDialogContent {
@@ -29,6 +34,11 @@ public class InventoryEditor extends INodeView implements Initializable , IDialo
 
     @FXML
     private TextField articleIdField,articleNameField,articleFamilyField,stockIdField,articleCodeField;
+   
+    @FXML
+    private Label articleIdErrorLabel, articleNameErrorLabel, articleFamilyErrorLabel, stockIdErrorLabel, articleCodeErrorLabel;
+
+    private CustomFieldSkin articleIdSkin, articleNameSkin, articleFamilySkin, stockIdSkin, articleCodeSkin ;
 
     private Runnable cancelTask;
 
@@ -56,11 +66,52 @@ public class InventoryEditor extends INodeView implements Initializable , IDialo
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        initialiseEditor();
+
+
+        setupTextFieldsValidation();
+
+
+    }
+
+    private void initialiseEditor() {
         articleIdField.setText(String.valueOf(product.getArticleId()));
         articleNameField.setText(product.getArticleName());
         articleFamilyField.setText(String.valueOf(product.getFamilyCode()));
         stockIdField.setText(String.valueOf(product.getDesignationId()));
         articleCodeField.setText(String.valueOf(product.getArticleCode()));
+    }
+
+    private void setupTextFieldsValidation() {
+        SkinErrorTester emptyFieldTester = new SkinErrorTester(Messages.errorRequiredField, Validators::emptyField);
+        SkinErrorTester invalidName = new SkinErrorTester(Messages.errorInvalidName, Validators::isName);
+        SkinErrorTester invalidNumberTester = new SkinErrorTester(Messages.errorInvalidNumber, Validators::isNumber);
+ 
+
+        articleIdSkin = new CustomFieldSkin(articleIdField,articleIdErrorLabel);
+        articleIdSkin.addErrorTester(emptyFieldTester);
+        articleIdSkin.addErrorTester(invalidNumberTester);
+        articleIdField.setSkin(articleIdSkin);
+
+        articleNameSkin = new CustomFieldSkin(articleNameField,articleNameErrorLabel);
+        articleNameSkin.addErrorTester(emptyFieldTester);
+        articleNameSkin.addErrorTester(invalidName);
+        articleNameField.setSkin(articleNameSkin);
+
+        articleFamilySkin = new CustomFieldSkin(articleFamilyField,articleFamilyErrorLabel);
+        articleFamilySkin.addErrorTester(emptyFieldTester);
+        articleFamilySkin.addErrorTester(invalidNumberTester);
+        articleFamilyField.setSkin(articleFamilySkin);
+
+        stockIdSkin = new CustomFieldSkin(stockIdField,stockIdErrorLabel);
+        stockIdSkin.addErrorTester(emptyFieldTester);
+        stockIdSkin.addErrorTester(invalidNumberTester);
+        stockIdField.setSkin(stockIdSkin);
+
+        articleCodeSkin = new CustomFieldSkin(articleCodeField,articleCodeErrorLabel);
+        articleCodeSkin.addErrorTester(emptyFieldTester);
+        articleCodeSkin.addErrorTester(invalidNumberTester);
+        articleCodeField.setSkin(articleCodeSkin);
     }
 
     @Override

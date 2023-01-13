@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 
 import idir.embag.Application.State.AppState;
 import idir.embag.Application.Utility.DataBundler;
+import idir.embag.Application.Utility.Validator.Validators;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.SessionGroup;
 import idir.embag.DataModels.Workers.SessionWorker;
@@ -18,10 +19,14 @@ import idir.embag.Types.Infrastructure.Database.Metadata.ESessionWorkerAttribute
 import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
+import idir.embag.Ui.Components.TextFieldSkins.CustomFieldSkin;
+import idir.embag.Ui.Components.TextFieldSkins.SkinErrorTester;
+import idir.embag.Ui.Constants.Messages;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
 
@@ -32,6 +37,10 @@ public class SessionWorkerEditor extends INodeView implements Initializable, IDi
 
     @FXML
     private TextField usernameField, passwordField;
+
+    @FXML
+    private Label usernameErrorLabel, passwordErrorLabel;
+    private CustomFieldSkin usernameSkin,passwordSkin;
 
     @FXML
     private MFXComboBox<SessionGroup> groupComboBox;
@@ -63,6 +72,12 @@ public class SessionWorkerEditor extends INodeView implements Initializable, IDi
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        initialiseSessionWorkerEditor();
+
+        setupTextFieldsValidation();
+    }
+
+    private void initialiseSessionWorkerEditor() {
         passwordField.setText(worker.getPassword());
         usernameField.setText(worker.getUsername());
 
@@ -83,6 +98,21 @@ public class SessionWorkerEditor extends INodeView implements Initializable, IDi
                 return null;
             }
         });
+    }
+
+    private void setupTextFieldsValidation() {
+        SkinErrorTester emptyFieldTester = new SkinErrorTester(Messages.errorRequiredField,Validators::emptyField);
+        SkinErrorTester invalidName = new SkinErrorTester(Messages.errorInvalidName, Validators::isName);
+
+
+        usernameSkin = new CustomFieldSkin(usernameField, usernameErrorLabel);
+        usernameSkin.addErrorTester(emptyFieldTester);
+        usernameSkin.addErrorTester(invalidName);
+        usernameField.setSkin(usernameSkin);
+
+        passwordSkin = new CustomFieldSkin(passwordField, passwordErrorLabel);
+        passwordSkin.addErrorTester(emptyFieldTester);
+        passwordField.setSkin(passwordSkin);
     }
 
     @Override

@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import idir.embag.Application.State.AppState;
+import idir.embag.Application.Utility.Validator.Validators;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.SessionGroup;
 import idir.embag.DataModels.Users.Designation;
@@ -19,12 +20,16 @@ import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Metadata.ESessionGroupAttributes;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
+import idir.embag.Ui.Components.TextFieldSkins.CustomFieldSkin;
+import idir.embag.Ui.Components.TextFieldSkins.SkinErrorTester;
+import idir.embag.Ui.Constants.Messages;
 import idir.embag.Ui.Dialogs.UsersDialog.Components.AttributeSelector;
 import io.github.palexdev.materialfx.controls.MFXListView;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
@@ -36,6 +41,9 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
 
     @FXML
     private TextField groupNameField;
+
+    @FXML
+    private Label groupNameErrorLabel;
 
     private Runnable cancelTask;
 
@@ -80,6 +88,13 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
   
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        initialiseGroupPermissions();
+
+
+        setupTextFieldsValidation();
+    }
+
+    private void initialiseGroupPermissions() {
         groupNameField.setText(group.getName());
 
         ArrayList<HBox> alreadyGranted = createSelectorNodes(group.getDesignations(),true);
@@ -91,6 +106,17 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
         allPermissions.addAll(alreadyGranted);
 
         permissionsListView.getItems().setAll(allPermissions);
+    }
+
+    private void setupTextFieldsValidation() {
+
+        SkinErrorTester emptyFieldTester = new SkinErrorTester(Messages.errorRequiredField, Validators::emptyField);
+        SkinErrorTester invalidName = new SkinErrorTester(Messages.errorInvalidName, Validators::isName);
+        
+        CustomFieldSkin groupNameSkin = new CustomFieldSkin(groupNameField,groupNameErrorLabel);
+        groupNameSkin.addErrorTester(emptyFieldTester);
+        groupNameSkin.addErrorTester(invalidName);
+        groupNameField.setSkin(groupNameSkin);
     }
 
     @Override
