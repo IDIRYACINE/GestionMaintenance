@@ -55,6 +55,7 @@ public class HistoryModel implements IDataDelegate{
     @Override
     public void search(Map<EEventsDataKeys,Object> data) {
         try {
+
             SearchWrapper searchParams =DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.SearchWrapper);
 
             ResultSet result = sessionQuery.SearchSessionRecord(searchParams);
@@ -75,14 +76,14 @@ public class HistoryModel implements IDataDelegate{
         try{
             ResultSet rawData = sessionQuery.LoadSessionRecord(loadWrapper);
             Collection<SessionRecord> records = sessionRepository.resultSetToRecord(rawData);
-
+          
             if(records.size() == 0){
                 data.put(EEventsDataKeys.OperationStatus, EOperationStatus.NoData);
             }else{
                 data.put(EEventsDataKeys.OperationStatus, EOperationStatus.HasData);
             }   
 
-            data.put(EEventsDataKeys.Instance, records);
+            data.put(EEventsDataKeys.InstanceCollection, records);
             notfiyEvent(EStores.DataStore, EStoreEvents.SessionRecordsEvent, EStoreEventAction.Load, data);
         }
         catch(SQLException e){

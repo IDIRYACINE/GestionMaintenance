@@ -29,6 +29,7 @@ public class LoginController implements IEventSubscriber{
 
 
     public void login(String username, String password) {
+
         Map<EEventsDataKeys,Object> data = new HashMap<>();
 
         ArrayList<AttributeWrapper> wrappers = new ArrayList<>();
@@ -50,7 +51,7 @@ public class LoginController implements IEventSubscriber{
     @Override
     public void notifyEvent(StoreEvent event) {
         Collection<User> users =  DataBundler.retrieveValue(event.getData(), EEventsDataKeys.InstanceCollection);
-        
+
         if(users.size() > 0){
             User user = users.iterator().next();
             AppState.getInstance().setCurrentUser(user);

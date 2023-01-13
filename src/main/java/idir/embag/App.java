@@ -1,8 +1,10 @@
 package idir.embag;
 
 import java.io.IOException;
+
 import idir.embag.Application.Controllers.Navigation.MainController;
 import idir.embag.Application.Utility.AppStateLoader;
+import idir.embag.Application.Utility.Serialisers.GsonSerialiser;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Infrastructure.ServicesProvider;
 import idir.embag.Infrastructure.Database.MysqlConnection;
@@ -36,6 +38,8 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        GsonSerialiser.init();
+
         FXMLLoader loader = new FXMLLoader();
         loader.setController(new LoginPanel());
         loader.load(getClass().getResourceAsStream("/views/Panels/LoginPanel.fxml"));

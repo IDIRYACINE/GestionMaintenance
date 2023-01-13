@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 
 import org.junit.jupiter.api.Test;
 
-import idir.embag.Application.Utility.GsonSerialiser;
+import idir.embag.Application.Utility.Serialisers.GsonSerialiser;
 import idir.embag.DataModels.Session.Session;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;

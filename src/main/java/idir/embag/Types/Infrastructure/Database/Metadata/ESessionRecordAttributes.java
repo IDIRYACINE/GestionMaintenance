@@ -11,5 +11,5 @@ public enum ESessionRecordAttributes {
     RecordQuantity,
     StockPrice,
     QuantityShift,
-    PriceShift,
+    PriceShift, ArticleName, WorkerName,
 }

@@ -6,10 +6,9 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import idir.embag.App;
-import idir.embag.Application.Utility.GsonSerialiser;
+import idir.embag.Application.Utility.Serialisers.GsonSerialiser;
 import idir.embag.DataModels.ApiBodyResponses.DSocketMessage;
-import idir.embag.DataModels.SocketApisData.DProductDetaills;
-import idir.embag.DataModels.SocketApisData.DSubmitRecord;
+import idir.embag.DataModels.SocketApisData.DReceiveRecord;
 import idir.embag.Infrastructure.Server.WebSocket.ResponseHandlers.SessionRecordHandler;
 
 public class WebSocketImpl extends WebSocketClient {
@@ -39,10 +38,8 @@ public class WebSocketImpl extends WebSocketClient {
         DSocketMessage sMessage = GsonSerialiser.deserialise(message, DSocketMessage.class);
         switch (sMessage.type) {
             case recordEvent:
-                DSubmitRecord data = GsonSerialiser.deserialise(sMessage.data, DSubmitRecord.class);
-                DProductDetaills products = recordHandler.handleRecord(data);
-                String response = GsonSerialiser.serialise(products);
-                send(response);
+                DReceiveRecord data = GsonSerialiser.deserialise(sMessage.data, DReceiveRecord.class);
+                recordHandler.notfiyRecord(data);
                 break;
 
             case recordCollectionEvent:

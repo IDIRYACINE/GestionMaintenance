@@ -47,7 +47,7 @@ public class ActiveSessionFrame extends INodeView implements Initializable {
 
     @FXML
     private void refresh(){
-        controller.refreshFromServer();
+        controller.refreshFromLocalDb();
     }
 
     @FXML

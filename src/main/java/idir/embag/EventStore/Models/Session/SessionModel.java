@@ -86,6 +86,7 @@ public class SessionModel  implements IDataDelegate{
     @Override
     public void search(Map<EEventsDataKeys,Object> data) {
         try {
+
             SearchWrapper searchParams =DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.SearchWrapper);
 
             ResultSet result = sessionQuery.SearchSessionRecord(searchParams);
@@ -103,6 +104,7 @@ public class SessionModel  implements IDataDelegate{
     @Override
     public void load(Map<EEventsDataKeys,Object> data) {
         LoadWrapper loadWrapper = DataBundler.retrieveNestedValue(data,EEventsDataKeys.WrappersKeys,EWrappers.LoadWrapper);
+
         try{
             ResultSet rawData = sessionQuery.LoadSessionRecord(loadWrapper);
             Collection<Session> sessions = sessionRepository.resultSetToSession(rawData);

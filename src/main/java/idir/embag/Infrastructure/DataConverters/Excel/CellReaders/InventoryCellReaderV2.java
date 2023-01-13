@@ -6,7 +6,8 @@ import java.util.Collection;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import idir.embag.Application.Utility.GsonSerialiser;
+
+import idir.embag.Application.Utility.Serialisers.GsonSerialiser;
 import idir.embag.Types.Infrastructure.DataConverters.ImportWrapper;
 import idir.embag.Types.Infrastructure.DataConverters.Excel.IExcelCellReader;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;

@@ -5,12 +5,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
+import idir.embag.Application.State.AppState;
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Products.InventoryProduct;
 import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.DataModels.SocketApisData.DProductDetaills;
+import idir.embag.DataModels.SocketApisData.DReceiveRecord;
 import idir.embag.DataModels.SocketApisData.DSubmitRecord;
+import idir.embag.DataModels.Users.User;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Infrastructure.ServicesProvider;
 import idir.embag.Repository.InventoryRepository;
@@ -27,36 +30,22 @@ public class SessionRecordHandler {
 
     private InventoryRepository inventoryRepository = new InventoryRepository();
 
-    public DProductDetaills handleRecord(DSubmitRecord requestData) {
+    public DProductDetaills handleRecordAndReturnProduct(DSubmitRecord requestData) {
 
         InventoryProduct product = getInventoryProduct(requestData.barcode);
-        DProductDetaills productDetails =
-        DProductDetaills.fromInventoryProduct(product, requestData.requestTimestamp);
+        DProductDetaills productDetails = DProductDetaills.fromInventoryProduct(product, requestData.requestTimestamp);
 
         SessionRecord sessionRecord = new SessionRecord(
-        product.getArticleId(),
-        product.getArticleName(),
-        requestData.scannedDate.toString(),
-        String.valueOf(product.getPrice()),
-        "0.0",
-        "0.0",
-        "0.0",
-        "0.0",
-        requestData.groupId,
-        requestData.workerName);
-
-        // for testing
-        // SessionRecord sessionRecord = new SessionRecord(
-        //         33,
-        //         "name",
-        //         requestData.scannedDate.toString(),
-        //         "450",
-        //         "0.0",
-        //         "0.0",
-        //         "0.0",
-        //         "0.0",
-        //         "45",
-        //         "idir");
+                product.getArticleId(),
+                product.getArticleName(),
+                requestData.scannedDate.toString(),
+                String.valueOf(product.getPrice()),
+                "0.0",
+                "0.0",
+                "0.0",
+                "0.0",
+                requestData.groupId,
+                requestData.workerName);
 
         SessionRecord[] values = { sessionRecord };
         EEventsDataKeys[] keys = { EEventsDataKeys.Instance };
@@ -67,11 +56,36 @@ public class SessionRecordHandler {
                 EStoreEvents.SessionRecordsEvent, EStoreEventAction.Add, data);
 
         storeCenter.notify(action);
-        
-        // for testing
-        // new DProductDetaills(0,"name","location",22,requestData.scannedDate);
 
         return productDetails;
+    }
+
+    public void notfiyRecord(DReceiveRecord requestData) {
+        User user = AppState.getInstance().getCurrentUser();
+        if (user.getDesignationsIds().contains(requestData.productDesignation)) {
+            SessionRecord sessionRecord = new SessionRecord(
+                    requestData.articleId,
+                    requestData.articleName,
+                    requestData.recordDate.toString(),
+                    String.valueOf(requestData.stockPrice),
+                    requestData.stockQuantity,
+                    requestData.recordQuantity,
+                    requestData.quantityShift,
+                    requestData.priceShift,
+                    String.valueOf(requestData.groupId),
+                    requestData.workerName);
+
+            SessionRecord[] values = { sessionRecord };
+            EEventsDataKeys[] keys = { EEventsDataKeys.Instance };
+            Map<EEventsDataKeys, Object> data = DataBundler.bundleData(keys, values);
+
+            StoreCenter storeCenter = StoreCenter.getInstance();
+            StoreDispatch action = storeCenter.createStoreEvent(EStores.DataStore,
+                    EStoreEvents.SessionRecordsEvent, EStoreEventAction.Add, data);
+
+            storeCenter.notify(action);
+        }
+
     }
 
     @SuppressWarnings({ "unchecked" })

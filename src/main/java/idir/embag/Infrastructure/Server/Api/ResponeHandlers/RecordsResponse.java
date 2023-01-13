@@ -3,7 +3,8 @@ package idir.embag.Infrastructure.Server.Api.ResponeHandlers;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import idir.embag.Application.Utility.GsonSerialiser;
+
+import idir.embag.Application.Utility.Serialisers.GsonSerialiser;
 import idir.embag.DataModels.ApiBodyResponses.DSessionResponse;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;

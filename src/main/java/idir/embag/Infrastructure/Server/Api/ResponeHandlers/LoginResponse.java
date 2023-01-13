@@ -1,7 +1,8 @@
 package idir.embag.Infrastructure.Server.Api.ResponeHandlers;
 
 import java.io.IOException;
-import idir.embag.Application.Utility.GsonSerialiser;
+
+import idir.embag.Application.Utility.Serialisers.GsonSerialiser;
 import idir.embag.DataModels.ApiBodyResponses.DLoginResponse;
 import idir.embag.Types.Api.IApiResponseHandler;
 import okhttp3.Response;

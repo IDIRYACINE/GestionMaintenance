@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 
 import org.junit.jupiter.api.Test;
 
-import idir.embag.Application.Utility.GsonSerialiser;
+import idir.embag.Application.Utility.Serialisers.GsonSerialiser;
 import idir.embag.DataModels.ApiBodyResponses.DLoginResponse;
 
 public class SerialiserTest {

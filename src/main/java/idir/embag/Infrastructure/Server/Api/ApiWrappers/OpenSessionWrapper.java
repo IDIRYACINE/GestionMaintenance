@@ -1,6 +1,6 @@
 package idir.embag.Infrastructure.Server.Api.ApiWrappers;
 
-import idir.embag.Application.Utility.GsonSerialiser;
+import idir.embag.Application.Utility.Serialisers.GsonSerialiser;
 import idir.embag.DataModels.Session.Session;
 import idir.embag.Types.Api.EApi;
 import idir.embag.Types.Api.IApiWrapper;

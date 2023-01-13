@@ -12,7 +12,6 @@ import idir.embag.Types.Infrastructure.Database.Metadata.ESessionAttributes;
 import idir.embag.Types.Infrastructure.Database.Metadata.ESessionGroupAttributes;
 import idir.embag.Types.Infrastructure.Database.Metadata.ESessionRecordAttributes;
 import idir.embag.Types.Infrastructure.Database.Metadata.ESessionWorkerAttributes;
-import idir.embag.Types.Infrastructure.Database.Metadata.EStockAttributes;
 import idir.embag.Types.Infrastructure.Database.Metadata.ETables;
 import idir.embag.Types.Infrastructure.Database.Metadata.EWorkerAttributes;
 import idir.embag.Types.Infrastructure.Database.IDatabase;
@@ -135,6 +134,8 @@ public class SessionQuery extends ISessionQuery {
                 + ESessionRecordAttributes.SessionId + " TIMESTAMP,\n"
                 + ESessionRecordAttributes.WorkerId + " INTEGER,\n"
                 + ESessionRecordAttributes.GroupId + " INTEGER,\n"
+                + ESessionRecordAttributes.WorkerName + " TEXT,\n"
+                + ESessionRecordAttributes.ArticleName + " TEXT,\n"
                 + ESessionRecordAttributes.InventoryId + " INTEGER,\n"
                 + ESessionRecordAttributes.RecordDate + " DATE,\n"
                 + ESessionRecordAttributes.PriceShift + " REAL,\n"
@@ -223,26 +224,7 @@ public class SessionQuery extends ISessionQuery {
     public ResultSet SearchSessionRecord(SearchWrapper parametrers) throws SQLException {
         String whereClause = " WHERE " + SearchWrapperToWhereClause(parametrers);
 
-        String joinClause = " INNER JOIN " + ETables.Workers + " ON "
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.WorkerId
-                + "=" + ETables.Workers + "." + EWorkerAttributes.WorkerId
-
-                + " INNER JOIN " + ETables.Stock + " ON "
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.InventoryId
-                + "=" + ETables.Stock + "." + EStockAttributes.ArticleId;
-
-        String query = "SELECT "
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.RecordId + " ,"
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.RecordDate + " ,"
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.PriceShift + " ,"
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.QuantityShift + " ,"
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.RecordQuantity + " ,"
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.StockQuantity + " ,"
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.StockPrice + " ,"
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.SessionId + " ,"
-                + ETables.Workers + "." + EWorkerAttributes.WorkerName + " ,"
-                + ETables.Stock + "." + EStockAttributes.ArticleName 
-                + " FROM " + ETables.SessionsRecords + joinClause + whereClause;
+        String query = "SELECT * " + " FROM " + ETables.SessionsRecords + whereClause;
 
         ResultSet result = database.SelectQuery(query);
         return result;
@@ -251,26 +233,8 @@ public class SessionQuery extends ISessionQuery {
     @Override
     public ResultSet LoadSessionRecord(LoadWrapper parametrers) throws SQLException {
         String extraClause = " LIMIT " + parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
-        String joinClause = " INNER JOIN " + ETables.Workers + " ON "
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.WorkerId
-                + "=" + ETables.Workers + "." + EWorkerAttributes.WorkerId
 
-                + " INNER JOIN " + ETables.Stock + " ON "
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.InventoryId
-                + "=" + ETables.Stock + "." + EStockAttributes.ArticleId;
-
-        String query = "SELECT "
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.RecordId + " ,"
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.RecordDate + " ,"
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.PriceShift + " ,"
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.QuantityShift + " ,"
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.RecordQuantity + " ,"
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.StockQuantity + " ,"
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.StockPrice + " ,"
-                + ETables.SessionsRecords + "." + ESessionRecordAttributes.SessionId + " ,"
-                + ETables.Workers + "." + EWorkerAttributes.WorkerName + " ,"
-                + ETables.Stock + "." + EStockAttributes.ArticleName 
-                + " FROM " + ETables.SessionsRecords + joinClause + extraClause;
+        String query = "SELECT * "+ " FROM " + ETables.SessionsRecords  + extraClause;
         ResultSet result = database.SelectQuery(query);
         return result;
     }

@@ -64,7 +64,7 @@ public class SessionController implements IEventSubscriber {
         wrappersData.put(EWrappers.LoadWrapper, loadWrapper);
         data.put(EEventsDataKeys.WrappersKeys, wrappersData);
 
-        dispatchEvent(EStores.DataStore, EStoreEvents.SessionEvent, EStoreEventAction.Load, data);
+        dispatchEvent(EStores.DataStore, EStoreEvents.SessionRecordsEvent, EStoreEventAction.Load, data);
     }
 
     public void refreshFromServer() {
@@ -98,6 +98,7 @@ public class SessionController implements IEventSubscriber {
 
     @Override
     public void notifyEvent(StoreEvent event) {
+      
         switch (event.getAction()) {
             case Add:
                 addRecord(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.Instance));
@@ -113,7 +114,10 @@ public class SessionController implements IEventSubscriber {
                 setActiveSession(session.getSessionId());
                 break;
             case Load:
-                setActiveSession(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.Instance));
+                if(event.getEvent() == EStoreEvents.SessionRecordsEvent)
+                    setRecords(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.InstanceCollection));
+                else 
+                    setActiveSession(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.Instance));
                 break;
             default:
                 break;
@@ -177,24 +181,18 @@ public class SessionController implements IEventSubscriber {
 
     private void addRecord(SessionRecord record) {
         tableRecord.getItems().add(record);
-
-        Map<EWrappers, Object> wrappers = new HashMap<>();
-
-        wrappers.put(EWrappers.AttributesCollection, sessionRecordToAttributes(record));
-
-        Map<EEventsDataKeys, Object> data = new HashMap<>();
-
-        data.put(EEventsDataKeys.Instance, record);
-        data.put(EEventsDataKeys.WrappersKeys, wrappers);
-        dispatchEvent(EStores.DataStore, EStoreEvents.SessionRecordsEvent, EStoreEventAction.Add, data);
-
     }
 
     private void addRecordCollection(Collection<SessionRecord> records) {
+        
+
         tableRecord.getItems().addAll(records);
     }
 
     private void setRecords(Collection<SessionRecord> records) {
+       
+
+        tableRecord.getItems().clear();
         tableRecord.getItems().setAll(records);
     }
 
@@ -218,7 +216,7 @@ public class SessionController implements IEventSubscriber {
         MFXTableColumn<SessionRecord> stockQuantiyColumn = new MFXTableColumn<>(Names.QuantityShift, true,
                 Comparator.comparing(SessionRecord::getQuantityStock));
 
-        idColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getRecordId));
+        idColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getArticleId));
         nameColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getArticleName));
         priceColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getPrix));
         priceShiftColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getPriceShift));
@@ -293,6 +291,7 @@ public class SessionController implements IEventSubscriber {
         return attributes;
     }
 
+    @SuppressWarnings("unused")
     private Collection<AttributeWrapper> sessionRecordToAttributes(SessionRecord record) {
         Collection<AttributeWrapper> attributes = new ArrayList<>();
 
