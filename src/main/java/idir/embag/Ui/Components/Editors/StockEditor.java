@@ -35,7 +35,7 @@ public class StockEditor extends INodeView implements Initializable , IDialogCon
     private TextField articleIdField,articleNameField,articlePriceField,articleQuantityField,articleFamilyField;
 
     @FXML
-    private Label articleIdErrorLabel,articleNameErrorLabel,articlePriceErrorLabel,articleQuantityErrorLabel,articleFamilyErrorLabel;
+    private Label articleIdErrorLabel,articleCodeErrorLabel,articleNameErrorLabel,articlePriceErrorLabel,articleQuantityErrorLabel,articleFamilyErrorLabel;
     
     private Runnable cancelTask;
 
@@ -105,7 +105,6 @@ public class StockEditor extends INodeView implements Initializable , IDialogCon
         articleFamilySkin.addErrorTester(emptyFieldTester);
         articleFamilySkin.addErrorTester(invalidNumberTester);
         articleFamilyField.setSkin(articleFamilySkin);
-
 
     }
 

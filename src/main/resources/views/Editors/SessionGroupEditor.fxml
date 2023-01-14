@@ -2,7 +2,7 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXListView?>
-<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
@@ -21,30 +21,38 @@
       </HBox>
    </bottom>
    <center>
-      <MFXScrollPane prefHeight="433.0" prefWidth="688.0" BorderPane.alignment="CENTER_LEFT">
-         <content>
-            <HBox alignment="CENTER_LEFT" prefHeight="431.0" prefWidth="686.0">
+      <HBox alignment="CENTER_LEFT" prefHeight="431.0" prefWidth="686.0">
+         <children>
+            <HBox alignment="CENTER" prefWidth="379.0" spacing="20.0">
                <children>
-                  <HBox alignment="CENTER" prefWidth="379.0" spacing="20.0">
+                  <Label text="Group Name">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+                  <VBox alignment="CENTER_LEFT">
                      <children>
-                        <Label text="Group Name">
-                           <font>
-                              <Font size="25.0" />
-                           </font>
-                        </Label>
                         <TextField fx:id="groupNameField" />
+                        <Label fx:id="groupNameErrorLabel" textFill="RED">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </Label>
                      </children>
-                  </HBox>
-                  <Line endX="-93.12132263183594" endY="202.00286865234375" startX="-95.41421508789062" startY="618.5858154296875" />
-                  <VBox alignment="CENTER" prefHeight="334.0" prefWidth="281.0" spacing="10.0">
-                     <children>
-                        <Label text="Permissions" />
-                        <MFXListView fx:id="permissionsListView" prefHeight="296.0" prefWidth="264.0" />
-                     </children>
+                     <HBox.margin>
+                        <Insets top="20.0" />
+                     </HBox.margin>
                   </VBox>
                </children>
             </HBox>
-         </content>
-      </MFXScrollPane>
+            <Line endX="-93.12132263183594" endY="202.00286865234375" startX="-95.41421508789062" startY="618.5858154296875" />
+            <VBox alignment="CENTER" prefHeight="334.0" prefWidth="281.0" spacing="10.0">
+               <children>
+                  <Label text="Permissions" />
+                  <MFXListView fx:id="permissionsListView" prefHeight="296.0" prefWidth="264.0" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
    </center>
 </BorderPane>
