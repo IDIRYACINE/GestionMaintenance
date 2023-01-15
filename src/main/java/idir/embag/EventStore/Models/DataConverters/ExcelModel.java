@@ -74,11 +74,13 @@ public class ExcelModel implements IDataConverterDelegate , IEventSubscriber{
         Collection<AttributeWrapper[]> loadedData = excelConverter.importData(cellReader);
 
         DataBundler.bundleNestedData(data, EEventsDataKeys.WrappersKeys, EWrappers.AttributesListCollection, loadedData);
-        DataBundler.appendData(data, EEventsDataKeys.Subscriber, this);
+        data.put(EEventsDataKeys.OperationStatus, EOperationStatus.Completed);
 
         StoreCenter storeCenter = StoreCenter.getInstance();
         StoreDispatch action = storeCenter.createStoreEvent(EStores.DataStore, eventKey, EStoreEventAction.Import, data);
         storeCenter.dispatch(action);
+        storeCenter.notify(action);
+
     }
 
     @Override
@@ -86,7 +88,7 @@ public class ExcelModel implements IDataConverterDelegate , IEventSubscriber{
         Map<EEventsDataKeys, Object> data = event.getData();
 
         StoreCenter storeCenter = StoreCenter.getInstance();
-        StoreDispatch action = storeCenter.createStoreEvent(EStores.DataConverterStore, event.getEvent(), EStoreEventAction.Export, data);
+        StoreDispatch action = storeCenter.createStoreEvent(EStores.DataConverterStore, event.getEvent(), event.getAction(), data);
         storeCenter.broadcast(action);
         
     }
