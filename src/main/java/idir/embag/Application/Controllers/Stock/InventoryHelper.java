@@ -116,7 +116,7 @@ public class InventoryHelper extends IStockHelper implements IEventSubscriber{
     @Override
     public void refresh() {
         Map<EEventsDataKeys,Object> data = new HashMap<>();
-        LoadWrapper loadWrapper = new LoadWrapper(100,0);
+        LoadWrapper loadWrapper = new LoadWrapper(2000,0);
         
         Map<EWrappers,Object> wrappersData = new HashMap<>();
         wrappersData.put(EWrappers.LoadWrapper, loadWrapper);

@@ -2,8 +2,8 @@ package idir.embag.Application.Utility.Validator;
 
 public abstract class Validators {
 
-    public static Boolean isName (String name){
-        return name.matches("^[A-Za-z\\s]+$");
+    public static Boolean isName(String name) {
+        return !name.matches("^[a-zA-Z\\s]+$");
     }
 
     public static Boolean isEmail(String email){
