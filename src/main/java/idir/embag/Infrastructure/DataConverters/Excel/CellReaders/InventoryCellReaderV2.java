@@ -81,7 +81,6 @@ public class InventoryCellReaderV2 implements IExcelCellReader {
 
     private AttributeWrapper[] readCells(Row row) {
         AttributeWrapper[] attributes = new AttributeWrapper[attrbs.length];
-
         try {
 
             int articleId = GsonSerialiser.deserialise(row.getCell(ARTICLE_ID_COL).getStringCellValue(), Integer.class);
@@ -90,7 +89,7 @@ public class InventoryCellReaderV2 implements IExcelCellReader {
 
             int designationId = GsonSerialiser.deserialise(row.getCell(ARTICLE_DESIGNATION_COL).getStringCellValue(),
                     Integer.class);
-
+            
             if (articleName == null) {
                 return null;
             }
@@ -109,9 +108,12 @@ public class InventoryCellReaderV2 implements IExcelCellReader {
             attributes[DESIGNATION_ID] = new AttributeWrapper(attrbs[DESIGNATION_ID], designationId);
 
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         }
         return attributes;
     }
+
+   
 
 }

@@ -217,7 +217,7 @@ public class ProductQuery extends IProductQuery{
 
     @Override
     public void RegisterInventoryCollection(Collection<AttributeWrapper[]> collection) throws SQLException {
-        String query = "INSERT INTO "+ETables.Inventory+ InsertCollectionToQuery(collection);        
+        String query = "INSERT IGNORE INTO "+ETables.Inventory+ InsertCollectionToQuery(collection);        
         database.InsertQuery(query);
     }
 

@@ -105,7 +105,11 @@ public class Exporter implements IEventSubscriber {
 
     @Override
     public void notifyEvent(StoreEvent event) {
+        System.out.println("Exporter: " + event.getAction());
+
+
         EOperationStatus status = (EOperationStatus) event.getData().get(EEventsDataKeys.OperationStatus);
+        System.out.println("Exporter: " + status);
         switch (status) {
             case HasData:
                 startExportOrImport(event.getData());
