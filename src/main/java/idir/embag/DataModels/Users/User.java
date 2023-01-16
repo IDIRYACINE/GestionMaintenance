@@ -1,7 +1,6 @@
 package idir.embag.DataModels.Users;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class User {
     private int userId;
@@ -57,8 +56,8 @@ public class User {
         return isAdmin;
     }
 
-    public Collection<Integer> getDesignationsIds() {
-        Collection<Integer> ids = new ArrayList<>();
+    public ArrayList<Integer> getDesignationsIds() {
+        ArrayList<Integer> ids = new ArrayList<>();
         designations.forEach(designation -> ids.add(designation.getDesignationId()));
         return ids;
     }

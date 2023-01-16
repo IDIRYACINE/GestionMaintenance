@@ -47,15 +47,17 @@ public class UsersManagerController implements IEventSubscriber {
     private void setupTable() {
 
         MFXTableColumn<User> idColumn = new MFXTableColumn<>(Names.Id, true, Comparator.comparing(User::getUserId));
-		MFXTableColumn<User> usernnameColumn = new MFXTableColumn<>(Names.Username, true, Comparator.comparing(User::getUserName));
-        MFXTableColumn<User> passwordColum = new MFXTableColumn<>(Names.Password, true, Comparator.comparing(User::getPassword));
+        MFXTableColumn<User> usernnameColumn = new MFXTableColumn<>(Names.Username, true,
+                Comparator.comparing(User::getUserName));
+        MFXTableColumn<User> passwordColum = new MFXTableColumn<>(Names.Password, true,
+                Comparator.comparing(User::getPassword));
 
-		idColumn.setRowCellFactory(product -> new MFXTableRowCell<>(User::getUserId));
-		usernnameColumn.setRowCellFactory(product -> new MFXTableRowCell<>(User::getUserName));
+        idColumn.setRowCellFactory(product -> new MFXTableRowCell<>(User::getUserId));
+        usernnameColumn.setRowCellFactory(product -> new MFXTableRowCell<>(User::getUserName));
 
         passwordColum.setRowCellFactory(product -> new MFXTableRowCell<>(User::getPassword));
-		
-        usersTable.getTableColumns().setAll(idColumn,usernnameColumn,passwordColum);
+
+        usersTable.getTableColumns().setAll(idColumn, usernnameColumn, passwordColum);
 
     }
 
@@ -63,7 +65,7 @@ public class UsersManagerController implements IEventSubscriber {
     public void notifyEvent(StoreEvent event) {
         switch (event.getAction()) {
             case Load:
-                setElements( DataBundler.retrieveValue(event.getData(), EEventsDataKeys.InstanceCollection));
+                setElements(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.InstanceCollection));
                 break;
             case Add:
                 addElement(DataBundler.retrieveValue(event.getData(), EEventsDataKeys.Instance));
@@ -77,8 +79,6 @@ public class UsersManagerController implements IEventSubscriber {
         }
 
     }
-
-
 
     private void addElement(User user) {
         usersTable.getItems().add(user);
@@ -112,24 +112,25 @@ public class UsersManagerController implements IEventSubscriber {
     }
 
     public void addUser() {
-        // by default this is available for only admins . they have all designations preloaded
+        // by default this is available for only admins . they have all designations
+        // preloaded
         User user = new User(AppState.getInstance().getWorkerCurrId() + 1, "", null, false, null);
-        addUserDialog(user,  user.getDesignations());
+        addUserDialog(user, user.getDesignations());
     }
 
     public void updateUser() {
         User user = usersTable.getSelectionModel().getSelectedValues().get(0);
 
-       
         if (user != null) {
-            ArrayList<Designation> adminDesignations = user.getDesignations();
-            ArrayList<Designation> userDesignations = new ArrayList<>();
+            ArrayList<Designation> adminDesignations = AppState.getInstance().getCurrentUser().getDesignations();
+            ArrayList<Integer> userDesignations = user.getDesignationsIds();
             ArrayList<Designation> ungrantedDesignations = new ArrayList<>();
 
-            for (Designation designation : adminDesignations) {
-                if (!userDesignations.contains(designation)) {
-                    ungrantedDesignations.add(designation);
-                }
+            for (Designation adminDesignation : adminDesignations) {
+
+               if(!userDesignations.contains(adminDesignation.getDesignationId()))
+                   ungrantedDesignations.add(adminDesignation);
+
             }
 
             updateUserDialog(user, ungrantedDesignations);
@@ -144,10 +145,10 @@ public class UsersManagerController implements IEventSubscriber {
 
     }
 
-    private void addUserDialog(User user,ArrayList<Designation> ungrantedDesignations) {
+    private void addUserDialog(User user, ArrayList<Designation> ungrantedDesignations) {
         StoreCenter storeCenter = StoreCenter.getInstance();
 
-        UserEditorDialog dialogContent = new UserEditorDialog(user,ungrantedDesignations);
+        UserEditorDialog dialogContent = new UserEditorDialog(user, ungrantedDesignations);
 
         Map<EEventsDataKeys, Object> data = new HashMap<>();
         Map<ENavigationKeys, Object> navigationData = new HashMap<>();
@@ -162,22 +163,21 @@ public class UsersManagerController implements IEventSubscriber {
             other.put(EEventsDataKeys.Instance, user);
             AppState.getInstance().nextWorkerCurrId();
 
-
             storeCenter.dispatchEvent(EStores.DataStore, EStoreEvents.UsersEvent, EStoreEventAction.Add, other);
 
         });
 
         dialogContent.loadFxml();
 
-        storeCenter.dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
+        storeCenter.dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,
+                data);
 
-   
     }
 
-    private void updateUserDialog(User user,ArrayList<Designation> ungrantedDesignations) {
+    private void updateUserDialog(User user, ArrayList<Designation> ungrantedDesignations) {
         StoreCenter storeCenter = StoreCenter.getInstance();
 
-        UserEditorDialog dialogContent = new UserEditorDialog(user,ungrantedDesignations);
+        UserEditorDialog dialogContent = new UserEditorDialog(user, ungrantedDesignations);
 
         Map<EEventsDataKeys, Object> data = new HashMap<>();
         Map<ENavigationKeys, Object> navigationData = new HashMap<>();
@@ -197,7 +197,8 @@ public class UsersManagerController implements IEventSubscriber {
 
         dialogContent.loadFxml();
 
-        storeCenter.dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
+        storeCenter.dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,
+                data);
 
     }
 
@@ -223,9 +224,9 @@ public class UsersManagerController implements IEventSubscriber {
 
         dialogContent.loadFxml();
 
-        storeCenter.dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
+        storeCenter.dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog,
+                data);
 
     }
-
 
 }
