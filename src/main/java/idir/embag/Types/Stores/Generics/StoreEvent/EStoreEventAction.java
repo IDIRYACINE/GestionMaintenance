@@ -25,5 +25,5 @@ public enum EStoreEventAction {
     Completed,
     NoData,
     AddCollection,
-    ApiResponse
+    ApiResponse, LoadNotIn
 }

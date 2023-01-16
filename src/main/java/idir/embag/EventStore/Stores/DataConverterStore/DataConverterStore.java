@@ -22,7 +22,7 @@ public class DataConverterStore implements IDataConverterStore{
 
     public DataConverterStore(IDataConverterDelegate[] delegatesList) {
         delegates.put(EExporters.Excel, delegatesList[IDataConverterStore.EXCEL_DELEGATE]);
-       
+        delegates.put(EExporters.Report, delegatesList[IDataConverterStore.REPORT_DELEGATE]);
         setupActions();
     }    
 

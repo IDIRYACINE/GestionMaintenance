@@ -228,6 +228,13 @@ public class ProductQuery extends IProductQuery{
         
     }
 
+    @Override
+    public ResultSet LoadNegativeProducts(String positiveBarcodes) throws SQLException {
+        String query = "SELECT * FROM "+ETables.Inventory+" WHERE "+EInventoryAttributes.ArticleCode+" NOT IN ("+positiveBarcodes+")";
+        ResultSet result = database.SelectQuery(query);
+        return result;
+    }
+
 
 
 

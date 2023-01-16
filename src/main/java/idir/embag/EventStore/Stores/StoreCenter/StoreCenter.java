@@ -8,6 +8,7 @@ import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.EventStore.Models.DataConverters.ExcelModel;
 import idir.embag.EventStore.Models.History.HistoryModel;
 import idir.embag.EventStore.Models.Permissions.GroupPermissionsModel;
+import idir.embag.EventStore.Models.Report.ReportModel;
 import idir.embag.EventStore.Models.Session.SessionGroupModel;
 import idir.embag.EventStore.Models.Session.SessionModel;
 import idir.embag.EventStore.Models.Session.SessionWorkersModel;
@@ -209,6 +210,7 @@ public class StoreCenter implements IStoresCenter {
 
     IDataConverterDelegate[] delegates = new IDataConverterDelegate[DataConverterStore.DELEGATES_COUNT];
     delegates[IDataConverterStore.EXCEL_DELEGATE] = new ExcelModel();
+    delegates[IDataConverterStore.REPORT_DELEGATE] = new ReportModel();
 
     stores.put(EStores.DataConverterStore, new DataConverterStore(delegates));
   }

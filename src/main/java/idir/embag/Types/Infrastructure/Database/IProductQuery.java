@@ -38,5 +38,6 @@ public abstract class IProductQuery extends IQuery{
     public abstract void CreateFamiLyCodesTable() throws SQLException;
     public abstract void CreateInventoryTable() throws SQLException;
     public abstract void CreateStockTable() throws SQLException;
+    public abstract ResultSet LoadNegativeProducts(String positiveBarcodes)throws SQLException;
     
 }
