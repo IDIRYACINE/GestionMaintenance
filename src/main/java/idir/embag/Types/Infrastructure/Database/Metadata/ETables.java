@@ -14,5 +14,6 @@ public enum ETables {
     Designations,
     Users,
     DesignationsPermissions,
-    GroupsPermissions
+    GroupsPermissions,
+    ScannedArticles
 }

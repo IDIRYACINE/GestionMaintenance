@@ -8,28 +8,69 @@ import java.util.Map;
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Products.InventoryProduct;
-import idir.embag.DataModels.Session.SessionRecord;
+import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
+import idir.embag.Infrastructure.DataConverters.Excel.CellWriters.ReportExcelCellWriter;
 import idir.embag.Repository.InventoryRepository;
+import idir.embag.Types.Generics.EOperationStatus;
+import idir.embag.Types.Infrastructure.DataConverters.ExportWrapper;
+import idir.embag.Types.Infrastructure.DataConverters.IDataConverter;
+import idir.embag.Types.Infrastructure.DataConverters.ReportWrapper;
+import idir.embag.Types.Infrastructure.DataConverters.Excel.IExcelCellWriter;
 import idir.embag.Types.Infrastructure.Database.IProductQuery;
+import idir.embag.Types.Infrastructure.Database.Metadata.EScannedBarcodeAttributes;
+import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Stores.DataConverterStore.IDataConverterDelegate;
+import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
+import idir.embag.Types.Stores.Generics.StoreDispatch.StoreDispatch;
+import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
+import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class ReportModel implements IDataConverterDelegate {
     IProductQuery query;
     InventoryRepository inventoryRepository;
+    private IExcelCellWriter writeDelegate;
+    private IDataConverter excelConverter;
+
+    public ReportModel(IProductQuery query, InventoryRepository inventoryRepository, IDataConverter excelConverter) {
+        this.query = query;
+        this.inventoryRepository = inventoryRepository;
+        this.excelConverter = excelConverter;
+        writeDelegate = new ReportExcelCellWriter();
+    }
 
     @Override
     public void exportData(Map<EEventsDataKeys, Object> data) {
-        ArrayList<SessionRecord> scannedInventoryItems = DataBundler.retrieveValue(data,
-                EEventsDataKeys.InstanceCollection);
-        
-        String positiveBarcodes = getInventoryBarcodesList(scannedInventoryItems);      
-        
 
         try {
-            ResultSet resultSet = query.LoadNegativeProducts(positiveBarcodes);
+            ResultSet resultSet;
+            resultSet = query.LoadScannedInventory();
+
+            String positiveBarcodes = getInventoryBarcodesList(resultSet);
+
+            resultSet = query.LoadProductsByInBarcodes(positiveBarcodes, false);
+            Collection<InventoryProduct> scannedInventoryItems = inventoryRepository.resultSetToProduct(resultSet);
+
+            resultSet = query.LoadProductsByInBarcodes(positiveBarcodes, true);
             Collection<InventoryProduct> negativeInventoryItems = inventoryRepository.resultSetToProduct(resultSet);
 
+            ExportWrapper exportWrapper = DataBundler.retrieveNestedValue(data, EEventsDataKeys.WrappersKeys,
+                    EWrappers.ExportWrapper);
 
+            ReportWrapper reportWrapper = new ReportWrapper(scannedInventoryItems, negativeInventoryItems);
+            ArrayList<ReportWrapper> reportWrappers = new ArrayList<>();
+            reportWrappers.add(reportWrapper);
+
+            excelConverter.setupExport(exportWrapper);
+            excelConverter.exportData(writeDelegate,
+                    reportWrappers);
+
+            data.put(EEventsDataKeys.OperationStatus, EOperationStatus.Completed);
+
+            StoreCenter storeCenter = StoreCenter.getInstance();
+            StoreDispatch action = storeCenter.createStoreEvent(EStores.DataStore, EStoreEvents.ReportEvent,
+                    EStoreEventAction.Export, data);
+            storeCenter.notify(action);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -46,14 +87,20 @@ public class ReportModel implements IDataConverterDelegate {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    private String getInventoryBarcodesList(ArrayList<SessionRecord> scannedInventoryItems) {
+    private String getInventoryBarcodesList(ResultSet source) {
         String barcodes = "";
-        for (int i = 0 ; i< scannedInventoryItems.size(); i++) {
-            barcodes += scannedInventoryItems.get(i).getArticleId();
-            if (i < scannedInventoryItems.size() - 1) {
-                barcodes += ",";
+
+        try {
+            while (source.next()) {
+                String barcode = source.getString(EScannedBarcodeAttributes.ScannedCodebar.toString());
+                barcodes += barcode;
+                if (!source.last())
+                    barcodes += ",";
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
         return barcodes;
     }
 

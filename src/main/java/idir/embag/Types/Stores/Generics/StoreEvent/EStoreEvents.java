@@ -17,5 +17,7 @@ public enum EStoreEvents {
     DesignationEvent,
     UsersEvent,
     PermissionsEvent,
-    GroupPermissionsEvent, DesignationPermissionEvent
+    GroupPermissionsEvent,
+    DesignationPermissionEvent,
+    ReportEvent
 }
