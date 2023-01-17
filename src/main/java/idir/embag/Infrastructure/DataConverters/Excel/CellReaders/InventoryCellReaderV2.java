@@ -23,11 +23,13 @@ public class InventoryCellReaderV2 implements IExcelCellReader {
     private static final int ARTICLE_CODE = 2;
     private static final int FAMILY_CODE = 3;
     private static final int DESIGNATION_ID = 4;
+    private static final int ARTICLE_PRICE = 5;
+
 
     private static final int ARTICLE_ID_COL = 1;
     private static final int ARTICLE_NAME_COL = 2;
     private static final int ARTICLE_DESIGNATION_COL = 7;
-    // private static final int FAMILY_CODE_COL = -1;
+    private static final int ARTICLE_PRICE_COL = 12;
 
     public InventoryCellReaderV2() {
 
@@ -37,6 +39,7 @@ public class InventoryCellReaderV2 implements IExcelCellReader {
                 EInventoryAttributes.ArticleCode,
                 EInventoryAttributes.FamilyCode,
                 EInventoryAttributes.DesignationId,
+                EInventoryAttributes.ArticlePrice
 
         };
 
@@ -89,6 +92,8 @@ public class InventoryCellReaderV2 implements IExcelCellReader {
 
             int designationId = GsonSerialiser.deserialise(row.getCell(ARTICLE_DESIGNATION_COL).getStringCellValue(),
                     Integer.class);
+
+            double articlePrice = row.getCell(ARTICLE_PRICE_COL).getNumericCellValue();        
             
             if (articleName == null) {
                 return null;
@@ -106,7 +111,8 @@ public class InventoryCellReaderV2 implements IExcelCellReader {
             attributes[ARTICLE_NAME] = new AttributeWrapper(attrbs[ARTICLE_NAME], articleName);
             attributes[FAMILY_CODE] = new AttributeWrapper(attrbs[FAMILY_CODE], familyCode);
             attributes[DESIGNATION_ID] = new AttributeWrapper(attrbs[DESIGNATION_ID], designationId);
-
+            attributes[ARTICLE_PRICE] = new AttributeWrapper(attrbs[ARTICLE_PRICE], articlePrice);
+            
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;

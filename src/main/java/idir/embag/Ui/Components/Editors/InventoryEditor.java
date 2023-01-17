@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
-
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.Application.Utility.Validator.Validators;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
@@ -33,12 +32,12 @@ public class InventoryEditor extends INodeView implements Initializable , IDialo
     private Node root;
 
     @FXML
-    private TextField articleIdField,articleNameField,articleFamilyField,stockIdField,articleCodeField;
+    private TextField articleIdField,articlePriceField,articleNameField,articleFamilyField,stockIdField,articleCodeField;
    
     @FXML
-    private Label articleIdErrorLabel, articleNameErrorLabel, articleFamilyErrorLabel, stockIdErrorLabel, articleCodeErrorLabel;
+    private Label articleIdErrorLabel,articlePriceErrorLabel,articleNameErrorLabel, articleFamilyErrorLabel, stockIdErrorLabel, articleCodeErrorLabel;
 
-    private CustomFieldSkin articleIdSkin, articleNameSkin, articleFamilySkin, stockIdSkin, articleCodeSkin ;
+    private CustomFieldSkin articleIdSkin, articlePriceSkin,articleNameSkin, articleFamilySkin, stockIdSkin, articleCodeSkin ;
 
     private Runnable cancelTask;
 
@@ -80,13 +79,14 @@ public class InventoryEditor extends INodeView implements Initializable , IDialo
         articleFamilyField.setText(String.valueOf(product.getFamilyCode()));
         stockIdField.setText(String.valueOf(product.getDesignationId()));
         articleCodeField.setText(String.valueOf(product.getArticleCode()));
+        articlePriceField.setText(String.valueOf(product.getPrice()));
     }
 
     private void setupTextFieldsValidation() {
         SkinErrorTester emptyFieldTester = new SkinErrorTester(Messages.errorRequiredField, Validators::emptyField);
         SkinErrorTester invalidName = new SkinErrorTester(Messages.errorInvalidName, Validators::isName);
         SkinErrorTester invalidNumberTester = new SkinErrorTester(Messages.errorInvalidNumber, Validators::isNumber);
- 
+        SkinErrorTester invalidPriceTester = new SkinErrorTester(Messages.errorInvalidPrice, Validators::isPrice);
 
         articleIdSkin = new CustomFieldSkin(articleIdField,articleIdErrorLabel);
         articleIdSkin.addErrorTester(emptyFieldTester);
@@ -112,6 +112,12 @@ public class InventoryEditor extends INodeView implements Initializable , IDialo
         articleCodeSkin.addErrorTester(emptyFieldTester);
         articleCodeSkin.addErrorTester(invalidNumberTester);
         articleCodeField.setSkin(articleCodeSkin);
+
+        articlePriceSkin = new CustomFieldSkin(articlePriceField,articlePriceErrorLabel);
+        articlePriceSkin.addErrorTester(emptyFieldTester);
+        articlePriceSkin.addErrorTester(invalidPriceTester);
+        articlePriceField.setSkin(articlePriceSkin);
+
     }
 
     @Override
@@ -150,7 +156,8 @@ public class InventoryEditor extends INodeView implements Initializable , IDialo
         Collection<AttributeWrapper> attributes = new ArrayList<AttributeWrapper>();
         
         attributes.add(new AttributeWrapper(EInventoryAttributes.ArticleId,articleIdField.getText()));
-        //attributes.add(new AttributeWrapper(EEventDataKeys.ArticleName,articleNameField.getText()));
+        attributes.add(new AttributeWrapper(EInventoryAttributes.ArticlePrice,articlePriceField.getText()));
+        attributes.add(new AttributeWrapper(EInventoryAttributes.ArticleName,articleNameField.getText()));
         attributes.add(new AttributeWrapper(EInventoryAttributes.ArticleCode,articleCodeField.getText()));
         attributes.add(new AttributeWrapper(EInventoryAttributes.StockId,stockIdField.getText()));
 

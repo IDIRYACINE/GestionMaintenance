@@ -65,6 +65,27 @@
             </HBox>
             <HBox alignment="CENTER" spacing="20.0">
                <children>
+                  <Label text="Price">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+                  <VBox>
+                     <children>
+                        <TextField fx:id="articlePriceField" />
+                        <Label fx:id="articlePriceErrorLabel" textFill="RED" />
+                     </children>
+                     <padding>
+                        <Insets top="10.0" />
+                     </padding>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets left="70.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER" spacing="20.0">
+               <children>
                   <Label text="StockId">
                      <font>
                         <Font size="25.0" />

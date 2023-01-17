@@ -9,6 +9,7 @@ public abstract class Messages {
     public static String errorInvalidEmail = "Adresse email invalide";
     public static String errorInvalidPhone = "Numéro de téléphone invalide";
     public static String errorInvalidNumber = "Numéro invalide";
+    public static String errorInvalidPrice = "Prix invalide";
     public static final String errorInvalidName = "Nom invalide";
 
 

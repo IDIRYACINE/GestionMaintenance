@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import idir.embag.DataModels.Products.InventoryProduct;
 import idir.embag.Types.Infrastructure.Database.Metadata.EInventoryAttributes;
-import idir.embag.Types.Infrastructure.Database.Metadata.EStockAttributes;
 
 public class InventoryRepository {
     public Collection<InventoryProduct> resultSetToProduct(ResultSet source){
@@ -14,11 +13,11 @@ public class InventoryRepository {
         try {
             while (source.next()) {
                 result.add(new InventoryProduct(source.getInt(EInventoryAttributes.ArticleId.toString()),
-                    source.getString(EStockAttributes.ArticleName.toString()),
+                    source.getString(EInventoryAttributes.ArticleName.toString()),
                     source.getInt(EInventoryAttributes.ArticleCode.toString()),
                     1,
-                    0,
-                    source.getInt(EStockAttributes.FamilyCode.toString()),
+                    source.getDouble(EInventoryAttributes.ArticlePrice.toString()),
+                    source.getInt(EInventoryAttributes.FamilyCode.toString()),
                     source.getInt(EInventoryAttributes.DesignationId.toString())));
                   
             }

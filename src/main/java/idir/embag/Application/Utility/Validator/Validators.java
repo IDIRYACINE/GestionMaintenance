@@ -22,4 +22,8 @@ public abstract class Validators {
         return text.matches("^[0-9]{10}$");
     }
 
+    public static Boolean isPrice(String text){
+        return text.matches("^[0-9]+(\\.[0-9]{1,2})?$");
+    }
+
 }
