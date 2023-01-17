@@ -66,8 +66,8 @@ public class StoreCenter implements IStoresCenter {
   }
 
   private StoreCenter(ServicesProvider servicesCenter, INavigationController navigationController) {
-    setupDataStore(servicesCenter.getDatabaseInitialiser());
-    setupDataConverterStore();
+    setupStores(servicesCenter.getDatabaseInitialiser());
+   
     stores.put(EStores.NavigationStore, new NavigationStore(navigationController));
   }
 
@@ -156,12 +156,15 @@ public class StoreCenter implements IStoresCenter {
     StoreCenter.getInstance().notify(action);
   }
 
-  private void setupDataStore(DatabaseInitialiser databaseInitialiser) {
+  private void setupStores(DatabaseInitialiser databaseInitialiser) {
 
     StockModel stockModel = new StockModel(databaseInitialiser.getProductQuery(), new StockRepository());
+    
+    InventoryRepository inventoryRepository= new InventoryRepository();
     InventoryModel inventoryModel = new InventoryModel(databaseInitialiser.getProductQuery(),
-        new InventoryRepository());
-    FamilyModel familyModel = new FamilyModel(databaseInitialiser.getProductQuery(), new FamilyCodeRepository());
+        inventoryRepository);
+    
+        FamilyModel familyModel = new FamilyModel(databaseInitialiser.getProductQuery(), new FamilyCodeRepository());
     WorkersModel workersModel = new WorkersModel(databaseInitialiser.getWorkerQuery(), new WorkersRepository());
 
     SessionRepository sessionRepository = new SessionRepository();
@@ -204,15 +207,15 @@ public class StoreCenter implements IStoresCenter {
     delegates[IDataStore.GROUP_PERMISSION_DELEGATE] = groupPermissionsModel;
 
     stores.put(EStores.DataStore, new DataStore(delegates));
+
+
+    IDataConverterDelegate[] converterDelegates = new IDataConverterDelegate[DataConverterStore.DELEGATES_COUNT];
+    converterDelegates[IDataConverterStore.EXCEL_DELEGATE] = new ExcelModel();
+
+    converterDelegates[IDataConverterStore.REPORT_DELEGATE] = new ReportModel(databaseInitialiser.getProductQuery(), inventoryRepository);
+
+    stores.put(EStores.DataConverterStore, new DataConverterStore(converterDelegates));
   }
 
-  private void setupDataConverterStore() {
-
-    IDataConverterDelegate[] delegates = new IDataConverterDelegate[DataConverterStore.DELEGATES_COUNT];
-    delegates[IDataConverterStore.EXCEL_DELEGATE] = new ExcelModel();
-    delegates[IDataConverterStore.REPORT_DELEGATE] = new ReportModel();
-
-    stores.put(EStores.DataConverterStore, new DataConverterStore(delegates));
-  }
 
 }

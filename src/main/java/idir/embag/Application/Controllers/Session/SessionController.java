@@ -17,7 +17,6 @@ import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Infrastructure.ServicesProvider;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.FetchActiveSessionRecordsWrapper;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.FetchActiveSessionWrapper;
-import idir.embag.Types.Infrastructure.DataConverters.ExportWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Metadata.ESessionAttributes;
@@ -35,6 +34,7 @@ import idir.embag.Ui.Constants.Messages;
 import idir.embag.Ui.Constants.Names;
 import idir.embag.Ui.Dialogs.ConfirmationDialog.ConfirmationDialog;
 import idir.embag.Ui.Dialogs.MangerDialog.SessionWorkersDialog;
+import idir.embag.Ui.Dialogs.ReportDialog.ReportDialog;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
@@ -161,22 +161,25 @@ public class SessionController implements IEventSubscriber {
 
     public void export() {
         Map<EEventsDataKeys, Object> data = new HashMap<>();
-
-        EStoreEvents targetTable = EStoreEvents.SessionRecordsEvent;
-        LoadWrapper loadWrapper = new LoadWrapper(1000, 0);
-
-        Map<EWrappers, Object> wrappersData = new HashMap<>();
-        ExportWrapper exportWrapper = new ExportWrapper(loadWrapper, targetTable);
-        wrappersData.put(EWrappers.ExportWrapper, exportWrapper);
-
         data.put(EEventsDataKeys.Subscriber, this);
-        data.put(EEventsDataKeys.WrappersKeys, wrappersData);
-        data.put(EEventsDataKeys.InstanceCollection, tableRecord.getItems());
 
-        StoreCenter storeCenter = StoreCenter.getInstance();
-        StoreDispatch event = storeCenter.createStoreEvent(EStores.DataConverterStore, targetTable,
-                EStoreEventAction.Export, data);
-        storeCenter.dispatch(event);
+        ReportDialog dialogContent = new ReportDialog();
+        dialogContent.setOnConfirm(requestData -> {
+            StoreCenter storeCenter = StoreCenter.getInstance();
+            StoreDispatch event = storeCenter.createStoreEvent(EStores.DataConverterStore, EStoreEvents.ReportEvent,
+                    EStoreEventAction.Export, requestData);
+            storeCenter.dispatch(event);
+        });
+
+        Map<ENavigationKeys, Object> navigationData = new HashMap<>();
+        navigationData.put(ENavigationKeys.DialogContent, dialogContent);
+        data.put(EEventsDataKeys.NavigationKeys, navigationData);
+
+        dialogContent.loadFxml();
+        
+
+        dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
+
     }
 
     private void addRecord(SessionRecord record) {

@@ -10,6 +10,7 @@ import org.yaml.snakeyaml.Yaml;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Generics.EExportSessionKeys;
+import idir.embag.Types.Generics.EExporters;
 import idir.embag.Types.Generics.EOperationStatus;
 import idir.embag.Types.Infrastructure.DataConverters.ExportWrapper;
 import idir.embag.Types.Infrastructure.DataConverters.ImportWrapper;
@@ -48,6 +49,7 @@ public class Exporter implements IEventSubscriber {
 
         data.put(EEventsDataKeys.Subscriber, this);
         data.put(EEventsDataKeys.WrappersKeys, wrappersData);
+        data.put(EEventsDataKeys.ExporterKey, EExporters.Excel);
 
         StoreCenter storeCenter = StoreCenter.getInstance();
         StoreDispatch event = storeCenter.createStoreEvent(EStores.DataConverterStore, exportWrapper.getTargetTable(),
@@ -65,6 +67,7 @@ public class Exporter implements IEventSubscriber {
         wrappersData.put(EWrappers.ImportWrapper, importWrapper);
 
         data.put(EEventsDataKeys.WrappersKeys, wrappersData);
+        data.put(EEventsDataKeys.ExporterKey, EExporters.Excel);
 
         StoreCenter storeCenter = StoreCenter.getInstance();
         StoreDispatch event = storeCenter.createStoreEvent(EStores.DataConverterStore, importWrapper.getTargetTable(),

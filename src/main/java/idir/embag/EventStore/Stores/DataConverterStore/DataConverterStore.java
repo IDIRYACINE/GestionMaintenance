@@ -44,9 +44,10 @@ public class DataConverterStore implements IDataConverterStore{
 
     @Override
     public void exportData(StoreEvent event) {
-        IDataConverterDelegate dataDelegate = delegates.get(EExporters.Excel);
-
         Map<EEventsDataKeys,Object> data = event.getData();
+
+        IDataConverterDelegate dataDelegate = delegates.get(data.get(EEventsDataKeys.ExporterKey));
+
         data.put(EEventsDataKeys.EventKey, event.getEvent());
 
         dataDelegate.exportData(data);

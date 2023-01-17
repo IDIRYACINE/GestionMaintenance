@@ -2,12 +2,10 @@ package idir.embag.Ui.Dialogs.ReportDialog;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
-import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.Types.Infrastructure.DataConverters.ExportWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Panels.Components.IDialogContent;
@@ -40,9 +38,9 @@ public class ReportDialog extends INodeView implements Initializable,IDialogCont
 
 
 
-    public ReportDialog(ArrayList<SessionRecord> records) {
+    public ReportDialog() {
         fxmlPath = "/views/ExportDialog/ReportDialog.fxml";
-        controller = new ReportController(records);
+        controller = new ReportController();
     }
 
     @Override

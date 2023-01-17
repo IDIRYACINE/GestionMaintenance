@@ -10,6 +10,7 @@ import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Products.InventoryProduct;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Infrastructure.DataConverters.Excel.CellWriters.ReportExcelCellWriter;
+import idir.embag.Infrastructure.DataConverters.Report.Excel;
 import idir.embag.Repository.InventoryRepository;
 import idir.embag.Types.Generics.EOperationStatus;
 import idir.embag.Types.Infrastructure.DataConverters.ExportWrapper;
@@ -32,10 +33,10 @@ public class ReportModel implements IDataConverterDelegate {
     private IExcelCellWriter writeDelegate;
     private IDataConverter excelConverter;
 
-    public ReportModel(IProductQuery query, InventoryRepository inventoryRepository, IDataConverter excelConverter) {
+    public ReportModel(IProductQuery query, InventoryRepository inventoryRepository) {
         this.query = query;
         this.inventoryRepository = inventoryRepository;
-        this.excelConverter = excelConverter;
+        excelConverter = new Excel();
         writeDelegate = new ReportExcelCellWriter();
     }
 
