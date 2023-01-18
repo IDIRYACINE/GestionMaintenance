@@ -45,7 +45,7 @@ public class ReportExcelCellWriter implements IExcelCellWriter<ReportWrapper> {
         InventoryProduct[] positiveItems = reportWrapper
                 .getScannedInventoryItems().toArray(new InventoryProduct[reportWrapper
                         .getScannedInventoryItems().size()]);
-                        
+
         InventoryProduct[] negativeItems = reportWrapper.getNegativeInventoryItems()
                 .toArray(new InventoryProduct[reportWrapper
                         .getScannedInventoryItems().size()]);
@@ -66,7 +66,7 @@ public class ReportExcelCellWriter implements IExcelCellWriter<ReportWrapper> {
             int totalQuantity = 0;
             int totalPrice = 0;
 
-            boolean isSamePositiveFamily = false;
+            boolean isSamePositiveFamily = stillOnSameFamily(currentFamilyCode, currentPositiveItem);
             while (isSamePositiveFamily && (positiveItemsIndex < positiveItems.length)) {
                 totalPrice += currentPositiveItem.getPrice();
                 totalQuantity += currentPositiveItem.getQuantity();
@@ -81,7 +81,7 @@ public class ReportExcelCellWriter implements IExcelCellWriter<ReportWrapper> {
 
             }
 
-            boolean isSameNegativeFamily = false;
+            boolean isSameNegativeFamily = stillOnSameFamily(currentFamilyCode, currentNegativeItem);
             while (isSameNegativeFamily && (negativeItemsIndex < negativeItems.length)) {
                 totalPrice -= currentNegativeItem.getPrice();
                 totalQuantity -= currentNegativeItem.getQuantity();
@@ -124,14 +124,14 @@ public class ReportExcelCellWriter implements IExcelCellWriter<ReportWrapper> {
     private void setupColumns() {
         Row row = sheet.createRow(0);
         for (int i = 0; i < columns.length; i++) {
-            Cell cell = row.createCell(i);
+            Cell cell = row.createCell(columnIndexes[i]);
             cell.setCellValue(columns[i]);
         }
     }
 
     private boolean isWorkCompleted(int positiveItemsIndex, int negativeItemsIndex, int positiveItemsLength,
             int negativeItemsLength) {
-        return positiveItemsIndex == positiveItemsLength && negativeItemsIndex == negativeItemsLength;
+        return (positiveItemsIndex == positiveItemsLength) && (negativeItemsIndex == negativeItemsLength);
     }
 
     private int getNextFamilyCode(InventoryProduct[] positiveItems, int positiveItemsIndex,

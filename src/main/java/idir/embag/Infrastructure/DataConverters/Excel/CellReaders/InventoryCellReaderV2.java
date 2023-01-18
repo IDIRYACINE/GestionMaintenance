@@ -30,6 +30,7 @@ public class InventoryCellReaderV2 implements IExcelCellReader {
     private static final int ARTICLE_NAME_COL = 2;
     private static final int ARTICLE_DESIGNATION_COL = 7;
     private static final int ARTICLE_PRICE_COL = 12;
+    private static final int ARTICLE_ACQUISITION_COL = 13;
 
     public InventoryCellReaderV2() {
 
@@ -93,7 +94,10 @@ public class InventoryCellReaderV2 implements IExcelCellReader {
             int designationId = GsonSerialiser.deserialise(row.getCell(ARTICLE_DESIGNATION_COL).getStringCellValue(),
                     Integer.class);
 
-            double articlePrice = row.getCell(ARTICLE_PRICE_COL).getNumericCellValue();        
+            double articlePrice = row.getCell(ARTICLE_PRICE_COL).getNumericCellValue();   
+            if (articlePrice == 0) {
+                articlePrice = row.getCell(ARTICLE_ACQUISITION_COL).getNumericCellValue(); 
+            }     
             
             if (articleName == null) {
                 return null;

@@ -95,7 +95,7 @@ public class ReportModel implements IDataConverterDelegate {
             while (source.next()) {
                 String barcode = source.getString(EScannedBarcodeAttributes.ScannedCodebar.toString());
                 barcodes += barcode;
-                if (!source.last())
+                if (!source.isLast())
                     barcodes += ",";
             }
         } catch (SQLException e) {

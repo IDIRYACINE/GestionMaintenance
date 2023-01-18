@@ -30,6 +30,7 @@ import idir.embag.Types.Stores.Generics.StoreDispatch.StoreDispatch;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
+import idir.embag.Ui.Constants.Measures;
 import idir.embag.Ui.Constants.Messages;
 import idir.embag.Ui.Constants.Names;
 import idir.embag.Ui.Dialogs.ConfirmationDialog.ConfirmationDialog;
@@ -215,11 +216,17 @@ public class SessionController implements IEventSubscriber {
 
         idColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getArticleId));
         nameColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getArticleName));
+        nameColumn.setMinWidth(Measures.ArticleNameColumnWidth);
+        
         priceColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getPrix));
+        priceColumn.setMinWidth(Measures.PriceColumnWidth);
+        
         workerIdColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getworkerName));
         groupIdColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getGroupId));
+        
         dateColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getDate));
-       
+        dateColumn.setMinWidth(Measures.DateColumnWidth);
+
         tableRecord.getTableColumns().setAll(idColumn, nameColumn, groupIdColumn, workerIdColumn, dateColumn,
                 priceColumn);
 
