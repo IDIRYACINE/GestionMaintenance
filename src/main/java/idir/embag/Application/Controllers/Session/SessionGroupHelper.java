@@ -10,7 +10,7 @@ import idir.embag.Application.State.AppState;
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.SessionGroup;
-import idir.embag.DataModels.Users.Designation;
+import idir.embag.DataModels.Users.Affectation;
 import idir.embag.DataModels.Users.User;
 import idir.embag.EventStore.Models.Permissions.RequestsData.LoadRequest;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
@@ -57,13 +57,13 @@ public class SessionGroupHelper implements IEventSubscriber {
         User user = appState.getCurrentUser();
 
         SessionGroup group = new SessionGroup(appState.getSessionGroupCurrId(), "", SessionController.sessionId,
-                new ArrayList<Designation>(),-1);
+                new ArrayList<Affectation>(),-1);
 
         addSessionGroupDialog(group, user.getDesignations());
 
     }
 
-    private void addSessionGroupDialog(SessionGroup group, ArrayList<Designation> ungratedDesignations) {
+    private void addSessionGroupDialog(SessionGroup group, ArrayList<Affectation> ungratedDesignations) {
 
         SessionGroupEditor dialogContent = new SessionGroupEditor(group, ungratedDesignations);
 
@@ -92,9 +92,9 @@ public class SessionGroupHelper implements IEventSubscriber {
         SessionGroup group = tableSessionGroups.getSelectionModel().getSelectedValues().get(0);
 
         if (group != null) {
-            ArrayList<Designation> userDesignations = AppState.getInstance().getCurrentUser().getDesignations();
-            ArrayList<Designation> unGrantedGroupDesignations = new ArrayList<>();
-            ArrayList<Designation> groupDesignations = group.getDesignations();
+            ArrayList<Affectation> userDesignations = AppState.getInstance().getCurrentUser().getDesignations();
+            ArrayList<Affectation> unGrantedGroupDesignations = new ArrayList<>();
+            ArrayList<Affectation> groupDesignations = group.getAffectations();
 
             userDesignations.forEach(designation -> {
                 if (!groupDesignations.contains(designation))
@@ -106,7 +106,7 @@ public class SessionGroupHelper implements IEventSubscriber {
         }
     }
 
-    private void updateSessionGroupDialog(SessionGroup group, ArrayList<Designation> ungrantedDesignations) {
+    private void updateSessionGroupDialog(SessionGroup group, ArrayList<Affectation> ungrantedDesignations) {
 
         SessionGroupEditor dialogContent = new SessionGroupEditor(group, ungrantedDesignations);
 

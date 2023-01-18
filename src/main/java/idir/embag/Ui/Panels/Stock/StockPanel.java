@@ -3,7 +3,7 @@ package idir.embag.Ui.Panels.Stock;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import idir.embag.Application.Controllers.Stock.DesignationHelper;
+import idir.embag.Application.Controllers.Stock.AffectationHelper;
 import idir.embag.Application.Controllers.Stock.FamilyCodesHelper;
 import idir.embag.Application.Controllers.Stock.InventoryHelper;
 import idir.embag.Application.Controllers.Stock.StockController;
@@ -45,7 +45,7 @@ public class StockPanel extends INodeView implements Initializable {
         IStockHelper stockHelper = new StockHelper();
         IStockHelper inventoryHelper = new InventoryHelper();
         IStockHelper familyCodesHelper = new FamilyCodesHelper();
-        IStockHelper designationsHelper = new DesignationHelper();
+        IStockHelper designationsHelper = new AffectationHelper();
 
         controller = new StockController(stockHelper, inventoryHelper, familyCodesHelper, designationsHelper);
 

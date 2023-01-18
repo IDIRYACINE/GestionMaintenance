@@ -42,8 +42,13 @@ public class ReportExcelCellWriter implements IExcelCellWriter<ReportWrapper> {
     public void writeData(Collection<ReportWrapper> data) {
         ReportWrapper reportWrapper = data.iterator().next();
 
-        InventoryProduct[] positiveItems = (InventoryProduct[]) reportWrapper.getScannedInventoryItems().toArray();
-        InventoryProduct[] negativeItems = (InventoryProduct[]) reportWrapper.getNegativeInventoryItems().toArray();
+        InventoryProduct[] positiveItems = reportWrapper
+                .getScannedInventoryItems().toArray(new InventoryProduct[reportWrapper
+                        .getScannedInventoryItems().size()]);
+                        
+        InventoryProduct[] negativeItems = reportWrapper.getNegativeInventoryItems()
+                .toArray(new InventoryProduct[reportWrapper
+                        .getScannedInventoryItems().size()]);
 
         int positiveItemsIndex = 0;
         int negativeItemsIndex = 0;

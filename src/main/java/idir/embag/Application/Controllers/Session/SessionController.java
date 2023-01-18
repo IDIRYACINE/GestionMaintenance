@@ -206,31 +206,22 @@ public class SessionController implements IEventSubscriber {
                 Comparator.comparing(SessionRecord::getArticleName));
         MFXTableColumn<SessionRecord> priceColumn = new MFXTableColumn<>(Names.Price, true,
                 Comparator.comparing(SessionRecord::getPrix));
-        MFXTableColumn<SessionRecord> priceShiftColumn = new MFXTableColumn<>(Names.PriceShift, true,
-                Comparator.comparing(SessionRecord::getPriceShift));
         MFXTableColumn<SessionRecord> workerIdColumn = new MFXTableColumn<>(Names.WorkerName, true,
                 Comparator.comparing(SessionRecord::getworkerName));
         MFXTableColumn<SessionRecord> groupIdColumn = new MFXTableColumn<>(Names.GroupId, true,
                 Comparator.comparing(SessionRecord::getGroupId));
         MFXTableColumn<SessionRecord> dateColumn = new MFXTableColumn<>(Names.Date, true,
                 Comparator.comparing(SessionRecord::getDate));
-        MFXTableColumn<SessionRecord> inventoryQuantiyColumn = new MFXTableColumn<>(Names.Quantity, true,
-                Comparator.comparing(SessionRecord::getQuantityInventory));
-        MFXTableColumn<SessionRecord> stockQuantiyColumn = new MFXTableColumn<>(Names.QuantityShift, true,
-                Comparator.comparing(SessionRecord::getQuantityStock));
 
         idColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getArticleId));
         nameColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getArticleName));
         priceColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getPrix));
-        priceShiftColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getPriceShift));
         workerIdColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getworkerName));
         groupIdColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getGroupId));
         dateColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getDate));
-        inventoryQuantiyColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getQuantityInventory));
-        stockQuantiyColumn.setRowCellFactory(record -> new MFXTableRowCell<>(SessionRecord::getQuantityStock));
-
+       
         tableRecord.getTableColumns().setAll(idColumn, nameColumn, groupIdColumn, workerIdColumn, dateColumn,
-                inventoryQuantiyColumn, stockQuantiyColumn, priceColumn, priceShiftColumn);
+                priceColumn);
 
     }
 

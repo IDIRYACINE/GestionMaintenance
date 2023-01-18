@@ -7,9 +7,9 @@ public class User {
     private String userName;
     private String password;
     private boolean isAdmin;
-    private ArrayList<Designation> designations ;
+    private ArrayList<Affectation> designations ;
 
-    public User(int userId, String userName, String password, boolean isAdmin, ArrayList<Designation> designations) {
+    public User(int userId, String userName, String password, boolean isAdmin, ArrayList<Affectation> designations) {
         this.userId = userId;
         this.userName = userName;
         this.password = password;
@@ -44,11 +44,11 @@ public class User {
         this.isAdmin = isAdmin;
     }
 
-    public void setDesignations(ArrayList<Designation> designations) {
+    public void setDesignations(ArrayList<Affectation> designations) {
         this.designations = designations;
     }
 
-    public ArrayList<Designation> getDesignations() {
+    public ArrayList<Affectation> getDesignations() {
         return designations;
     }
 
@@ -58,8 +58,21 @@ public class User {
 
     public ArrayList<Integer> getDesignationsIds() {
         ArrayList<Integer> ids = new ArrayList<>();
-        designations.forEach(designation -> ids.add(designation.getDesignationId()));
+        designations.forEach(designation -> ids.add(designation.getAffectationId()));
         return ids;
+    }
+
+    public void addDesignation(Affectation designation) {
+        designations.add(designation);
+    }
+
+    public void removeDesignation(Affectation designation) {
+        for (int i = 0; i < designations.size(); i++) {
+            if(designations.get(i).getAffectationId() == designation.getAffectationId()){
+                designations.remove(i);
+                break;
+            }
+        }
     }
 
 }

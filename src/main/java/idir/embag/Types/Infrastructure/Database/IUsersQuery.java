@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
-import idir.embag.DataModels.Users.DesignationPermission;
+import idir.embag.DataModels.Users.AffectationPermission;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.IQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
@@ -19,8 +19,8 @@ public abstract class IUsersQuery extends IQuery{
     public abstract ResultSet LoadUsers(LoadWrapper parametrers) throws SQLException;
     public abstract ResultSet SearchUsers(SearchWrapper parameters) throws SQLException;
 
-    public abstract void GrantDesignationSupervisior(Collection<DesignationPermission> attributes) throws SQLException;
-    public abstract void RevokeDesignationSupervisior(Collection<DesignationPermission> atributes) throws SQLException;
+    public abstract void GrantDesignationSupervisior(Collection<AffectationPermission> attributes) throws SQLException;
+    public abstract void RevokeDesignationSupervisior(Collection<AffectationPermission> atributes) throws SQLException;
 
     public abstract ResultSet LoadUserPermissions(int userId) throws SQLException;
     public abstract ResultSet LoadUserUngrantedPermissions(Collection<Integer> grantedPermissions) throws SQLException;

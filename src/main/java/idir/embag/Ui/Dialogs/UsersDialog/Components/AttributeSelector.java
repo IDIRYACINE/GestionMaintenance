@@ -3,7 +3,7 @@ package idir.embag.Ui.Dialogs.UsersDialog.Components;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
-import idir.embag.DataModels.Users.Designation;
+import idir.embag.DataModels.Users.Affectation;
 import io.github.palexdev.materialfx.controls.MFXCheckbox;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -21,23 +21,23 @@ public class AttributeSelector  implements Initializable{
     @FXML
     private MFXCheckbox attrbCheckBox;
 
-    private Designation attribute;
+    private Affectation attribute;
 
     private Consumer<HBox> onSelect,onDeselect;
 
     private boolean isSelectedInitially = false;
 
-    public AttributeSelector(Designation attributes) {
+    public AttributeSelector(Affectation attributes) {
         this.attribute = attributes;
     }
 
-    public Designation getDesignation() {
+    public Affectation getDesignation() {
         return attribute;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        attrbLabel.setText(attribute.getDesignationName());
+        attrbLabel.setText(attribute.getAffectationName());
         attrbCheckBox.setOnAction(event -> {
             handleCheckBoxToggling();
         });

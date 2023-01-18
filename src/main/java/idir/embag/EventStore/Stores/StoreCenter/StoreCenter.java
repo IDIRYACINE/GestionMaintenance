@@ -24,7 +24,7 @@ import idir.embag.EventStore.Stores.DataStore.DataStore;
 import idir.embag.EventStore.Stores.NavigationStore.NavigationStore;
 import idir.embag.Infrastructure.ServicesProvider;
 import idir.embag.Infrastructure.Initialisers.DatabaseInitialiser;
-import idir.embag.Repository.DesignationsRepository;
+import idir.embag.Repository.AffectationsRepository;
 import idir.embag.Repository.FamilyCodeRepository;
 import idir.embag.Repository.InventoryRepository;
 import idir.embag.Repository.SessionRepository;
@@ -174,22 +174,22 @@ public class StoreCenter implements IStoresCenter {
     SessionWorkersModel sessionWorkersModel = new SessionWorkersModel(databaseInitialiser.getSessionQuery(),
         sessionRepository);
 
-    DesignationsRepository designationsRepository = new DesignationsRepository();
+    AffectationsRepository designationsRepository = new AffectationsRepository();
 
     SessionGroupModel sessionGroupModel = new SessionGroupModel(databaseInitialiser.getSessionQuery(),
         sessionRepository, databaseInitialiser.getGroupPermissionsQuery(), designationsRepository);
     HistoryModel historyModel = new HistoryModel(databaseInitialiser.getSessionQuery(), sessionRepository);
 
-    DesignationModel designationModel = new DesignationModel(databaseInitialiser.getDesignationsQuery(),
+    DesignationModel designationModel = new DesignationModel(databaseInitialiser.getAffectationsQuery(),
         designationsRepository);
 
-    PermissionsModel permissionsModel = new PermissionsModel(databaseInitialiser.getDesignationsQuery(),
+    PermissionsModel permissionsModel = new PermissionsModel(databaseInitialiser.getAffectationsQuery(),
         databaseInitialiser.getUsersQuery(), designationsRepository);
 
     UsersModel usersModel = new UsersModel(databaseInitialiser.getUsersQuery(), new UsersRepository(),
-        designationsRepository, databaseInitialiser.getDesignationsQuery());
+        designationsRepository, databaseInitialiser.getAffectationsQuery());
 
-    GroupPermissionsModel groupPermissionsModel = new GroupPermissionsModel(databaseInitialiser.getDesignationsQuery(),
+    GroupPermissionsModel groupPermissionsModel = new GroupPermissionsModel(databaseInitialiser.getAffectationsQuery(),
         databaseInitialiser.getGroupPermissionsQuery(), designationsRepository);
 
     IDataDelegate[] delegates = new IDataDelegate[IDataStore.DELEGATES_COUNT];

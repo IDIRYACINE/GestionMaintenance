@@ -7,13 +7,13 @@ import javafx.scene.Node;
 public class StockController {
 
     private IStockHelper selectedStockHelper , stockHelper,inventoryHelper,familyCodesHelper;
-    private IStockHelper designationHelper;
+    private IStockHelper affectationHelper;
 
     public StockController(IStockHelper stockHelper, IStockHelper inventoryHelper, IStockHelper familyCodesHelper,IStockHelper designationHelper) {
         this.stockHelper = stockHelper;
         this.inventoryHelper = inventoryHelper;
         this.familyCodesHelper = familyCodesHelper;
-        this.designationHelper = designationHelper;
+        this.affectationHelper = designationHelper;
         selectedStockHelper = this.stockHelper;
     }
 
@@ -31,8 +31,8 @@ public class StockController {
                 selectedStockHelper = familyCodesHelper;
                 selectedStockHelper.notifySelected();
                 break;
-            case Designation:
-                selectedStockHelper = designationHelper;
+            case Affectation:
+                selectedStockHelper = affectationHelper;
                 selectedStockHelper.notifySelected();
                 break;    
         }

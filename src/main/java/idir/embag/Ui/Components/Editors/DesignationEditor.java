@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.Application.Utility.Validator.Validators;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
-import idir.embag.DataModels.Users.Designation;
+import idir.embag.DataModels.Users.Affectation;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Metadata.EAffectationAttributes;
 import idir.embag.Types.MetaData.EWrappers;
@@ -43,9 +43,9 @@ public class DesignationEditor extends INodeView implements Initializable, IDial
 
     private Consumer<Map<EEventsDataKeys, Object>> confirmTask;
 
-    private Designation designation;
+    private Affectation designation;
 
-    public DesignationEditor(Designation designation) {
+    public DesignationEditor(Affectation designation) {
         this.designation = designation;
         fxmlPath = "/views/Editors/DesignationEditor.fxml";
 
@@ -70,8 +70,8 @@ public class DesignationEditor extends INodeView implements Initializable, IDial
     }
 
     private void initialiseEditor() {
-        idField.setText(String.valueOf(designation.getDesignationId()));
-        nameField.setText(String.valueOf(designation.getDesignationName()));
+        idField.setText(String.valueOf(designation.getAffectationId()));
+        nameField.setText(String.valueOf(designation.getAffectationName()));
     }
 
     private void setupTextFieldsValidation() {
@@ -111,8 +111,8 @@ public class DesignationEditor extends INodeView implements Initializable, IDial
     }
 
     private void setupConfirm(Map<EEventsDataKeys, Object> data) {
-        designation.setDesignationName(nameField.getText());
-        designation.setDesignationId(Integer.parseInt(idField.getText()));
+        designation.setAffectationName(nameField.getText());
+        designation.setAffectationId(Integer.parseInt(idField.getText()));
 
         DataBundler.bundleNestedData(data, EEventsDataKeys.WrappersKeys, EWrappers.AttributesCollection,
                 getAttributeWrappers());
@@ -122,7 +122,7 @@ public class DesignationEditor extends INodeView implements Initializable, IDial
     private Collection<AttributeWrapper> getAttributeWrappers() {
         Collection<AttributeWrapper> attributes = new ArrayList<AttributeWrapper>();
 
-        attributes.add(new AttributeWrapper(EAffectationAttributes.DesignationName, nameField.getText()));
+        attributes.add(new AttributeWrapper(EAffectationAttributes.AffectationName, nameField.getText()));
         attributes.add(new AttributeWrapper(EAffectationAttributes.AffectationId, idField.getText()));
 
         return attributes;

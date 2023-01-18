@@ -4,21 +4,21 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import idir.embag.DataModels.Users.Designation;
+import idir.embag.DataModels.Users.Affectation;
 
 public class SessionGroup {
     private int id;
     private String name;
     private Timestamp sessionId;
-    private ArrayList<Designation> designations ;
+    private ArrayList<Affectation> affectations ;
     private int supervisorId;
 
 
-    public SessionGroup(int id, String name, Timestamp sessionId, ArrayList<Designation> designations,int supervisorId) {
+    public SessionGroup(int id, String name, Timestamp sessionId, ArrayList<Affectation> affectations,int supervisorId) {
         this.id = id;
         this.name = name;
         this.sessionId = sessionId;
-        this.designations = designations;
+        this.affectations = affectations;
         this.supervisorId = supervisorId;
     }
 
@@ -39,8 +39,8 @@ public class SessionGroup {
     }
     
 
-    public ArrayList<Designation> getDesignations() {
-        return designations;
+    public ArrayList<Affectation> getAffectations() {
+        return affectations;
     }
 
 
@@ -53,14 +53,14 @@ public class SessionGroup {
         this.supervisorId = supervisorId;
     }
 
-    public Collection<Integer> getDesignationsIds() {
+    public Collection<Integer> getAffectationsIds() {
         Collection<Integer> ids = new ArrayList<>();
-        designations.forEach(designation -> ids.add(designation.getDesignationId()));
+        affectations.forEach(designation -> ids.add(designation.getAffectationId()));
         return ids;
     }
 
-    public void setDesignations(ArrayList<Designation> designations) {
-        this.designations = designations;
+    public void setAffectations(ArrayList<Affectation> designations) {
+        this.affectations = designations;
     }
 
 

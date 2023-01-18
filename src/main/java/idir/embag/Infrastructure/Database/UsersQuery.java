@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import idir.embag.DataModels.Users.DesignationPermission;
+import idir.embag.DataModels.Users.AffectationPermission;
 import idir.embag.Types.Infrastructure.Database.IDatabase;
 import idir.embag.Types.Infrastructure.Database.IUsersQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
@@ -66,17 +66,17 @@ public class UsersQuery extends IUsersQuery {
     }
 
     @Override
-    public void GrantDesignationSupervisior(Collection<DesignationPermission> attributes) throws SQLException {
-        Iterator<DesignationPermission> iterator = attributes.iterator();
-        DesignationPermission permission = iterator.next();
+    public void GrantDesignationSupervisior(Collection<AffectationPermission> attributes) throws SQLException {
+        Iterator<AffectationPermission> iterator = attributes.iterator();
+        AffectationPermission permission = iterator.next();
 
         String query = "INSERT INTO " + ETables.AffecationsPermissions  + " (" + EAffectationPermissions.UserId + ","
                 + EAffectationPermissions.AffectationId + ") VALUES (" + permission.getId() + ","
-                + permission.getDesignationId();
+                + permission.getAffectationId();
 
         while (iterator.hasNext()) {
             permission = iterator.next();
-            query += ",(" + permission.getId() + "," + permission.getDesignationId() + ")";
+            query += ",(" + permission.getId() + "," + permission.getAffectationId() + ")";
         }
         
         query += ")";        
@@ -84,16 +84,16 @@ public class UsersQuery extends IUsersQuery {
     }
 
     @Override
-    public void RevokeDesignationSupervisior(Collection<DesignationPermission> attributes) throws SQLException {
-        Iterator<DesignationPermission> iterator = attributes.iterator();
-        DesignationPermission permission = iterator.next();
+    public void RevokeDesignationSupervisior(Collection<AffectationPermission> attributes) throws SQLException {
+        Iterator<AffectationPermission> iterator = attributes.iterator();
+        AffectationPermission permission = iterator.next();
 
         String whereClause = " WHERE " + EUsersAttributes.UserId + "=" + permission.getId()
-                + " AND (" + EAffectationAttributes.AffectationId + "=" + permission.getDesignationId();
+                + " AND (" + EAffectationAttributes.AffectationId + "=" + permission.getAffectationId();
 
         while (iterator.hasNext()) {
             permission = iterator.next();
-            whereClause += " OR " + EAffectationAttributes.AffectationId + "=" + permission.getDesignationId();
+            whereClause += " OR " + EAffectationAttributes.AffectationId + "=" + permission.getAffectationId();
         }
 
         whereClause += ")";

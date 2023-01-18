@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Iterator;
 
-import idir.embag.DataModels.Users.DesignationPermission;
+import idir.embag.DataModels.Users.AffectationPermission;
 import idir.embag.Types.Infrastructure.Database.IDatabase;
 import idir.embag.Types.Infrastructure.Database.IGroupPermissionsQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.IQuery;
@@ -60,17 +60,17 @@ public class GroupPermissionsQuery extends IQuery implements IGroupPermissionsQu
     }
 
     @Override
-    public void GrantGroupPermission(Collection<DesignationPermission> attributes) throws SQLException {
-        Iterator<DesignationPermission> iterator = attributes.iterator();
-        DesignationPermission permission = iterator.next();
+    public void GrantGroupPermission(Collection<AffectationPermission> attributes) throws SQLException {
+        Iterator<AffectationPermission> iterator = attributes.iterator();
+        AffectationPermission permission = iterator.next();
 
         String query = "INSERT INTO " + ETables.GroupsPermissions  + " (" + EGroupsPermissionsAttributes.GroupId + ","
                 + EGroupsPermissionsAttributes.PermissionId + ") VALUES (" + permission.getId() + ","
-                + permission.getDesignationId();
+                + permission.getAffectationId();
 
         while (iterator.hasNext()) {
             permission = iterator.next();
-            query += ",(" + permission.getId() + "," + permission.getDesignationId() + ")";
+            query += ",(" + permission.getId() + "," + permission.getAffectationId() + ")";
         }
         
         query += ")";     
@@ -80,16 +80,16 @@ public class GroupPermissionsQuery extends IQuery implements IGroupPermissionsQu
     }
 
     @Override
-    public void RevokeGroupPermission(Collection<DesignationPermission> attributes) throws SQLException {
-        Iterator<DesignationPermission> iterator = attributes.iterator();
-        DesignationPermission permission = iterator.next();
+    public void RevokeGroupPermission(Collection<AffectationPermission> attributes) throws SQLException {
+        Iterator<AffectationPermission> iterator = attributes.iterator();
+        AffectationPermission permission = iterator.next();
 
         String whereClause = " WHERE " + EGroupsPermissionsAttributes.GroupId + "=" + permission.getId()
-                + " AND (" + EGroupsPermissionsAttributes.PermissionId + "=" + permission.getDesignationId();
+                + " AND (" + EGroupsPermissionsAttributes.PermissionId + "=" + permission.getAffectationId();
 
         while (iterator.hasNext()) {
             permission = iterator.next();
-            whereClause += " OR " + EAffectationAttributes.AffectationId + "=" + permission.getDesignationId();
+            whereClause += " OR " + EAffectationAttributes.AffectationId + "=" + permission.getAffectationId();
         }
 
         whereClause += ")";

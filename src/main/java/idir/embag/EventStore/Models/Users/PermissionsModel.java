@@ -7,11 +7,11 @@ import java.util.Map;
 
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
-import idir.embag.DataModels.Users.Designation;
-import idir.embag.DataModels.Users.DesignationPermission;
+import idir.embag.DataModels.Users.Affectation;
+import idir.embag.DataModels.Users.AffectationPermission;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
-import idir.embag.Repository.DesignationsRepository;
-import idir.embag.Types.Infrastructure.Database.IDesignationsQuery;
+import idir.embag.Repository.AffectationsRepository;
+import idir.embag.Types.Infrastructure.Database.IAffectationssQuery;
 import idir.embag.Types.Infrastructure.Database.IUsersQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 import idir.embag.Types.MetaData.EWrappers;
@@ -23,12 +23,12 @@ import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 
 public class PermissionsModel implements IDataDelegate {
-    private IDesignationsQuery designationsQuery;
+    private IAffectationssQuery designationsQuery;
     private IUsersQuery usersQuery;
 
-    private DesignationsRepository designationsRepository;
+    private AffectationsRepository designationsRepository;
 
-    public PermissionsModel(IDesignationsQuery designationsQuery,IUsersQuery usersQuery, DesignationsRepository designationsRepository) {
+    public PermissionsModel(IAffectationssQuery designationsQuery,IUsersQuery usersQuery, AffectationsRepository designationsRepository) {
         this.designationsQuery = designationsQuery;
         this.designationsRepository = designationsRepository;
         this.usersQuery = usersQuery;
@@ -37,7 +37,7 @@ public class PermissionsModel implements IDataDelegate {
     @Override
     public void add(Map<EEventsDataKeys, Object> data) {
         try {
-            Collection<DesignationPermission> wrappers = DataBundler.retrieveNestedValue(data, EEventsDataKeys.WrappersKeys,
+            Collection<AffectationPermission> wrappers = DataBundler.retrieveNestedValue(data, EEventsDataKeys.WrappersKeys,
                     EWrappers.AttributesCollection);
 
                     usersQuery.GrantDesignationSupervisior(wrappers);
@@ -58,7 +58,7 @@ public class PermissionsModel implements IDataDelegate {
     public void remove(Map<EEventsDataKeys, Object> data) {
         try {
             
-            Collection<DesignationPermission> designation = DataBundler.retrieveValue(data, EEventsDataKeys.InstanceCollection);
+            Collection<AffectationPermission> designation = DataBundler.retrieveValue(data, EEventsDataKeys.InstanceCollection);
 
             usersQuery.RevokeDesignationSupervisior(designation);
 
@@ -79,9 +79,9 @@ public class PermissionsModel implements IDataDelegate {
         try {
             SearchWrapper wrappers = DataBundler.retrieveNestedValue(data, EEventsDataKeys.WrappersKeys,
                     EWrappers.SearchWrapper);
-            ResultSet resultSet = designationsQuery.SearchDesignations(wrappers);
+            ResultSet resultSet = designationsQuery.SearchAffectations(wrappers);
 
-            Collection<Designation> designations = designationsRepository.resultSetToDesignation(resultSet);
+            Collection<Affectation> designations = designationsRepository.resultSetToAffectation(resultSet);
             data.put(EEventsDataKeys.InstanceCollection, designations);
 
             notfiyEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Search, data);

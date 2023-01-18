@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 import idir.embag.Types.Infrastructure.Database.IDatabase;
-import idir.embag.Types.Infrastructure.Database.IDesignationsQuery;
+import idir.embag.Types.Infrastructure.Database.IAffectationssQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
@@ -13,31 +13,31 @@ import idir.embag.Types.Infrastructure.Database.Metadata.EAffectationAttributes;
 import idir.embag.Types.Infrastructure.Database.Metadata.ETables;
 import idir.embag.Types.Infrastructure.Database.Metadata.EUsersAttributes;
 
-public class DesignationsQuery extends IDesignationsQuery {
+public class AffectationsQuery extends IAffectationssQuery {
     private IDatabase database;
 
-    public DesignationsQuery(IDatabase database) {
+    public AffectationsQuery(IDatabase database) {
         this.database = database;
     }
 
     @Override
-    public void RegisterDesignation(Collection<AttributeWrapper> attributes) throws SQLException {
+    public void RegisterAffectation(Collection<AttributeWrapper> attributes) throws SQLException {
         String query = "INSERT INTO " + ETables.Affectations + InsertWrapperToQuery(attributes);
         database.InsertQuery(query);
 
     }
 
     @Override
-    public void UpdateDesignation(int designationId, Collection<AttributeWrapper> attributes) throws SQLException {
-        String whereClause = " WHERE " + EAffectationAttributes.AffectationId + "=" + designationId;
+    public void UpdateAffectation(int affectationId, Collection<AttributeWrapper> attributes) throws SQLException {
+        String whereClause = " WHERE " + EAffectationAttributes.AffectationId + "=" + affectationId;
         String query = "UPDATE " + ETables.Affectations + UpdateWrapperToQuery(attributes) + whereClause;
         database.UpdateQuery(query);
 
     }
 
     @Override
-    public void DeleteDesignation(int designationId) throws SQLException {
-        String whereClause = " WHERE " + EAffectationAttributes.AffectationId + "=" + designationId;
+    public void DeleteAffectation(int affectationId) throws SQLException {
+        String whereClause = " WHERE " + EAffectationAttributes.AffectationId + "=" + affectationId;
         String query = "DELETE FROM " + ETables.Affectations + whereClause;
 
         database.DeleteQuery(query);
@@ -45,10 +45,10 @@ public class DesignationsQuery extends IDesignationsQuery {
     }
 
     @Override
-    public void CreateDesignationsTable() throws SQLException {
+    public void CreateAffectationsTable() throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS " + ETables.Affectations + " (\n"
                 + EAffectationAttributes.AffectationId + " INTEGER PRIMARY  KEY ,\n"
-                + EAffectationAttributes.DesignationName + " TEXT)\n";
+                + EAffectationAttributes.AffectationName + " TEXT)\n";
 
         database.CreateQuery(query);
     }
@@ -71,7 +71,7 @@ public class DesignationsQuery extends IDesignationsQuery {
     }
 
     @Override
-    public ResultSet SearchDesignations(SearchWrapper parametrers) throws SQLException {
+    public ResultSet SearchAffectations(SearchWrapper parametrers) throws SQLException {
         String whereClause = " WHERE " + SearchWrapperToWhereClause(parametrers);
         String query = "SELECT * FROM " + ETables.Affectations + whereClause;
 
@@ -80,7 +80,7 @@ public class DesignationsQuery extends IDesignationsQuery {
     }
 
     @Override
-    public ResultSet LoadDesignations(LoadWrapper parametrers) throws SQLException {
+    public ResultSet LoadAffectations(LoadWrapper parametrers) throws SQLException {
         String extraClause = " LIMIT " + parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
         String query = "SELECT * FROM " + ETables.Affectations + extraClause;
         ResultSet result = database.SelectQuery(query);

@@ -6,13 +6,13 @@ import java.util.Collection;
 import java.util.Map;
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
-import idir.embag.DataModels.Users.Designation;
-import idir.embag.DataModels.Users.DesignationPermission;
+import idir.embag.DataModels.Users.Affectation;
+import idir.embag.DataModels.Users.AffectationPermission;
 import idir.embag.EventStore.Models.Permissions.RequestsData.LoadRequest;
 import idir.embag.EventStore.Models.Permissions.RequestsData.UpdateGroup;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
-import idir.embag.Repository.DesignationsRepository;
-import idir.embag.Types.Infrastructure.Database.IDesignationsQuery;
+import idir.embag.Repository.AffectationsRepository;
+import idir.embag.Types.Infrastructure.Database.IAffectationssQuery;
 import idir.embag.Types.Infrastructure.Database.IGroupPermissionsQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 import idir.embag.Types.MetaData.EWrappers;
@@ -24,15 +24,15 @@ import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 
 public class GroupPermissionsModel implements IDataDelegate {
-    private IDesignationsQuery designationsQuery;
+    private IAffectationssQuery affectationsQuery;
     private IGroupPermissionsQuery groupPermissionsQuery;
 
-    private DesignationsRepository designationsRepository;
+    private AffectationsRepository affectationRepository;
 
-    public GroupPermissionsModel(IDesignationsQuery designationsQuery, IGroupPermissionsQuery groupPermissionsQuery,
-            DesignationsRepository designationsRepository) {
-        this.designationsQuery = designationsQuery;
-        this.designationsRepository = designationsRepository;
+    public GroupPermissionsModel(IAffectationssQuery affectationsQuery, IGroupPermissionsQuery groupPermissionsQuery,
+    AffectationsRepository affectationRepository) {
+        this.affectationsQuery = affectationsQuery;
+        this.affectationRepository = affectationRepository;
         this.groupPermissionsQuery = groupPermissionsQuery;
     }
 
@@ -41,7 +41,7 @@ public class GroupPermissionsModel implements IDataDelegate {
         try {
 
             UpdateGroup request = DataBundler.retrieveValue(data, EEventsDataKeys.RequestData);
-            Collection<DesignationPermission> granted = request.getGrantedPermissions();
+            Collection<AffectationPermission> granted = request.getGrantedPermissions();
 
             if (granted.size() > 0)
                 groupPermissionsQuery.GrantGroupPermission(granted);
@@ -63,7 +63,7 @@ public class GroupPermissionsModel implements IDataDelegate {
         try {
             UpdateGroup request = DataBundler.retrieveValue(data, EEventsDataKeys.RequestData);
 
-            Collection<DesignationPermission> ungranted = request.getUnGrantedPermissions();
+            Collection<AffectationPermission> ungranted = request.getUnGrantedPermissions();
             if (ungranted.size() > 0)
                 groupPermissionsQuery.RevokeGroupPermission(ungranted);
 
@@ -79,11 +79,11 @@ public class GroupPermissionsModel implements IDataDelegate {
 
         UpdateGroup request = DataBundler.retrieveValue(data, EEventsDataKeys.RequestData);
 
-        Collection<DesignationPermission> ungranted = request.getUnGrantedPermissions();
+        Collection<AffectationPermission> ungranted = request.getUnGrantedPermissions();
         if (ungranted.size() > 0)
             remove(data);
 
-        Collection<DesignationPermission> granted = request.getGrantedPermissions();
+        Collection<AffectationPermission> granted = request.getGrantedPermissions();
         if (granted.size() > 0)
             add(data);
 
@@ -94,10 +94,10 @@ public class GroupPermissionsModel implements IDataDelegate {
         try {
             SearchWrapper wrappers = DataBundler.retrieveNestedValue(data, EEventsDataKeys.WrappersKeys,
                     EWrappers.SearchWrapper);
-            ResultSet resultSet = designationsQuery.SearchDesignations(wrappers);
+            ResultSet resultSet = affectationsQuery.SearchAffectations(wrappers);
 
-            Collection<Designation> designations = designationsRepository.resultSetToDesignation(resultSet);
-            data.put(EEventsDataKeys.InstanceCollection, designations);
+            Collection<Affectation> affectations = affectationRepository.resultSetToAffectation(resultSet);
+            data.put(EEventsDataKeys.InstanceCollection, affectations);
 
             notfiyEvent(EStores.DataStore, EStoreEvents.GroupPermissionsEvent, EStoreEventAction.Search, data);
         } catch (SQLException e) {
@@ -111,13 +111,13 @@ public class GroupPermissionsModel implements IDataDelegate {
         try {
             LoadRequest loadRequest = DataBundler.retrieveValue(data, EEventsDataKeys.Instance);
 
-            ResultSet designationsResultSet = groupPermissionsQuery.LoadGroupUngrantedPermissions(
-                    loadRequest.getGroup().getDesignationsIds());
+            ResultSet affectationsResultSet = groupPermissionsQuery.LoadGroupUngrantedPermissions(
+                    loadRequest.getGroup().getAffectationsIds());
 
-            Collection<Designation> designations = designationsRepository
-                    .resultSetToDesignation(designationsResultSet);
+            Collection<Affectation> affectations = affectationRepository
+                    .resultSetToAffectation(affectationsResultSet);
 
-            data.put(EEventsDataKeys.InstanceCollection, designations);
+            data.put(EEventsDataKeys.InstanceCollection, affectations);
 
             notfiyEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Load, data);
 

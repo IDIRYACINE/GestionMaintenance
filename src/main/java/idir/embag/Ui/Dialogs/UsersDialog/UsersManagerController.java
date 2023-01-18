@@ -9,7 +9,7 @@ import java.util.Map;
 import idir.embag.Application.State.AppState;
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
-import idir.embag.DataModels.Users.Designation;
+import idir.embag.DataModels.Users.Affectation;
 import idir.embag.DataModels.Users.User;
 import idir.embag.EventStore.Models.Users.RequestsData.LoadRequest;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
@@ -115,7 +115,7 @@ public class UsersManagerController implements IEventSubscriber {
         // by default this is available for only admins . they have all designations
         // preloaded
         User user = new User(AppState.getInstance().getUserCurrId() , "", null, false, null);
-        ArrayList<Designation> adminDesignations = AppState.getInstance().getCurrentUser().getDesignations();
+        ArrayList<Affectation> adminDesignations = AppState.getInstance().getCurrentUser().getDesignations();
         addUserDialog(user, adminDesignations);
         
     }
@@ -124,13 +124,13 @@ public class UsersManagerController implements IEventSubscriber {
         User user = usersTable.getSelectionModel().getSelectedValues().get(0);
 
         if (user != null) {
-            ArrayList<Designation> adminDesignations = AppState.getInstance().getCurrentUser().getDesignations();
+            ArrayList<Affectation> adminDesignations = AppState.getInstance().getCurrentUser().getDesignations();
             ArrayList<Integer> userDesignations = user.getDesignationsIds();
-            ArrayList<Designation> ungrantedDesignations = new ArrayList<>();
+            ArrayList<Affectation> ungrantedDesignations = new ArrayList<>();
 
-            for (Designation adminDesignation : adminDesignations) {
+            for (Affectation adminDesignation : adminDesignations) {
 
-               if(!userDesignations.contains(adminDesignation.getDesignationId()))
+               if(!userDesignations.contains(adminDesignation.getAffectationId()))
                    ungrantedDesignations.add(adminDesignation);
 
             }
@@ -147,7 +147,7 @@ public class UsersManagerController implements IEventSubscriber {
 
     }
 
-    private void addUserDialog(User user, ArrayList<Designation> ungrantedDesignations) {
+    private void addUserDialog(User user, ArrayList<Affectation> ungrantedDesignations) {
         StoreCenter storeCenter = StoreCenter.getInstance();
 
         UserEditorDialog dialogContent = new UserEditorDialog(user, ungrantedDesignations);
@@ -176,7 +176,7 @@ public class UsersManagerController implements IEventSubscriber {
 
     }
 
-    private void updateUserDialog(User user, ArrayList<Designation> ungrantedDesignations) {
+    private void updateUserDialog(User user, ArrayList<Affectation> ungrantedDesignations) {
         StoreCenter storeCenter = StoreCenter.getInstance();
 
         UserEditorDialog dialogContent = new UserEditorDialog(user, ungrantedDesignations);

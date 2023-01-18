@@ -13,8 +13,8 @@ import idir.embag.Application.State.AppState;
 import idir.embag.Application.Utility.Validator.Validators;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.SessionGroup;
-import idir.embag.DataModels.Users.Designation;
-import idir.embag.DataModels.Users.DesignationPermission;
+import idir.embag.DataModels.Users.Affectation;
+import idir.embag.DataModels.Users.AffectationPermission;
 import idir.embag.EventStore.Models.Permissions.RequestsData.UpdateGroup;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Metadata.ESessionGroupAttributes;
@@ -62,9 +62,9 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
 
     private ArrayList<HBox> newlyGrantedPermissions;
 
-    private ArrayList<Designation> ungrantedDesignations;
+    private ArrayList<Affectation> ungrantedDesignations;
     
-    public SessionGroupEditor(SessionGroup group, ArrayList<Designation> unGranteddesignations) {
+    public SessionGroupEditor(SessionGroup group, ArrayList<Affectation> unGranteddesignations) {
         this.group = group;
         fxmlPath = "/views/Editors/SessionGroupEditor.fxml";
 
@@ -97,7 +97,7 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
     private void initialiseGroupPermissions() {
         groupNameField.setText(group.getName());
 
-        ArrayList<HBox> alreadyGranted = createSelectorNodes(group.getDesignations(),true);
+        ArrayList<HBox> alreadyGranted = createSelectorNodes(group.getAffectations(),true);
         
         newlyGrantedPermissions.addAll(alreadyGranted);
         grantedOnLoadPermissions.addAll(alreadyGranted);
@@ -159,26 +159,26 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
 
         data.put(EEventsDataKeys.Instance, group);
 
-        Collection<DesignationPermission> grantedP = new ArrayList<>();
+        Collection<AffectationPermission> grantedP = new ArrayList<>();
 
         newlyGrantedPermissions.forEach( node -> {
-            Designation designation = (Designation) node.getUserData();
+            Affectation designation = (Affectation) node.getUserData();
             
-            grantedP.add(new DesignationPermission(group.getId(), designation.getDesignationId()));
+            grantedP.add(new AffectationPermission(group.getId(), designation.getAffectationId()));
 
-            if(!group.getDesignations().contains(designation)){
-                group.getDesignations().add(designation);
+            if(!group.getAffectations().contains(designation)){
+                group.getAffectations().add(designation);
             }
         });
         
-        Collection<DesignationPermission> ungrantedP = new ArrayList<>();
+        Collection<AffectationPermission> ungrantedP = new ArrayList<>();
         revokedPermissions.forEach(node ->{
-            Designation designation = (Designation) node.getUserData();
+            Affectation designation = (Affectation) node.getUserData();
 
-            ungrantedP.add(new DesignationPermission(group.getId(), designation.getDesignationId()));
+            ungrantedP.add(new AffectationPermission(group.getId(), designation.getAffectationId()));
 
-            if(group.getDesignations().contains(designation)){
-                group.getDesignations().remove(designation);
+            if(group.getAffectations().contains(designation)){
+                group.getAffectations().remove(designation);
             }
         });
 
@@ -189,7 +189,7 @@ public class SessionGroupEditor extends INodeView implements Initializable , IDi
 
 
 
-    private ArrayList<HBox> createSelectorNodes(ArrayList<Designation> designations,boolean selected){
+    private ArrayList<HBox> createSelectorNodes(ArrayList<Affectation> designations,boolean selected){
         FXMLLoader loader;     
         AttributeSelector controller ;
         

@@ -8,14 +8,14 @@ import java.util.Map;
 
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
-import idir.embag.DataModels.Users.Designation;
+import idir.embag.DataModels.Users.Affectation;
 import idir.embag.DataModels.Users.User;
 import idir.embag.EventStore.Models.Users.RequestsData.LoadRequest;
 import idir.embag.EventStore.Models.Users.RequestsData.UpdateUser;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
-import idir.embag.Repository.DesignationsRepository;
+import idir.embag.Repository.AffectationsRepository;
 import idir.embag.Repository.UsersRepository;
-import idir.embag.Types.Infrastructure.Database.IDesignationsQuery;
+import idir.embag.Types.Infrastructure.Database.IAffectationssQuery;
 import idir.embag.Types.Infrastructure.Database.IUsersQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
@@ -31,11 +31,11 @@ public class UsersModel implements IDataDelegate {
 
     private IUsersQuery usersQuery;
     private UsersRepository usersRepository;
-    private DesignationsRepository designationRepository;
-    private IDesignationsQuery designationsQuery;
+    private AffectationsRepository designationRepository;
+    private IAffectationssQuery designationsQuery;
 
     public UsersModel(IUsersQuery usersQuery, UsersRepository usersRepository,
-            DesignationsRepository designationsRepository, IDesignationsQuery designationsQuery) {
+            AffectationsRepository designationsRepository, IAffectationssQuery designationsQuery) {
         this.usersQuery = usersQuery;
         this.usersRepository = usersRepository;
         this.designationRepository = designationsRepository;
@@ -124,19 +124,19 @@ public class UsersModel implements IDataDelegate {
     private void fetchAndSetUserDesignations(User user) {
 
         ResultSet designationsResultSet;
-        ArrayList<Designation> designations;
+        ArrayList<Affectation> designations;
         try {
             if (user.isAdmin()) {
                 LoadWrapper loadWrapper = new LoadWrapper(1000, 0);
-                designationsResultSet = designationsQuery.LoadDesignations(loadWrapper);
-                designations = designationRepository.resultSetToDesignation(designationsResultSet);
+                designationsResultSet = designationsQuery.LoadAffectations(loadWrapper);
+                designations = designationRepository.resultSetToAffectation(designationsResultSet);
                 user.setDesignations(designations);
 
                 return;
             }
 
             designationsResultSet = usersQuery.LoadUserPermissions(user.getUserId());
-            designations = designationRepository.resultSetToDesignation(designationsResultSet);
+            designations = designationRepository.resultSetToAffectation(designationsResultSet);
             user.setDesignations(designations);
 
         } catch (SQLException e) {
@@ -173,8 +173,8 @@ public class UsersModel implements IDataDelegate {
                 ResultSet designationsResultSet = usersQuery.LoadUserUngrantedPermissions(
                         loadRequest.getUser().getDesignationsIds());
 
-                Collection<Designation> designations = designationRepository
-                        .resultSetToDesignation(designationsResultSet);
+                Collection<Affectation> designations = designationRepository
+                        .resultSetToAffectation(designationsResultSet);
 
                 data.put(EEventsDataKeys.InstanceCollection, designations);
 

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import idir.embag.DataModels.Users.Designation;
+import idir.embag.DataModels.Users.Affectation;
 import idir.embag.DataModels.Users.User;
 import idir.embag.Types.Infrastructure.Database.Metadata.EInventoryAttributes;
 
@@ -153,10 +153,10 @@ public abstract class IQuery {
 
         String query = "( ";
 
-        ArrayList<Designation> designations = user.getDesignations();
+        ArrayList<Affectation> designations = user.getDesignations();
 
         for (int index = 0; index < designations.size(); index++) {
-            query += "(" +EInventoryAttributes.AffectationId +" = " + designations.get(index).getDesignationId();
+            query += "(" +EInventoryAttributes.AffectationId +" = " + designations.get(index).getAffectationId();
             if(index != designations.size() - 1)
                 query += " ) OR ";
         }

@@ -11,8 +11,8 @@ import java.util.function.Consumer;
 
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
-import idir.embag.DataModels.Users.Designation;
-import idir.embag.DataModels.Users.DesignationPermission;
+import idir.embag.DataModels.Users.Affectation;
+import idir.embag.DataModels.Users.AffectationPermission;
 import idir.embag.DataModels.Users.User;
 import idir.embag.EventStore.Models.Users.RequestsData.UpdateUser;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
@@ -62,9 +62,9 @@ public class UserEditorDialog extends INodeView implements Initializable, IDialo
 
     private ArrayList<HBox> newlyGrantedPermissions;
 
-    private ArrayList<Designation> unGrantedDesignations;
+    private ArrayList<Affectation> unGrantedDesignations;
 
-    public UserEditorDialog(User user, ArrayList<Designation> unGrantedDesignations) {
+    public UserEditorDialog(User user, ArrayList<Affectation> unGrantedDesignations) {
         fxmlPath = "/views/Editors/UserEditor.fxml";
         this.user = user;
         
@@ -150,24 +150,24 @@ public class UserEditorDialog extends INodeView implements Initializable, IDialo
             user.setAdmin(isAdmin);
         }
 
-        Collection<DesignationPermission> grantedP = new ArrayList<>();
+        Collection<AffectationPermission> grantedP = new ArrayList<>();
 
         newlyGrantedPermissions.forEach(node -> {
 
-            Designation designation = (Designation) node.getUserData();
+            Affectation designation = (Affectation) node.getUserData();
 
-            grantedP.add(new DesignationPermission(user.getUserId(), designation.getDesignationId()));
+            grantedP.add(new AffectationPermission(user.getUserId(), designation.getAffectationId()));
 
             if (!user.getDesignations().contains(designation)) {
                 user.getDesignations().add(designation);
             }
         });
 
-        Collection<DesignationPermission> ungrantedP = new ArrayList<>();
+        Collection<AffectationPermission> ungrantedP = new ArrayList<>();
         revokedPermissions.forEach(node -> {
-            Designation designation = (Designation) node.getUserData();
+            Affectation designation = (Affectation) node.getUserData();
 
-            ungrantedP.add(new DesignationPermission(user.getUserId(), designation.getDesignationId()));
+            ungrantedP.add(new AffectationPermission(user.getUserId(), designation.getAffectationId()));
 
             if (user.getDesignations().contains(designation)) {
                 user.getDesignations().remove(designation);
@@ -180,7 +180,7 @@ public class UserEditorDialog extends INodeView implements Initializable, IDialo
 
     }
 
-    private ArrayList<HBox> createSelectorNodes(ArrayList<Designation> designations, boolean selected) {
+    private ArrayList<HBox> createSelectorNodes(ArrayList<Affectation> designations, boolean selected) {
         FXMLLoader loader;
         AttributeSelector controller;
 

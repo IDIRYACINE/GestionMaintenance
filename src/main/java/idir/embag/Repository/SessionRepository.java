@@ -7,7 +7,7 @@ import java.util.Collection;
 import idir.embag.DataModels.Session.Session;
 import idir.embag.DataModels.Session.SessionGroup;
 import idir.embag.DataModels.Session.SessionRecord;
-import idir.embag.DataModels.Users.Designation;
+import idir.embag.DataModels.Users.Affectation;
 import idir.embag.DataModels.Workers.SessionWorker;
 import idir.embag.Types.Infrastructure.Database.Metadata.ESessionAttributes;
 import idir.embag.Types.Infrastructure.Database.Metadata.ESessionGroupAttributes;
@@ -48,7 +48,7 @@ public class SessionRepository {
                         source.getInt(ESessionGroupAttributes.GroupId.toString()),
                         source.getString(ESessionGroupAttributes.GroupName.toString()),
                         source.getTimestamp(ESessionGroupAttributes.SessionId.toString()),
-                        new ArrayList<Designation>(),
+                        new ArrayList<Affectation>(),
                         source.getInt(ESessionGroupAttributes.GroupSupervisorId.toString())
                         ));
             }

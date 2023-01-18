@@ -5,8 +5,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+import idir.embag.Application.State.AppState;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
-import idir.embag.DataModels.Users.Designation;
+import idir.embag.DataModels.Users.Affectation;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Application.Stock.IStockHelper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
@@ -32,11 +33,11 @@ import javafx.scene.Node;
 
 @SuppressWarnings("unchecked")
 
-public class DesignationHelper extends IStockHelper implements IEventSubscriber{
-    private MFXTableView<Designation> tableDesignations;
+public class AffectationHelper extends IStockHelper implements IEventSubscriber{
+    private MFXTableView<Affectation> tableAffectations;
 
-    public DesignationHelper() {
-        this.tableDesignations = new MFXTableView<>();
+    public AffectationHelper() {
+        this.tableAffectations = new MFXTableView<>();
         StoreCenter.getInstance().subscribeToEvents(EStores.DataStore, EStoreEvents.DesignationEvent, this);
     }
 
@@ -44,9 +45,9 @@ public class DesignationHelper extends IStockHelper implements IEventSubscriber{
 
     @Override
     public void update() {
-        Designation designation = tableDesignations.getSelectionModel().getSelectedValues().get(0);
+        Affectation affectation = tableAffectations.getSelectionModel().getSelectedValues().get(0);
 
-        DesignationEditor dialogContent =  new DesignationEditor(designation);
+        DesignationEditor dialogContent =  new DesignationEditor(affectation);
         
         Map<EEventsDataKeys,Object> data = new HashMap<>();
         
@@ -56,7 +57,7 @@ public class DesignationHelper extends IStockHelper implements IEventSubscriber{
 
 
         dialogContent.setOnConfirm(requestData -> {
-            requestData.put(EEventsDataKeys.Instance, designation);
+            requestData.put(EEventsDataKeys.Instance, affectation);
             dispatchEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Update, requestData);
         });
 
@@ -68,7 +69,7 @@ public class DesignationHelper extends IStockHelper implements IEventSubscriber{
 
     @Override
     public void remove() {
-        Designation designation = tableDesignations.getSelectionModel().getSelectedValues().get(0);
+        Affectation affectation = tableAffectations.getSelectionModel().getSelectedValues().get(0);
 
         ConfirmationDialog dialogContent =  new ConfirmationDialog();
 
@@ -82,7 +83,7 @@ public class DesignationHelper extends IStockHelper implements IEventSubscriber{
 
         
         dialogContent.setOnConfirm(requestData -> {
-            requestData.put(EEventsDataKeys.Instance, designation);
+            requestData.put(EEventsDataKeys.Instance, affectation);
 
             dispatchEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Remove, requestData);
         });
@@ -94,8 +95,8 @@ public class DesignationHelper extends IStockHelper implements IEventSubscriber{
 
     @Override
     public void add() {
-        Designation designation = new Designation(0, "");
-        DesignationEditor dialogContent =  new DesignationEditor(designation);
+        Affectation affectation = new Affectation(0, "");
+        DesignationEditor dialogContent =  new DesignationEditor(affectation);
 
         Map<EEventsDataKeys,Object> data = new HashMap<>();
         
@@ -105,7 +106,7 @@ public class DesignationHelper extends IStockHelper implements IEventSubscriber{
 
 
         dialogContent.setOnConfirm(requestData -> {
-            requestData.put(EEventsDataKeys.Instance, designation);
+            requestData.put(EEventsDataKeys.Instance, affectation);
             dispatchEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Add, requestData);
         });
 
@@ -144,15 +145,15 @@ public class DesignationHelper extends IStockHelper implements IEventSubscriber{
     public void notifyEvent(StoreEvent event) {
         
         switch(event.getAction()){
-            case Add: addTableElement((Designation)event.getData().get(EEventsDataKeys.Instance));
+            case Add: addTableElement((Affectation)event.getData().get(EEventsDataKeys.Instance));
                 break;
-            case Remove: removeTableElement((Designation)event.getData().get(EEventsDataKeys.Instance));
+            case Remove: removeTableElement((Affectation)event.getData().get(EEventsDataKeys.Instance));
                 break;  
-            case Update: updateTableElement((Designation)event.getData().get(EEventsDataKeys.Instance));
+            case Update: updateTableElement((Affectation)event.getData().get(EEventsDataKeys.Instance));
                 break;
-            case Search: setTableDesignations((Collection<Designation>)event.getData().get(EEventsDataKeys.InstanceCollection));
+            case Search: setTableDesignations((Collection<Affectation>)event.getData().get(EEventsDataKeys.InstanceCollection));
                 break;    
-            case Load: setTableDesignations((Collection<Designation>)event.getData().get(EEventsDataKeys.InstanceCollection));
+            case Load: setTableDesignations((Collection<Affectation>)event.getData().get(EEventsDataKeys.InstanceCollection));
                 break;              
               default:
                    break;
@@ -166,36 +167,38 @@ public class DesignationHelper extends IStockHelper implements IEventSubscriber{
     }
 
    
-    private void addTableElement(Designation designation) {
-        tableDesignations.getItems().add(designation);
+    private void addTableElement(Affectation designation) {
+        tableAffectations.getItems().add(designation);
+        AppState.getInstance().getCurrentUser().addDesignation(designation);
     }
 
-    private void removeTableElement(Designation designation){
-        int index = tableDesignations.getItems().indexOf(designation);
-        tableDesignations.getItems().remove(index);
+    private void removeTableElement(Affectation designation){
+        int index = tableAffectations.getItems().indexOf(designation);
+        tableAffectations.getItems().remove(index);
+        AppState.getInstance().getCurrentUser().removeDesignation(designation);
     }
 
-    private void updateTableElement(Designation designation){
-        int index = tableDesignations.getItems().indexOf(designation);
-        tableDesignations.getCell(index).updateRow();
+    private void updateTableElement(Affectation designation){
+        int index = tableAffectations.getItems().indexOf(designation);
+        tableAffectations.getCell(index).updateRow();
     }
 
-    private void setTableDesignations(Collection<Designation> designation){
-        tableDesignations.getItems().setAll(designation);
+    private void setTableDesignations(Collection<Affectation> designation){
+        tableAffectations.getItems().setAll(designation);
     }
 
     private void setup(){
-        tableDesignations.setMinWidth(Measures.defaultTablesWidth);
-        tableDesignations.setMinHeight(Measures.defaultTablesHeight);
-        tableDesignations.setFooterVisible(false);
+        tableAffectations.setMinWidth(Measures.defaultTablesWidth);
+        tableAffectations.setMinHeight(Measures.defaultTablesHeight);
+        tableAffectations.setFooterVisible(false);
 
-        MFXTableColumn<Designation> idColumn = new MFXTableColumn<>(Names.Id, true, Comparator.comparing(Designation::getDesignationId));
-		MFXTableColumn<Designation> nameColumn = new MFXTableColumn<>(Names.DesignationName, true, Comparator.comparing(Designation::getDesignationName));
+        MFXTableColumn<Affectation> idColumn = new MFXTableColumn<>(Names.Id, true, Comparator.comparing(Affectation::getAffectationId));
+		MFXTableColumn<Affectation> nameColumn = new MFXTableColumn<>(Names.DesignationName, true, Comparator.comparing(Affectation::getAffectationName));
         
-        idColumn.setRowCellFactory(designations -> new MFXTableRowCell<>(Designation::getDesignationId));
-        nameColumn.setRowCellFactory(designations -> new MFXTableRowCell<>(Designation::getDesignationName));
+        idColumn.setRowCellFactory(designations -> new MFXTableRowCell<>(Affectation::getAffectationId));
+        nameColumn.setRowCellFactory(designations -> new MFXTableRowCell<>(Affectation::getAffectationName));
 
-        tableDesignations.getTableColumns().setAll(idColumn,nameColumn);
+        tableAffectations.getTableColumns().setAll(idColumn,nameColumn);
         
     }
 
@@ -203,7 +206,7 @@ public class DesignationHelper extends IStockHelper implements IEventSubscriber{
     private IDialogContent buildSearchDialog(){
         FilterDialog dialog = new FilterDialog();
 
-        EAffectationAttributes[] attributes = {EAffectationAttributes.AffectationId, EAffectationAttributes.DesignationName};
+        EAffectationAttributes[] attributes = {EAffectationAttributes.AffectationId, EAffectationAttributes.AffectationName};
         dialog.setAttributes(attributes);
 
         dialog.setOnConfirm(requestData -> {
@@ -216,7 +219,7 @@ public class DesignationHelper extends IStockHelper implements IEventSubscriber{
 
     @Override
     public Node getView() {
-        return tableDesignations;
+        return tableAffectations;
     }
 
 }

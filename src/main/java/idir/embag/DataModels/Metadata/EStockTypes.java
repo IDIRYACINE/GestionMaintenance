@@ -4,5 +4,5 @@ public enum EStockTypes {
     Stock,
     Inventory,
     FamilyCodes,
-    Designation
+    Affectation
 }

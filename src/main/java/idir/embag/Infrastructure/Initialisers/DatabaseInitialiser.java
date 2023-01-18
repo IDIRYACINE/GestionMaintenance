@@ -3,7 +3,7 @@ package idir.embag.Infrastructure.Initialisers;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import idir.embag.Infrastructure.Database.DesignationsQuery;
+import idir.embag.Infrastructure.Database.AffectationsQuery;
 import idir.embag.Infrastructure.Database.GroupPermissionsQuery;
 import idir.embag.Infrastructure.Database.MysqlDatabase;
 import idir.embag.Infrastructure.Database.ProductQuery;
@@ -12,7 +12,7 @@ import idir.embag.Infrastructure.Database.UsersQuery;
 import idir.embag.Infrastructure.Database.WorkerQuery;
 import idir.embag.Types.Infrastructure.Database.IConnectionParameters;
 import idir.embag.Types.Infrastructure.Database.IDatabase;
-import idir.embag.Types.Infrastructure.Database.IDesignationsQuery;
+import idir.embag.Types.Infrastructure.Database.IAffectationssQuery;
 import idir.embag.Types.Infrastructure.Database.IGroupPermissionsQuery;
 import idir.embag.Types.Infrastructure.Database.IProductQuery;
 import idir.embag.Types.Infrastructure.Database.ISessionQuery;
@@ -26,7 +26,7 @@ public class DatabaseInitialiser {
     private IWorkerQuery workerQuery;
     private IDatabase database;
     private IUsersQuery usersQuery;
-    private IDesignationsQuery designationsQuery;
+    private IAffectationssQuery affectationsQuery;
     private IGroupPermissionsQuery groupPermissionsQuery;
 
     public DatabaseInitialiser() {
@@ -35,7 +35,7 @@ public class DatabaseInitialiser {
         sessionQuery = new SessionQuery(database);
         workerQuery = new WorkerQuery(database);
         usersQuery = new UsersQuery(database);
-        designationsQuery = new DesignationsQuery(database);
+        affectationsQuery = new AffectationsQuery(database);
         groupPermissionsQuery = new GroupPermissionsQuery(database);
     }
 
@@ -55,8 +55,8 @@ public class DatabaseInitialiser {
         return usersQuery;
     }
 
-    public IDesignationsQuery getDesignationsQuery() {
-        return designationsQuery;
+    public IAffectationssQuery getAffectationsQuery() {
+        return affectationsQuery;
     }
 
     public IGroupPermissionsQuery getGroupPermissionsQuery() {
@@ -76,8 +76,8 @@ public class DatabaseInitialiser {
             sessionQuery.CreateSessionWorkersTable();
             sessionQuery.CreateSessionRecordTable();
 
-            designationsQuery.CreateDesignationsTable();
-            designationsQuery.CreatePermissionsTable();
+            affectationsQuery.CreateAffectationsTable();
+            affectationsQuery.CreatePermissionsTable();
 
             usersQuery.CreateUsersTable();
 

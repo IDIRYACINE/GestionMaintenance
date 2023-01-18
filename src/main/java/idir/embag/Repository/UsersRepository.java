@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import idir.embag.DataModels.Users.Designation;
+import idir.embag.DataModels.Users.Affectation;
 import idir.embag.DataModels.Users.User;
 import idir.embag.Types.Infrastructure.Database.Metadata.EAffectationAttributes;
 import idir.embag.Types.Infrastructure.Database.Metadata.EAffectationPermissions;
@@ -14,15 +14,15 @@ public class UsersRepository {
 
     public Collection<User> resultSetToUsers(ResultSet userSource, ResultSet designationsSource) {
         Collection<User> result = new ArrayList<User>();
-        ArrayList<Designation> designations = new ArrayList<Designation>();
+        ArrayList<Affectation> designations = new ArrayList<Affectation>();
 
         try {
 
             while (designationsSource.next()) {
                 designations.add(
-                        new Designation(
+                        new Affectation(
                                 designationsSource.getInt(EAffectationPermissions.AffectationId.toString()),
-                                designationsSource.getNString(EAffectationAttributes.DesignationName.toString())));
+                                designationsSource.getNString(EAffectationAttributes.AffectationName.toString())));
             }
 
             while (userSource.next()) {

@@ -7,10 +7,10 @@ import java.util.Map;
 
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
-import idir.embag.DataModels.Users.Designation;
+import idir.embag.DataModels.Users.Affectation;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
-import idir.embag.Repository.DesignationsRepository;
-import idir.embag.Types.Infrastructure.Database.IDesignationsQuery;
+import idir.embag.Repository.AffectationsRepository;
+import idir.embag.Types.Infrastructure.Database.IAffectationssQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
@@ -23,10 +23,10 @@ import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEvents;
 import idir.embag.Types.Stores.Generics.StoreEvent.StoreEvent;
 
 public class DesignationModel implements IDataDelegate {
-    private IDesignationsQuery designationsQuery;
-    private DesignationsRepository designationsRepository;
+    private IAffectationssQuery designationsQuery;
+    private AffectationsRepository designationsRepository;
 
-    public DesignationModel(IDesignationsQuery designationsQuery, DesignationsRepository designationsRepository) {
+    public DesignationModel(IAffectationssQuery designationsQuery, AffectationsRepository designationsRepository) {
         this.designationsQuery = designationsQuery;
         this.designationsRepository = designationsRepository;
     }
@@ -37,7 +37,7 @@ public class DesignationModel implements IDataDelegate {
             Collection<AttributeWrapper> wrappers = DataBundler.retrieveNestedValue(data, EEventsDataKeys.WrappersKeys,
                     EWrappers.AttributesCollection);
 
-            designationsQuery.RegisterDesignation(wrappers);
+            designationsQuery.RegisterAffectation(wrappers);
             notfiyEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Add, data);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -53,9 +53,9 @@ public class DesignationModel implements IDataDelegate {
     @Override
     public void remove(Map<EEventsDataKeys, Object> data) {
         try {
-            Designation designation = DataBundler.retrieveValue(data, EEventsDataKeys.Instance);
+            Affectation designation = DataBundler.retrieveValue(data, EEventsDataKeys.Instance);
 
-            designationsQuery.DeleteDesignation(designation.getDesignationId());
+            designationsQuery.DeleteAffectation(designation.getAffectationId());
             notfiyEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Remove, data);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -66,11 +66,11 @@ public class DesignationModel implements IDataDelegate {
     @Override
     public void update(Map<EEventsDataKeys, Object> data) {
         try {
-            Designation designation = DataBundler.retrieveValue(data, EEventsDataKeys.Instance);
+            Affectation designation = DataBundler.retrieveValue(data, EEventsDataKeys.Instance);
             Collection<AttributeWrapper> wrappers = DataBundler.retrieveNestedValue(data, EEventsDataKeys.WrappersKeys,
                     EWrappers.AttributesCollection);
 
-            designationsQuery.UpdateDesignation(designation.getDesignationId(), wrappers);
+            designationsQuery.UpdateAffectation(designation.getAffectationId(), wrappers);
             notfiyEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Update, data);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -83,9 +83,9 @@ public class DesignationModel implements IDataDelegate {
         try {
             SearchWrapper wrappers = DataBundler.retrieveNestedValue(data, EEventsDataKeys.WrappersKeys,
                     EWrappers.SearchWrapper);
-            ResultSet resultSet = designationsQuery.SearchDesignations(wrappers);
+            ResultSet resultSet = designationsQuery.SearchAffectations(wrappers);
 
-            Collection<Designation> designations = designationsRepository.resultSetToDesignation(resultSet);
+            Collection<Affectation> designations = designationsRepository.resultSetToAffectation(resultSet);
             data.put(EEventsDataKeys.InstanceCollection, designations);
 
             notfiyEvent(EStores.DataStore, EStoreEvents.DesignationEvent, EStoreEventAction.Search, data);
@@ -101,9 +101,9 @@ public class DesignationModel implements IDataDelegate {
             LoadWrapper wrappers = DataBundler.retrieveNestedValue(data, EEventsDataKeys.WrappersKeys,
                     EWrappers.LoadWrapper);
 
-            ResultSet resultSet = designationsQuery.LoadDesignations(wrappers);
+            ResultSet resultSet = designationsQuery.LoadAffectations(wrappers);
 
-            Collection<Designation> designations = designationsRepository.resultSetToDesignation(resultSet);
+            Collection<Affectation> designations = designationsRepository.resultSetToAffectation(resultSet);
 
             data.put(EEventsDataKeys.InstanceCollection, designations);
 

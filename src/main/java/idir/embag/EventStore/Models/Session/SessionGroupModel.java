@@ -9,10 +9,10 @@ import java.util.Map;
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.SessionGroup;
-import idir.embag.DataModels.Users.Designation;
+import idir.embag.DataModels.Users.Affectation;
 import idir.embag.EventStore.Models.Permissions.RequestsData.UpdateGroup;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
-import idir.embag.Repository.DesignationsRepository;
+import idir.embag.Repository.AffectationsRepository;
 import idir.embag.Repository.SessionRepository;
 import idir.embag.Types.Infrastructure.Database.IGroupPermissionsQuery;
 import idir.embag.Types.Infrastructure.Database.ISessionQuery;
@@ -32,10 +32,10 @@ public class SessionGroupModel implements IDataDelegate {
     SessionRepository sessionRepository;
     private IGroupPermissionsQuery groupPermissionsQuery;
 
-    private DesignationsRepository designationsRepository;
+    private AffectationsRepository designationsRepository;
 
     public SessionGroupModel(ISessionQuery sessionQuery, SessionRepository sessionRepository,
-            IGroupPermissionsQuery groupPermissionsQuery, DesignationsRepository designationsRepository) {
+            IGroupPermissionsQuery groupPermissionsQuery, AffectationsRepository designationsRepository) {
         this.sessionQuery = sessionQuery;
         this.sessionRepository = sessionRepository;
         this.groupPermissionsQuery = groupPermissionsQuery;
@@ -111,9 +111,9 @@ public class SessionGroupModel implements IDataDelegate {
 
             for (SessionGroup group : groups) {
                 rawData = groupPermissionsQuery.LoadGroupPermissions(group.getId());
-                ArrayList<Designation> designations = designationsRepository.resultSetToDesignation(rawData);
+                ArrayList<Affectation> designations = designationsRepository.resultSetToAffectation(rawData);
 
-                group.setDesignations(designations);
+                group.setAffectations(designations);
             }
 
             data.put(EEventsDataKeys.InstanceCollection, groups);
