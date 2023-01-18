@@ -30,7 +30,7 @@ public class DProductDetaills {
         details.barcode = product.getArticleCode();
         details.itemName = product.getArticleName();
         details.locationName = "Location Name";
-        details.locationId = product.getDesignationId();
+        details.locationId = product.getAffectationId();
         details.requestTimestamp = requestTimestamp;
 
         return details;

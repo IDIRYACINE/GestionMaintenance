@@ -1,6 +1,6 @@
 package idir.embag.Types.Infrastructure.Database.Metadata;
 
-public enum EDesignationAttributes {
-    DesignationId,
+public enum EAffectationAttributes {
+    AffectationId,
     DesignationName,
 }

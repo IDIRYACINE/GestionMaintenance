@@ -47,7 +47,7 @@ public class InventoryModel implements IDataDelegate {
         try {
             InventoryProduct product = DataBundler.retrieveValue(data,EEventsDataKeys.Instance);
 
-            productQuery.UnregisterInventoryProduct(product.getArticleId(),product.getDesignationId());
+            productQuery.UnregisterInventoryProduct(product.getArticleId(),product.getAffectationId());
             notfiyEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Remove, data);
         } catch (SQLException e) {
             e.printStackTrace();

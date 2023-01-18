@@ -18,7 +18,7 @@ public class InventoryRepository {
                     1,
                     source.getDouble(EInventoryAttributes.ArticlePrice.toString()),
                     source.getInt(EInventoryAttributes.FamilyCode.toString()),
-                    source.getInt(EInventoryAttributes.DesignationId.toString())));
+                    source.getInt(EInventoryAttributes.AffectationId.toString())));
                   
             }
         } catch (Exception e) {

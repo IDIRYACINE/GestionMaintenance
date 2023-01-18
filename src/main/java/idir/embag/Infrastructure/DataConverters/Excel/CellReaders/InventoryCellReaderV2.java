@@ -38,7 +38,7 @@ public class InventoryCellReaderV2 implements IExcelCellReader {
                 EInventoryAttributes.ArticleName,
                 EInventoryAttributes.ArticleCode,
                 EInventoryAttributes.FamilyCode,
-                EInventoryAttributes.DesignationId,
+                EInventoryAttributes.AffectationId,
                 EInventoryAttributes.ArticlePrice
 
         };

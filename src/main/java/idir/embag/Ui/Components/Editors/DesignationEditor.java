@@ -13,18 +13,18 @@ import idir.embag.Application.Utility.Validator.Validators;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Users.Designation;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
-import idir.embag.Types.Infrastructure.Database.Metadata.EDesignationAttributes;
+import idir.embag.Types.Infrastructure.Database.Metadata.EAffectationAttributes;
 import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Panels.Components.IDialogContent;
 import idir.embag.Types.Panels.Generics.INodeView;
 import idir.embag.Ui.Components.TextFieldSkins.CustomFieldSkin;
 import idir.embag.Ui.Components.TextFieldSkins.SkinErrorTester;
 import idir.embag.Ui.Constants.Messages;
-import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 
 public class DesignationEditor extends INodeView implements Initializable, IDialogContent {
 
@@ -32,7 +32,7 @@ public class DesignationEditor extends INodeView implements Initializable, IDial
     private Node root;
 
     @FXML
-    private MFXTextField nameField, idField;
+    private TextField nameField, idField;
 
     @FXML
     private Label nameErrorLabel, idErrorLabel;
@@ -75,18 +75,18 @@ public class DesignationEditor extends INodeView implements Initializable, IDial
     }
 
     private void setupTextFieldsValidation() {
-        SkinErrorTester emptyFieldTester = new SkinErrorTester(Messages.errorRequiredField, Validators::emptyField);
         SkinErrorTester invalidName = new SkinErrorTester(Messages.errorInvalidName, Validators::isName);
         SkinErrorTester invalidNumberTester = new SkinErrorTester(Messages.errorInvalidNumber, Validators::isNumber);
+        SkinErrorTester emptyFieldTester = new SkinErrorTester(Messages.errorRequiredField, Validators::emptyField);
 
         nameSkin = new CustomFieldSkin(nameField, nameErrorLabel);
-        nameSkin.addErrorTester(emptyFieldTester);
         nameSkin.addErrorTester(invalidName);
+        nameSkin.addErrorTester(emptyFieldTester);
         nameField.setSkin(nameSkin);
 
         idSkin = new CustomFieldSkin(idField, idErrorLabel);
-        idSkin.addErrorTester(emptyFieldTester);
         idSkin.addErrorTester(invalidNumberTester);
+        idSkin.addErrorTester(emptyFieldTester);
         idField.setSkin(idSkin);
     }
 
@@ -122,8 +122,8 @@ public class DesignationEditor extends INodeView implements Initializable, IDial
     private Collection<AttributeWrapper> getAttributeWrappers() {
         Collection<AttributeWrapper> attributes = new ArrayList<AttributeWrapper>();
 
-        attributes.add(new AttributeWrapper(EDesignationAttributes.DesignationName, nameField.getText()));
-        attributes.add(new AttributeWrapper(EDesignationAttributes.DesignationId, idField.getText()));
+        attributes.add(new AttributeWrapper(EAffectationAttributes.DesignationName, nameField.getText()));
+        attributes.add(new AttributeWrapper(EAffectationAttributes.AffectationId, idField.getText()));
 
         return attributes;
     }

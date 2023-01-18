@@ -114,8 +114,10 @@ public class UsersManagerController implements IEventSubscriber {
     public void addUser() {
         // by default this is available for only admins . they have all designations
         // preloaded
-        User user = new User(AppState.getInstance().getWorkerCurrId() + 1, "", null, false, null);
-        addUserDialog(user, user.getDesignations());
+        User user = new User(AppState.getInstance().getUserCurrId() , "", null, false, null);
+        ArrayList<Designation> adminDesignations = AppState.getInstance().getCurrentUser().getDesignations();
+        addUserDialog(user, adminDesignations);
+        
     }
 
     public void updateUser() {
@@ -218,6 +220,7 @@ public class UsersManagerController implements IEventSubscriber {
         data.put(EEventsDataKeys.Subscriber, this);
 
         dialogContent.setOnConfirm(other -> {
+            other.put(EEventsDataKeys.Instance, user);
             storeCenter.dispatchEvent(EStores.DataStore, EStoreEvents.UsersEvent, EStoreEventAction.Remove, other);
 
         });

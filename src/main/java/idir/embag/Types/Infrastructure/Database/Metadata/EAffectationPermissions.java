@@ -1,6 +1,6 @@
 package idir.embag.Types.Infrastructure.Database.Metadata;
 
-public enum EDesignationsPermissions {
+public enum EAffectationPermissions {
     UserId,
-    DesignationId,
+    AffectationId,
 }

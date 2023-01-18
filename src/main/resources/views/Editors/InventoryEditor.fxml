@@ -112,10 +112,10 @@
                         <Font size="25.0" />
                      </font>
                   </Label>
-                  <VBox fx:id="articleCodeErrorLabel" alignment="CENTER_LEFT">
+                  <VBox alignment="CENTER_LEFT">
                      <children>
                         <TextField fx:id="articleCodeField" />
-                        <Label textFill="#e40000" />
+                        <Label fx:id="articleCodeErrorLabel" textFill="#e40000" />
                      </children>
                      <padding>
                         <Insets top="10.0" />
@@ -130,10 +130,10 @@
                         <Font size="25.0" />
                      </font>
                   </Label>
-                  <VBox fx:id="articleFamilyErrorLabel" alignment="CENTER_LEFT">
+                  <VBox alignment="CENTER_LEFT">
                      <children>
                         <TextField fx:id="articleFamilyField" />
-                        <Label textFill="RED" />
+                        <Label fx:id="articleFamilyErrorLabel" textFill="RED" />
                      </children>
                      <padding>
                         <Insets top="10.0" />

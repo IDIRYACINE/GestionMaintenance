@@ -11,11 +11,11 @@ public abstract class Validators {
     }
 
     public static Boolean emptyField(String text){
-        return text.length() == 0;
+        return text == "";
     }
 
     public static Boolean isNumber(String text){
-        return text.matches("^[0-9]+$");
+        return !text.matches("^[0-9]+$");
     }
 
     public static Boolean isPhoneNumber(String text){

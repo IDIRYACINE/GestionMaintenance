@@ -35,7 +35,6 @@ public class MainController  implements Initializable,INavigationController  {
     
     private INodeView[] views;
 
-    private MFXStageDialog dialog;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -72,7 +71,7 @@ public class MainController  implements Initializable,INavigationController  {
     @Override
     public void displayPopup(IDialogContent content) {
 
-      dialog = MFXGenericDialogBuilder.build()
+      MFXStageDialog dialog = MFXGenericDialogBuilder.build()
       .setContent(content.getView())
       .setShowAlwaysOnTop(true)
       .toStageDialogBuilder()

@@ -117,7 +117,7 @@ public class ProductQuery extends IProductQuery {
                 + EInventoryAttributes.ArticleId + " INTEGER PRIMARY KEY,\n"
                 + EInventoryAttributes.ArticleName + " TEXT,\n"
                 + EInventoryAttributes.ArticleCode + " INTEGER,\n"
-                + EInventoryAttributes.DesignationId + " INTEGER,\n"
+                + EInventoryAttributes.AffectationId + " INTEGER,\n"
                 + EInventoryAttributes.ArticlePrice + " REAL,\n"
                 + EInventoryAttributes.FamilyCode + " INTEGER)\n";
 

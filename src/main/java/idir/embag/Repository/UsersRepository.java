@@ -6,8 +6,8 @@ import java.util.Collection;
 
 import idir.embag.DataModels.Users.Designation;
 import idir.embag.DataModels.Users.User;
-import idir.embag.Types.Infrastructure.Database.Metadata.EDesignationAttributes;
-import idir.embag.Types.Infrastructure.Database.Metadata.EDesignationsPermissions;
+import idir.embag.Types.Infrastructure.Database.Metadata.EAffectationAttributes;
+import idir.embag.Types.Infrastructure.Database.Metadata.EAffectationPermissions;
 import idir.embag.Types.Infrastructure.Database.Metadata.EUsersAttributes;
 
 public class UsersRepository {
@@ -21,8 +21,8 @@ public class UsersRepository {
             while (designationsSource.next()) {
                 designations.add(
                         new Designation(
-                                designationsSource.getInt(EDesignationsPermissions.DesignationId.toString()),
-                                designationsSource.getNString(EDesignationAttributes.DesignationName.toString())));
+                                designationsSource.getInt(EAffectationPermissions.AffectationId.toString()),
+                                designationsSource.getNString(EAffectationAttributes.DesignationName.toString())));
             }
 
             while (userSource.next()) {

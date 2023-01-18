@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import idir.embag.DataModels.Users.Designation;
-import idir.embag.Types.Infrastructure.Database.Metadata.EDesignationAttributes;
+import idir.embag.Types.Infrastructure.Database.Metadata.EAffectationAttributes;
 
 public class DesignationsRepository {
 
@@ -15,8 +15,8 @@ public class DesignationsRepository {
             while (designationsSource.next()) {
                 result.add(
                         new Designation(
-                                designationsSource.getInt(EDesignationAttributes.DesignationId.toString()),
-                                designationsSource.getNString(EDesignationAttributes.DesignationName.toString())));
+                                designationsSource.getInt(EAffectationAttributes.AffectationId.toString()),
+                                designationsSource.getNString(EAffectationAttributes.DesignationName.toString())));
             }
 
         } catch (Exception e) {

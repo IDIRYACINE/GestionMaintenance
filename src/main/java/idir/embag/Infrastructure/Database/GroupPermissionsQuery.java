@@ -9,7 +9,7 @@ import idir.embag.DataModels.Users.DesignationPermission;
 import idir.embag.Types.Infrastructure.Database.IDatabase;
 import idir.embag.Types.Infrastructure.Database.IGroupPermissionsQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.IQuery;
-import idir.embag.Types.Infrastructure.Database.Metadata.EDesignationAttributes;
+import idir.embag.Types.Infrastructure.Database.Metadata.EAffectationAttributes;
 import idir.embag.Types.Infrastructure.Database.Metadata.EGroupsPermissionsAttributes;
 import idir.embag.Types.Infrastructure.Database.Metadata.ETables;
 
@@ -28,8 +28,8 @@ public class GroupPermissionsQuery extends IQuery implements IGroupPermissionsQu
 
     @Override
     public ResultSet LoadGroupPermissions(int groupId) throws SQLException {
-        String query = "SELECT * FROM " + ETables.Designations + " WHERE "
-                + EDesignationAttributes.DesignationId + " IN (" 
+        String query = "SELECT * FROM " + ETables.Affectations + " WHERE "
+                + EAffectationAttributes.AffectationId + " IN (" 
                 + "SELECT " + EGroupsPermissionsAttributes.PermissionId + " FROM " + ETables.GroupsPermissions 
                 + " WHERE " + EGroupsPermissionsAttributes.GroupId + "=" + groupId + ")" ;
 
@@ -38,7 +38,7 @@ public class GroupPermissionsQuery extends IQuery implements IGroupPermissionsQu
 
     @Override
     public ResultSet LoadGroupUngrantedPermissions(Collection<Integer> grantedPermissions) throws SQLException {
-        String whereClause = " WHERE " + EDesignationAttributes.DesignationId + " NOT IN (";
+        String whereClause = " WHERE " + EAffectationAttributes.AffectationId + " NOT IN (";
 
         Iterator<Integer> iterator = grantedPermissions.iterator();
         while (iterator.hasNext()) {
@@ -49,7 +49,7 @@ public class GroupPermissionsQuery extends IQuery implements IGroupPermissionsQu
 
         whereClause += ")";
 
-        String query = "SELECT * FROM " + ETables.Designations;
+        String query = "SELECT * FROM " + ETables.Affectations;
 
         if (grantedPermissions.size() > 0)
             query += whereClause;
@@ -89,7 +89,7 @@ public class GroupPermissionsQuery extends IQuery implements IGroupPermissionsQu
 
         while (iterator.hasNext()) {
             permission = iterator.next();
-            whereClause += " OR " + EDesignationAttributes.DesignationId + "=" + permission.getDesignationId();
+            whereClause += " OR " + EAffectationAttributes.AffectationId + "=" + permission.getDesignationId();
         }
 
         whereClause += ")";

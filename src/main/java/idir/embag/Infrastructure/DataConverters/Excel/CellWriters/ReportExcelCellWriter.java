@@ -146,7 +146,7 @@ public class ReportExcelCellWriter implements IExcelCellWriter<ReportWrapper> {
         createAndSetCellValue(familyCodeColumnIndex, row, product.getFamilyCode());
         createAndSetCellValue(articleNameColumnIndex, row, product.getArticleName());
         createAndSetCellValue(articleCodebarColumnIndex, row, product.getArticleCode());
-        createAndSetCellValue(affectationColumnIndex, row, product.getDesignationId());
+        createAndSetCellValue(affectationColumnIndex, row, product.getAffectationId());
 
         if (isPositive) {
             createAndSetCellValue(quantityColumnIndex, row, product.getQuantity());

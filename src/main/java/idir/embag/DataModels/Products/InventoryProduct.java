@@ -14,18 +14,18 @@ public class InventoryProduct {
 
     private int familyCode;
 
-    private int designationId;
+    private int affectationId;
 
     public InventoryProduct(int articleId, String articleName, int articleCodebar, int articleQuantity,
             double articlePrice,
-            int familyCode, int designationId) {
+            int familyCode, int affectationId) {
         this.articleId = articleId;
         this.articleName = articleName;
         this.articleCodebar = articleCodebar;
         this.articleQuantity = articleQuantity;
         this.articlePrice = articlePrice;
         this.familyCode = familyCode;
-        this.designationId = designationId;
+        this.affectationId = affectationId;
     }
 
     public int getArticleCode() {
@@ -78,12 +78,12 @@ public class InventoryProduct {
         this.articlePrice = price;
     }
 
-    public int getDesignationId() {
-        return designationId;
+    public int getAffectationId() {
+        return affectationId;
     }
 
-    public void setDesignationId(int id) {
-        designationId = id;
+    public void setAffectationId(int id) {
+        affectationId = id;
     }
 
 }

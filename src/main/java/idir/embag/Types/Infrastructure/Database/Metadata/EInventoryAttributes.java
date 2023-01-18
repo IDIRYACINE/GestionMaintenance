@@ -5,7 +5,7 @@ public enum EInventoryAttributes {
     ArticleCode,
     StockId,
     ArticleName,
-    DesignationId,
+    AffectationId,
     FamilyCode,
     ArticlePrice
 }

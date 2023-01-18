@@ -28,8 +28,8 @@ public abstract class Names {
     public static final String ExportFileTitle = "Export File";
     public static final String Username = "Username";
     public static final String Id = "Id";
-    public static final String DesignationName = "DesignationName";
-    public static final String DesignationId = "DesignationId";
+    public static final String DesignationName = "AffectationName";
+    public static final String AffectationId = "AffectationId";
 
 
 

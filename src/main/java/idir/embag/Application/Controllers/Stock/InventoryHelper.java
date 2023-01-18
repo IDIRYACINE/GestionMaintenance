@@ -1,5 +1,6 @@
 package idir.embag.Application.Controllers.Stock;
 
+import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -31,8 +32,8 @@ import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import javafx.scene.Node;
 
 @SuppressWarnings("unchecked")
-public class InventoryHelper extends IStockHelper implements IEventSubscriber{
-    
+public class InventoryHelper extends IStockHelper implements IEventSubscriber {
+
     private MFXTableView<InventoryProduct> tableInventory;
 
     public InventoryHelper() {
@@ -44,11 +45,11 @@ public class InventoryHelper extends IStockHelper implements IEventSubscriber{
     public void update() {
         InventoryProduct product = tableInventory.getSelectionModel().getSelectedValues().get(0);
 
-        InventoryEditor dialogContent =  new InventoryEditor(product);
+        InventoryEditor dialogContent = new InventoryEditor(product);
 
-        Map<EEventsDataKeys,Object> data = new HashMap<>();
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
 
-         Map<ENavigationKeys, Object> navigationData = new HashMap<>();
+        Map<ENavigationKeys, Object> navigationData = new HashMap<>();
         navigationData.put(ENavigationKeys.DialogContent, dialogContent);
         data.put(EEventsDataKeys.NavigationKeys, navigationData);
 
@@ -59,21 +60,19 @@ public class InventoryHelper extends IStockHelper implements IEventSubscriber{
 
         dialogContent.loadFxml();
 
-       
-
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
-        
+
     }
 
     @Override
     public void remove() {
         InventoryProduct product = tableInventory.getSelectionModel().getSelectedValues().get(0);
 
-        ConfirmationDialog dialogContent =  new ConfirmationDialog();
+        ConfirmationDialog dialogContent = new ConfirmationDialog();
 
         dialogContent.setMessage(Messages.deleteElement);
 
-        Map<EEventsDataKeys,Object> data = new HashMap<>();
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
 
         Map<ENavigationKeys, Object> navigationData = new HashMap<>();
         navigationData.put(ENavigationKeys.DialogContent, dialogContent);
@@ -81,7 +80,6 @@ public class InventoryHelper extends IStockHelper implements IEventSubscriber{
 
         dialogContent.setOnConfirm(requestData -> {
             requestData.put(EEventsDataKeys.Instance, product);
-           
 
             dispatchEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Remove, requestData);
         });
@@ -94,11 +92,11 @@ public class InventoryHelper extends IStockHelper implements IEventSubscriber{
     @Override
     public void add() {
         InventoryProduct product = new InventoryProduct(0, "", 0, 0, 0, 0, 0);
-        InventoryEditor dialogContent =  new InventoryEditor(product);
+        InventoryEditor dialogContent = new InventoryEditor(product);
 
-        Map<EEventsDataKeys,Object> data = new HashMap<>();
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
 
-         Map<ENavigationKeys, Object> navigationData = new HashMap<>();
+        Map<ENavigationKeys, Object> navigationData = new HashMap<>();
         navigationData.put(ENavigationKeys.DialogContent, dialogContent);
         data.put(EEventsDataKeys.NavigationKeys, navigationData);
 
@@ -109,28 +107,27 @@ public class InventoryHelper extends IStockHelper implements IEventSubscriber{
 
         dialogContent.loadFxml();
 
-
         dispatchEvent(EStores.NavigationStore, EStoreEvents.NavigationEvent, EStoreEventAction.Dialog, data);
     }
 
     @Override
     public void refresh() {
-        Map<EEventsDataKeys,Object> data = new HashMap<>();
-        LoadWrapper loadWrapper = new LoadWrapper(2000,0);
-        
-        Map<EWrappers,Object> wrappersData = new HashMap<>();
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
+        LoadWrapper loadWrapper = new LoadWrapper(2000, 0);
+
+        Map<EWrappers, Object> wrappersData = new HashMap<>();
         wrappersData.put(EWrappers.LoadWrapper, loadWrapper);
         data.put(EEventsDataKeys.WrappersKeys, wrappersData);
 
-        dispatchEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Load,data);        
+        dispatchEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Load, data);
     }
 
     @Override
     public void search() {
-        IDialogContent dialogContent =  buildSearchDialog();
-        Map<EEventsDataKeys,Object> data = new HashMap<>();
+        IDialogContent dialogContent = buildSearchDialog();
+        Map<EEventsDataKeys, Object> data = new HashMap<>();
 
-         Map<ENavigationKeys, Object> navigationData = new HashMap<>();
+        Map<ENavigationKeys, Object> navigationData = new HashMap<>();
         navigationData.put(ENavigationKeys.DialogContent, dialogContent);
         data.put(EEventsDataKeys.NavigationKeys, navigationData);
 
@@ -139,63 +136,87 @@ public class InventoryHelper extends IStockHelper implements IEventSubscriber{
 
     @Override
     public void notifyEvent(StoreEvent event) {
-        
-        switch(event.getAction()){
-            case Add: addTableElement((InventoryProduct)event.getData().get(EEventsDataKeys.Instance));
-                break;
-            case Remove: removeTableElement((InventoryProduct)event.getData().get(EEventsDataKeys.Instance));
-                break;  
-            case Update: updateTableElement((InventoryProduct)event.getData().get(EEventsDataKeys.Instance));
-                break;
-            case Search: setTableProducts((Collection<InventoryProduct>)event.getData().get(EEventsDataKeys.InstanceCollection));
-                break;          
-            case Load: setTableProducts((Collection<InventoryProduct>)event.getData().get(EEventsDataKeys.InstanceCollection));
-                break;
-              default:
-                   break;
-           }
-        
-    }
 
+        switch (event.getAction()) {
+            case Add:
+                addTableElement((InventoryProduct) event.getData().get(EEventsDataKeys.Instance));
+                break;
+            case Remove:
+                removeTableElement((InventoryProduct) event.getData().get(EEventsDataKeys.Instance));
+                break;
+            case Update:
+                updateTableElement((InventoryProduct) event.getData().get(EEventsDataKeys.Instance));
+                break;
+            case Search:
+                setTableProducts(
+                        (Collection<InventoryProduct>) event.getData().get(EEventsDataKeys.InstanceCollection));
+                break;
+            case Load:
+                setTableProducts(
+                        (Collection<InventoryProduct>) event.getData().get(EEventsDataKeys.InstanceCollection));
+                break;
+            default:
+                break;
+        }
+
+    }
 
     private void addTableElement(InventoryProduct product) {
         tableInventory.getItems().add(product);
     }
 
-    private void removeTableElement(InventoryProduct product){
+    private void removeTableElement(InventoryProduct product) {
         int index = tableInventory.getItems().indexOf(product);
         tableInventory.getItems().remove(index);
     }
 
-    private void updateTableElement(InventoryProduct product){
+    private void updateTableElement(InventoryProduct product) {
         int index = tableInventory.getItems().indexOf(product);
         tableInventory.getCell(index).updateRow();
     }
 
-    private void setTableProducts(Collection<InventoryProduct> product){
+    private void setTableProducts(Collection<InventoryProduct> product) {
         tableInventory.getItems().setAll(product);
     }
 
-    private void setup(){
+    private void setup() {
         tableInventory.setMinWidth(Measures.defaultTablesWidth);
         tableInventory.setMinHeight(Measures.defaultTablesHeight);
         tableInventory.setFooterVisible(false);
 
-        MFXTableColumn<InventoryProduct> idColumn = new MFXTableColumn<>(Names.ArticleId, true, Comparator.comparing(InventoryProduct::getArticleId));
-		MFXTableColumn<InventoryProduct> nameColumn = new MFXTableColumn<>(Names.ArticleName, true, Comparator.comparing(InventoryProduct::getArticleName));
-        MFXTableColumn<InventoryProduct> codebarColumn = new MFXTableColumn<>(Names.Codebar, true, Comparator.comparing(InventoryProduct::getArticleCode));
+        DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
 
-        MFXTableColumn<InventoryProduct> familyColumn = new MFXTableColumn<>(Names.FamilyCode, true, Comparator.comparing(InventoryProduct::getFamilyCode));
-        MFXTableColumn<InventoryProduct> designationColumn = new MFXTableColumn<>(Names.DesignationId, true, Comparator.comparing(InventoryProduct::getDesignationId));
+        MFXTableColumn<InventoryProduct> idColumn = new MFXTableColumn<>(Names.ArticleId, true,
+                Comparator.comparing(InventoryProduct::getArticleId));
+        MFXTableColumn<InventoryProduct> nameColumn = new MFXTableColumn<>(Names.ArticleName, true,
+                Comparator.comparing(InventoryProduct::getArticleName));
+        MFXTableColumn<InventoryProduct> codebarColumn = new MFXTableColumn<>(Names.Codebar, true,
+                Comparator.comparing(InventoryProduct::getArticleCode));
 
-		idColumn.setRowCellFactory(product -> new MFXTableRowCell<>(InventoryProduct::getArticleId));
-		nameColumn.setRowCellFactory(product -> new MFXTableRowCell<>(InventoryProduct::getArticleName));
+        MFXTableColumn<InventoryProduct> familyColumn = new MFXTableColumn<>(Names.FamilyCode, true,
+                Comparator.comparing(InventoryProduct::getFamilyCode));
+        MFXTableColumn<InventoryProduct> affectationColumn = new MFXTableColumn<>(Names.AffectationId, true,
+                Comparator.comparing(InventoryProduct::getAffectationId));
+        MFXTableColumn<InventoryProduct> priceColumn = new MFXTableColumn<>(Names.Price, true,
+                Comparator.comparing(InventoryProduct::getPrice));
+
+        idColumn.setRowCellFactory(product -> new MFXTableRowCell<>(InventoryProduct::getArticleId));
+        nameColumn.setRowCellFactory(product -> new MFXTableRowCell<>(InventoryProduct::getArticleName));
+        nameColumn.setMinWidth(Measures.ArticleNameColumnWidth);
 
         codebarColumn.setRowCellFactory(product -> new MFXTableRowCell<>(InventoryProduct::getArticleCode));
-		designationColumn.setRowCellFactory(product -> new MFXTableRowCell<>(InventoryProduct::getDesignationId));
-		familyColumn.setRowCellFactory(product -> new MFXTableRowCell<>(InventoryProduct::getFamilyCode));
+        affectationColumn.setRowCellFactory(product -> new MFXTableRowCell<>(InventoryProduct::getAffectationId));
+        familyColumn.setRowCellFactory(product -> new MFXTableRowCell<>(InventoryProduct::getFamilyCode));
 
-        tableInventory.getTableColumns().setAll(idColumn,codebarColumn,nameColumn,familyColumn,designationColumn);
+        priceColumn.setRowCellFactory(
+                product -> {
+                    return new MFXTableRowCell<InventoryProduct, Double>(InventoryProduct::getPrice , 
+                    (value) -> decimalFormat.format(value));
+                });
+                
+
+        tableInventory.getTableColumns().setAll(idColumn, codebarColumn, nameColumn, priceColumn, familyColumn,
+                affectationColumn);
     }
 
     @Override
@@ -203,18 +224,17 @@ public class InventoryHelper extends IStockHelper implements IEventSubscriber{
         setup();
     }
 
-   
-    private IDialogContent buildSearchDialog(){
+    private IDialogContent buildSearchDialog() {
         FilterDialog dialog = new FilterDialog();
 
-        EInventoryAttributes[] attributes = {EInventoryAttributes.ArticleId, EInventoryAttributes.StockId
-            ,EInventoryAttributes.ArticleCode};
+        EInventoryAttributes[] attributes = { EInventoryAttributes.ArticleId, EInventoryAttributes.StockId,
+                EInventoryAttributes.ArticleCode };
 
         dialog.setAttributes(attributes);
-        
-        dialog.setOnConfirm(new Consumer<Map<EEventsDataKeys,Object>> (){
+
+        dialog.setOnConfirm(new Consumer<Map<EEventsDataKeys, Object>>() {
             @Override
-            public void accept(Map<EEventsDataKeys,Object> data) {
+            public void accept(Map<EEventsDataKeys, Object> data) {
                 dispatchEvent(EStores.DataStore, EStoreEvents.InventoryEvent, EStoreEventAction.Search, data);
             }
         });

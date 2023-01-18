@@ -10,7 +10,7 @@ import idir.embag.DataModels.Users.Designation;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Types.Application.Stock.IStockHelper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
-import idir.embag.Types.Infrastructure.Database.Metadata.EDesignationAttributes;
+import idir.embag.Types.Infrastructure.Database.Metadata.EAffectationAttributes;
 import idir.embag.Types.MetaData.ENavigationKeys;
 import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Panels.Components.IDialogContent;
@@ -203,7 +203,7 @@ public class DesignationHelper extends IStockHelper implements IEventSubscriber{
     private IDialogContent buildSearchDialog(){
         FilterDialog dialog = new FilterDialog();
 
-        EDesignationAttributes[] attributes = {EDesignationAttributes.DesignationId, EDesignationAttributes.DesignationName};
+        EAffectationAttributes[] attributes = {EAffectationAttributes.AffectationId, EAffectationAttributes.DesignationName};
         dialog.setAttributes(attributes);
 
         dialog.setOnConfirm(requestData -> {

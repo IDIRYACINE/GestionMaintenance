@@ -156,7 +156,7 @@ public abstract class IQuery {
         ArrayList<Designation> designations = user.getDesignations();
 
         for (int index = 0; index < designations.size(); index++) {
-            query += "(" +EInventoryAttributes.DesignationId +" = " + designations.get(index).getDesignationId();
+            query += "(" +EInventoryAttributes.AffectationId +" = " + designations.get(index).getDesignationId();
             if(index != designations.size() - 1)
                 query += " ) OR ";
         }

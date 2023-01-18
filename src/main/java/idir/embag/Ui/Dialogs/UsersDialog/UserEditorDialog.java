@@ -141,7 +141,7 @@ public class UserEditorDialog extends INodeView implements Initializable, IDialo
         String password = passwordField.getText();
         if (!password.equals(user.getPassword())) {
             fields.add(new AttributeWrapper(EUsersAttributes.Password, password));
-            user.setPassword(fxmlPath);
+            user.setPassword(password);
         }
 
         boolean isAdmin = isAdminCheckbox.isSelected();
