@@ -17,6 +17,7 @@ public class FetchActiveSessionRecordsRequest extends IApi{
 
     HttpUrl url;
 
+
     public FetchActiveSessionRecordsRequest(IApiWrapper wrapper){
         client = new OkHttpClient();
 

@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import idir.embag.Application.State.AppState;
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.Session;
@@ -73,9 +74,11 @@ public class SessionController implements IEventSubscriber {
         int recordOffset = 0;
 
         Map<EServerKeys, Object> data = new HashMap<>();
+        
+        ArrayList<Integer> permissions = AppState.getInstance().getCurrentUser().getDesignationsIds();
 
         FetchActiveSessionRecordsWrapper apiWrapper = new FetchActiveSessionRecordsWrapper(maxRetrivedRecord,
-                recordOffset);
+                recordOffset,permissions);
         data.put(EServerKeys.ApiWrapper, apiWrapper);
 
         ServicesProvider.getInstance().getRemoteServer().dispatchApiCall(data);

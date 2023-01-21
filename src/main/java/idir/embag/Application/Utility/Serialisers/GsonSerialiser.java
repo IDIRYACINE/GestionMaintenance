@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import idir.embag.DataModels.Products.InventoryProduct;
 import idir.embag.DataModels.Session.SessionRecord;
 
 public abstract class GsonSerialiser {
@@ -23,6 +24,8 @@ public abstract class GsonSerialiser {
 
         builder.registerTypeAdapter(Timestamp.class, new TimeStampAdapter());
         builder.registerTypeAdapter(SessionRecord.class, new SessionRecordAdapter());
+        builder.registerTypeAdapter(InventoryProduct.class, new InventoryProductAdapter());
+
 
         gson = builder.create();
 
