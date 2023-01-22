@@ -2,7 +2,6 @@ package idir.embag.DataModels.Session;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import idir.embag.DataModels.Users.Affectation;
 
@@ -53,8 +52,8 @@ public class SessionGroup {
         this.supervisorId = supervisorId;
     }
 
-    public Collection<Integer> getAffectationsIds() {
-        Collection<Integer> ids = new ArrayList<>();
+    public ArrayList<Integer> getAffectationsIds() {
+        ArrayList<Integer> ids = new ArrayList<>();
         affectations.forEach(designation -> ids.add(designation.getAffectationId()));
         return ids;
     }

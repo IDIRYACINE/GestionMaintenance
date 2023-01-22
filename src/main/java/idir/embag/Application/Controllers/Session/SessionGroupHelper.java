@@ -94,12 +94,14 @@ public class SessionGroupHelper implements IEventSubscriber {
         if (group != null) {
             ArrayList<Affectation> userDesignations = AppState.getInstance().getCurrentUser().getDesignations();
             ArrayList<Affectation> unGrantedGroupDesignations = new ArrayList<>();
-            ArrayList<Affectation> groupDesignations = group.getAffectations();
+            ArrayList<Integer> groupDesignations = group.getAffectationsIds();
 
-            userDesignations.forEach(designation -> {
-                if (!groupDesignations.contains(designation))
-                    unGrantedGroupDesignations.add(designation);
-            });
+            for (Affectation userDesignation : userDesignations) {
+
+                if(!groupDesignations.contains(userDesignation.getAffectationId()))
+                    unGrantedGroupDesignations.add(userDesignation);
+ 
+             }
 
             updateSessionGroupDialog(group, unGrantedGroupDesignations);
 

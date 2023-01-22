@@ -16,7 +16,7 @@ public class SettingsPanel extends INodeView implements Initializable {
   private Pane root;
 
   @FXML
-  private Pane manageUsersPane;
+  private Pane manageUsersPane, openSessionPane, closeSessionPane;
 
   private SettingsController controller;
 
@@ -27,11 +27,13 @@ public class SettingsPanel extends INodeView implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    if (!AppState.getInstance().getCurrentUser().isAdmin()) {
-      manageUsersPane.setVisible(false);
-    }
+    boolean enableIfAdmin = AppState.getInstance().getCurrentUser().isAdmin();
 
+    manageUsersPane.setVisible(enableIfAdmin);
+    openSessionPane.setVisible(enableIfAdmin);
+    closeSessionPane.setVisible(enableIfAdmin);
   }
+
 
   @Override
   public Node getView() {
@@ -52,6 +54,16 @@ public class SettingsPanel extends INodeView implements Initializable {
   @FXML
   private void manageUsers() {
     controller.manageUsers();
+  }
+
+  @FXML
+  private void openSession() {
+    controller.openNewSession();
+  }
+
+  @FXML
+  private void closeSession() {
+    controller.closeSession();
   }
 
 }

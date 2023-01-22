@@ -56,6 +56,48 @@
                         </VBox>
                      </children>
                   </Pane>
+                  <Pane fx:id="openSessionPane" onMouseClicked="#openSession" style="-fx-background-color: white;">
+                     <children>
+                        <FontAwesomeIconView layoutX="7.0" layoutY="52.0" size="50" wrappingWidth="63.0" />
+                        <VBox alignment="TOP_CENTER" layoutX="81.0">
+                           <children>
+                              <Label prefHeight="35.0" prefWidth="213.0" text="Open Session">
+                                 <font>
+                                    <Font name="System Bold" size="22.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="35.0" prefWidth="213.0" text="Start new inventory session" />
+                           </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </Pane>
+                  <Pane fx:id="closeSessionPane" onMouseClicked="#closeSession" style="-fx-background-color: white;">
+                     <children>
+                        <FontAwesomeIconView layoutX="7.0" layoutY="52.0" size="50" wrappingWidth="63.0" />
+                        <VBox alignment="TOP_CENTER" layoutX="81.0">
+                           <children>
+                              <Label prefHeight="35.0" prefWidth="213.0" text="Close Session">
+                                 <font>
+                                    <Font name="System Bold" size="22.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="35.0" prefWidth="213.0" text="Close ongoing inventory session" />
+                           </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </Pane>
                   
                </children>
             </VBox>

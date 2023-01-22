@@ -14,7 +14,6 @@ public class NoSessionFrame extends INodeView implements Initializable {
     @FXML
     private VBox root;
 
-    private SessionController controller;
 
     public NoSessionFrame(SessionController controller) {
         fxmlPath = "/views/Panels/NoSessionPanel.fxml";
@@ -33,12 +32,10 @@ public class NoSessionFrame extends INodeView implements Initializable {
 
     @FXML
     private void openNewSession(){
-        controller.openNewSession();
     }
 
     @FXML
     private void checkActiveSession(){
-        controller.loadActiveSessionIfExists();
     }
     
 }
