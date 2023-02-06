@@ -6,11 +6,11 @@
 
 <VBox fx:id="root" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="685.0" prefWidth="1300.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <MFXButton fx:id="btnStartSession" onAction="#openNewSession" prefHeight="130.0" prefWidth="345.0" text="Starter une session" textAlignment="CENTER">
+      <MFXButton fx:id="btnStartSession"  prefHeight="130.0" prefWidth="345.0" text="Starter une session" textAlignment="CENTER">
          <font>
             <Font size="30.0" />
          </font></MFXButton>
-      <MFXButton onAction="#checkActiveSession" prefHeight="130.0" prefWidth="345.0" text="Load session" textAlignment="CENTER">
+      <MFXButton prefHeight="130.0" prefWidth="345.0" text="Load session" textAlignment="CENTER">
          <font>
             <Font size="30.0" />
          </font>

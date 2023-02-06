@@ -67,7 +67,7 @@ public class StoreCenter implements IStoresCenter {
 
   private StoreCenter(ServicesProvider servicesCenter, INavigationController navigationController) {
     setupStores(servicesCenter.getDatabaseInitialiser());
-   
+
     stores.put(EStores.NavigationStore, new NavigationStore(navigationController));
   }
 
@@ -84,8 +84,12 @@ public class StoreCenter implements IStoresCenter {
       });
       return;
     }
-
-    stores.get(action.getStore()).dispatch(action.getEvent());
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        stores.get(action.getStore()).dispatch(action.getEvent());
+      }
+    });
   }
 
   @Override
@@ -159,12 +163,12 @@ public class StoreCenter implements IStoresCenter {
   private void setupStores(DatabaseInitialiser databaseInitialiser) {
 
     StockModel stockModel = new StockModel(databaseInitialiser.getProductQuery(), new StockRepository());
-    
-    InventoryRepository inventoryRepository= new InventoryRepository();
+
+    InventoryRepository inventoryRepository = new InventoryRepository();
     InventoryModel inventoryModel = new InventoryModel(databaseInitialiser.getProductQuery(),
         inventoryRepository);
-    
-        FamilyModel familyModel = new FamilyModel(databaseInitialiser.getProductQuery(), new FamilyCodeRepository());
+
+    FamilyModel familyModel = new FamilyModel(databaseInitialiser.getProductQuery(), new FamilyCodeRepository());
     WorkersModel workersModel = new WorkersModel(databaseInitialiser.getWorkerQuery(), new WorkersRepository());
 
     SessionRepository sessionRepository = new SessionRepository();
@@ -208,14 +212,13 @@ public class StoreCenter implements IStoresCenter {
 
     stores.put(EStores.DataStore, new DataStore(delegates));
 
-
     IDataConverterDelegate[] converterDelegates = new IDataConverterDelegate[DataConverterStore.DELEGATES_COUNT];
     converterDelegates[IDataConverterStore.EXCEL_DELEGATE] = new ExcelModel();
 
-    converterDelegates[IDataConverterStore.REPORT_DELEGATE] = new ReportModel(databaseInitialiser.getProductQuery(), inventoryRepository);
+    converterDelegates[IDataConverterStore.REPORT_DELEGATE] = new ReportModel(databaseInitialiser.getProductQuery(),
+        inventoryRepository);
 
     stores.put(EStores.DataConverterStore, new DataConverterStore(converterDelegates));
   }
-
 
 }

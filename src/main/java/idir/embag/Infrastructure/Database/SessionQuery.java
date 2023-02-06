@@ -216,6 +216,7 @@ public class SessionQuery extends ISessionQuery {
                 + ETables.SessionsGroups + "." + ESessionGroupAttributes.GroupName 
                 + " FROM " + ETables.SessionWorkers + joinClause + whereClause;
 
+
         ResultSet result = database.SelectQuery(query);
         return result;
     }
@@ -249,7 +250,6 @@ public class SessionQuery extends ISessionQuery {
 
     @Override
     public ResultSet LoadSessionWorkers(LoadWrapper parametrers) throws SQLException {
-        String extraClause = " LIMIT " + parametrers.getLimit() + " OFFSET " + parametrers.getOffset();
 
         String joinClause = " INNER JOIN " + ETables.SessionsGroups + " ON "
                 + ETables.SessionWorkers + "." + ESessionWorkerAttributes.GroupId
@@ -266,9 +266,9 @@ public class SessionQuery extends ISessionQuery {
                 + ETables.SessionWorkers + "." + ESessionWorkerAttributes.Password + " ,"
                 + ETables.SessionWorkers + "." + ESessionWorkerAttributes.Username + " ,"
                 + ETables.SessionsGroups + "." + ESessionGroupAttributes.GroupId + " ,"
+                + ETables.SessionWorkers + "." + ESessionWorkerAttributes.SupervisorId + " ,"
                 + ETables.SessionsGroups + "." + ESessionGroupAttributes.GroupName + " "
-                + " FROM " + ETables.SessionWorkers
-                + joinClause + extraClause;
+                + " FROM " + ETables.SessionWorkers + joinClause ;
 
         ResultSet result = database.SelectQuery(query);
         return result;
