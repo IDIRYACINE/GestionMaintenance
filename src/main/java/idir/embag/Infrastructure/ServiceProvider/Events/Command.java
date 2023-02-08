@@ -1,10 +1,10 @@
-package idir.embag.Infrastructure.ServiceProivder.Events;
+package idir.embag.Infrastructure.ServiceProvider.Events;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import idir.embag.Infrastructure.ServiceProivder.Events.ServiceEventResponse.UnhandeledEventResponse;
+import idir.embag.Infrastructure.ServiceProvider.Events.ServiceEventResponse.UnhandeledEventResponse;
 
 @SuppressWarnings("rawtypes")
 public abstract class Command<A extends ServiceEventData, B extends RawServiceEventData, O extends ServiceEventResponse> {

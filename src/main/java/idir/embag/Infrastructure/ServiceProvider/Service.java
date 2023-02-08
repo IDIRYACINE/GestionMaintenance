@@ -1,20 +1,20 @@
-package idir.embag.Infrastructure.ServiceProivder;
+package idir.embag.Infrastructure.ServiceProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.stream.Stream;
 
-import idir.embag.Infrastructure.ServiceProivder.Events.Command;
-import idir.embag.Infrastructure.ServiceProivder.Events.RawServiceEventData;
-import idir.embag.Infrastructure.ServiceProivder.Events.ServiceEvent;
-import idir.embag.Infrastructure.ServiceProivder.Events.ServiceEventResponse;
-import idir.embag.Infrastructure.ServiceProivder.Algorithms.Comparator;
-import idir.embag.Infrastructure.ServiceProivder.Algorithms.SearchAlgorithm;
+import idir.embag.Infrastructure.ServiceProvider.Algorithms.Comparator;
+import idir.embag.Infrastructure.ServiceProvider.Algorithms.SearchAlgorithm;
+import idir.embag.Infrastructure.ServiceProvider.Events.Command;
+import idir.embag.Infrastructure.ServiceProvider.Events.RawServiceEventData;
+import idir.embag.Infrastructure.ServiceProvider.Events.ServiceEvent;
+import idir.embag.Infrastructure.ServiceProvider.Events.ServiceEventResponse;
 
 @SuppressWarnings("rawtypes")
 public abstract class Service {
-    int serviceId;
+    public int serviceId;
     String serviceName;
     Stream stream;
 

@@ -1,11 +1,11 @@
-package idir.embag.Infrastructure.ServiceProivder;
+package idir.embag.Infrastructure.ServiceProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import idir.embag.Infrastructure.ServiceProivder.Algorithms.Comparator;
-import idir.embag.Infrastructure.ServiceProivder.Algorithms.SearchAlgorithm;
-import idir.embag.Infrastructure.ServiceProivder.Events.ServiceEvent;
+import idir.embag.Infrastructure.ServiceProvider.Algorithms.Comparator;
+import idir.embag.Infrastructure.ServiceProvider.Algorithms.SearchAlgorithm;
+import idir.embag.Infrastructure.ServiceProvider.Events.ServiceEvent;
 
 @SuppressWarnings("rawtypes")
 public abstract class ServiceStore {

@@ -1,4 +1,4 @@
-package idir.embag.Infrastructure.ServiceProivder.Events;
+package idir.embag.Infrastructure.ServiceProvider.Events;
 
 import java.util.function.Consumer;
 
