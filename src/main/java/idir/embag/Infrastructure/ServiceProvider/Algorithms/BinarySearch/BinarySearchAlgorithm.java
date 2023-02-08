@@ -5,7 +5,7 @@ import java.util.List;
 import idir.embag.Infrastructure.ServiceProvider.Algorithms.SearchAlgorithm;
 
 public class BinarySearchAlgorithm<E, T>
-        extends SearchAlgorithm<E, T, BinarySearchComparator<E, T>> {
+        implements SearchAlgorithm<E, T, BinarySearchComparator<E, T>> {
 
     BinarySearchComparator<E, T> comparator;
 

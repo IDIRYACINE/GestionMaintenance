@@ -11,14 +11,14 @@ public abstract class Command<A extends ServiceEventData, B extends RawServiceEv
     public final int commandId;
     final String commandName;
 
-    Command(int commandId, String commandName) {
+    public Command(int commandId, String commandName) {
         this.commandId = commandId;
         this.commandName = commandName;
     }
 
-    abstract Future<O> handleEvent(A eventData);
+    public abstract Future<O> handleEvent(A eventData);
 
-    abstract Future<O> handleRawEvent(B eventData);
+    public abstract Future<O> handleRawEvent(B eventData);
 
     public static class EmptyCommand
             extends Command<EmptyCommandData, EmptyCommandRawData, ServiceEventResponse.UnhandeledEventResponse> {
@@ -57,12 +57,12 @@ public abstract class Command<A extends ServiceEventData, B extends RawServiceEv
         };
 
         @Override
-        Future<UnhandeledEventResponse> handleEvent(EmptyCommandData eventData) {
+        public Future<UnhandeledEventResponse> handleEvent(EmptyCommandData eventData) {
             return emptyCommandFuture;
         }
 
         @Override
-        Future<UnhandeledEventResponse> handleRawEvent(EmptyCommandRawData eventData) {
+        public Future<UnhandeledEventResponse> handleRawEvent(EmptyCommandRawData eventData) {
             return emptyCommandFuture;
         }
 
@@ -74,7 +74,7 @@ public abstract class Command<A extends ServiceEventData, B extends RawServiceEv
         }
 
         @Override
-        EmptyCommandRawData toRawServiceEventData() {
+        public EmptyCommandRawData toRawServiceEventData() {
             return null;
         }
 

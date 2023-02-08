@@ -16,15 +16,15 @@ public abstract class ServiceStore {
         this._searchAlgorithm = _searchAlgorithm;
     }
 
-    void registerService(Service service) {
+    public void registerService(Service service) {
         _services.add(service);
     }
 
-    void unregisterService(Service service) {
+    public void unregisterService(Service service) {
         _services.remove(service);
     }
 
-    void sendEvent(ServiceEvent event) {
+    public void sendEvent(ServiceEvent event) {
         Service service = _searchAlgorithm.search(_services, event.serviceId);
         if (service != null) {
             service.onEventForCallback(event);

@@ -13,7 +13,6 @@ import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.Session;
 import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
-import idir.embag.Infrastructure.ServicesProvider;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.FetchActiveSessionRecordsWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
@@ -75,7 +74,7 @@ public class SessionController implements IEventSubscriber {
                 recordOffset, permissions);
         data.put(EServerKeys.ApiWrapper, apiWrapper);
 
-        ServicesProvider.getInstance().getRemoteServer().dispatchApiCall(data);
+        ApiService.getInstance().getRemoteServer().dispatchApiCall(data);
     }
 
     public void manageSessionGroups() {

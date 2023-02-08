@@ -26,32 +26,32 @@ public abstract class Service {
         this.searchAlgorithm = searchAlgorithm;
     }
 
-    void registerCommand(Command command) {
+    public void registerCommand(Command command) {
         commands.add(command);
     }
 
-    void registerCommandAtIndex(Command command) {
+    public void registerCommandAtIndex(Command command) {
         commands.add(command.commandId, command);
     }
 
-    void replaceCommandAtIndex(Command command) {
+    public void replaceCommandAtIndex(Command command) {
         commands.set(command.commandId, command);
     }
 
-    void unregisterCommand(Command command) {
+    public void unregisterCommand(Command command) {
         commands.remove(command);
     }
 
-    void unregisterCommandById(int commandId) {
+    public void unregisterCommandById(int commandId) {
         Command command = searchAlgorithm.search(commands, commandId);
         if (command != null) {
             commands.remove(command);
         }
     }
 
-    abstract void onEventForCallback(ServiceEvent event);
+    public abstract  void onEventForCallback(ServiceEvent event);
 
-    abstract Future<ServiceEventResponse> onEventForResponse(ServiceEvent event);
+    public abstract Future<ServiceEventResponse> onEventForResponse(ServiceEvent event);
 
-    abstract Future<ServiceEventResponse> onRawEvent(RawServiceEventData event);
+    public abstract Future<ServiceEventResponse> onRawEvent(RawServiceEventData event);
 }

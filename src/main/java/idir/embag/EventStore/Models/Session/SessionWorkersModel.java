@@ -9,7 +9,6 @@ import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Workers.SessionWorker;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
-import idir.embag.Infrastructure.ServicesProvider;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.RegisterSessionWorkerWrapper;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.UnregisterSessionWorkerWrapper;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.UpdateSessionWorkerWrapper;
@@ -129,7 +128,7 @@ public class SessionWorkersModel implements IDataDelegate {
         Map<EServerKeys,Object> data =  new HashMap<>();
         DataBundler.appendData(data, EServerKeys.ApiWrapper, wrapper);
 
-        IServer server = ServicesProvider.getInstance().getRemoteServer();
+        IServer server = ApiService.getInstance().getRemoteServer();
         server.dispatchApiCall(data);
     }
     
@@ -139,7 +138,7 @@ public class SessionWorkersModel implements IDataDelegate {
         Map<EServerKeys,Object> data =  new HashMap<>();
         DataBundler.appendData(data, EServerKeys.ApiWrapper, wrapper);
 
-        IServer server = ServicesProvider.getInstance().getRemoteServer();
+        IServer server = ApiService.getInstance().getRemoteServer();
         server.dispatchApiCall(data);
     }
 
@@ -149,7 +148,7 @@ public class SessionWorkersModel implements IDataDelegate {
         Map<EServerKeys,Object> data =  new HashMap<>();
         DataBundler.appendData(data, EServerKeys.ApiWrapper, wrapper);
 
-        IServer server = ServicesProvider.getInstance().getRemoteServer();
+        IServer server = ApiService.getInstance().getRemoteServer();
         server.dispatchApiCall(data);
     }
 

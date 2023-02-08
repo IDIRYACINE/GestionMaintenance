@@ -15,7 +15,6 @@ import idir.embag.DataModels.SocketApisData.DReceiveRecord;
 import idir.embag.DataModels.SocketApisData.DSubmitRecord;
 import idir.embag.DataModels.Users.User;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
-import idir.embag.Infrastructure.ServicesProvider;
 import idir.embag.Repository.InventoryRepository;
 import idir.embag.Types.Infrastructure.Database.IProductQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
@@ -103,7 +102,7 @@ public class SessionRecordHandler {
     }
 
     private InventoryProduct getInventoryProduct(int barcode) {
-        IProductQuery query = ServicesProvider.getInstance().getDatabaseInitialiser().getProductQuery();
+        IProductQuery query = ApiService.getInstance().getDatabaseInitialiser().getProductQuery();
 
         try {
             AttributeWrapper barcodeAttr = new AttributeWrapper(EInventoryAttributes.ArticleCode, barcode);

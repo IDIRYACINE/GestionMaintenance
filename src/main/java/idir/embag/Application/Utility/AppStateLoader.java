@@ -5,7 +5,6 @@ import java.sql.SQLException;
 
 import idir.embag.Application.State.AppState;
 import idir.embag.DataModels.AppState.AppStateWrapper;
-import idir.embag.Infrastructure.ServicesProvider;
 import idir.embag.Repository.AppStateRepository;
 import idir.embag.Types.Infrastructure.Database.Metadata.ETables;
 import idir.embag.Types.MetaData.EAutoIncrementedAliases;
@@ -21,7 +20,7 @@ public class AppStateLoader {
 
             String query = formulateAppStateQuery();
 
-            ResultSet result = ServicesProvider.getInstance().getDatabaseInitialiser().executeQuery(query);
+            ResultSet result = ApiService.getInstance().getDatabaseInitialiser().executeQuery(query);
 
             AppStateWrapper wrapper = appStateRepository.resultSetToAppStateWrapper(result);
 

@@ -10,7 +10,6 @@ import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.Session;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
-import idir.embag.Infrastructure.ServicesProvider;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.CloseSessionWrapper;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.OpenSessionWrapper;
 import idir.embag.Repository.SessionRepository;
@@ -138,7 +137,7 @@ public class SessionModel implements IDataDelegate {
         Map<EServerKeys, Object> data = new HashMap<>();
         DataBundler.appendData(data, EServerKeys.ApiWrapper, openSessionWrapper);
 
-        IServer server = ServicesProvider.getInstance().getRemoteServer();
+        IServer server = ApiService.getInstance().getRemoteServer();
         server.dispatchApiCall(data);
     }
 
@@ -148,7 +147,7 @@ public class SessionModel implements IDataDelegate {
         Map<EServerKeys, Object> data = new HashMap<>();
         DataBundler.appendData(data, EServerKeys.ApiWrapper, closeSessionWrapper);
 
-        IServer server = ServicesProvider.getInstance().getRemoteServer();
+        IServer server = ApiService.getInstance().getRemoteServer();
         server.dispatchApiCall(data);
     }
 }

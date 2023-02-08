@@ -1,8 +1,8 @@
 package idir.embag.Infrastructure.ServiceProvider.Events;
 
-abstract class ServiceEventData<T extends RawServiceEventData> {
-    final String requesterId;
-    int messageId = 0;
+public abstract class ServiceEventData<T extends RawServiceEventData> {
+    public final String requesterId;
+    public int messageId = 0;
 
     public ServiceEventData(String requesterId, int messageId) {
         this.requesterId = requesterId;
@@ -13,9 +13,9 @@ abstract class ServiceEventData<T extends RawServiceEventData> {
         this.requesterId = requesterId;
     }
 
-    abstract T toRawServiceEventData();
+    public abstract T toRawServiceEventData();
 
-    void setMessageId(int messageId) {
+    public void setMessageId(int messageId) {
         this.messageId = messageId;
     }
 

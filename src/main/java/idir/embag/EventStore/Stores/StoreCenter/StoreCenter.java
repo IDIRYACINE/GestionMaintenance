@@ -22,7 +22,6 @@ import idir.embag.EventStore.Models.Workers.WorkersModel;
 import idir.embag.EventStore.Stores.DataConverterStore.DataConverterStore;
 import idir.embag.EventStore.Stores.DataStore.DataStore;
 import idir.embag.EventStore.Stores.NavigationStore.NavigationStore;
-import idir.embag.Infrastructure.ServicesProvider;
 import idir.embag.Infrastructure.Initialisers.DatabaseInitialiser;
 import idir.embag.Repository.AffectationsRepository;
 import idir.embag.Repository.FamilyCodeRepository;
@@ -54,7 +53,7 @@ public class StoreCenter implements IStoresCenter {
 
   private Map<EStores, IStore> stores = new HashMap<>();
 
-  public static StoreCenter getInstance(ServicesProvider servicesCenter, INavigationController navigationController) {
+  public static StoreCenter getInstance(ApiService servicesCenter, INavigationController navigationController) {
     if (instance == null) {
       instance = new StoreCenter(servicesCenter, navigationController);
     }
@@ -65,7 +64,7 @@ public class StoreCenter implements IStoresCenter {
     return instance;
   }
 
-  private StoreCenter(ServicesProvider servicesCenter, INavigationController navigationController) {
+  private StoreCenter(ApiService servicesCenter, INavigationController navigationController) {
     setupStores(servicesCenter.getDatabaseInitialiser());
 
     stores.put(EStores.NavigationStore, new NavigationStore(navigationController));

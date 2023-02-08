@@ -10,7 +10,6 @@ import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Users.User;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
-import idir.embag.Infrastructure.ServicesProvider;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.LoginWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
@@ -63,7 +62,7 @@ public class LoginController implements IEventSubscriber{
         Map<EServerKeys,Object> data = new HashMap<>();
         LoginWrapper apiWrapper = new LoginWrapper("idir","idir");
         data.put(EServerKeys.ApiWrapper, apiWrapper);
-        ServicesProvider.getInstance().getRemoteServer().dispatchApiCall(data);
+        ApiService.getInstance().getRemoteServer().dispatchApiCall(data);
     }
 
     
