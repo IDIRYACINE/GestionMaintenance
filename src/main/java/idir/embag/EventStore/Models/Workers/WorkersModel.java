@@ -28,7 +28,7 @@ public class WorkersModel implements IDataDelegate{
     IWorkerQuery workerQuery;
     WorkersRepository workerRepository;
 
-    public WorkersModel(IWorkerQuery workerQuery,WorkersRepository workerRepository) {
+    public WorkersModel(WorkersRepository workerRepository) {
         this.workerQuery = workerQuery;
         this.workerRepository = workerRepository;
     }

@@ -9,9 +9,13 @@ import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Workers.SessionWorker;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
+import idir.embag.Infrastructure.Server.Server;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.RegisterSessionWorkerWrapper;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.UnregisterSessionWorkerWrapper;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.UpdateSessionWorkerWrapper;
+import idir.embag.Infrastructure.Server.Api.Commands.RegisterSessionWorker.RegisterSessionWorkerEvent;
+import idir.embag.Infrastructure.Server.Api.Commands.UnregisterSessionWorker.UnregisterSessionWorkerEvent;
+import idir.embag.Infrastructure.Server.Api.Commands.UpdateSessionWorker.UpdateSessionWorkerEvent;
 import idir.embag.Repository.SessionRepository;
 import idir.embag.Types.Infrastructure.Database.ISessionQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
@@ -33,7 +37,7 @@ public class SessionWorkersModel implements IDataDelegate {
     ISessionQuery sessionQuery;
     SessionRepository sessionRepository;
     
-    public SessionWorkersModel(ISessionQuery sessionQuery, SessionRepository sessionRepository) {
+    public SessionWorkersModel(SessionRepository sessionRepository) {
         this.sessionQuery = sessionQuery;
         this.sessionRepository = sessionRepository;
     }
@@ -125,31 +129,23 @@ public class SessionWorkersModel implements IDataDelegate {
     private void registerSessionWorkerOnServer(SessionWorker worker){
         RegisterSessionWorkerWrapper wrapper = new RegisterSessionWorkerWrapper(worker);
 
-        Map<EServerKeys,Object> data =  new HashMap<>();
-        DataBundler.appendData(data, EServerKeys.ApiWrapper, wrapper);
-
-        IServer server = ApiService.getInstance().getRemoteServer();
-        server.dispatchApiCall(data);
+        RegisterSessionWorkerEvent event = new RegisterSessionWorkerEvent("",wrapper);
+        Server.getInstance().dispatchEvent(event);
     }
     
     private void unregisterSessionWorkerOnServer(SessionWorker worker){
         UnregisterSessionWorkerWrapper wrapper = new UnregisterSessionWorkerWrapper(worker);
 
-        Map<EServerKeys,Object> data =  new HashMap<>();
-        DataBundler.appendData(data, EServerKeys.ApiWrapper, wrapper);
-
-        IServer server = ApiService.getInstance().getRemoteServer();
-        server.dispatchApiCall(data);
+        UnregisterSessionWorkerEvent event = new UnregisterSessionWorkerEvent("",wrapper);
+        Server.getInstance().dispatchEvent(event);
     }
 
     private void updateSessionWorkerOnServer(SessionWorker worker){
         UpdateSessionWorkerWrapper wrapper = new UpdateSessionWorkerWrapper(worker);
 
-        Map<EServerKeys,Object> data =  new HashMap<>();
-        DataBundler.appendData(data, EServerKeys.ApiWrapper, wrapper);
-
-        IServer server = ApiService.getInstance().getRemoteServer();
-        server.dispatchApiCall(data);
+        UpdateSessionWorkerEvent event = new UpdateSessionWorkerEvent("",wrapper);
+        Server.getInstance().dispatchEvent(event);
+        
     }
 
 }    

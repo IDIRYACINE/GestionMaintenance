@@ -16,19 +16,19 @@ public class AppStateLoader {
 
     public static void loadAppState() {
 
-        try {
+        // try {
 
-            String query = formulateAppStateQuery();
+        //     String query = formulateAppStateQuery();
 
-            ResultSet result = ApiService.getInstance().getDatabaseInitialiser().executeQuery(query);
+        //     ResultSet result = ApiService.getInstance().getDatabaseInitialiser().executeQuery(query);
 
-            AppStateWrapper wrapper = appStateRepository.resultSetToAppStateWrapper(result);
+        //     AppStateWrapper wrapper = appStateRepository.resultSetToAppStateWrapper(result);
 
-            AppState.getInstance().setAppState(wrapper);
+        //     AppState.getInstance().setAppState(wrapper);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        // } catch (SQLException e) {
+        //     e.printStackTrace();
+        // }
 
     }
 

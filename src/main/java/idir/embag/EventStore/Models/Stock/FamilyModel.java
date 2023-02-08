@@ -27,7 +27,7 @@ public class FamilyModel implements IDataDelegate{
     private IProductQuery productQuery;
     private FamilyCodeRepository familyCodeRepository;
 
-    public FamilyModel(IProductQuery productQuery,FamilyCodeRepository familyCodeRepository) {
+    public FamilyModel(FamilyCodeRepository familyCodeRepository) {
         this.productQuery = productQuery;
         this.familyCodeRepository = familyCodeRepository;
     }

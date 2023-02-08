@@ -13,11 +13,12 @@ import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.Session;
 import idir.embag.DataModels.Session.SessionRecord;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
+import idir.embag.Infrastructure.Server.Server;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.FetchActiveSessionRecordsWrapper;
+import idir.embag.Infrastructure.Server.Api.Commands.FetchActiveSessionRecords.FetchActiveSessionRecordsEvent;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Metadata.ESessionRecordAttributes;
-import idir.embag.Types.Infrastructure.Server.EServerKeys;
 import idir.embag.Types.MetaData.ENavigationKeys;
 import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Stores.Generics.IEventSubscriber;
@@ -66,15 +67,13 @@ public class SessionController implements IEventSubscriber {
         int maxRetrivedRecord = 1000;
         int recordOffset = 0;
 
-        Map<EServerKeys, Object> data = new HashMap<>();
-
         ArrayList<Integer> permissions = AppState.getInstance().getCurrentUser().getDesignationsIds();
 
         FetchActiveSessionRecordsWrapper apiWrapper = new FetchActiveSessionRecordsWrapper(maxRetrivedRecord,
                 recordOffset, permissions);
-        data.put(EServerKeys.ApiWrapper, apiWrapper);
 
-        ApiService.getInstance().getRemoteServer().dispatchApiCall(data);
+        FetchActiveSessionRecordsEvent event = new FetchActiveSessionRecordsEvent("sessionController", apiWrapper);
+        Server.getInstance().dispatchEvent(event);
     }
 
     public void manageSessionGroups() {

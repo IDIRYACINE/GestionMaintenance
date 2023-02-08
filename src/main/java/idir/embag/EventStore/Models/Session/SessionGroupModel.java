@@ -34,8 +34,8 @@ public class SessionGroupModel implements IDataDelegate {
 
     private AffectationsRepository designationsRepository;
 
-    public SessionGroupModel(ISessionQuery sessionQuery, SessionRepository sessionRepository,
-            IGroupPermissionsQuery groupPermissionsQuery, AffectationsRepository designationsRepository) {
+    public SessionGroupModel(SessionRepository sessionRepository,
+             AffectationsRepository designationsRepository) {
         this.sessionQuery = sessionQuery;
         this.sessionRepository = sessionRepository;
         this.groupPermissionsQuery = groupPermissionsQuery;

@@ -1,6 +1,5 @@
 package idir.embag.Infrastructure.ServiceProvider.Algorithms.BinarySearch;
 
-import java.util.List;
 
 import idir.embag.Infrastructure.ServiceProvider.Algorithms.SearchAlgorithm;
 
@@ -17,13 +16,13 @@ public class BinarySearchAlgorithm<E, T>
     }
 
     @Override
-    public E search(List<E> list, T target) {
+    public E search(E[] list, T target) {
         int min = 0;
-        int max = list.size() - 1;
+        int max = list.length - 1;
 
         while (min <= max) {
             int mid = (min + max) / 2;
-            E midVal = list.get(mid);
+            E midVal = list[mid];
 
             if (comparator.isLessThan.apply(midVal, target)) {
                 min = mid + 1;

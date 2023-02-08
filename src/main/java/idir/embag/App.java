@@ -8,6 +8,7 @@ import idir.embag.Application.Utility.Serialisers.GsonSerialiser;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
 import idir.embag.Infrastructure.Database.MysqlConnection;
 import idir.embag.Infrastructure.Initialisers.DatabaseInitialiser;
+import idir.embag.Infrastructure.Server.Server;
 import idir.embag.Types.Application.Navigation.INavigationController;
 import idir.embag.Types.Infrastructure.Database.IConnectionParameters;
 import idir.embag.Types.Stores.StoreCenter.IStoresCenter;
@@ -26,7 +27,6 @@ public class App extends Application {
 
     public static StackPane stackPane;
     private static IStoresCenter storesCenter;
-    private ApiService servicesCenter;
     private INavigationController navigationController;
 
     private Stage appStage;
@@ -80,14 +80,8 @@ public class App extends Application {
 
     private void setup() {
         navigationController = new MainController();
-        servicesCenter = ApiService.getInstance();
-        storesCenter = StoreCenter.getInstance(servicesCenter, navigationController);
-
-        IConnectionParameters connectionParameters = new MysqlConnection("test", "idir", "idir",
-                "localhost", 3306);
-
-        ApiService.getInstance().getDatabaseInitialiser().connect(connectionParameters);
-        ApiService.getInstance().getDatabaseInitialiser().createTables();
+        storesCenter = StoreCenter.getInstance(navigationController);
+        Server.getInstance();
 
     }
 

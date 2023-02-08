@@ -1,5 +1,5 @@
 package idir.embag.Infrastructure.Server.Api.Commands;
 
 public enum CommandsEnum {
-    closeSession
+    CloseSession, Login, OpenSession, RegisterSessionWorker, UnregisterSessionWorker, UpdateSessionWorker, FetchActiveSessionRecords, FetchActiveSession
 }

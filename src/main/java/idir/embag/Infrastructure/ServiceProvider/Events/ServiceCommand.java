@@ -7,11 +7,11 @@ import java.util.concurrent.TimeUnit;
 import idir.embag.Infrastructure.ServiceProvider.Events.ServiceEventResponse.UnhandeledEventResponse;
 
 @SuppressWarnings("rawtypes")
-public abstract class Command<A extends ServiceEventData, B extends RawServiceEventData, O extends ServiceEventResponse> {
+public abstract class ServiceCommand<A extends ServiceEventData, B extends RawServiceEventData, O extends ServiceEventResponse> {
     public final int commandId;
     final String commandName;
 
-    public Command(int commandId, String commandName) {
+    public ServiceCommand(int commandId, String commandName) {
         this.commandId = commandId;
         this.commandName = commandName;
     }
@@ -21,8 +21,8 @@ public abstract class Command<A extends ServiceEventData, B extends RawServiceEv
     public abstract Future<O> handleRawEvent(B eventData);
 
     public static class EmptyCommand
-            extends Command<EmptyCommandData, EmptyCommandRawData, ServiceEventResponse.UnhandeledEventResponse> {
-        EmptyCommand(int commandId) {
+            extends ServiceCommand<EmptyCommandData, EmptyCommandRawData, ServiceEventResponse.UnhandeledEventResponse> {
+        public EmptyCommand(int commandId) {
             super(commandId, "EmptyCommand");
         }
 

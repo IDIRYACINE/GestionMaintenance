@@ -27,7 +27,7 @@ public class InventoryModel implements IDataDelegate {
     IProductQuery productQuery;
     InventoryRepository inventoryRepository;
 
-    public InventoryModel(IProductQuery productQuery,InventoryRepository inventoryRepository) {
+    public InventoryModel(InventoryRepository inventoryRepository) {
         this.productQuery = productQuery;
         this.inventoryRepository = inventoryRepository;
     }

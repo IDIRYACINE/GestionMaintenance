@@ -1,15 +1,20 @@
 package idir.embag.Infrastructure.Server.Api.Commands.CloseSession;
 
-import java.util.function.Consumer;
-import idir.embag.Infrastructure.ServiceProvider.Events.ServiceEvent;
-import idir.embag.Infrastructure.ServiceProvider.Events.ServiceEventData;
+import idir.embag.Infrastructure.Server.Api.ApiWrappers.CloseSessionWrapper;
+import idir.embag.Infrastructure.Server.Api.Commands.CommandsEnum;
+import idir.embag.Infrastructure.ServiceProvider.Events.SimpleServiceEvent;
 
-public class CloseSessionEvent extends ServiceEvent<CloseSessionRawData, CloseSessionResponse> {
-   
+public class CloseSessionEvent extends SimpleServiceEvent<CloseSessionWrapper> {
+    public static final int eventId = CommandsEnum.CloseSession.ordinal();
 
-    public CloseSessionEvent(
-            ServiceEventData<CloseSessionRawData> eventData, Consumer<CloseSessionResponse> callback) {
-        super(CloseSessionMetadata.serviceId, CloseSessionMetadata.eventId, CloseSessionMetadata.eventName, eventData, callback);
+
+    public CloseSessionEvent(String requesterName, CloseSessionWrapper data) {
+        super(requesterName, data);
+    }
+
+    @Override
+    public int getEventId() {
+        return eventId;
     }
 
 }

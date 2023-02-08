@@ -29,7 +29,7 @@ public class GroupPermissionsModel implements IDataDelegate {
 
     private AffectationsRepository affectationRepository;
 
-    public GroupPermissionsModel(IAffectationssQuery affectationsQuery, IGroupPermissionsQuery groupPermissionsQuery,
+    public GroupPermissionsModel( 
     AffectationsRepository affectationRepository) {
         this.affectationsQuery = affectationsQuery;
         this.affectationRepository = affectationRepository;

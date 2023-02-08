@@ -10,11 +10,12 @@ import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Users.User;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
+import idir.embag.Infrastructure.Server.Server;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.LoginWrapper;
+import idir.embag.Infrastructure.Server.Api.Commands.Login.LoginEvent;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
 import idir.embag.Types.Infrastructure.Database.Metadata.EUsersAttributes;
-import idir.embag.Types.Infrastructure.Server.EServerKeys;
 import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Stores.Generics.IEventSubscriber;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
@@ -59,10 +60,10 @@ public class LoginController implements IEventSubscriber{
     }
 
     private void loginToRemoteServer(){
-        Map<EServerKeys,Object> data = new HashMap<>();
         LoginWrapper apiWrapper = new LoginWrapper("idir","idir");
-        data.put(EServerKeys.ApiWrapper, apiWrapper);
-        ApiService.getInstance().getRemoteServer().dispatchApiCall(data);
+
+        LoginEvent event = new LoginEvent("loginController",apiWrapper);
+        Server.getInstance().dispatchEvent(event);
     }
 
     

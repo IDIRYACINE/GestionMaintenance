@@ -12,11 +12,11 @@ import idir.embag.Application.Controllers.Session.SessionController;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.Session;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
+import idir.embag.Infrastructure.Server.Server;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.FetchActiveSessionWrapper;
-import idir.embag.Infrastructure.ServiceProvider.Events.ServiceEvent;
+import idir.embag.Infrastructure.Server.Api.Commands.FetchActiveSession.FetchActiveSessionEvent;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Metadata.ESessionAttributes;
-import idir.embag.Types.Infrastructure.Server.EServerKeys;
 import idir.embag.Types.MetaData.ENavigationKeys;
 import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
@@ -106,17 +106,11 @@ public class SettingsController {
     }
 
     public void loadActiveSessionIfExists() {
-        Map<EServerKeys, Object> data = new HashMap<>();
 
         FetchActiveSessionWrapper apiWrapper = new FetchActiveSessionWrapper();
-        data.put(EServerKeys.ApiWrapper, apiWrapper);
 
-
-        
-
-        ApiService sProvider = ApiService.getInstance();
-
-        sProvider.sendEvent(event);
+        FetchActiveSessionEvent event = new FetchActiveSessionEvent("settingsController",apiWrapper);
+        Server.getInstance().dispatchEvent(event);
 
     }
 

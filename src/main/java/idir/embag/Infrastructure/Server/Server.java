@@ -1,55 +1,36 @@
 package idir.embag.Infrastructure.Server;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Map;
-
-import idir.embag.Application.Utility.DataBundler;
 import idir.embag.Infrastructure.Server.Api.ServerConfigurations;
-import idir.embag.Infrastructure.Server.Api.Requests.CloseSessionRequest;
-import idir.embag.Infrastructure.Server.Api.Requests.FetchActiveSessionRecordsRequest;
-import idir.embag.Infrastructure.Server.Api.Requests.FetchActiveSessionRequest;
-import idir.embag.Infrastructure.Server.Api.Requests.LoginRequest;
-import idir.embag.Infrastructure.Server.Api.Requests.OpenSessionRequest;
-import idir.embag.Infrastructure.Server.Api.Requests.RegisterSessionWorkerRequest;
-import idir.embag.Infrastructure.Server.Api.Requests.UnregisterSessionWorkerRequest;
-import idir.embag.Infrastructure.Server.Api.Requests.UpdateSessionWorkerRequest;
-import idir.embag.Infrastructure.Server.Api.ResponeHandlers.LoginResponse;
-import idir.embag.Infrastructure.Server.Api.ResponeHandlers.RecordsResponse;
-import idir.embag.Infrastructure.Server.Api.ResponeHandlers.SessionResponse;
-import idir.embag.Infrastructure.Server.Api.ResponeHandlers.WorkerOperationResponse;
+import idir.embag.Infrastructure.Server.Api.Commands.CommandsEnum;
+import idir.embag.Infrastructure.Server.Api.Commands.FetchActiveSession.FetchActiveSessionCommand;
+import idir.embag.Infrastructure.Server.Api.Commands.FetchActiveSessionRecords.FetchActiveSessionRecordsCommand;
+import idir.embag.Infrastructure.Server.Api.Commands.Login.LoginCommand;
+import idir.embag.Infrastructure.Server.Api.Commands.OpenSession.OpenSessionCommand;
+import idir.embag.Infrastructure.Server.Api.Commands.UnregisterSessionWorker.UnregisterSessionWorkerCommand;
+import idir.embag.Infrastructure.Server.Api.Commands.UpdateSessionWorker.UpdateSessionWorkerCommand;
 import idir.embag.Infrastructure.Server.WebSocket.WebSocketImpl;
-import idir.embag.Types.Api.EHeaders.Headers;
-import idir.embag.Types.Api.EHeaders;
-import idir.embag.Types.Api.IApi;
-import idir.embag.Types.Api.IApiWrapper;
-import idir.embag.Types.Infrastructure.Server.EServerKeys;
-import idir.embag.Types.Infrastructure.Server.IServer;
-
-import java.util.concurrent.Future;
 import java.util.function.BiFunction;
 import idir.embag.Infrastructure.ServiceProvider.Service;
 import idir.embag.Infrastructure.ServiceProvider.Algorithms.SearchAlgorithm;
 import idir.embag.Infrastructure.ServiceProvider.Algorithms.BinarySearch.BinarySearchAlgorithm;
 import idir.embag.Infrastructure.ServiceProvider.Algorithms.BinarySearch.BinarySearchComparator;
-import idir.embag.Infrastructure.ServiceProvider.Events.Command;
-import idir.embag.Infrastructure.ServiceProvider.Events.RawServiceEventData;
 import idir.embag.Infrastructure.ServiceProvider.Events.ServiceEvent;
-import idir.embag.Infrastructure.ServiceProvider.Events.ServiceEventResponse;
-import idir.embag.Infrastructure.ServiceProvider.Types.CommandSearchAlgorithm;
+import idir.embag.Infrastructure.ServiceProvider.Events.SimpleServiceCommand;
+import idir.embag.Infrastructure.ServiceProvider.Events.SimpleServiceEvent;
+import idir.embag.Infrastructure.ServiceProvider.Types.SimpleCommandSearchAglorithm;
 
-@SuppressWarnings({ "rawtypes"})
-public class Server extends Service implements IServer  {
+@SuppressWarnings({ "rawtypes", "unchecked" })
+public class Server extends Service {
 
-    WebSocketImpl webSocketClient;
+    public WebSocketImpl webSocketClient;
 
-   ServerConfigurations serverConfigurations;
+    private final ServerConfigurations serverConfigurations;
 
-    private Server(CommandSearchAlgorithm searchAlgorithm) {
+    private Server(SimpleCommandSearchAglorithm searchAlgorithm, ServerConfigurations serverConfigurations) {
         super(searchAlgorithm);
-        registerDefaultCommand();
+        this.serverConfigurations = serverConfigurations;
+        registerDefaultCommands();
     }
-
 
     private static Server instance;
 
@@ -59,170 +40,57 @@ public class Server extends Service implements IServer  {
 
     public static Server getInstance(ServerConfigurations serverConfigurations) {
         if (instance == null) {
-            CommandSearchAlgorithm searchAlgorithm = (CommandSearchAlgorithm) ((SearchAlgorithm) createSearchAlgorithm());
+            SimpleCommandSearchAglorithm searchAlgorithm = (SimpleCommandSearchAglorithm) ((SearchAlgorithm) createSearchAlgorithm());
 
-            instance = new Server(searchAlgorithm);
+            instance = new Server(searchAlgorithm, serverConfigurations);
         }
         return instance;
     }
 
+    private static BinarySearchAlgorithm<SimpleServiceCommand, Integer> createSearchAlgorithm() {
+        BinarySearchAlgorithm<SimpleServiceCommand, Integer> searchAlgorithm = new BinarySearchAlgorithm<SimpleServiceCommand, Integer>();
 
-    private static BinarySearchAlgorithm<Command, Integer> createSearchAlgorithm() {
-        BinarySearchAlgorithm<Command, Integer> searchAlgorithm = new BinarySearchAlgorithm<Command, Integer>();
-        
-        BiFunction<Command, Integer,Boolean> isGreaterThan = (command, id) -> command.commandId > id;
-        BiFunction<Command, Integer,Boolean> isLessThan = (command, id) -> command.commandId < id;
+        BiFunction<SimpleServiceCommand, Integer, Boolean> isGreaterThan = (command, id) -> command.getEventId() > id;
+        BiFunction<SimpleServiceCommand, Integer, Boolean> isLessThan = (command, id) -> command.getEventId() < id;
 
-        BinarySearchComparator<Command, Integer> comparator = new BinarySearchComparator<Command, Integer>(isGreaterThan,isLessThan);
+        BinarySearchComparator<SimpleServiceCommand, Integer> comparator = new BinarySearchComparator<SimpleServiceCommand, Integer>(
+                isGreaterThan, isLessThan);
 
         searchAlgorithm.setComparator(comparator);
-        
+
         return searchAlgorithm;
     }
-    
 
-    @Override
-    public void dispatchApiCall(Map<EServerKeys,Object> data) {
-        IApiWrapper apiWrapper = DataBundler.retrieveValue(data, EServerKeys.ApiWrapper);
+    private void registerDefaultCommands() {
+        int length = CommandsEnum.values().length;
+        commands = new SimpleServiceCommand[length];
 
-        switch(apiWrapper.getApi()){
-            case loginAdmin : login(apiWrapper);
-            break;
-            case closeSession : closeSession(apiWrapper);
-            break;
-            case openSession: openSession(apiWrapper);
-            break;
-            case registerSessionWorker: registerSessionWorker(apiWrapper);
-            break;
-            case unregisterSessionWorker: unregisterSessionWorker(apiWrapper);
-            break;
-            case fetchActiveSession : fetchActiveSession(apiWrapper);
-            break; 
-            case updateSessionWorker: updateSessionWorker(apiWrapper);
-            break;
-
-            case fetchActiveSessionRecords : fetchRecords(apiWrapper);
-            break;
-
-            default : 
-            break;
+        SimpleServiceCommand.EmptyCommand emptyCommand = new SimpleServiceCommand.EmptyCommand();
+        for (int i = 0; i < length; i++) {
+            commands[i] = emptyCommand;
         }
-    }
 
-    private void login(IApiWrapper wrapper) {
-        IApi loginApi = new LoginRequest(wrapper);
-
-        loginApi.addHeader(Headers.access_token, serverConfigurations.authToken);
-
-        Runnable initSocket = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    URI url = new URI("ws://"+serverConfigurations.serverPath+":"+serverConfigurations.port);
-                    webSocketClient = new WebSocketImpl(url);
-                    webSocketClient.addHeader(EHeaders.valueOf(Headers.access_token), serverConfigurations.authToken);
-                    webSocketClient.connectBlocking();
-
-                } catch (URISyntaxException | InterruptedException e) {
-                    System.out.println("Invalid server path");
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        LoginResponse loginHandler = new LoginResponse(initSocket);
-        loginApi.setResponseHandler(loginHandler);
-
-        loginApi.execute();
-    }
-
-    private void openSession(IApiWrapper apiWrapper){
-        OpenSessionRequest request = new OpenSessionRequest(apiWrapper);
-        request.addHeader(Headers.access_token, serverConfigurations.authToken);
-
-        SessionResponse responseHandler = new SessionResponse();
-        request.setResponseHandler(responseHandler);
-        request.execute();
-    }
-
-    private void closeSession(IApiWrapper apiWrapper){
-        CloseSessionRequest request = new CloseSessionRequest(apiWrapper);
-        request.addHeader(Headers.access_token, serverConfigurations.authToken);
-
-        SessionResponse responseHandler = new SessionResponse();
-        request.setResponseHandler(responseHandler);
-        request.execute();
-    }
-
-    private void registerSessionWorker(IApiWrapper apiWrapper){
-        RegisterSessionWorkerRequest request = new RegisterSessionWorkerRequest(apiWrapper);
-        request.addHeader(Headers.access_token, serverConfigurations.authToken);
-
-        WorkerOperationResponse responseHandler = new WorkerOperationResponse();
-        request.setResponseHandler(responseHandler);
-        request.execute();
-    }
-
-    private void unregisterSessionWorker(IApiWrapper apiWrapper){
-        UnregisterSessionWorkerRequest request = new UnregisterSessionWorkerRequest(apiWrapper);
-        request.addHeader(Headers.access_token, serverConfigurations.authToken);
-
-        WorkerOperationResponse responseHandler = new WorkerOperationResponse();
-        request.setResponseHandler(responseHandler);
-        request.execute();
-    }
-
-    private void updateSessionWorker(IApiWrapper apiWrapper){
-        UpdateSessionWorkerRequest request = new UpdateSessionWorkerRequest(apiWrapper);
-        request.addHeader(Headers.access_token, serverConfigurations.authToken);
-
-        WorkerOperationResponse responseHandler = new WorkerOperationResponse();
-        request.setResponseHandler(responseHandler);
-        request.execute();
-    }
-
-
-    private void fetchActiveSession(IApiWrapper apiWrapper){
-       
-        FetchActiveSessionRequest request = new FetchActiveSessionRequest(apiWrapper);
-        request.addHeader(Headers.access_token, serverConfigurations.authToken);
-
-        SessionResponse responseHandler = new SessionResponse();
-        request.setResponseHandler(responseHandler);
-        request.execute();
-    }
-    
-    private void fetchRecords(IApiWrapper apiWrapper){
-        FetchActiveSessionRecordsRequest request = new FetchActiveSessionRecordsRequest(apiWrapper);
-        request.addHeader(Headers.access_token, serverConfigurations.authToken);
-
-        RecordsResponse responseHandler = new RecordsResponse();
-        request.setResponseHandler(responseHandler);
-        request.execute();
-    }
-
-
-
-
-
-    private void registerDefaultCommand() {
+        registerCommandAtIndex(new LoginCommand(serverConfigurations));
+        registerCommandAtIndex(new UpdateSessionWorkerCommand(serverConfigurations));
+        registerCommandAtIndex(new UnregisterSessionWorkerCommand(serverConfigurations));
+        registerCommandAtIndex(new OpenSessionCommand(serverConfigurations));
+        registerCommandAtIndex(new FetchActiveSessionCommand(serverConfigurations));
+        registerCommandAtIndex(new FetchActiveSessionRecordsCommand(serverConfigurations));
 
     }
 
     @Override
-    public void onEventForCallback(ServiceEvent event) {
-        
-    }
+    public void sendEvent(ServiceEvent event) {
 
+    }
 
     @Override
-    public Future<ServiceEventResponse> onEventForResponse(ServiceEvent event) {
-        return null;
+    public void dispatchEvent(SimpleServiceEvent event) {
+        SimpleServiceCommand command = searchAlgorithm.search(commands, event.getEventId());
+        if (command != null) {
+            command.execute(event);
+        }
+
     }
 
-
-    @Override
-    public Future<ServiceEventResponse> onRawEvent(RawServiceEventData event) {
-        return null;
-    }
 }

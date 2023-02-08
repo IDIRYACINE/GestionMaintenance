@@ -34,12 +34,10 @@ public class UsersModel implements IDataDelegate {
     private AffectationsRepository designationRepository;
     private IAffectationssQuery designationsQuery;
 
-    public UsersModel(IUsersQuery usersQuery, UsersRepository usersRepository,
-            AffectationsRepository designationsRepository, IAffectationssQuery designationsQuery) {
+    public UsersModel( UsersRepository usersRepository,AffectationsRepository designationsRepository) {
         this.usersQuery = usersQuery;
         this.usersRepository = usersRepository;
         this.designationRepository = designationsRepository;
-        this.designationsQuery = designationsQuery;
     }
 
     @Override
