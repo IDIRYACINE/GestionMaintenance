@@ -19,7 +19,7 @@ public class ServicesProvider {
     
     private ServicesProvider() {
         databaseInitialiser = new DatabaseInitialiser();
-        remoteServer =  new Server("localhost",3050, "embag343adminvcs", 0);
+        remoteServer =  new Server("embag.duckdns.org",3050, "embag343adminvcs", 0);
     }
 
 
