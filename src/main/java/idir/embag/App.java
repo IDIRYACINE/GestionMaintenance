@@ -1,8 +1,10 @@
 package idir.embag;
 
 import java.io.IOException;
+import java.io.ObjectInputFilter.Config;
 
 import idir.embag.Application.Controllers.Navigation.MainController;
+import idir.embag.Application.State.ConfigState;
 import idir.embag.Application.Utility.AppStateLoader;
 import idir.embag.Application.Utility.Serialisers.GsonSerialiser;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
@@ -84,8 +86,15 @@ public class App extends Application {
         servicesCenter = ServicesProvider.getInstance();
         storesCenter = StoreCenter.getInstance(servicesCenter, navigationController);
 
-        IConnectionParameters connectionParameters = new MysqlConnection("test", "idir", "idir",
-                "localhost", 3306);
+        ConfigState configState = AppStateLoader.loadConfigState();
+        
+        IConnectionParameters connectionParameters = new MysqlConnection(
+            configState.databaseName,
+            configState.databaseUser,
+            configState.databasePassword,
+            configState.databaseHost,
+            configState.databasePort
+        );
 
         ServicesProvider.getInstance().getDatabaseInitialiser().connect(connectionParameters);
         ServicesProvider.getInstance().getDatabaseInitialiser().createTables();

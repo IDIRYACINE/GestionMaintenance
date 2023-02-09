@@ -12,6 +12,7 @@ public class AppState {
     private int userCurrId;
     private int workerCurrId;
     private int sessionGroupCurrId;
+    private ConfigState configState;
     
     private AppState() {
         
@@ -57,10 +58,15 @@ public class AppState {
         sessionGroupCurrId++;
     }
 
-    public void setAppState(AppStateWrapper appStateWrapper) {
+    public void setAppState(AppStateWrapper appStateWrapper,ConfigState configState) {
         this.userCurrId = appStateWrapper.userCurrId;
         this.workerCurrId = appStateWrapper.workerCurrId;
         this.sessionGroupCurrId = appStateWrapper.sessionGroupCurrId;
+        this.configState = configState;
     }
 
+    public ConfigState getConfigState() {
+        return configState;
+    }
+    
 }

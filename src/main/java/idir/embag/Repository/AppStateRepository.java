@@ -1,7 +1,9 @@
 package idir.embag.Repository;
 
 import java.sql.ResultSet;
+import java.util.Map;
 
+import idir.embag.Application.State.ConfigState;
 import idir.embag.DataModels.AppState.AppStateWrapper;
 import idir.embag.Types.MetaData.EAutoIncrementedAliases;
 
@@ -18,5 +20,20 @@ public class AppStateRepository {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public ConfigState jsonToConfigState(Map<String, Object> config) {
+      
+        return new ConfigState(
+            (String) config.get(ConfigState.Keys.databaseName.name()),
+            (String) config.get(ConfigState.Keys.databaseUser.name()),
+            (String) config.get(ConfigState.Keys.databasePassword.name()),
+            (String) config.get(ConfigState.Keys.databaseHost.name()),
+            (int) config.get(ConfigState.Keys.databasePort.name()),
+            (String) config.get(ConfigState.Keys.serverHost.name()),
+            (int) config.get(ConfigState.Keys.serverPort.name()),
+            (String) config.get(ConfigState.Keys.serverAuthToken.name()),
+            (int) config.get(ConfigState.Keys.serverApiVersion.name())
+        );
     }
 }
