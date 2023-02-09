@@ -10,10 +10,10 @@ import idir.embag.Application.Utility.Serialisers.GsonSerialiser;
 import idir.embag.DataModels.ApiBodyResponses.DSessionResponse;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
-import idir.embag.Infrastructure.Server.Server;
+import idir.embag.Infrastructure.ServicesProvider;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.FetchActiveSessionRecordsWrapper;
-import idir.embag.Infrastructure.Server.Api.Commands.FetchActiveSessionRecords.FetchActiveSessionRecordsEvent;
 import idir.embag.Types.Api.IApiResponseHandler;
+import idir.embag.Types.Infrastructure.Server.EServerKeys;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
 import idir.embag.Types.Stores.Generics.StoreDispatch.StoreDispatch;
 import idir.embag.Types.Stores.Generics.StoreEvent.EStoreEventAction;
@@ -76,10 +76,12 @@ public class SessionResponse implements IApiResponseHandler{
 
             ArrayList<Integer> permissions = AppState.getInstance().getCurrentUser().getDesignationsIds();
 
+            Map<EServerKeys, Object> data = new HashMap<>();
+
             FetchActiveSessionRecordsWrapper apiWrapper = new FetchActiveSessionRecordsWrapper(maxRetrivedRecord,recordOffset,permissions);
-            
-            FetchActiveSessionRecordsEvent event = new FetchActiveSessionRecordsEvent("SessionResponse",apiWrapper);
-            Server.getInstance().dispatchEvent(event);
+            data.put(EServerKeys.ApiWrapper, apiWrapper);
+    
+            ServicesProvider.getInstance().getRemoteServer().dispatchApiCall(data);
         }
 
     }

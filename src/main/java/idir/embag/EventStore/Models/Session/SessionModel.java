@@ -4,22 +4,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import idir.embag.Application.Utility.DataBundler;
 import idir.embag.DataModels.Metadata.EEventsDataKeys;
 import idir.embag.DataModels.Session.Session;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
-import idir.embag.Infrastructure.Server.Server;
+import idir.embag.Infrastructure.ServicesProvider;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.CloseSessionWrapper;
 import idir.embag.Infrastructure.Server.Api.ApiWrappers.OpenSessionWrapper;
-import idir.embag.Infrastructure.Server.Api.Commands.CloseSession.CloseSessionEvent;
-import idir.embag.Infrastructure.Server.Api.Commands.OpenSession.OpenSessionEvent;
 import idir.embag.Repository.SessionRepository;
 import idir.embag.Types.Generics.EOperationStatus;
 import idir.embag.Types.Infrastructure.Database.ISessionQuery;
 import idir.embag.Types.Infrastructure.Database.Generics.AttributeWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.LoadWrapper;
 import idir.embag.Types.Infrastructure.Database.Generics.SearchWrapper;
+import idir.embag.Types.Infrastructure.Server.EServerKeys;
+import idir.embag.Types.Infrastructure.Server.IServer;
 import idir.embag.Types.MetaData.EWrappers;
 import idir.embag.Types.Stores.DataStore.IDataDelegate;
 import idir.embag.Types.Stores.Generics.StoreDispatch.EStores;
@@ -33,7 +34,7 @@ public class SessionModel implements IDataDelegate {
     ISessionQuery sessionQuery;
     SessionRepository sessionRepository;
 
-    public SessionModel(SessionRepository sessionRepository) {
+    public SessionModel(ISessionQuery sessionQuery, SessionRepository sessionRepository) {
         this.sessionQuery = sessionQuery;
         this.sessionRepository = sessionRepository;
     }
@@ -134,13 +135,20 @@ public class SessionModel implements IDataDelegate {
     private void openSessionOnServer(Session session) {
         OpenSessionWrapper openSessionWrapper = new OpenSessionWrapper(session);
 
-        OpenSessionEvent openSessionEvent = new OpenSessionEvent("",openSessionWrapper);
-        Server.getInstance().dispatchEvent(openSessionEvent);
+        Map<EServerKeys, Object> data = new HashMap<>();
+        DataBundler.appendData(data, EServerKeys.ApiWrapper, openSessionWrapper);
+
+        IServer server = ServicesProvider.getInstance().getRemoteServer();
+        server.dispatchApiCall(data);
     }
 
     private void closeSessionOnServer(Timestamp sessionId) {
         CloseSessionWrapper closeSessionWrapper = new CloseSessionWrapper(sessionId);
-        CloseSessionEvent closeSessionEvent = new CloseSessionEvent("",closeSessionWrapper);
-        Server.getInstance().dispatchEvent(closeSessionEvent);
+
+        Map<EServerKeys, Object> data = new HashMap<>();
+        DataBundler.appendData(data, EServerKeys.ApiWrapper, closeSessionWrapper);
+
+        IServer server = ServicesProvider.getInstance().getRemoteServer();
+        server.dispatchApiCall(data);
     }
 }

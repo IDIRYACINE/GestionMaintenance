@@ -1,14 +1,16 @@
 package idir.embag;
 
 import java.io.IOException;
+import java.io.ObjectInputFilter.Config;
 
 import idir.embag.Application.Controllers.Navigation.MainController;
+import idir.embag.Application.State.ConfigState;
 import idir.embag.Application.Utility.AppStateLoader;
 import idir.embag.Application.Utility.Serialisers.GsonSerialiser;
 import idir.embag.EventStore.Stores.StoreCenter.StoreCenter;
+import idir.embag.Infrastructure.ServicesProvider;
 import idir.embag.Infrastructure.Database.MysqlConnection;
 import idir.embag.Infrastructure.Initialisers.DatabaseInitialiser;
-import idir.embag.Infrastructure.Server.Server;
 import idir.embag.Types.Application.Navigation.INavigationController;
 import idir.embag.Types.Infrastructure.Database.IConnectionParameters;
 import idir.embag.Types.Stores.StoreCenter.IStoresCenter;
@@ -27,6 +29,7 @@ public class App extends Application {
 
     public static StackPane stackPane;
     private static IStoresCenter storesCenter;
+    private ServicesProvider servicesCenter;
     private INavigationController navigationController;
 
     private Stage appStage;
@@ -80,8 +83,21 @@ public class App extends Application {
 
     private void setup() {
         navigationController = new MainController();
-        storesCenter = StoreCenter.getInstance(navigationController);
-        Server.getInstance();
+        servicesCenter = ServicesProvider.getInstance();
+        storesCenter = StoreCenter.getInstance(servicesCenter, navigationController);
+
+        ConfigState configState = AppStateLoader.loadConfigState();
+        
+        IConnectionParameters connectionParameters = new MysqlConnection(
+            configState.databaseName,
+            configState.databaseUser,
+            configState.databasePassword,
+            configState.databaseHost,
+            configState.databasePort
+        );
+
+        ServicesProvider.getInstance().getDatabaseInitialiser().connect(connectionParameters);
+        ServicesProvider.getInstance().getDatabaseInitialiser().createTables();
 
     }
 

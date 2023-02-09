@@ -22,6 +22,8 @@ import idir.embag.EventStore.Models.Workers.WorkersModel;
 import idir.embag.EventStore.Stores.DataConverterStore.DataConverterStore;
 import idir.embag.EventStore.Stores.DataStore.DataStore;
 import idir.embag.EventStore.Stores.NavigationStore.NavigationStore;
+import idir.embag.Infrastructure.ServicesProvider;
+import idir.embag.Infrastructure.Initialisers.DatabaseInitialiser;
 import idir.embag.Repository.AffectationsRepository;
 import idir.embag.Repository.FamilyCodeRepository;
 import idir.embag.Repository.InventoryRepository;
@@ -52,9 +54,9 @@ public class StoreCenter implements IStoresCenter {
 
   private Map<EStores, IStore> stores = new HashMap<>();
 
-  public static StoreCenter getInstance( INavigationController navigationController) {
+  public static StoreCenter getInstance(ServicesProvider servicesCenter, INavigationController navigationController) {
     if (instance == null) {
-      instance = new StoreCenter( navigationController);
+      instance = new StoreCenter(servicesCenter, navigationController);
     }
     return instance;
   }
@@ -63,8 +65,8 @@ public class StoreCenter implements IStoresCenter {
     return instance;
   }
 
-  private StoreCenter( INavigationController navigationController) {
-    setupStores();
+  private StoreCenter(ServicesProvider servicesCenter, INavigationController navigationController) {
+    setupStores(servicesCenter.getDatabaseInitialiser());
 
     stores.put(EStores.NavigationStore, new NavigationStore(navigationController));
   }
@@ -158,41 +160,41 @@ public class StoreCenter implements IStoresCenter {
     StoreCenter.getInstance().notify(action);
   }
 
-  private void setupStores() {
+  private void setupStores(DatabaseInitialiser databaseInitialiser) {
 
-    StockModel stockModel = new StockModel( new StockRepository());
+    StockModel stockModel = new StockModel(databaseInitialiser.getProductQuery(), new StockRepository());
 
     InventoryRepository inventoryRepository = new InventoryRepository();
-    InventoryModel inventoryModel = new InventoryModel(
+    InventoryModel inventoryModel = new InventoryModel(databaseInitialiser.getProductQuery(),
         inventoryRepository);
 
-    FamilyModel familyModel = new FamilyModel( new FamilyCodeRepository());
-    WorkersModel workersModel = new WorkersModel(new WorkersRepository());
+    FamilyModel familyModel = new FamilyModel(databaseInitialiser.getProductQuery(), new FamilyCodeRepository());
+    WorkersModel workersModel = new WorkersModel(databaseInitialiser.getWorkerQuery(), new WorkersRepository());
 
     SessionRepository sessionRepository = new SessionRepository();
 
-    SessionModel sessionModel = new SessionModel( sessionRepository);
+    SessionModel sessionModel = new SessionModel(databaseInitialiser.getSessionQuery(), sessionRepository);
 
-    SessionWorkersModel sessionWorkersModel = new SessionWorkersModel(
+    SessionWorkersModel sessionWorkersModel = new SessionWorkersModel(databaseInitialiser.getSessionQuery(),
         sessionRepository);
 
     AffectationsRepository designationsRepository = new AffectationsRepository();
 
-    SessionGroupModel sessionGroupModel = new SessionGroupModel(
-        sessionRepository,  designationsRepository);
-    HistoryModel historyModel = new HistoryModel( sessionRepository);
+    SessionGroupModel sessionGroupModel = new SessionGroupModel(databaseInitialiser.getSessionQuery(),
+        sessionRepository, databaseInitialiser.getGroupPermissionsQuery(), designationsRepository);
+    HistoryModel historyModel = new HistoryModel(databaseInitialiser.getSessionQuery(), sessionRepository);
 
-    DesignationModel designationModel = new DesignationModel(
+    DesignationModel designationModel = new DesignationModel(databaseInitialiser.getAffectationsQuery(),
         designationsRepository);
 
-    PermissionsModel permissionsModel = new PermissionsModel(
-        new AffectationsRepository());
+    PermissionsModel permissionsModel = new PermissionsModel(databaseInitialiser.getAffectationsQuery(),
+        databaseInitialiser.getUsersQuery(), designationsRepository);
 
-    UsersModel usersModel = new UsersModel(new UsersRepository(),
-        designationsRepository );
+    UsersModel usersModel = new UsersModel(databaseInitialiser.getUsersQuery(), new UsersRepository(),
+        designationsRepository, databaseInitialiser.getAffectationsQuery());
 
-    GroupPermissionsModel groupPermissionsModel = new GroupPermissionsModel(
-         designationsRepository);
+    GroupPermissionsModel groupPermissionsModel = new GroupPermissionsModel(databaseInitialiser.getAffectationsQuery(),
+        databaseInitialiser.getGroupPermissionsQuery(), designationsRepository);
 
     IDataDelegate[] delegates = new IDataDelegate[IDataStore.DELEGATES_COUNT];
     delegates[IDataStore.STOCK_DELEGATE] = stockModel;
@@ -213,7 +215,7 @@ public class StoreCenter implements IStoresCenter {
     IDataConverterDelegate[] converterDelegates = new IDataConverterDelegate[DataConverterStore.DELEGATES_COUNT];
     converterDelegates[IDataConverterStore.EXCEL_DELEGATE] = new ExcelModel();
 
-    converterDelegates[IDataConverterStore.REPORT_DELEGATE] = new ReportModel(
+    converterDelegates[IDataConverterStore.REPORT_DELEGATE] = new ReportModel(databaseInitialiser.getProductQuery(),
         inventoryRepository);
 
     stores.put(EStores.DataConverterStore, new DataConverterStore(converterDelegates));

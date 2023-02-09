@@ -1,0 +1,3 @@
+{databaseUser: idir, databaseHost: 127.0.0.1, databaseName: test, databasePassword: idir,
+  serverApiVersion: 0, serverPort: 3050, serverAuthToken: embag343adminvcs, serverHost: 127.0.0.1,
+  databasePort: 3306}

@@ -1,96 +1,167 @@
 package idir.embag.Infrastructure.Server;
 
-import idir.embag.Infrastructure.Server.Api.ServerConfigurations;
-import idir.embag.Infrastructure.Server.Api.Commands.CommandsEnum;
-import idir.embag.Infrastructure.Server.Api.Commands.FetchActiveSession.FetchActiveSessionCommand;
-import idir.embag.Infrastructure.Server.Api.Commands.FetchActiveSessionRecords.FetchActiveSessionRecordsCommand;
-import idir.embag.Infrastructure.Server.Api.Commands.Login.LoginCommand;
-import idir.embag.Infrastructure.Server.Api.Commands.OpenSession.OpenSessionCommand;
-import idir.embag.Infrastructure.Server.Api.Commands.UnregisterSessionWorker.UnregisterSessionWorkerCommand;
-import idir.embag.Infrastructure.Server.Api.Commands.UpdateSessionWorker.UpdateSessionWorkerCommand;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Map;
+
+import idir.embag.Application.Utility.DataBundler;
+import idir.embag.Infrastructure.Server.Api.Requests.CloseSessionRequest;
+import idir.embag.Infrastructure.Server.Api.Requests.FetchActiveSessionRecordsRequest;
+import idir.embag.Infrastructure.Server.Api.Requests.FetchActiveSessionRequest;
+import idir.embag.Infrastructure.Server.Api.Requests.LoginRequest;
+import idir.embag.Infrastructure.Server.Api.Requests.OpenSessionRequest;
+import idir.embag.Infrastructure.Server.Api.Requests.RegisterSessionWorkerRequest;
+import idir.embag.Infrastructure.Server.Api.Requests.UnregisterSessionWorkerRequest;
+import idir.embag.Infrastructure.Server.Api.Requests.UpdateSessionWorkerRequest;
+import idir.embag.Infrastructure.Server.Api.ResponeHandlers.LoginResponse;
+import idir.embag.Infrastructure.Server.Api.ResponeHandlers.RecordsResponse;
+import idir.embag.Infrastructure.Server.Api.ResponeHandlers.SessionResponse;
+import idir.embag.Infrastructure.Server.Api.ResponeHandlers.WorkerOperationResponse;
 import idir.embag.Infrastructure.Server.WebSocket.WebSocketImpl;
-import java.util.function.BiFunction;
-import idir.embag.Infrastructure.ServiceProvider.Service;
-import idir.embag.Infrastructure.ServiceProvider.Algorithms.SearchAlgorithm;
-import idir.embag.Infrastructure.ServiceProvider.Algorithms.BinarySearch.BinarySearchAlgorithm;
-import idir.embag.Infrastructure.ServiceProvider.Algorithms.BinarySearch.BinarySearchComparator;
-import idir.embag.Infrastructure.ServiceProvider.Events.ServiceEvent;
-import idir.embag.Infrastructure.ServiceProvider.Events.SimpleServiceCommand;
-import idir.embag.Infrastructure.ServiceProvider.Events.SimpleServiceEvent;
-import idir.embag.Infrastructure.ServiceProvider.Types.SimpleCommandSearchAglorithm;
+import idir.embag.Types.Api.EHeaders.Headers;
+import idir.embag.Types.Api.EHeaders;
+import idir.embag.Types.Api.IApi;
+import idir.embag.Types.Api.IApiWrapper;
+import idir.embag.Types.Infrastructure.Server.EServerKeys;
+import idir.embag.Types.Infrastructure.Server.IServer;
 
-@SuppressWarnings({ "rawtypes", "unchecked" })
-public class Server extends Service {
+public class Server implements IServer{
 
-    public WebSocketImpl webSocketClient;
+    WebSocketImpl webSocketClient;
 
-    private final ServerConfigurations serverConfigurations;
+    String authToken;
 
-    private Server(SimpleCommandSearchAglorithm searchAlgorithm, ServerConfigurations serverConfigurations) {
-        super(searchAlgorithm);
-        this.serverConfigurations = serverConfigurations;
-        registerDefaultCommands();
+    int apiVersion;
+
+    String serverPath;
+
+    int port;
+
+    public Server(String serverPath,int port , String authToken,int apiVersion) {
+        this.authToken = authToken;
+        this.apiVersion = apiVersion;
+        this.serverPath = serverPath;
+        this.port = port;
     }
-
-    private static Server instance;
-
-    public static Server getInstance() {
-        return instance;
-    }
-
-    public static Server getInstance(ServerConfigurations serverConfigurations) {
-        if (instance == null) {
-            SimpleCommandSearchAglorithm searchAlgorithm = (SimpleCommandSearchAglorithm) ((SearchAlgorithm) createSearchAlgorithm());
-
-            instance = new Server(searchAlgorithm, serverConfigurations);
-        }
-        return instance;
-    }
-
-    private static BinarySearchAlgorithm<SimpleServiceCommand, Integer> createSearchAlgorithm() {
-        BinarySearchAlgorithm<SimpleServiceCommand, Integer> searchAlgorithm = new BinarySearchAlgorithm<SimpleServiceCommand, Integer>();
-
-        BiFunction<SimpleServiceCommand, Integer, Boolean> isGreaterThan = (command, id) -> command.getEventId() > id;
-        BiFunction<SimpleServiceCommand, Integer, Boolean> isLessThan = (command, id) -> command.getEventId() < id;
-
-        BinarySearchComparator<SimpleServiceCommand, Integer> comparator = new BinarySearchComparator<SimpleServiceCommand, Integer>(
-                isGreaterThan, isLessThan);
-
-        searchAlgorithm.setComparator(comparator);
-
-        return searchAlgorithm;
-    }
-
-    private void registerDefaultCommands() {
-        int length = CommandsEnum.values().length;
-        commands = new SimpleServiceCommand[length];
-
-        SimpleServiceCommand.EmptyCommand emptyCommand = new SimpleServiceCommand.EmptyCommand();
-        for (int i = 0; i < length; i++) {
-            commands[i] = emptyCommand;
-        }
-
-        registerCommandAtIndex(new LoginCommand(serverConfigurations));
-        registerCommandAtIndex(new UpdateSessionWorkerCommand(serverConfigurations));
-        registerCommandAtIndex(new UnregisterSessionWorkerCommand(serverConfigurations));
-        registerCommandAtIndex(new OpenSessionCommand(serverConfigurations));
-        registerCommandAtIndex(new FetchActiveSessionCommand(serverConfigurations));
-        registerCommandAtIndex(new FetchActiveSessionRecordsCommand(serverConfigurations));
-
-    }
+    
 
     @Override
-    public void sendEvent(ServiceEvent event) {
+    public void dispatchApiCall(Map<EServerKeys,Object> data) {
+        IApiWrapper apiWrapper = DataBundler.retrieveValue(data, EServerKeys.ApiWrapper);
 
-    }
+        switch(apiWrapper.getApi()){
+            case loginAdmin : login(apiWrapper);
+            break;
+            case closeSession : closeSession(apiWrapper);
+            break;
+            case openSession: openSession(apiWrapper);
+            break;
+            case registerSessionWorker: registerSessionWorker(apiWrapper);
+            break;
+            case unregisterSessionWorker: unregisterSessionWorker(apiWrapper);
+            break;
+            case fetchActiveSession : fetchActiveSession(apiWrapper);
+            break; 
+            case updateSessionWorker: updateSessionWorker(apiWrapper);
+            break;
 
-    @Override
-    public void dispatchEvent(SimpleServiceEvent event) {
-        SimpleServiceCommand command = searchAlgorithm.search(commands, event.getEventId());
-        if (command != null) {
-            command.execute(event);
+            case fetchActiveSessionRecords : fetchRecords(apiWrapper);
+            break;
+
+            default : 
+            break;
         }
-
     }
 
+    private void login(IApiWrapper wrapper) {
+        IApi loginApi = new LoginRequest(wrapper);
+
+        loginApi.addHeader(Headers.access_token, authToken);
+
+        Runnable initSocket = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URI url = new URI("ws://"+serverPath+":"+port);
+                    webSocketClient = new WebSocketImpl(url);
+                    webSocketClient.addHeader(EHeaders.valueOf(Headers.access_token), authToken);
+                    webSocketClient.connectBlocking();
+
+                } catch (URISyntaxException | InterruptedException e) {
+                    System.out.println("Invalid server path");
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        LoginResponse loginHandler = new LoginResponse(initSocket);
+        loginApi.setResponseHandler(loginHandler);
+
+        loginApi.execute();
+    }
+
+    private void openSession(IApiWrapper apiWrapper){
+        OpenSessionRequest request = new OpenSessionRequest(apiWrapper);
+        request.addHeader(Headers.access_token, authToken);
+
+        SessionResponse responseHandler = new SessionResponse();
+        request.setResponseHandler(responseHandler);
+        request.execute();
+    }
+
+    private void closeSession(IApiWrapper apiWrapper){
+        CloseSessionRequest request = new CloseSessionRequest(apiWrapper);
+        request.addHeader(Headers.access_token, authToken);
+
+        SessionResponse responseHandler = new SessionResponse();
+        request.setResponseHandler(responseHandler);
+        request.execute();
+    }
+
+    private void registerSessionWorker(IApiWrapper apiWrapper){
+        RegisterSessionWorkerRequest request = new RegisterSessionWorkerRequest(apiWrapper);
+        request.addHeader(Headers.access_token, authToken);
+
+        WorkerOperationResponse responseHandler = new WorkerOperationResponse();
+        request.setResponseHandler(responseHandler);
+        request.execute();
+    }
+
+    private void unregisterSessionWorker(IApiWrapper apiWrapper){
+        UnregisterSessionWorkerRequest request = new UnregisterSessionWorkerRequest(apiWrapper);
+        request.addHeader(Headers.access_token, authToken);
+
+        WorkerOperationResponse responseHandler = new WorkerOperationResponse();
+        request.setResponseHandler(responseHandler);
+        request.execute();
+    }
+
+    private void updateSessionWorker(IApiWrapper apiWrapper){
+        UpdateSessionWorkerRequest request = new UpdateSessionWorkerRequest(apiWrapper);
+        request.addHeader(Headers.access_token, authToken);
+
+        WorkerOperationResponse responseHandler = new WorkerOperationResponse();
+        request.setResponseHandler(responseHandler);
+        request.execute();
+    }
+
+
+    private void fetchActiveSession(IApiWrapper apiWrapper){
+       
+        FetchActiveSessionRequest request = new FetchActiveSessionRequest(apiWrapper);
+        request.addHeader(Headers.access_token, authToken);
+
+        SessionResponse responseHandler = new SessionResponse();
+        request.setResponseHandler(responseHandler);
+        request.execute();
+    }
+    
+    private void fetchRecords(IApiWrapper apiWrapper){
+        FetchActiveSessionRecordsRequest request = new FetchActiveSessionRecordsRequest(apiWrapper);
+        request.addHeader(Headers.access_token, authToken);
+
+        RecordsResponse responseHandler = new RecordsResponse();
+        request.setResponseHandler(responseHandler);
+        request.execute();
+    }
 }

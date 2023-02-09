@@ -191,5 +191,3 @@ public class UsersQuery extends IUsersQuery {
     }
 
 }
-
-

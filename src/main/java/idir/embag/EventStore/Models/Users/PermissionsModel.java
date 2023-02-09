@@ -28,7 +28,7 @@ public class PermissionsModel implements IDataDelegate {
 
     private AffectationsRepository designationsRepository;
 
-    public PermissionsModel( AffectationsRepository designationsRepository) {
+    public PermissionsModel(IAffectationssQuery designationsQuery,IUsersQuery usersQuery, AffectationsRepository designationsRepository) {
         this.designationsQuery = designationsQuery;
         this.designationsRepository = designationsRepository;
         this.usersQuery = usersQuery;

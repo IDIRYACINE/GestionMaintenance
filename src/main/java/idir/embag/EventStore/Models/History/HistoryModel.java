@@ -27,7 +27,7 @@ public class HistoryModel implements IDataDelegate{
     ISessionQuery sessionQuery;
     SessionRepository sessionRepository;
     
-    public HistoryModel(SessionRepository sessionRepository) {
+    public HistoryModel(ISessionQuery sessionQuery,SessionRepository sessionRepository) {
         this.sessionQuery = sessionQuery;
         this.sessionRepository = sessionRepository;
     }

@@ -26,7 +26,7 @@ public class DesignationModel implements IDataDelegate {
     private IAffectationssQuery designationsQuery;
     private AffectationsRepository designationsRepository;
 
-    public DesignationModel( AffectationsRepository designationsRepository) {
+    public DesignationModel(IAffectationssQuery designationsQuery, AffectationsRepository designationsRepository) {
         this.designationsQuery = designationsQuery;
         this.designationsRepository = designationsRepository;
     }

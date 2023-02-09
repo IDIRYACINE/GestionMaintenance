@@ -33,7 +33,7 @@ public class ReportModel implements IDataConverterDelegate {
     private IExcelCellWriter writeDelegate;
     private IDataConverter excelConverter;
 
-    public ReportModel(InventoryRepository inventoryRepository) {
+    public ReportModel(IProductQuery query, InventoryRepository inventoryRepository) {
         this.query = query;
         this.inventoryRepository = inventoryRepository;
         excelConverter = new Excel();

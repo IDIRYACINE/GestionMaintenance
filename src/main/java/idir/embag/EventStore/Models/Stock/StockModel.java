@@ -27,7 +27,7 @@ public class StockModel implements IDataDelegate{
     IProductQuery productQuery;
     StockRepository stockRepository;
 
-    public StockModel(StockRepository stockRepository) {
+    public StockModel(IProductQuery productQuery,StockRepository stockRepository) {
         this.productQuery = productQuery;
         this.stockRepository = stockRepository;
     }
