@@ -1,7 +1,9 @@
 package idir.embag;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputFilter.Config;
+import java.net.URL;
 
 import idir.embag.Application.Controllers.Navigation.MainController;
 import idir.embag.Application.State.ConfigState;
@@ -44,7 +46,12 @@ public class App extends Application {
 
         FXMLLoader loader = new FXMLLoader();
         loader.setController(new LoginPanel());
-        loader.load(getClass().getResourceAsStream("/views/Panels/LoginPanel.fxml"));
+        InputStream stream = App.class.getResourceAsStream("/views/Panels/LoginPanel.fxml");
+        
+
+        System.out.println(stream);
+
+        loader.load(stream);
 
         Parent root = loader.getRoot();
         Scene scene = new Scene(root);

@@ -91,6 +91,7 @@ public class DatabaseInitialiser {
 
     public void connect(IConnectionParameters connectionParameters) {
         database.Connect(connectionParameters);
+
     }
 
     public ResultSet executeQuery(String query) throws SQLException {

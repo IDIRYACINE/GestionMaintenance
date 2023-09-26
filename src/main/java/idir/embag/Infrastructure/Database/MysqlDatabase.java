@@ -14,7 +14,11 @@ public class MysqlDatabase implements IDatabase {
     @Override
     public void Connect(IConnectionParameters connectionParameters) {
         try {
-            connection = DriverManager.getConnection(formatConnectionUrl(connectionParameters),
+            // Class.forName("org.mariadb.jdbc.Driver");
+            String connectionUrl = formatConnectionUrl(connectionParameters);
+            System.out.println(connectionUrl);
+
+            connection = DriverManager.getConnection(connectionUrl,
                     connectionParameters.getDatabaseUser(), connectionParameters.getDatabasePassword());
             if (connection != null) {
                 connection.getMetaData();
@@ -40,7 +44,7 @@ public class MysqlDatabase implements IDatabase {
     }
 
     @Override
-    public void InsertQuery(String query)  {
+    public void InsertQuery(String query) {
         try {
             connection.createStatement().execute(query);
         } catch (SQLException e) {
@@ -50,7 +54,7 @@ public class MysqlDatabase implements IDatabase {
 
     @Override
     public void DeleteQuery(String query) {
-        
+
         try {
             connection.createStatement().execute(query);
         } catch (SQLException e) {
@@ -74,7 +78,7 @@ public class MysqlDatabase implements IDatabase {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
     }
 
     private String formatConnectionUrl(IConnectionParameters connectionParameters) {
